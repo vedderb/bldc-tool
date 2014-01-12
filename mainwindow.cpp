@@ -264,7 +264,7 @@ void MainWindow::timerSlot()
             }
         } else {
             filter = f.generateFirFilter(ui->currentFilterFreqBox->value(),
-                                                         ui->currentFilterTapBox->value(), ui->hammingBox->isChecked());
+                                         ui->currentFilterTapBox->value(), ui->hammingBox->isChecked());
         }
 
         if (ui->meanRadioButton2->isChecked()) {
@@ -275,7 +275,7 @@ void MainWindow::timerSlot()
             }
         } else {
             filter2 = f.generateFirFilter(ui->currentFilterFreqBox2->value(),
-                                                         ui->currentFilterTapBox2->value(), ui->hammingBox2->isChecked());
+                                          ui->currentFilterTapBox2->value(), ui->hammingBox2->isChecked());
         }
 
         static int last_len = 0;
