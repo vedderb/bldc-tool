@@ -21,7 +21,6 @@
 #include <QObject>
 #include <QTimer>
 #include <QVector>
-#include "locpoint.h"
 
 class PacketInterface : public QObject
 {
@@ -42,62 +41,37 @@ public:
         double duty_now;
     } MC_VALUES;
 
-    typedef struct {
-        quint8 address;
-        quint16 value;
-    } ULTRA_SENSOR_VALUE;
-
     // Packets that expect response
     typedef enum {
-        CAR_PACKET_READ_VALUES = 0,
-        CAR_PACKET_READ_POS,
-        CAR_PACKET_READ_SENS_ULTRA,
-        CAR_PACKET_READ_SENS_IR,
-        CAR_PACKET_READ_TRAVEL_COUNTER,
-        CAR_PACKET_PRINT,
-        CAR_PACKET_SEND_SAMPLES,
-        CAR_PACKET_PING
-    } CAR_RES_PACKET_ID;
+        COMM_READ_VALUES = 0,
+        COMM_PRINT,
+        COMM_SEND_SAMPLES
+    } COMM_RES_PACKET_ID;
 
-    // Packets that only expect ack
+    // Packets that don't expect any response
     typedef enum {
-        CAR_PACKET_SET_POWER_SERVO = 0,
-        CAR_PACKET_WRITE_POS,
-        CAR_PACKET_ADD_POINT,
-        CAR_PACKET_AP_RUN,
-        CAR_PACKET_AP_CLEAR,
-        CAR_PACKET_RESET_TRAVEL_CNT,
-        CAR_PACKET_SET_LIMITED,
-        CAR_PACKET_FULL_BRAKE,
-        CAR_PACKET_SERVO_OFFSET,
-        CAR_PACKET_CAN_TEST,
-        CAR_PACKET_TERMINAL_CMD
-    } CAR_NORES_PACKET_ID;
+        COMM_FULL_BRAKE = 0,
+        COMM_SERVO_OFFSET,
+        COMM_CAN_TEST,
+        COMM_TERMINAL_CMD
+    } COMM_NORES_PACKET_ID;
 
     typedef enum {
-        CAR_PACKET_RES = 1,
-        CAR_PACKET_NORES = 2
-    } CAR_SPECIAL_CMD;
+        COMM_PACKET_RES = 1,
+        COMM_PACKET_NORES = 2
+    } COMM_SPECIAL_CMD;
 
     explicit PacketInterface(QObject *parent = 0);
     void processData(QByteArray &data);
     bool sendPacket(const unsigned char *data, int len);
     bool sendPacket(QByteArray data);
-    bool setMotorServo(double speed, unsigned char dir);
-    bool setPosition(LocPoint &pos);
     bool readValues();
-    bool readPosition();
-    bool readSensorsUltra();
     bool testCan();
     bool sendTerminalCmd(QString cmd);
 
 signals:
     void dataToSend(QByteArray &data);
     void carValuesReceived(PacketInterface::MC_VALUES values);
-    void carPosReceived(LocPoint pos);
-    void carPingReceived();
-    void carResponseTimedOut();
-    void carSensorsUltraReceived(QVector<PacketInterface::ULTRA_SENSOR_VALUE> values);
     void carPrintReceived(QString str);
     void carSamplesReceived(QByteArray bytes);
     

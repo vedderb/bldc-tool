@@ -156,11 +156,7 @@ unsigned short PacketInterface::crc16(const unsigned char *buf, unsigned int len
 void PacketInterface::processPacket(const unsigned char *data, int len)
 {
     unsigned int i = 0;
-    quint16 tmp_us = 0;
-    LocPoint loc;
     MC_VALUES values;
-    QVector<ULTRA_SENSOR_VALUE> sensor_values;
-    ULTRA_SENSOR_VALUE ultra_sensor_tmp;
     QByteArray bytes;
     QByteArray tmpArray;
 
@@ -169,7 +165,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     len--;
 
     switch (id) {
-    case CAR_PACKET_READ_VALUES:
+    case COMM_READ_VALUES:
         i = 0;
 
         values.temp_mos1 = ((double)getInt16FromBuffer(data, &i)) / 10.0;
@@ -188,55 +184,17 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         emit carValuesReceived(values);
         break;
 
-    case CAR_PACKET_READ_POS:
-        i = 0;
-        loc.setX((double)((qint32)data[i] << 24 | (qint32)data[i + 1] << 16 |
-                 (qint32)data[i + 2] << 8 | (qint32)data[i + 3]));
-        i += 4;
-
-        loc.setY((double)((qint32)data[i] << 24 | (qint32)data[i + 1] << 16 |
-                 (qint32)data[i + 2] << 8 | (qint32)data[i + 3]));
-        i += 4;
-
-        loc.setAlpha((double)((quint16)data[i] << 8 | (quint16)data[i + 1]) / 10000.0);
-        i += 2;
-
-        emit carPosReceived(loc);
-        break;
-
-    case CAR_PACKET_READ_SENS_ULTRA:
-        sensor_values.clear();
-        tmp_us = len / 3;
-
-        for (int i = 0;i < tmp_us;i++) {
-            ultra_sensor_tmp.address = (quint8)data[i];
-            ultra_sensor_tmp.value = ((quint16)data[i * 2 + tmp_us] << 8) |
-                    (quint16)data[i * 2 + tmp_us + 1];
-            sensor_values.append(ultra_sensor_tmp);
-        }
-
-        emit carSensorsUltraReceived(sensor_values);
-        break;
-
-    case CAR_PACKET_READ_SENS_IR:
-        // TODO
-        break;
-
-    case CAR_PACKET_PRINT:
+    case COMM_PRINT:
         tmpArray = QByteArray::fromRawData((char*)data, len);
         tmpArray[len] = '\0';
         emit carPrintReceived(QString::fromLatin1(tmpArray));
         break;
 
-    case CAR_PACKET_SEND_SAMPLES:
+    case COMM_SEND_SAMPLES:
         for (int i = 0;i < len;i++) {
             bytes.append(data[i]);
         }
         emit carSamplesReceived(bytes);
-        break;
-
-    case CAR_PACKET_PING:
-        emit carPingReceived();
         break;
 
     default:
@@ -284,85 +242,12 @@ bool PacketInterface::sendPacket(QByteArray data)
     return sendPacket((const unsigned char*)data.data(), data.size());
 }
 
-bool PacketInterface::setMotorServo(double speed, unsigned char dir)
-{
-    QByteArray buffer;
-    buffer.clear();
-    buffer.append((char)CAR_PACKET_NORES);
-    buffer.append((char)CAR_PACKET_SET_POWER_SERVO);
-
-    qint16 speed_int = (quint16)(speed * 100.0);
-
-    buffer.append((char)(speed_int >> 8));
-    buffer.append((char)speed_int);
-    buffer.append((char)dir);
-    return sendPacket(buffer);
-}
-
-bool PacketInterface::setPosition(LocPoint &pos)
-{
-    QByteArray buffer;
-    qint32 px, py;
-    qint16 alpha;
-    double alpha_d;
-
-    // Make sure that the angle is within the range 0 - 2*pi
-    alpha_d = pos.getAlpha();
-    while (alpha_d > 2.0 * M_PI) {
-        alpha_d -= 2.0 * M_PI;
-    }
-
-    while (alpha_d < 0) {
-        alpha_d += 2.0 * M_PI;
-    }
-
-    buffer.clear();
-    buffer.append((char)CAR_PACKET_NORES);
-    buffer.append((char)CAR_PACKET_WRITE_POS);
-
-    px = (qint32)pos.getX();
-    py = (qint32)pos.getY();
-    alpha = (qint16)(alpha_d * 10000.0);
-
-    buffer.append((char)(px >> 24));
-    buffer.append((char)(px >> 16));
-    buffer.append((char)(px >> 8));
-    buffer.append((char)px);
-
-    buffer.append((char)(py >> 24));
-    buffer.append((char)(py >> 16));
-    buffer.append((char)(py >> 8));
-    buffer.append((char)py);
-
-    buffer.append((char)(alpha >> 8));
-    buffer.append((char)alpha);
-    return sendPacket(buffer);
-}
-
 bool PacketInterface::readValues()
 {
     QByteArray buffer;
     buffer.clear();
-    buffer.append((char)CAR_PACKET_RES);
-    buffer.append((char)CAR_PACKET_READ_VALUES);
-    return sendPacket(buffer);
-}
-
-bool PacketInterface::readPosition()
-{
-    QByteArray buffer;
-    buffer.clear();
-    buffer.append((char)CAR_PACKET_RES);
-    buffer.append((char)CAR_PACKET_READ_POS);
-    return sendPacket(buffer);
-}
-
-bool PacketInterface::readSensorsUltra()
-{
-    QByteArray buffer;
-    buffer.clear();
-    buffer.append((char)CAR_PACKET_RES);
-    buffer.append((char)CAR_PACKET_READ_SENS_ULTRA);
+    buffer.append((char)COMM_PACKET_RES);
+    buffer.append((char)COMM_READ_VALUES);
     return sendPacket(buffer);
 }
 
@@ -370,8 +255,8 @@ bool PacketInterface::testCan()
 {
     QByteArray buffer;
     buffer.clear();
-    buffer.append((char)CAR_PACKET_NORES);
-    buffer.append((char)CAR_PACKET_CAN_TEST);
+    buffer.append((char)COMM_PACKET_NORES);
+    buffer.append((char)COMM_CAN_TEST);
     return sendPacket(buffer);
 }
 
@@ -379,8 +264,8 @@ bool PacketInterface::sendTerminalCmd(QString cmd)
 {
     QByteArray buffer;
     buffer.clear();
-    buffer.append((char)CAR_PACKET_NORES);
-    buffer.append((char)CAR_PACKET_TERMINAL_CMD);
+    buffer.append((char)COMM_PACKET_NORES);
+    buffer.append((char)COMM_TERMINAL_CMD);
     buffer.append(cmd.toLatin1());
     return sendPacket(buffer);
 }
