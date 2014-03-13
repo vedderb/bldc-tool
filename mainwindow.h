@@ -47,6 +47,7 @@ private slots:
     void mcValuesReceived(PacketInterface::MC_VALUES values);
     void printReceived(QString str);
     void samplesReceived(QByteArray data);
+    void rotorPosReceived(double pos);
 
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();

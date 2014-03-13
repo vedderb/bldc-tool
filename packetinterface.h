@@ -45,7 +45,8 @@ public:
     typedef enum {
         COMM_READ_VALUES = 0,
         COMM_PRINT,
-        COMM_SEND_SAMPLES
+        COMM_SEND_SAMPLES,
+        COMM_ROTOR_POSITION
     } COMM_RES_PACKET_ID;
 
     // Packets that don't expect any response
@@ -71,9 +72,10 @@ public:
 
 signals:
     void dataToSend(QByteArray &data);
-    void carValuesReceived(PacketInterface::MC_VALUES values);
-    void carPrintReceived(QString str);
-    void carSamplesReceived(QByteArray bytes);
+    void valuesReceived(PacketInterface::MC_VALUES values);
+    void printReceived(QString str);
+    void samplesReceived(QByteArray bytes);
+    void rotorPosReceived(double pos);
     
 public slots:
     void timerSlot();

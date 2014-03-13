@@ -155,7 +155,7 @@ unsigned short PacketInterface::crc16(const unsigned char *buf, unsigned int len
 
 void PacketInterface::processPacket(const unsigned char *data, int len)
 {
-    unsigned int i = 0;
+    unsigned int index = 0;
     MC_VALUES values;
     QByteArray bytes;
     QByteArray tmpArray;
@@ -166,35 +166,39 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
 
     switch (id) {
     case COMM_READ_VALUES:
-        i = 0;
+        index = 0;
+        values.temp_mos1 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
+        values.temp_mos2 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
+        values.temp_mos3 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
+        values.temp_mos4 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
+        values.temp_mos5 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
+        values.temp_mos6 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
+        values.temp_pcb = ((double)getInt16FromBuffer(data, &index)) / 10.0;
+        values.current_motor = ((double)getInt32FromBuffer(data, &index)) / 100.0;
+        values.current_in = ((double)getInt32FromBuffer(data, &index)) / 100.0;
+        values.duty_now = ((double)getInt16FromBuffer(data, &index)) / 1000.0;
+        values.rpm = (double)getInt32FromBuffer(data, &index);
+        values.v_in = ((double)getInt16FromBuffer(data, &index)) / 10.0;
 
-        values.temp_mos1 = ((double)getInt16FromBuffer(data, &i)) / 10.0;
-        values.temp_mos2 = ((double)getInt16FromBuffer(data, &i)) / 10.0;
-        values.temp_mos3 = ((double)getInt16FromBuffer(data, &i)) / 10.0;
-        values.temp_mos4 = ((double)getInt16FromBuffer(data, &i)) / 10.0;
-        values.temp_mos5 = ((double)getInt16FromBuffer(data, &i)) / 10.0;
-        values.temp_mos6 = ((double)getInt16FromBuffer(data, &i)) / 10.0;
-        values.temp_pcb = ((double)getInt16FromBuffer(data, &i)) / 10.0;
-        values.current_motor = ((double)getInt32FromBuffer(data, &i)) / 100.0;
-        values.current_in = ((double)getInt32FromBuffer(data, &i)) / 100.0;
-        values.duty_now = ((double)getInt16FromBuffer(data, &i)) / 1000.0;
-        values.rpm = (double)getInt32FromBuffer(data, &i);
-        values.v_in = ((double)getInt16FromBuffer(data, &i)) / 10.0;
-
-        emit carValuesReceived(values);
+        emit valuesReceived(values);
         break;
 
     case COMM_PRINT:
         tmpArray = QByteArray::fromRawData((char*)data, len);
         tmpArray[len] = '\0';
-        emit carPrintReceived(QString::fromLatin1(tmpArray));
+        emit printReceived(QString::fromLatin1(tmpArray));
         break;
 
     case COMM_SEND_SAMPLES:
         for (int i = 0;i < len;i++) {
             bytes.append(data[i]);
         }
-        emit carSamplesReceived(bytes);
+        emit samplesReceived(bytes);
+        break;
+
+    case COMM_ROTOR_POSITION:
+        index = 0;
+        emit rotorPosReceived((double)getInt32FromBuffer(data, &index) / 100000.0);
         break;
 
     default:

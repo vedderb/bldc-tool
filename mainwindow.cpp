@@ -68,12 +68,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(mPacketInterface, SIGNAL(dataToSend(QByteArray&)),
             this, SLOT(packetDataToSend(QByteArray&)));
-    connect(mPacketInterface, SIGNAL(carValuesReceived(PacketInterface::MC_VALUES)),
+    connect(mPacketInterface, SIGNAL(valuesReceived(PacketInterface::MC_VALUES)),
             this, SLOT(mcValuesReceived(PacketInterface::MC_VALUES)));
-    connect(mPacketInterface, SIGNAL(carPrintReceived(QString)),
+    connect(mPacketInterface, SIGNAL(printReceived(QString)),
             this, SLOT(printReceived(QString)));
-    connect(mPacketInterface, SIGNAL(carSamplesReceived(QByteArray)),
+    connect(mPacketInterface, SIGNAL(samplesReceived(QByteArray)),
             this, SLOT(samplesReceived(QByteArray)));
+    connect(mPacketInterface, SIGNAL(rotorPosReceived(double)),
+            this, SLOT(rotorPosReceived(double)));
 
     ui->currentPlot->setRangeDrag(Qt::Horizontal | Qt::Vertical);
     ui->currentPlot->setRangeZoom(Qt::Horizontal | Qt::Vertical);
@@ -961,6 +963,11 @@ void MainWindow::samplesReceived(QByteArray data)
             mDoRescale = true;
         }
     }
+}
+
+void MainWindow::rotorPosReceived(double pos)
+{
+    ui->rotorPosBar->setValue((int)pos);
 }
 
 void MainWindow::on_connectButton_clicked()

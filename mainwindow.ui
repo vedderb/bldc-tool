@@ -718,15 +718,15 @@
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
-            <item>
+           <layout class="QGridLayout" name="gridLayout_8">
+            <item row="0" column="0">
              <widget class="QLabel" name="label_4">
               <property name="text">
                <string>Calculated RPM</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="1">
              <widget class="QLCDNumber" name="rpmLcdNumber">
               <property name="minimumSize">
                <size>
@@ -736,6 +736,26 @@
               </property>
               <property name="digitCount">
                <number>8</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Rotor Position</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QProgressBar" name="rotorPosBar">
+              <property name="maximum">
+               <number>360</number>
+              </property>
+              <property name="value">
+               <number>120</number>
+              </property>
+              <property name="format">
+               <string>%v Degrees</string>
               </property>
              </widget>
             </item>
