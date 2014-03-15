@@ -749,7 +749,7 @@
             <item row="1" column="1">
              <widget class="QProgressBar" name="rotorPosBar">
               <property name="maximum">
-               <number>360</number>
+               <number>359</number>
               </property>
               <property name="value">
                <number>120</number>

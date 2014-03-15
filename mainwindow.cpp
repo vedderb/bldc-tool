@@ -428,25 +428,25 @@ void MainWindow::timerSlot()
         QVector<double> ph1(size/2);
         for (int i=0; i<(size); i+=2)
         {
-            ph1[i/2] = (double)((quint8)ph1Array.at(i))*256 + (double)((quint8)ph1Array.at(i+1));
+            ph1[i/2] = (double)((qint16)(((unsigned char)ph1Array[i] << 8) | (unsigned char)ph1Array[i + 1]));
         }
 
         QVector<double> ph2(size/2);
         for (int i=0; i<(size); i+=2)
         {
-            ph2[i/2] = (double)((quint8)ph2Array.at(i))*256 + (double)((quint8)ph2Array.at(i+1));
+            ph2[i/2] = (double)((qint16)(((unsigned char)ph2Array[i] << 8) | (unsigned char)ph2Array[i + 1]));
         }
 
         QVector<double> ph3(size/2);
         for (int i=0; i<(size); i+=2)
         {
-            ph3[i/2] = (double)((quint8)ph3Array.at(i))*256 + (double)((quint8)ph3Array.at(i+1));
+            ph3[i/2] = (double)((qint16)(((unsigned char)ph3Array[i] << 8) | (unsigned char)ph3Array[i + 1]));
         }
 
         QVector<double> vZero(size/2);
         for (int i=0; i<(size); i+=2)
         {
-            vZero[i/2] = (double)((quint8)vZeroArray.at(i))*256 + (double)((quint8)vZeroArray.at(i+1));
+            vZero[i/2] = (double)((qint16)(((unsigned char)vZeroArray[i] << 8) | (unsigned char)vZeroArray[i + 1]));
         }
 
         QVector<double> position(size/2);
