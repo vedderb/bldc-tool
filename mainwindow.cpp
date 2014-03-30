@@ -1026,6 +1026,17 @@ void MainWindow::on_rpmButton_clicked()
     mPacketInterface->sendPacket(data);
 }
 
+void MainWindow::on_currentButton_clicked()
+{
+    QByteArray data;
+    data.append((char)0);
+    data.append((char)7);
+    qint16 value = (qint16)(ui->currentBox->value() * 100.0);
+    data.append((char)(value >> 8));
+    data.append((char)value);
+    mPacketInterface->sendPacket(data);
+}
+
 void MainWindow::on_offButton_clicked()
 {
     QByteArray data;

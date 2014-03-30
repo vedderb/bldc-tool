@@ -55,6 +55,7 @@ private slots:
     void on_getDataStartButton_clicked();
     void on_dutyButton_clicked();
     void on_rpmButton_clicked();
+    void on_currentButton_clicked();
     void on_offButton_clicked();
     void on_replotButton_clicked();
     void on_rescaleButton_clicked();
