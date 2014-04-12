@@ -135,11 +135,19 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
 
         switch(keyEvent->key()) {
         case Qt::Key_Up:
-            // Nothing
+            if (isPress) {
+                setCurrent(ui->arrowCurrentBox->value());
+            } else {
+                setCurrent(0.0);
+            }
             break;
 
         case Qt::Key_Down:
-            // Nothing
+            if (isPress) {
+                setCurrent(-ui->arrowCurrentBox->value());
+            } else {
+                setCurrent(0.0);
+            }
             break;
 
         case Qt::Key_Left:
@@ -174,6 +182,17 @@ bool MainWindow::setDytyCycle(double duty)
     data.append((char)0);
     data.append((char)2);
     qint16 value = (qint16)(duty * 1000.0);
+    data.append((char)(value >> 8));
+    data.append((char)value);
+    return mPacketInterface->sendPacket(data);
+}
+
+bool MainWindow::setCurrent(double current)
+{
+    QByteArray data;
+    data.append((char)0);
+    data.append((char)7);
+    qint16 value = (qint16)(current * 100.0);
     data.append((char)(value >> 8));
     data.append((char)value);
     return mPacketInterface->sendPacket(data);
@@ -1028,24 +1047,17 @@ void MainWindow::on_rpmButton_clicked()
 
 void MainWindow::on_currentButton_clicked()
 {
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)7);
-    qint16 value = (qint16)(ui->currentBox->value() * 100.0);
-    data.append((char)(value >> 8));
-    data.append((char)value);
-    mPacketInterface->sendPacket(data);
+    setCurrent(ui->currentBox->value());
 }
 
 void MainWindow::on_offButton_clicked()
 {
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)2);
-    qint16 value = 0;
-    data.append((char)(value >> 8));
-    data.append((char)value);
-    mPacketInterface->sendPacket(data);
+    setCurrent(0.0);
+}
+
+void MainWindow::on_offBrakeButton_clicked()
+{
+    setDytyCycle(0.0);
 }
 
 void MainWindow::clearBuffers()
@@ -1167,14 +1179,6 @@ void MainWindow::appendDoubleAndTrunc(QVector<double> *vec, double num, int maxS
 void MainWindow::on_clearTerminalButton_clicked()
 {
     ui->terminalBrowser->clear();
-}
-
-void MainWindow::on_resetFaultButton_clicked()
-{
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)5);
-    mPacketInterface->sendPacket(data);
 }
 
 void MainWindow::on_sendTerminalButton_clicked()

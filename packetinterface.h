@@ -54,7 +54,8 @@ public:
         COMM_FULL_BRAKE = 0,
         COMM_SERVO_OFFSET,
         COMM_CAN_TEST,
-        COMM_TERMINAL_CMD
+        COMM_TERMINAL_CMD,
+        COMM_RELEASE
     } COMM_NORES_PACKET_ID;
 
     typedef enum {

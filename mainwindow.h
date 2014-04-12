@@ -39,6 +39,8 @@ public:
     ~MainWindow();
     bool eventFilter(QObject *object, QEvent *e);
     bool setDytyCycle(double duty);
+    bool setCurrent(double current);
+
 
 private slots:
     void serialDataAvailable();
@@ -57,6 +59,7 @@ private slots:
     void on_rpmButton_clicked();
     void on_currentButton_clicked();
     void on_offButton_clicked();
+    void on_offBrakeButton_clicked();
     void on_replotButton_clicked();
     void on_rescaleButton_clicked();
     void on_horizontalZoomBox_clicked();
@@ -66,7 +69,6 @@ private slots:
     void on_detectButton_clicked();
     void on_resetBufferButton_clicked();
     void on_clearTerminalButton_clicked();
-    void on_resetFaultButton_clicked();
     void on_sendTerminalButton_clicked();
 
 private:
