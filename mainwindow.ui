@@ -719,6 +719,13 @@
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <layout class="QGridLayout" name="gridLayout_8">
+            <item row="1" column="1">
+             <widget class="QPushButton" name="detectButton">
+              <property name="text">
+               <string>Detect</string>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_4">
               <property name="text">
@@ -726,7 +733,7 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="2">
+            <item row="0" column="3">
              <widget class="QLCDNumber" name="rpmLcdNumber">
               <property name="minimumSize">
                <size>
@@ -746,7 +753,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
+            <item row="1" column="3">
              <widget class="QProgressBar" name="rotorPosBar">
               <property name="maximum">
                <number>359</number>
@@ -759,10 +766,10 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="detectButton">
+            <item row="1" column="2">
+             <widget class="QPushButton" name="stopDetectButton">
               <property name="text">
-               <string>Detect</string>
+               <string>Stop</string>
               </property>
              </widget>
             </item>

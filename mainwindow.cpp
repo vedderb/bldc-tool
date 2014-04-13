@@ -1186,3 +1186,8 @@ void MainWindow::on_sendTerminalButton_clicked()
     mPacketInterface->sendTerminalCmd(ui->terminalEdit->text());
     ui->terminalEdit->clear();
 }
+
+void MainWindow::on_stopDetectButton_clicked()
+{
+    setCurrent(0.0);
+}

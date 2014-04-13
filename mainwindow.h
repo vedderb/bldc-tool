@@ -71,6 +71,8 @@ private slots:
     void on_clearTerminalButton_clicked();
     void on_sendTerminalButton_clicked();
 
+    void on_stopDetectButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     SerialPort *mPort;
