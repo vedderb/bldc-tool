@@ -46,7 +46,8 @@ public:
         COMM_READ_VALUES = 0,
         COMM_PRINT,
         COMM_SEND_SAMPLES,
-        COMM_ROTOR_POSITION
+        COMM_ROTOR_POSITION,
+        COMM_EXPERIMENT_SAMPLE
     } COMM_RES_PACKET_ID;
 
     // Packets that don't expect any response
@@ -77,6 +78,7 @@ signals:
     void printReceived(QString str);
     void samplesReceived(QByteArray bytes);
     void rotorPosReceived(double pos);
+    void experimentSamplesReceived(QVector<double> samples);
     
 public slots:
     void timerSlot();

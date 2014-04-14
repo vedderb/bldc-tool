@@ -50,6 +50,7 @@ private slots:
     void printReceived(QString str);
     void samplesReceived(QByteArray data);
     void rotorPosReceived(double pos);
+    void experimentSamplesReceived(QVector<double> samples);
 
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();
@@ -70,8 +71,9 @@ private slots:
     void on_resetBufferButton_clicked();
     void on_clearTerminalButton_clicked();
     void on_sendTerminalButton_clicked();
-
     void on_stopDetectButton_clicked();
+    void on_experimentClearSamplesButton_clicked();
+    void on_experimentSaveSamplesButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -117,8 +119,12 @@ private:
     bool keyLeft;
     bool keyRight;
 
+    QVector<QVector<double> > mExperimentSamples;
+
     void appendDoubleAndTrunc(QVector<double> *vec, double num, int maxSize);
     void clearBuffers();
+    void saveExperimentSamplesToFile(QString path);
+
 };
 
 #endif // MAINWINDOW_H

@@ -159,6 +159,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     MC_VALUES values;
     QByteArray bytes;
     QByteArray tmpArray;
+    QVector<double> samples;
 
     unsigned char id = data[0];
     data++;
@@ -199,6 +200,17 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     case COMM_ROTOR_POSITION:
         index = 0;
         emit rotorPosReceived((double)getInt32FromBuffer(data, &index) / 100000.0);
+        break;
+
+    case COMM_EXPERIMENT_SAMPLE:
+        samples.clear();
+        index = 0;
+
+        while (index < (unsigned int)len) {
+            samples.append(((double)getInt32FromBuffer(data, &index)) / 10000.0);
+        }
+
+        emit experimentSamplesReceived(samples);
         break;
 
     default:

@@ -18,6 +18,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
+#include <QFileDialog>
 #include <string.h>
 #include <cmath>
 #include "digitalfiltering.h"
@@ -76,6 +77,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(samplesReceived(QByteArray)));
     connect(mPacketInterface, SIGNAL(rotorPosReceived(double)),
             this, SLOT(rotorPosReceived(double)));
+    connect(mPacketInterface, SIGNAL(experimentSamplesReceived(QVector<double>)),
+            this, SLOT(experimentSamplesReceived(QVector<double>)));
 
     ui->currentPlot->setRangeDrag(Qt::Horizontal | Qt::Vertical);
     ui->currentPlot->setRangeZoom(Qt::Horizontal | Qt::Vertical);
@@ -989,6 +992,27 @@ void MainWindow::rotorPosReceived(double pos)
     ui->rotorPosBar->setValue((int)pos);
 }
 
+void MainWindow::experimentSamplesReceived(QVector<double> samples)
+{
+    QString row;
+
+    if (samples.size() > 0) {
+        row.append(QString().sprintf("%d", (int)samples.at(0)));
+    }
+    for (int i = 1; i < samples.size();i++) {
+        row.append(QString().sprintf("\t%.3f", samples.at(i)));
+    }
+
+    ui->experimentBrowser->append(row);
+    mExperimentSamples.append(samples);
+    ui->experimentSampleLabel->setText(QString().sprintf("Samples: %d", mExperimentSamples.size()));
+
+    if (ui->experimentAutosaveBox->isChecked() &&
+            (mExperimentSamples.size() % ui->experimentAutosaveIntervalBox->value()) == 0) {
+        saveExperimentSamplesToFile(ui->experimentPathEdit->text());
+    }
+}
+
 void MainWindow::on_connectButton_clicked()
 {
     mPort->openPort(ui->serialDeviceEdit->text());
@@ -1071,6 +1095,35 @@ void MainWindow::clearBuffers()
     tmpVZeroArray.clear();
     tmpStatusArray.clear();
     tmpCurrTotArray.clear();
+}
+
+void MainWindow::saveExperimentSamplesToFile(QString path)
+{
+    QFile file(path);
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qDebug() << "Could not open" << path;
+        return;
+    }
+
+    QTextStream out(&file);
+
+    QVectorIterator<QVector<double> > i(mExperimentSamples);
+    while (i.hasNext()) {
+        const QVector<double> &element = i.next();
+        QString row;
+
+        if (element.size() > 0) {
+            row.append(QString().sprintf("%d", (int)element.at(0)));
+        }
+        for (int i = 1; i < element.size();i++) {
+            row.append(QString().sprintf(";%.3f", element.at(i)));
+        }
+
+        out << row << "\n";
+    }
+
+    file.close();
 }
 
 void MainWindow::on_replotButton_clicked()
@@ -1190,4 +1243,23 @@ void MainWindow::on_sendTerminalButton_clicked()
 void MainWindow::on_stopDetectButton_clicked()
 {
     setCurrent(0.0);
+}
+
+void MainWindow::on_experimentClearSamplesButton_clicked()
+{
+    ui->experimentBrowser->clear();
+    mExperimentSamples.clear();
+    ui->experimentSampleLabel->setText("Samples: 0");
+}
+
+void MainWindow::on_experimentSaveSamplesButton_clicked()
+{
+    QString path;
+    path = QFileDialog::getSaveFileName(this, tr("Choose where to save the magnetometer samples"));
+    if (path.isNull()) {
+        return;
+    }
+
+    ui->experimentPathEdit->setText(path);
+    saveExperimentSamplesToFile(path);
 }
