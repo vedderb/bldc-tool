@@ -126,6 +126,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
         case Qt::Key_Down:
         case Qt::Key_Left:
         case Qt::Key_Right:
+        case Qt::Key_PageDown:
             break;
 
         default:
@@ -169,6 +170,14 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
             }
             break;
 
+        case Qt::Key_PageDown:
+            if (isPress) {
+                setBrakeCurrent(-ui->arrowCurrentBox->value());
+            } else {
+                setBrakeCurrent(0.0);
+            }
+            break;
+
         default:
             break;
         }
@@ -195,6 +204,17 @@ bool MainWindow::setCurrent(double current)
     QByteArray data;
     data.append((char)0);
     data.append((char)7);
+    qint16 value = (qint16)(current * 100.0);
+    data.append((char)(value >> 8));
+    data.append((char)value);
+    return mPacketInterface->sendPacket(data);
+}
+
+bool MainWindow::setBrakeCurrent(double current)
+{
+    QByteArray data;
+    data.append((char)0);
+    data.append((char)8);
     qint16 value = (qint16)(current * 100.0);
     data.append((char)(value >> 8));
     data.append((char)value);
@@ -268,7 +288,6 @@ void MainWindow::timerSlot()
     if (keyPower != lastKeyPower) {
         lastKeyPower = keyPower;
         setDytyCycle(keyPower);
-        qDebug() << keyPower;
     }
 
     // Update plots

@@ -40,7 +40,7 @@ public:
     bool eventFilter(QObject *object, QEvent *e);
     bool setDytyCycle(double duty);
     bool setCurrent(double current);
-
+    bool setBrakeCurrent(double current);
 
 private slots:
     void serialDataAvailable();
