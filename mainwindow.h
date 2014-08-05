@@ -89,6 +89,7 @@ private:
     QByteArray vZeroArray;
     QByteArray statusArray;
     QByteArray currTotArray;
+    QByteArray fSwArray;
     QByteArray tmpCurr1Array;
     QByteArray tmpCurr2Array;
     QByteArray tmpPh1Array;
@@ -97,6 +98,7 @@ private:
     QByteArray tmpVZeroArray;
     QByteArray tmpStatusArray;
     QByteArray tmpCurrTotArray;
+    QByteArray tmpFSwArray;
 
     QVector<double> tempMos1Vec;
     QVector<double> tempMos2Vec;

@@ -490,6 +490,7 @@ void MainWindow::timerSlot()
             vZero[i/2] = (double)((qint16)(((unsigned char)vZeroArray[i] << 8) | (unsigned char)vZeroArray[i + 1]));
         }
 
+        // TODO: Calculate RPM properly with the correct switching/sampling frequency
         QVector<double> position(size/2);
         for (int i=0;i < (size / 2);i++)
         {
@@ -517,6 +518,14 @@ void MainWindow::timerSlot()
         {
             totCurrentMc[i/2] = (double)((qint16)(((unsigned char)currTotArray[i] << 8) | (unsigned char)currTotArray[i + 1]));
             totCurrentMc[i/2] /= 100;
+        }
+
+        QVector<double> fSw(size/2);
+        for (int i=0; i<(size); i+=2)
+        {
+            fSw[i/2] = (double)((qint16)(((unsigned char)fSwArray[i] << 8) | (unsigned char)fSwArray[i + 1]));
+            fSw[i/2] *= 10.0;
+            fSw[i/2] /= (double)ui->sampleIntBox->value();
         }
 
         // Calculate current on phases and voltages
@@ -614,6 +623,8 @@ void MainWindow::timerSlot()
         QVector<double> xAxisCurr;
 
         // Use DFT
+        // TODO: The transform only makes sense with a constant sampling frequency right now. Some
+        // weird scaling should be implemented.
         if (ui->currentSpectrumButton->isChecked()) {
             int fftBits = 16;
 
@@ -647,18 +658,26 @@ void MainWindow::timerSlot()
             xAxisCurr.resize(totCurrentMc.size());
 
             // Generate X axis
+            double prev_x = 0.0;
+            double rat = (double)fSw.size() / (double)xAxisCurrDec.size();
             for (int i = 0;i < xAxisCurrDec.size();i++) {
-                xAxisCurrDec[i] = ((double)i * (double)decimation) / f_samp;
+                xAxisCurrDec[i] = prev_x;
+                prev_x += (double)decimation / fSw[(int)((double)i * rat)];
             }
 
+            prev_x = 0.0;
+            rat = (double)fSw.size() / (double)xAxisCurr.size();
             for (int i = 0;i < xAxisCurr.size();i++) {
-                xAxisCurr[i] = (double)i / f_samp;
+                xAxisCurr[i] = prev_x;
+                prev_x += 1.0 / fSw[(int)((double)i * rat)];
             }
         }
 
         QVector<double> xAxisVolt(ph1.size());
+        double prev_x = 0.0;
         for (int i = 0;i < xAxisVolt.size();i++) {
-            xAxisVolt[i] = (double)i / f_samp;
+            xAxisVolt[i] = prev_x;
+            prev_x += 1.0 / fSw[i];
         }
 
         ui->currentPlot->clearGraphs();
@@ -983,10 +1002,12 @@ void MainWindow::samplesReceived(QByteArray data)
             tmpStatusArray.append(data[i]);
         } else if (mSampleInt == 13 || mSampleInt == 14) {
             tmpCurrTotArray.append(data[i]);
+        } else if (mSampleInt == 15 || mSampleInt == 16) {
+            tmpFSwArray.append(data[i]);
         }
 
         mSampleInt++;
-        if (mSampleInt == 15) {
+        if (mSampleInt == 17) {
             mSampleInt = 0;
         }
 
@@ -999,6 +1020,7 @@ void MainWindow::samplesReceived(QByteArray data)
             vZeroArray = tmpVZeroArray;
             statusArray = tmpStatusArray;
             currTotArray = tmpCurrTotArray;
+            fSwArray = tmpFSwArray;
             mDoReplot = true;
             mDoFilterReplot = true;
             mDoRescale = true;
@@ -1114,6 +1136,7 @@ void MainWindow::clearBuffers()
     tmpVZeroArray.clear();
     tmpStatusArray.clear();
     tmpCurrTotArray.clear();
+    tmpFSwArray.clear();
 }
 
 void MainWindow::saveExperimentSamplesToFile(QString path)
