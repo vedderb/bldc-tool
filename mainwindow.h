@@ -112,6 +112,9 @@ private:
     QVector<double> dutyVec;
     QVector<double> rpmVec;
     QVector<double> voltInVec;
+    QVector<double> positionVec;
+
+
 
     bool mRealtimeGraphsAdded;
     bool mDoReplot;
