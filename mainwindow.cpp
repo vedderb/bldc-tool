@@ -104,6 +104,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->realtimePlotRest->setRangeDrag(Qt::Horizontal | Qt::Vertical);
     ui->realtimePlotRest->setRangeZoom(Qt::Horizontal | Qt::Vertical);
 
+    ui->realtimePlotPosition->setRangeDrag(Qt::Horizontal | Qt::Vertical);
+    ui->realtimePlotPosition->setRangeZoom(Qt::Horizontal | Qt::Vertical);
+
     qApp->installEventFilter(this);
 }
 
@@ -1030,7 +1033,17 @@ void MainWindow::samplesReceived(QByteArray data)
 
 void MainWindow::rotorPosReceived(double pos)
 {
+    const int maxS = 500;
+    appendDoubleAndTrunc(&positionVec, pos, maxS);
+
+    QVector<double> xAxis(positionVec.size());
+    for (int i = 0;i < positionVec.size();i++) {
+        xAxis[i] = (double)i;
+    }
+
     ui->rotorPosBar->setValue((int)pos);
+    ui->realtimePlotPosition->graph(0)->setData(xAxis, positionVec);
+    ui->realtimePlotPosition->replot();
 }
 
 void MainWindow::experimentSamplesReceived(QVector<double> samples)
@@ -1255,6 +1268,11 @@ void MainWindow::on_detectButton_clicked()
     data.append((char)0);
     data.append((char)4);
     mPacketInterface->sendPacket(data);
+
+    ui->realtimePlotPosition->addGraph();
+    ui->realtimePlotPosition->graph(0)->setPen(QPen(Qt::blue));
+    ui->realtimePlotPosition->graph(0)->setName("Position");
+
 }
 
 void MainWindow::on_resetBufferButton_clicked()
