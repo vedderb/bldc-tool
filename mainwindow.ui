@@ -775,7 +775,7 @@
             </item>
            </layout>
           </item>
-           <item>
+          <item>
            <widget class="QCustomPlot" name="realtimePlotPosition" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
