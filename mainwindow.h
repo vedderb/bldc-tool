@@ -38,9 +38,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     bool eventFilter(QObject *object, QEvent *e);
-    bool setDytyCycle(double duty);
-    bool setCurrent(double current);
-    bool setBrakeCurrent(double current);
 
 private slots:
     void serialDataAvailable();
@@ -113,8 +110,6 @@ private:
     QVector<double> rpmVec;
     QVector<double> voltInVec;
     QVector<double> positionVec;
-
-
 
     bool mRealtimeGraphsAdded;
     bool mDoReplot;

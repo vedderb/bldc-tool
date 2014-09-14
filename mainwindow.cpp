@@ -155,17 +155,17 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
         switch(keyEvent->key()) {
         case Qt::Key_Up:
             if (isPress) {
-                setCurrent(ui->arrowCurrentBox->value());
+                mPacketInterface->setCurrent(ui->arrowCurrentBox->value());
             } else {
-                setCurrent(0.0);
+                mPacketInterface->setCurrent(0.0);
             }
             break;
 
         case Qt::Key_Down:
             if (isPress) {
-                setCurrent(-ui->arrowCurrentBox->value());
+                mPacketInterface->setCurrent(-ui->arrowCurrentBox->value());
             } else {
-                setCurrent(0.0);
+                mPacketInterface->setCurrent(0.0);
             }
             break;
 
@@ -187,9 +187,9 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
 
         case Qt::Key_PageDown:
             if (isPress) {
-                setBrakeCurrent(-ui->arrowCurrentBox->value());
+                mPacketInterface->setCurrentBrake(-ui->arrowCurrentBox->value());
             } else {
-                setBrakeCurrent(0.0);
+                mPacketInterface->setCurrentBrake(0.0);
             }
             break;
 
@@ -201,39 +201,6 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
     }
 
     return false;
-}
-
-bool MainWindow::setDytyCycle(double duty)
-{
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)2);
-    qint16 value = (qint16)(duty * 1000.0);
-    data.append((char)(value >> 8));
-    data.append((char)value);
-    return mPacketInterface->sendPacket(data);
-}
-
-bool MainWindow::setCurrent(double current)
-{
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)7);
-    qint16 value = (qint16)(current * 100.0);
-    data.append((char)(value >> 8));
-    data.append((char)value);
-    return mPacketInterface->sendPacket(data);
-}
-
-bool MainWindow::setBrakeCurrent(double current)
-{
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)8);
-    qint16 value = (qint16)(current * 100.0);
-    data.append((char)(value >> 8));
-    data.append((char)value);
-    return mPacketInterface->sendPacket(data);
 }
 
 void MainWindow::serialDataAvailable()
@@ -302,7 +269,7 @@ void MainWindow::timerSlot()
 
     if (keyPower != lastKeyPower) {
         lastKeyPower = keyPower;
-        setDytyCycle(keyPower);
+        mPacketInterface->setDutyCycle(keyPower);
     }
 
     // Update plots
@@ -1092,62 +1059,38 @@ void MainWindow::on_disconnectButton_clicked()
 void MainWindow::on_getDataButton_clicked()
 {
     clearBuffers();
-
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)1);
-    int value = ui->sampleNumBox->value();
-    data.append((char)(value >> 8));
-    data.append((char)value);
-    data.append((char)ui->sampleIntBox->value());
-    mPacketInterface->sendPacket(data);
+    mPacketInterface->samplePrint(false, ui->sampleNumBox->value(), ui->sampleIntBox->value());
 }
 
 void MainWindow::on_getDataStartButton_clicked()
 {
     clearBuffers();
-
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)6);
-    int value = ui->sampleNumBox->value();
-    data.append((char)(value >> 8));
-    data.append((char)value);
-    data.append((char)ui->sampleIntBox->value());
-    mPacketInterface->sendPacket(data);
+    mPacketInterface->samplePrint(true, ui->sampleNumBox->value(), ui->sampleIntBox->value());
 }
 
 void MainWindow::on_dutyButton_clicked()
 {
-    setDytyCycle(ui->dutyBox->value());
+    mPacketInterface->setDutyCycle(ui->dutyBox->value());
 }
 
 void MainWindow::on_rpmButton_clicked()
 {
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)3);
-    qint32 value = ui->rpmBox->value();
-    data.append((char)(value >> 24));
-    data.append((char)(value >> 16));
-    data.append((char)(value >> 8));
-    data.append((char)value);
-    mPacketInterface->sendPacket(data);
+    mPacketInterface->setRpm(ui->rpmBox->value());
 }
 
 void MainWindow::on_currentButton_clicked()
 {
-    setCurrent(ui->currentBox->value());
+    mPacketInterface->setCurrent(ui->currentBox->value());
 }
 
 void MainWindow::on_offButton_clicked()
 {
-    setCurrent(0.0);
+    mPacketInterface->setCurrent(0.0);
 }
 
 void MainWindow::on_offBrakeButton_clicked()
 {
-    setDytyCycle(0.0);
+    mPacketInterface->setDutyCycle(0.0);
 }
 
 void MainWindow::clearBuffers()
@@ -1280,10 +1223,7 @@ void MainWindow::on_filterLogScaleBox2_clicked(bool checked)
 
 void MainWindow::on_detectButton_clicked()
 {
-    QByteArray data;
-    data.append((char)0);
-    data.append((char)4);
-    mPacketInterface->sendPacket(data);
+    mPacketInterface->setDetect();
 }
 
 void MainWindow::on_resetBufferButton_clicked()
@@ -1313,7 +1253,7 @@ void MainWindow::on_sendTerminalButton_clicked()
 
 void MainWindow::on_stopDetectButton_clicked()
 {
-    setCurrent(0.0);
+    mPacketInterface->setCurrent(0.0);
 }
 
 void MainWindow::on_experimentClearSamplesButton_clicked()

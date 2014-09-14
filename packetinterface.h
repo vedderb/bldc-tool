@@ -41,36 +41,37 @@ public:
         double duty_now;
     } MC_VALUES;
 
-    // Packets that expect response
     typedef enum {
-        COMM_READ_VALUES = 0,
+        COMM_GET_VALUES = 0,
+        COMM_SET_DUTY,
+        COMM_SET_CURRENT,
+        COMM_SET_CURRENT_BRAKE,
+        COMM_SET_RPM,
+        COMM_SET_DETECT,
+        COMM_SET_SERVO_OFFSET,
+        COMM_SET_CONF,
+        COMM_GET_CONF,
+        COMM_SAMPLE_PRINT,
+        COMM_TERMINAL_CMD,
         COMM_PRINT,
-        COMM_SEND_SAMPLES,
         COMM_ROTOR_POSITION,
         COMM_EXPERIMENT_SAMPLE
-    } COMM_RES_PACKET_ID;
-
-    // Packets that don't expect any response
-    typedef enum {
-        COMM_FULL_BRAKE = 0,
-        COMM_SERVO_OFFSET,
-        COMM_CAN_TEST,
-        COMM_TERMINAL_CMD,
-        COMM_RELEASE
-    } COMM_NORES_PACKET_ID;
-
-    typedef enum {
-        COMM_PACKET_RES = 1,
-        COMM_PACKET_NORES = 2
-    } COMM_SPECIAL_CMD;
+    } COMM_PACKET_ID;
 
     explicit PacketInterface(QObject *parent = 0);
-    void processData(QByteArray &data);
+    ~PacketInterface();
+
     bool sendPacket(const unsigned char *data, int len);
     bool sendPacket(QByteArray data);
+    void processData(QByteArray &data);
     bool readValues();
-    bool testCan();
     bool sendTerminalCmd(QString cmd);
+    bool setDutyCycle(double dutyCycle);
+    bool setCurrent(double current);
+    bool setCurrentBrake(double current);
+    bool setRpm(int rpm);
+    bool setDetect();
+    bool samplePrint(bool at_start, int sample_len, int dec);
 
 signals:
     void dataToSend(QByteArray &data);
@@ -86,10 +87,9 @@ public slots:
 private:
     unsigned short crc16(const unsigned char *buf, unsigned int len);
     void processPacket(const unsigned char *data, int len);
-    qint16 getInt16FromBuffer(const unsigned char *buffer, unsigned int *index);
-    qint32 getInt32FromBuffer(const unsigned char *buffer, unsigned int *index);
 
     QTimer *mTimer;
+    quint8 *mSendBuffer;
 
     // Packet state machine variables
     int mRxTimer;

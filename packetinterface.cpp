@@ -16,6 +16,7 @@
     */
 
 #include "packetinterface.h"
+#include "utility.h"
 #include <QDebug>
 #include <math.h>
 
@@ -55,6 +56,8 @@ const unsigned short crc16_tab[] = { 0x0000, 0x1021, 0x2042, 0x3063, 0x4084,
 PacketInterface::PacketInterface(QObject *parent) :
     QObject(parent)
 {
+    mSendBuffer = new quint8[255];
+
     mRxState = 0;
     mRxTimer = 0;
 
@@ -68,6 +71,11 @@ PacketInterface::PacketInterface(QObject *parent) :
     mTimer->start();
 
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
+}
+
+PacketInterface::~PacketInterface()
+{
+    delete mSendBuffer;
 }
 
 void PacketInterface::processData(QByteArray &data)
@@ -153,88 +161,8 @@ unsigned short PacketInterface::crc16(const unsigned char *buf, unsigned int len
     return cksum;
 }
 
-void PacketInterface::processPacket(const unsigned char *data, int len)
-{
-    unsigned int index = 0;
-    MC_VALUES values;
-    QByteArray bytes;
-    QByteArray tmpArray;
-    QVector<double> samples;
-
-    unsigned char id = data[0];
-    data++;
-    len--;
-
-    switch (id) {
-    case COMM_READ_VALUES:
-        index = 0;
-        values.temp_mos1 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
-        values.temp_mos2 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
-        values.temp_mos3 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
-        values.temp_mos4 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
-        values.temp_mos5 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
-        values.temp_mos6 = ((double)getInt16FromBuffer(data, &index)) / 10.0;
-        values.temp_pcb = ((double)getInt16FromBuffer(data, &index)) / 10.0;
-        values.current_motor = ((double)getInt32FromBuffer(data, &index)) / 100.0;
-        values.current_in = ((double)getInt32FromBuffer(data, &index)) / 100.0;
-        values.duty_now = ((double)getInt16FromBuffer(data, &index)) / 1000.0;
-        values.rpm = (double)getInt32FromBuffer(data, &index);
-        values.v_in = ((double)getInt16FromBuffer(data, &index)) / 10.0;
-
-        emit valuesReceived(values);
-        break;
-
-    case COMM_PRINT:
-        tmpArray = QByteArray::fromRawData((char*)data, len);
-        tmpArray[len] = '\0';
-        emit printReceived(QString::fromLatin1(tmpArray));
-        break;
-
-    case COMM_SEND_SAMPLES:
-        for (int i = 0;i < len;i++) {
-            bytes.append(data[i]);
-        }
-        emit samplesReceived(bytes);
-        break;
-
-    case COMM_ROTOR_POSITION:
-        index = 0;
-        emit rotorPosReceived((double)getInt32FromBuffer(data, &index) / 100000.0);
-        break;
-
-    case COMM_EXPERIMENT_SAMPLE:
-        samples.clear();
-        index = 0;
-
-        while (index < (unsigned int)len) {
-            samples.append(((double)getInt32FromBuffer(data, &index)) / 10000.0);
-        }
-
-        emit experimentSamplesReceived(samples);
-        break;
-
-    default:
-        break;
-    }
-}
-
-qint16 PacketInterface::getInt16FromBuffer(const unsigned char *buffer, unsigned int *index)
-{
-    qint16 res = (quint8)buffer[*index] << 8 | (quint8)buffer[*index + 1];
-    *index += 2;
-    return res;
-}
-
-qint32 PacketInterface::getInt32FromBuffer(const unsigned char *buffer, unsigned int *index)
-{
-    qint32 res = (quint8)buffer[*index] << 24 | (quint8)buffer[*index + 1] << 16 |
-                 (quint8)buffer[*index + 2] << 8 | (quint8)buffer[*index + 3];
-    *index += 4;
-    return res;
-}
-
 bool PacketInterface::sendPacket(const unsigned char *data, int len)
-{   
+{
     unsigned char buffer[len + 5];
     buffer[0] = 2;
     buffer[1] = len;
@@ -258,21 +186,76 @@ bool PacketInterface::sendPacket(QByteArray data)
     return sendPacket((const unsigned char*)data.data(), data.size());
 }
 
+void PacketInterface::processPacket(const unsigned char *data, int len)
+{
+    int32_t index = 0;
+    MC_VALUES values;
+    QByteArray bytes;
+    QByteArray tmpArray;
+    QVector<double> samples;
+
+    unsigned char id = data[0];
+    data++;
+    len--;
+
+    switch (id) {
+    case COMM_GET_VALUES:
+        index = 0;
+        values.temp_mos1 = ((double)utility::buffer_get_int16(data, &index)) / 10.0;
+        values.temp_mos2 = ((double)utility::buffer_get_int16(data, &index)) / 10.0;
+        values.temp_mos3 = ((double)utility::buffer_get_int16(data, &index)) / 10.0;
+        values.temp_mos4 = ((double)utility::buffer_get_int16(data, &index)) / 10.0;
+        values.temp_mos5 = ((double)utility::buffer_get_int16(data, &index)) / 10.0;
+        values.temp_mos6 = ((double)utility::buffer_get_int16(data, &index)) / 10.0;
+        values.temp_pcb = ((double)utility::buffer_get_int16(data, &index)) / 10.0;
+        values.current_motor = ((double)utility::buffer_get_int32(data, &index)) / 100.0;
+        values.current_in = ((double)utility::buffer_get_int32(data, &index)) / 100.0;
+        values.duty_now = ((double)utility::buffer_get_int16(data, &index)) / 1000.0;
+        values.rpm = (double)utility::buffer_get_int32(data, &index);
+        values.v_in = ((double)utility::buffer_get_int16(data, &index)) / 10.0;
+
+        emit valuesReceived(values);
+        break;
+
+    case COMM_PRINT:
+        tmpArray = QByteArray::fromRawData((char*)data, len);
+        tmpArray[len] = '\0';
+        emit printReceived(QString::fromLatin1(tmpArray));
+        break;
+
+    case COMM_SAMPLE_PRINT:
+        for (int i = 0;i < len;i++) {
+            bytes.append(data[i]);
+        }
+        emit samplesReceived(bytes);
+        break;
+
+    case COMM_ROTOR_POSITION:
+        index = 0;
+        emit rotorPosReceived((double)utility::buffer_get_int32(data, &index) / 100000.0);
+        break;
+
+    case COMM_EXPERIMENT_SAMPLE:
+        samples.clear();
+        index = 0;
+
+        while (index < len) {
+            samples.append(((double)utility::buffer_get_int32(data, &index)) / 10000.0);
+        }
+
+        emit experimentSamplesReceived(samples);
+        break;
+
+    default:
+        break;
+    }
+}
+
 bool PacketInterface::readValues()
 {
     QByteArray buffer;
     buffer.clear();
-    buffer.append((char)COMM_PACKET_RES);
-    buffer.append((char)COMM_READ_VALUES);
-    return sendPacket(buffer);
-}
-
-bool PacketInterface::testCan()
-{
-    QByteArray buffer;
-    buffer.clear();
-    buffer.append((char)COMM_PACKET_NORES);
-    buffer.append((char)COMM_CAN_TEST);
+    buffer.append((char)COMM_GET_VALUES);
     return sendPacket(buffer);
 }
 
@@ -280,8 +263,57 @@ bool PacketInterface::sendTerminalCmd(QString cmd)
 {
     QByteArray buffer;
     buffer.clear();
-    buffer.append((char)COMM_PACKET_NORES);
     buffer.append((char)COMM_TERMINAL_CMD);
     buffer.append(cmd.toLatin1());
     return sendPacket(buffer);
+}
+
+bool PacketInterface::setDutyCycle(double dutyCycle)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SET_DUTY;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(dutyCycle * 100000.0), &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::setCurrent(double current)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SET_CURRENT;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(current * 1000.0), &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::setCurrentBrake(double current)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SET_CURRENT_BRAKE;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(current * 1000.0), &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::setRpm(int rpm)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SET_RPM;
+    utility::buffer_append_int32(mSendBuffer, rpm, &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::setDetect()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_SET_DETECT);
+    return sendPacket(buffer);
+}
+
+bool PacketInterface::samplePrint(bool at_start, int sample_len, int dec)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SAMPLE_PRINT;
+    mSendBuffer[send_index++] = at_start;
+    utility::buffer_append_uint16(mSendBuffer, sample_len, &send_index);
+    mSendBuffer[send_index++] = dec;
+    return sendPacket(mSendBuffer, send_index);
 }

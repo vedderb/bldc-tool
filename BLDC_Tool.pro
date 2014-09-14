@@ -18,12 +18,14 @@ SOURCES += main.cpp\
     qcustomplot.cpp \
     serialport.cpp \
     digitalfiltering.cpp \
-    packetinterface.cpp
+    packetinterface.cpp \
+    utility.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
     serialport.h \
     digitalfiltering.h \
-    packetinterface.h
+    packetinterface.h \
+    utility.h
 
 FORMS    += mainwindow.ui
