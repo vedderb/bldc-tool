@@ -48,6 +48,7 @@ private slots:
     void samplesReceived(QByteArray data);
     void rotorPosReceived(double pos);
     void experimentSamplesReceived(QVector<double> samples);
+    void mcconfReceived(PacketInterface::mc_configuration mcconf);
 
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();
@@ -71,6 +72,8 @@ private slots:
     void on_stopDetectButton_clicked();
     void on_experimentClearSamplesButton_clicked();
     void on_experimentSaveSamplesButton_clicked();
+    void on_mcconfReadButton_clicked();
+    void on_mcconfWritepushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

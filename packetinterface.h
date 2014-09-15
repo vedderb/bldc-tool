@@ -49,8 +49,8 @@ public:
         COMM_SET_RPM,
         COMM_SET_DETECT,
         COMM_SET_SERVO_OFFSET,
-        COMM_SET_CONF,
-        COMM_GET_CONF,
+        COMM_SET_MCCONF,
+        COMM_GET_MCCONF,
         COMM_SAMPLE_PRINT,
         COMM_TERMINAL_CMD,
         COMM_PRINT,
@@ -58,13 +58,64 @@ public:
         COMM_EXPERIMENT_SAMPLE
     } COMM_PACKET_ID;
 
+    typedef enum {
+        COMM_MODE_INTEGRATE = 0,
+        COMM_MODE_DELAY
+    } mc_comm_mode;
+
+    typedef enum {
+        PWM_MODE_NONSYNCHRONOUS_HISW = 0, // This mode is not recommended
+        PWM_MODE_SYNCHRONOUS, // The recommended and most tested mode
+        PWM_MODE_BIPOLAR // Some glitches occasionally, can kill MOSFETs
+    } mc_pwm_mode;
+
+    typedef struct {
+        // Switching and drive
+        mc_pwm_mode pwm_mode;
+        mc_comm_mode comm_mode;
+        // Limits
+        float l_current_max;
+        float l_current_min;
+        float l_in_current_max;
+        float l_in_current_min;
+        float l_abs_current_max;
+        float l_min_erpm;
+        float l_max_erpm;
+        float l_max_erpm_fbrake;
+        float l_min_vin;
+        float l_max_vin;
+        bool l_slow_abs_current;
+        bool l_rpm_lim_neg_torque;
+        // Sensorless
+        bool sl_is_sensorless;
+        float sl_min_erpm;
+        float sl_min_erpm_cycle_int_limit;
+        float sl_cycle_int_limit;
+        float sl_cycle_int_limit_high_fac;
+        float sl_cycle_int_rpm_br;
+        float sl_bemf_coupling_k;
+        // Hall sensor
+        int hall_dir;
+        int hall_fwd_add;
+        int hall_rev_add;
+        // Speed PID
+        float s_pid_kp;
+        float s_pid_ki;
+        float s_pid_kd;
+        float s_pid_min_rpm;
+        // Current controller
+        float cc_startup_boost_duty;
+        float cc_min_current;
+        float cc_gain;
+    } mc_configuration;
+
     explicit PacketInterface(QObject *parent = 0);
     ~PacketInterface();
 
     bool sendPacket(const unsigned char *data, int len);
     bool sendPacket(QByteArray data);
     void processData(QByteArray &data);
-    bool readValues();
+    bool getValues();
     bool sendTerminalCmd(QString cmd);
     bool setDutyCycle(double dutyCycle);
     bool setCurrent(double current);
@@ -72,6 +123,8 @@ public:
     bool setRpm(int rpm);
     bool setDetect();
     bool samplePrint(bool at_start, int sample_len, int dec);
+    bool getMcconf();
+    bool setMcconf(const PacketInterface::mc_configuration &mcconf);
 
 signals:
     void dataToSend(QByteArray &data);
@@ -80,6 +133,7 @@ signals:
     void samplesReceived(QByteArray bytes);
     void rotorPosReceived(double pos);
     void experimentSamplesReceived(QVector<double> samples);
+    void mcconfReceived(PacketInterface::mc_configuration mcconf);
     
 public slots:
     void timerSlot();

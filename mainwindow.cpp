@@ -79,6 +79,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(rotorPosReceived(double)));
     connect(mPacketInterface, SIGNAL(experimentSamplesReceived(QVector<double>)),
             this, SLOT(experimentSamplesReceived(QVector<double>)));
+    connect(mPacketInterface, SIGNAL(mcconfReceived(PacketInterface::mc_configuration)),
+            this, SLOT(mcconfReceived(PacketInterface::mc_configuration)));
 
     ui->currentPlot->setRangeDrag(Qt::Horizontal | Qt::Vertical);
     ui->currentPlot->setRangeZoom(Qt::Horizontal | Qt::Vertical);
@@ -227,7 +229,7 @@ void MainWindow::timerSlot()
 
         if (div_cnt >= 1) {
             div_cnt = 0;
-            mPacketInterface->readValues();
+            mPacketInterface->getValues();
         }
     }
 
@@ -1046,6 +1048,74 @@ void MainWindow::experimentSamplesReceived(QVector<double> samples)
     }
 }
 
+void MainWindow::mcconfReceived(PacketInterface::mc_configuration mcconf)
+{
+    switch (mcconf.pwm_mode) {
+    case PacketInterface::PWM_MODE_SYNCHRONOUS:
+        ui->mcconfPwmModeSyncButton->setChecked(true);
+        break;
+
+    case PacketInterface::PWM_MODE_BIPOLAR:
+        ui->mcconfPwmModeBipolarButton->setChecked(true);
+        break;
+
+    case PacketInterface::PWM_MODE_NONSYNCHRONOUS_HISW:
+        ui->mcconfPwmModeNonsyncHiswButton->setChecked(true);
+        break;
+
+    default:
+        break;
+    }
+
+    switch (mcconf.comm_mode) {
+    case PacketInterface::COMM_MODE_INTEGRATE:
+        ui->mcconfCommIntButton->setChecked(true);
+        break;
+
+    case PacketInterface::COMM_MODE_DELAY:
+        ui->mcconfCommDelayButton->setChecked(true);
+        break;
+
+    default:
+        break;
+
+    }
+
+    ui->mcconfLimCurrentMaxBox->setValue(mcconf.l_current_max);
+    ui->mcconfLimCurrentMinBox->setValue(mcconf.l_current_min);
+    ui->mcconfLimCurrentInMaxBox->setValue(mcconf.l_in_current_max);
+    ui->mcconfLimCurrentInMinBox->setValue(mcconf.l_in_current_min);
+    ui->mcconfLimCurrentAbsMaxBox->setValue(mcconf.l_abs_current_max);
+    ui->mcconfLimCurrentSlowAbsMaxBox->setChecked(mcconf.l_slow_abs_current);
+    ui->mcconfLimMaxErpmBox->setValue(mcconf.l_max_erpm);
+    ui->mcconfLimMinErpmBox->setValue(mcconf.l_min_erpm);
+    ui->mcconfLimMaxErpmFbrakeBox->setValue(mcconf.l_max_erpm_fbrake);
+    ui->mcconfLimErpmLimitNegTorqueBox->setChecked(mcconf.l_rpm_lim_neg_torque);
+    ui->mcconfLimMinVinBox->setValue(mcconf.l_min_vin);
+    ui->mcconfLimMaxVinBox->setValue(mcconf.l_max_vin);
+
+    ui->mcconfSlIsSensorlessBox->setChecked(mcconf.sl_is_sensorless);
+    ui->mcconfSlMinErpmBox->setValue(mcconf.sl_min_erpm);
+    ui->mcconfSlMinErpmIlBox->setValue(mcconf.sl_min_erpm_cycle_int_limit);
+    ui->mcconfSlIntLimBox->setValue(mcconf.sl_cycle_int_limit);
+    ui->mcconfSlIntLimScaleBrBox->setValue(mcconf.sl_cycle_int_limit_high_fac);
+    ui->mcconfSlBrErpmBox->setValue(mcconf.sl_cycle_int_rpm_br);
+    ui->mcconfSlBemfKBox->setValue(mcconf.sl_bemf_coupling_k);
+
+    ui->mcconfHallDirBox->setValue(mcconf.hall_dir);
+    ui->mcconfHallFwdAddBox->setValue(mcconf.hall_fwd_add);
+    ui->mcconfHallRevAddBox->setValue(mcconf.hall_rev_add);
+
+    ui->mcconfSpidKpBox->setValue(mcconf.s_pid_kp);
+    ui->mcconfSpidKiBox->setValue(mcconf.s_pid_ki);
+    ui->mcconfSpidKdBox->setValue(mcconf.s_pid_kd);
+    ui->mcconfSpidMinRpmBox->setValue(mcconf.s_pid_min_rpm);
+
+    ui->mcconfCcBoostBox->setValue(mcconf.cc_startup_boost_duty);
+    ui->mcconfCcMinBox->setValue(mcconf.cc_min_current);
+    ui->mcconfCcGainBox->setValue(mcconf.cc_gain);
+}
+
 void MainWindow::on_connectButton_clicked()
 {
     mPort->openPort(ui->serialDeviceEdit->text());
@@ -1273,4 +1343,64 @@ void MainWindow::on_experimentSaveSamplesButton_clicked()
 
     ui->experimentPathEdit->setText(path);
     saveExperimentSamplesToFile(path);
+}
+
+void MainWindow::on_mcconfReadButton_clicked()
+{
+    mPacketInterface->getMcconf();
+}
+
+void MainWindow::on_mcconfWritepushButton_clicked()
+{
+    PacketInterface::mc_configuration mcconf;
+
+    if (ui->mcconfPwmModeSyncButton->isChecked()) {
+        mcconf.pwm_mode = PacketInterface::PWM_MODE_SYNCHRONOUS;
+    } else if (ui->mcconfPwmModeBipolarButton->isChecked()) {
+        mcconf.pwm_mode = PacketInterface::PWM_MODE_BIPOLAR;
+    } else if (ui->mcconfPwmModeNonsyncHiswButton->isChecked()) {
+        mcconf.pwm_mode = PacketInterface::PWM_MODE_NONSYNCHRONOUS_HISW;
+    }
+
+    if (ui->mcconfCommIntButton->isChecked()) {
+        mcconf.comm_mode = PacketInterface::COMM_MODE_INTEGRATE;
+    } else if (ui->mcconfCommDelayButton->isChecked()) {
+        mcconf.comm_mode = PacketInterface::COMM_MODE_DELAY;
+    }
+
+    mcconf.l_current_max = ui->mcconfLimCurrentMaxBox->value();
+    mcconf.l_current_min = ui->mcconfLimCurrentMinBox->value();
+    mcconf.l_in_current_max = ui->mcconfLimCurrentInMaxBox->value();
+    mcconf.l_in_current_min = ui->mcconfLimCurrentInMinBox->value();
+    mcconf.l_abs_current_max = ui->mcconfLimCurrentAbsMaxBox->value();
+    mcconf.l_slow_abs_current = ui->mcconfLimCurrentSlowAbsMaxBox->isChecked();
+    mcconf.l_max_erpm = ui->mcconfLimMaxErpmBox->value();
+    mcconf.l_min_erpm = ui->mcconfLimMinErpmBox->value();
+    mcconf.l_max_erpm_fbrake = ui->mcconfLimMaxErpmFbrakeBox->value();
+    mcconf.l_rpm_lim_neg_torque = ui->mcconfLimErpmLimitNegTorqueBox->isChecked();
+    mcconf.l_min_vin = ui->mcconfLimMinVinBox->value();
+    mcconf.l_max_vin = ui->mcconfLimMaxVinBox->value();
+
+    mcconf.sl_is_sensorless = ui->mcconfSlIsSensorlessBox->isChecked();
+    mcconf.sl_min_erpm = ui->mcconfSlMinErpmBox->value();
+    mcconf.sl_min_erpm_cycle_int_limit = ui->mcconfSlMinErpmIlBox->value();
+    mcconf.sl_cycle_int_limit = ui->mcconfSlIntLimBox->value();
+    mcconf.sl_cycle_int_limit_high_fac = ui->mcconfSlIntLimScaleBrBox->value();
+    mcconf.sl_cycle_int_rpm_br = ui->mcconfSlBrErpmBox->value();
+    mcconf.sl_bemf_coupling_k = ui->mcconfSlBemfKBox->value();
+
+    mcconf.hall_dir = ui->mcconfHallDirBox->value();
+    mcconf.hall_fwd_add = ui->mcconfHallFwdAddBox->value();
+    mcconf.hall_rev_add = ui->mcconfHallRevAddBox->value();
+
+    mcconf.s_pid_kp = ui->mcconfSpidKpBox->value();
+    mcconf.s_pid_ki = ui->mcconfSpidKiBox->value();
+    mcconf.s_pid_kd = ui->mcconfSpidKdBox->value();
+    mcconf.s_pid_min_rpm = ui->mcconfSpidMinRpmBox->value();
+
+    mcconf.cc_startup_boost_duty = ui->mcconfCcBoostBox->value();
+    mcconf.cc_min_current = ui->mcconfCcMinBox->value();
+    mcconf.cc_gain = ui->mcconfCcGainBox->value();
+
+    mPacketInterface->setMcconf(mcconf);
 }
