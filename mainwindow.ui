@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1249</width>
-    <height>763</height>
+    <width>1161</width>
+    <height>732</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,145 +33,61 @@
         </property>
         <widget class="QWidget" name="tab_6">
          <attribute name="title">
-          <string>Main</string>
+          <string>Realtime plot</string>
          </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_21">
+         <layout class="QVBoxLayout" name="verticalLayout_17">
           <item>
            <widget class="QSplitter" name="splitter_3">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
             </property>
-            <widget class="QWidget" name="widget" native="true">
+            <widget class="QCustomPlot" name="realtimePlotRest" native="true"/>
+            <widget class="QCustomPlot" name="realtimePlotTemperature" native="true">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>3</horstretch>
+               <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_16">
-              <item>
-               <widget class="QTabWidget" name="tabWidget_3">
-                <property name="tabPosition">
-                 <enum>QTabWidget::West</enum>
-                </property>
-                <property name="currentIndex">
-                 <number>0</number>
-                </property>
-                <widget class="QWidget" name="tab_5">
-                 <attribute name="title">
-                  <string>Current</string>
-                 </attribute>
-                 <layout class="QVBoxLayout" name="verticalLayout_18">
-                  <item>
-                   <widget class="QCustomPlot" name="realtimePlotRest" native="true"/>
-                  </item>
-                 </layout>
-                </widget>
-                <widget class="QWidget" name="tab_4">
-                 <attribute name="title">
-                  <string>Temperature</string>
-                 </attribute>
-                 <layout class="QVBoxLayout" name="verticalLayout_17">
-                  <item>
-                   <widget class="QCustomPlot" name="realtimePlotTemperature" native="true">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </widget>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_20">
-                <item>
-                 <widget class="QCheckBox" name="realtimeActivateBox">
-                  <property name="text">
-                   <string>Activate sampling</string>
-                  </property>
-                  <property name="tristate">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QCheckBox" name="realtimeAutoScaleBox">
-                  <property name="text">
-                   <string>Auto Scale</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="verticalSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="widget_2" native="true">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-               <horstretch>1</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_4">
-              <item>
-               <widget class="QTextBrowser" name="terminalBrowser">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="font">
-                 <font>
-                  <family>Monospace</family>
-                 </font>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_15">
-                <item>
-                 <widget class="QLineEdit" name="terminalEdit"/>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="sendTerminalButton">
-                  <property name="text">
-                   <string>Send</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="clearTerminalButton">
-                  <property name="text">
-                   <string>Clear</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
             </widget>
            </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_16">
+            <item>
+             <widget class="QCheckBox" name="realtimeAutoScaleBox">
+              <property name="text">
+               <string>Auto Scale</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="realtimeActivateBox">
+              <property name="text">
+               <string>Activate sampling</string>
+              </property>
+              <property name="tristate">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_7">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -179,7 +95,7 @@
          <attribute name="title">
           <string>Configuration</string>
          </attribute>
-         <layout class="QVBoxLayout" name="verticalLayout_23">
+         <layout class="QVBoxLayout" name="verticalLayout_31">
           <item>
            <widget class="QTabWidget" name="tabWidget_4">
             <property name="tabPosition">
@@ -195,35 +111,34 @@
              <layout class="QVBoxLayout" name="verticalLayout_24">
               <item>
                <widget class="QGroupBox" name="groupBox_8">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="title">
                  <string>Current</string>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_18">
                  <item>
                   <layout class="QGridLayout" name="gridLayout_9">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_16">
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_19">
                      <property name="text">
-                      <string>Motor max</string>
+                      <string>Batt min (regen)</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentMaxBox">
-                     <property name="maximum">
-                      <double>200.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_17">
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_20">
                      <property name="text">
-                      <string>Motor min (regen)</string>
+                      <string>Absolute max</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentMinBox">
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMinBox">
                      <property name="minimum">
                       <double>-200.000000000000000</double>
                      </property>
@@ -239,34 +154,10 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMaxBox">
-                     <property name="maximum">
-                      <double>200.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_19">
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_17">
                      <property name="text">
-                      <string>Batt min (regen)</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMinBox">
-                     <property name="minimum">
-                      <double>-200.000000000000000</double>
-                     </property>
-                     <property name="maximum">
-                      <double>0.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_20">
-                     <property name="text">
-                      <string>Absolute max</string>
+                      <string>Motor min (regen)</string>
                      </property>
                     </widget>
                    </item>
@@ -277,24 +168,38 @@
                      </property>
                     </widget>
                    </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_25">
-                   <item>
-                    <spacer name="verticalSpacer_5">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentMinBox">
+                     <property name="minimum">
+                      <double>-200.000000000000000</double>
                      </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
+                     <property name="maximum">
+                      <double>0.000000000000000</double>
                      </property>
-                    </spacer>
+                    </widget>
                    </item>
-                   <item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMaxBox">
+                     <property name="maximum">
+                      <double>200.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_16">
+                     <property name="text">
+                      <string>Motor max</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentMaxBox">
+                     <property name="maximum">
+                      <double>200.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
                     <widget class="QCheckBox" name="mcconfLimCurrentSlowAbsMaxBox">
                      <property name="text">
                       <string>Slow absolute max</string>
@@ -308,20 +213,46 @@
               </item>
               <item>
                <widget class="QGroupBox" name="groupBox_9">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="title">
                  <string>RPM</string>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_19">
                  <item>
                   <layout class="QGridLayout" name="gridLayout_10">
-                   <item row="0" column="0">
+                   <item row="1" column="0">
                     <widget class="QLabel" name="label_21">
                      <property name="text">
                       <string>Min ERPM</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfLimMaxErpmBox">
+                     <property name="maximum">
+                      <double>200000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>100.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfLimMaxErpmFbrakeBox">
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>100.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfLimMinErpmBox">
                      <property name="minimum">
                       <double>-200000.000000000000000</double>
@@ -334,63 +265,26 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0">
+                   <item row="2" column="0">
                     <widget class="QLabel" name="label_22">
                      <property name="text">
                       <string>Max ERPM</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimMaxErpmBox">
-                     <property name="maximum">
-                      <double>200000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>100.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
+                   <item row="3" column="0">
                     <widget class="QLabel" name="label_23">
                      <property name="text">
                       <string>Max ERPM at full brake</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimMaxErpmFbrakeBox">
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>100.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_26">
-                   <item>
+                   <item row="0" column="0">
                     <widget class="QCheckBox" name="mcconfLimErpmLimitNegTorqueBox">
                      <property name="text">
                       <string>Limit ERPM with negative torque</string>
                      </property>
                     </widget>
-                   </item>
-                   <item>
-                    <spacer name="verticalSpacer_6">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                    </spacer>
                    </item>
                   </layout>
                  </item>
@@ -465,121 +359,72 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_27">
               <item>
-               <widget class="QGroupBox" name="groupBox_11">
+               <widget class="QGroupBox" name="mcconfSlBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="title">
                  <string>Sensorless</string>
                 </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_21">
                  <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_23">
+                   <item>
+                    <widget class="QGroupBox" name="groupBox_16">
+                     <property name="title">
+                      <string>Commutation mode</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>false</bool>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_30">
+                      <item>
+                       <widget class="QRadioButton" name="mcconfCommIntButton">
+                        <property name="text">
+                         <string>Integrate</string>
+                        </property>
+                        <property name="checked">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QRadioButton" name="mcconfCommDelayButton">
+                        <property name="text">
+                         <string>Delay</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer_9">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
                   <layout class="QGridLayout" name="gridLayout_12">
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_29">
-                     <property name="toolTip">
-                      <string>For phase advance, not so important</string>
-                     </property>
-                     <property name="text">
-                      <string>Integrator limit scale at BR ERPM</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QCheckBox" name="mcconfSlIsSensorlessBox">
-                     <property name="text">
-                      <string>Is sensorless</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlBemfKBox">
-                     <property name="maximum">
-                      <double>5000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>10.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="0">
-                    <widget class="QLabel" name="label_41">
-                     <property name="toolTip">
-                      <string>Important. There is a command in the terminal that can be used to estimate this parameter.</string>
-                     </property>
-                     <property name="text">
-                      <string>BEMF Coupling</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_26">
-                     <property name="toolTip">
-                      <string>Important for startup</string>
-                     </property>
-                     <property name="text">
-                      <string>Minimum ERPM</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlMinErpmBox">
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>10.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_27">
-                     <property name="toolTip">
-                      <string>Important for startup</string>
-                     </property>
-                     <property name="text">
-                      <string>Minimum ERPM for integrator limit</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_28">
-                     <property name="toolTip">
-                      <string>Important. There is a command in the terminal that can be used to estimate this parameter.</string>
-                     </property>
-                     <property name="text">
-                      <string>Integrator limit</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimBox">
-                     <property name="maximum">
-                      <double>10000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>10.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlMinErpmIlBox">
-                     <property name="maximum">
-                      <double>10000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>10.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="4" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimScaleBrBox">
-                     <property name="maximum">
-                      <double>1.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.100000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfSlBrErpmBox">
                      <property name="maximum">
                       <double>200000.000000000000000</double>
@@ -589,7 +434,107 @@
                      </property>
                     </widget>
                    </item>
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSlMinErpmBox">
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_26">
+                     <property name="toolTip">
+                      <string>Important for startup</string>
+                     </property>
+                     <property name="text">
+                      <string>Minimum ERPM</string>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="5" column="0">
+                    <widget class="QLabel" name="label_41">
+                     <property name="toolTip">
+                      <string>Important. There is a command in the terminal that can be used to estimate this parameter.</string>
+                     </property>
+                     <property name="text">
+                      <string>BEMF Coupling</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_28">
+                     <property name="toolTip">
+                      <string>Important. There is a command in the terminal that can be used to estimate this parameter.</string>
+                     </property>
+                     <property name="text">
+                      <string>Integrator limit</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_27">
+                     <property name="toolTip">
+                      <string>Important for startup</string>
+                     </property>
+                     <property name="text">
+                      <string>Minimum ERPM for integrator limit</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSlMinErpmIlBox">
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimBox">
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_29">
+                     <property name="toolTip">
+                      <string>For phase advance, not so important</string>
+                     </property>
+                     <property name="text">
+                      <string>Integrator limit scale at BR ERPM</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSlBemfKBox">
+                     <property name="maximum">
+                      <double>5000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimScaleBrBox">
+                     <property name="maximum">
+                      <double>1.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
                     <widget class="QLabel" name="label_30">
                      <property name="toolTip">
                       <string>For phase advance, not so important</string>
@@ -609,50 +554,63 @@
                 <property name="title">
                  <string>Hall sensors</string>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_22">
+                <layout class="QVBoxLayout" name="verticalLayout_20">
                  <item>
-                  <layout class="QGridLayout" name="gridLayout_13">
-                   <item row="0" column="0">
+                  <layout class="QHBoxLayout" name="horizontalLayout_22">
+                   <item>
                     <widget class="QLabel" name="label_31">
                      <property name="text">
-                      <string>Hall direction</string>
+                      <string>Direction</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
+                   <item>
                     <widget class="QSpinBox" name="mcconfHallDirBox">
                      <property name="maximum">
                       <number>1</number>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0">
+                   <item>
                     <widget class="QLabel" name="label_32">
                      <property name="text">
-                      <string>Hall rev add</string>
+                      <string>Rev add</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
+                   <item>
                     <widget class="QSpinBox" name="mcconfHallRevAddBox">
                      <property name="maximum">
                       <number>5</number>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="0">
+                   <item>
                     <widget class="QLabel" name="label_33">
                      <property name="text">
-                      <string>hall fwd add</string>
+                      <string>Fwd add</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
+                   <item>
                     <widget class="QSpinBox" name="mcconfHallFwdAddBox">
                      <property name="maximum">
                       <number>5</number>
                      </property>
                     </widget>
+                   </item>
+                   <item>
+                    <spacer name="horizontalSpacer_8">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                   </layout>
                  </item>
@@ -706,32 +664,6 @@
                   <widget class="QRadioButton" name="mcconfPwmModeNonsyncHiswButton">
                    <property name="text">
                     <string>Nonsynchronous-HISW (Not recommended)</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_16">
-                <property name="title">
-                 <string>Commutation mode</string>
-                </property>
-                <layout class="QVBoxLayout" name="verticalLayout_30">
-                 <item>
-                  <widget class="QRadioButton" name="mcconfCommIntButton">
-                   <property name="text">
-                    <string>Integrator</string>
-                   </property>
-                   <property name="checked">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QRadioButton" name="mcconfCommDelayButton">
-                   <property name="text">
-                    <string>Delay</string>
                    </property>
                   </widget>
                  </item>
@@ -905,6 +837,20 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_17">
             <item>
+             <widget class="QPushButton" name="mcconfReadButton">
+              <property name="text">
+               <string>Read configuration</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="mcconfWriteButton">
+              <property name="text">
+               <string>Write configuration</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <spacer name="horizontalSpacer_6">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -918,16 +864,16 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="mcconfReadButton">
+             <widget class="QPushButton" name="mcconfLoadXmlButton">
               <property name="text">
-               <string>Read configuration</string>
+               <string>Load XML</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="mcconfWritepushButton">
+             <widget class="QPushButton" name="mcconfSaveXmlButton">
               <property name="text">
-               <string>Write configuration</string>
+               <string>Save XML</string>
               </property>
              </widget>
             </item>
@@ -937,7 +883,7 @@
         </widget>
         <widget class="QWidget" name="tab_2">
          <attribute name="title">
-          <string>Voltages</string>
+          <string>BEMF Plot</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_10">
           <item>
@@ -1028,7 +974,7 @@
         </widget>
         <widget class="QWidget" name="tab">
          <attribute name="title">
-          <string>Currents</string>
+          <string>Current Plot</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_19">
           <item>
@@ -1472,6 +1418,61 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="tab_15">
+         <attribute name="title">
+          <string>Terminal</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_21">
+          <item>
+           <widget class="QWidget" name="widget_2" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>1</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="QTextBrowser" name="terminalBrowser">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Monospace</family>
+                </font>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_15">
+               <item>
+                <widget class="QLineEdit" name="terminalEdit"/>
+               </item>
+               <item>
+                <widget class="QPushButton" name="sendTerminalButton">
+                 <property name="text">
+                  <string>Send</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="clearTerminalButton">
+                 <property name="text">
+                  <string>Clear</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
         <widget class="QWidget" name="tab_3">
          <attribute name="title">
           <string>Misc</string>
@@ -1742,59 +1743,56 @@
          <property name="title">
           <string>Control</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_7">
-          <item row="0" column="0" colspan="2">
+         <layout class="QVBoxLayout" name="verticalLayout_18">
+          <item>
            <layout class="QGridLayout" name="gridLayout_2">
-            <item row="0" column="0">
-             <widget class="QDoubleSpinBox" name="dutyBox">
-              <property name="minimum">
-               <double>-1.000000000000000</double>
-              </property>
-              <property name="maximum">
-               <double>1.000000000000000</double>
-              </property>
-              <property name="singleStep">
-               <double>0.050000000000000</double>
-              </property>
-              <property name="value">
-               <double>0.200000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="dutyButton">
-              <property name="text">
-               <string>Set Duty Cycle</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QSpinBox" name="rpmBox">
-              <property name="minimum">
-               <number>-100000</number>
-              </property>
-              <property name="maximum">
-               <number>100000</number>
-              </property>
-              <property name="singleStep">
-               <number>1000</number>
-              </property>
-              <property name="value">
-               <number>15000</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="rpmButton">
-              <property name="text">
-               <string>Set RPM (PID)</string>
-              </property>
-             </widget>
-            </item>
             <item row="2" column="1">
              <widget class="QPushButton" name="currentButton">
               <property name="text">
-               <string>Set current (A)</string>
+               <string>Current</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QDoubleSpinBox" name="currentBrakeBox">
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>200.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.500000000000000</double>
+              </property>
+              <property name="value">
+               <double>3.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>KB Current</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="currentBrakeButton">
+              <property name="text">
+               <string>Brake Current</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QDoubleSpinBox" name="arrowCurrentBox">
+              <property name="maximum">
+               <double>200.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.500000000000000</double>
+              </property>
+              <property name="value">
+               <double>3.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -1814,38 +1812,67 @@
               </property>
              </widget>
             </item>
+            <item row="0" column="0">
+             <widget class="QDoubleSpinBox" name="dutyBox">
+              <property name="minimum">
+               <double>-1.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.050000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.200000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QSpinBox" name="rpmBox">
+              <property name="minimum">
+               <number>-100000</number>
+              </property>
+              <property name="maximum">
+               <number>100000</number>
+              </property>
+              <property name="singleStep">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>15000</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="dutyButton">
+              <property name="text">
+               <string>Duty Cycle</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="rpmButton">
+              <property name="text">
+               <string>RPM</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QPushButton" name="offButton">
+              <property name="text">
+               <string>Release</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QPushButton" name="offBrakeButton">
+              <property name="text">
+               <string>Full Brake</string>
+              </property>
+             </widget>
+            </item>
            </layout>
-          </item>
-          <item row="5" column="0" colspan="2">
-           <widget class="QPushButton" name="offButton">
-            <property name="text">
-             <string>OFF (Release)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0" colspan="2">
-           <widget class="QPushButton" name="offBrakeButton">
-            <property name="text">
-             <string>OFF (Brake)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>ArrowCurrent</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="arrowCurrentBox">
-            <property name="maximum">
-             <double>200.000000000000000</double>
-            </property>
-            <property name="value">
-             <double>3.000000000000000</double>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
@@ -1853,19 +1880,26 @@
        <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
-          <string>Sampling</string>
+          <string>BEMF and Current Sampling</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <layout class="QGridLayout" name="gridLayout">
-            <item row="0" column="0">
+            <item row="1" column="0">
              <widget class="QLabel" name="label">
               <property name="text">
                <string>Samples</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Decimation</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
              <widget class="QSpinBox" name="sampleNumBox">
               <property name="minimum">
                <number>10</number>
@@ -1881,28 +1915,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Decimation</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="sampleIntBox">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_5">
-              <property name="text">
-               <string>Fs</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
+            <item row="3" column="1">
              <widget class="QSpinBox" name="sampleFreqBox">
               <property name="minimum">
                <number>1</number>
@@ -1918,21 +1931,35 @@
               </property>
              </widget>
             </item>
+            <item row="2" column="1">
+             <widget class="QSpinBox" name="sampleIntBox">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Fs</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="getDataButton">
+              <property name="text">
+               <string>Now</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="getDataStartButton">
+              <property name="text">
+               <string>At start</string>
+              </property>
+             </widget>
+            </item>
            </layout>
-          </item>
-          <item>
-           <widget class="QPushButton" name="getDataButton">
-            <property name="text">
-             <string>Sample now</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="getDataStartButton">
-            <property name="text">
-             <string>Sample at start</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
@@ -2036,7 +2063,6 @@
   <tabstop>rpmButton</tabstop>
   <tabstop>sampleNumBox</tabstop>
   <tabstop>sampleIntBox</tabstop>
-  <tabstop>getDataButton</tabstop>
   <tabstop>horizontalZoomBox</tabstop>
   <tabstop>verticalZoomBox</tabstop>
   <tabstop>rescaleButton</tabstop>
@@ -2052,12 +2078,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>153</x>
-     <y>589</y>
+     <x>35</x>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2068,12 +2094,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1231</x>
-     <y>72</y>
+     <x>685</x>
+     <y>667</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2084,12 +2110,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>486</x>
-     <y>630</y>
+     <x>374</x>
+     <y>621</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2100,12 +2126,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1024</x>
-     <y>662</y>
+     <x>1129</x>
+     <y>458</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2116,12 +2142,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>660</y>
+     <x>35</x>
+     <y>653</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2132,12 +2158,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>205</x>
-     <y>624</y>
+     <x>35</x>
+     <y>622</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2148,12 +2174,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>486</x>
-     <y>663</y>
+     <x>374</x>
+     <y>651</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2164,12 +2190,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>334</x>
-     <y>595</y>
+     <x>202</x>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2180,12 +2206,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1022</x>
-     <y>520</y>
+     <x>519</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2196,12 +2222,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>703</x>
-     <y>595</y>
+     <x>472</x>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2212,12 +2238,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>815</x>
-     <y>595</y>
+     <x>639</x>
+     <y>592</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2228,12 +2254,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>702</x>
-     <y>632</y>
+     <x>555</x>
+     <y>622</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2244,12 +2270,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>703</x>
-     <y>664</y>
+     <x>472</x>
+     <y>655</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2260,12 +2286,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>967</x>
-     <y>663</y>
+     <x>811</x>
+     <y>651</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2276,12 +2302,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>967</x>
-     <y>630</y>
+     <x>811</x>
+     <y>621</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2292,12 +2318,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>956</x>
-     <y>520</y>
+     <x>519</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2308,12 +2334,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>156</x>
-     <y>83</y>
+     <x>61</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2324,12 +2350,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>257</x>
-     <y>83</y>
+     <x>149</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2340,12 +2366,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>358</x>
-     <y>83</y>
+     <x>237</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2356,12 +2382,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>482</x>
-     <y>83</y>
+     <x>325</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2372,12 +2398,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>631</x>
-     <y>83</y>
+     <x>432</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2388,12 +2414,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>723</x>
-     <y>83</y>
+     <x>561</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2404,12 +2430,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>88</x>
-     <y>72</y>
+     <x>29</x>
+     <y>667</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2420,12 +2446,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>193</x>
-     <y>72</y>
+     <x>107</x>
+     <y>667</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2436,12 +2462,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>213</x>
-     <y>59</y>
+     <x>186</x>
+     <y>667</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2452,12 +2478,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>511</x>
-     <y>72</y>
+     <x>384</x>
+     <y>667</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2468,12 +2494,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>419</x>
-     <y>72</y>
+     <x>266</x>
+     <y>667</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>
@@ -2484,28 +2510,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1118</x>
-     <y>83</y>
+     <x>745</x>
+     <y>521</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1477</x>
-     <y>541</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>terminalEdit</sender>
-   <signal>returnPressed()</signal>
-   <receiver>sendTerminalButton</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>971</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1125</x>
-     <y>653</y>
+     <x>1129</x>
+     <y>643</y>
     </hint>
    </hints>
   </connection>

@@ -20,34 +20,16 @@
 #include <errno.h>
 #include <QtDebug>
 
+#include <cstdio>   /* Standard input/output definitions */
+#include <unistd.h>  /* UNIX standard function definitions */
+#include <fcntl.h>   /* File control definitions */
+#include <errno.h>   /* Error number definitions */
+#include <termios.h> /* POSIX terminal control definitions */
+#include <linux/serial.h>
+#include <sys/ioctl.h>
+#include <iostream>
+
 #include "serialport.h"
-
-namespace
-{
-int msecSleep(unsigned long milisec)
-{
-    struct timespec req={0, 0};
-    time_t sec=(int)(milisec/1000);
-    milisec=milisec-(sec*1000);
-    req.tv_sec=sec;
-    req.tv_nsec=milisec*1000000L;
-    while(nanosleep(&req,&req)==-1)
-        continue;
-    return 1;
-}
-
-int usecSleep(unsigned long usec)
-{
-    struct timespec req={0, 0};
-    time_t sec=(int)(usec/1000000);
-    usec=usec-(sec*1000000);
-    req.tv_sec=sec;
-    req.tv_nsec=usec*1000L;
-    while(nanosleep(&req,&req)==-1)
-        continue;
-    return 1;
-}
-}
 
 SerialPort::SerialPort(QObject *parent) :
     QThread(parent)
@@ -59,7 +41,7 @@ SerialPort::SerialPort(QObject *parent) :
     mSettings.stopBits = STOP_1;
     mSettings.baudrate = 115200;
     
-    mBufferSize = 2048;
+    mBufferSize = 32768;
     mReadBuffer = new char[mBufferSize];
     mBufferRead = 0;
     mBufferWrite = 0;
@@ -83,13 +65,12 @@ int SerialPort::openPort(
         SerialStopBits stopBits,
         SerialParity parity)
 {
-    if (mIsOpen)
-    {
+    if (mIsOpen) {
         closePort();
     }
+
     mFd = open(port.toLocal8Bit().data(), O_RDWR | O_NOCTTY | O_NDELAY);
-    if (mFd == -1)
-    {
+    if (mFd == -1) {
         qCritical() << "Opening serial port failed.";
         return -1;
     }
@@ -100,8 +81,7 @@ int SerialPort::openPort(
     fcntl(mFd, F_SETFL, FNDELAY);
     
     struct termios options;
-    if (0 != tcgetattr(mFd, &options))
-    {
+    if (0 != tcgetattr(mFd, &options)) {
         qCritical() << "Reading serial port options failed.";
         return -2;
     }
@@ -135,33 +115,31 @@ int SerialPort::openPort(
 #endif //_POSIX_VDISABLE
     
     //Set the new options for the port...
-    if (0 != tcsetattr(mFd, TCSANOW, &options))
-    {
+    if (0 != tcsetattr(mFd, TCSANOW, &options)) {
         qCritical() << "Writing serial port options failed.";
         closePort();
         return -3;
     }
     
-    if (false == setDataBits(dataBits))
-    {
+    if (false == setDataBits(dataBits)) {
         qCritical() << "Setting data bits failed.";
         closePort();
         return -4;
     }
-    if (false == setStopBits(stopBits))
-    {
+
+    if (false == setStopBits(stopBits)) {
         qCritical() << "Setting stopbits failed.";
         closePort();
         return -5;
     }
-    if (false == setParity(parity))
-    {
+
+    if (false == setParity(parity)) {
         qCritical() << "Setting parity faield.";
         closePort();
         return -6;
     }
-    if (false == setBaudrate(baudrate))
-    {
+
+    if (false == setBaudrate(baudrate)) {
         qCritical() << "Setting baudrate failed.";
         closePort();
         return -7;
@@ -202,15 +180,13 @@ void SerialPort::closePort()
 
 bool SerialPort::setBaudrate(int baudrate)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return false;
     }
     
     speed_t baud = 0;
-    switch (baudrate)
-    {
+    switch (baudrate) {
     case      50: baud =      B50; break;
     case      75: baud =      B75; break;
     case     110: baud =     B110; break;
@@ -245,18 +221,15 @@ bool SerialPort::setBaudrate(int baudrate)
     }
     
     struct termios options;
-    if (0 != tcgetattr(mFd, &options))
-    {
+    if (0 != tcgetattr(mFd, &options)) {
         qCritical() << "Reading serial port options failed.";
         return false;
     }
     
     serial_struct ser_info;
     
-    if (0 == baud)
-    {
-        if (0 != ioctl(mFd, TIOCGSERIAL, &ser_info))
-        {
+    if (0 == baud) {
+        if (0 != ioctl(mFd, TIOCGSERIAL, &ser_info)) {
             qCritical() << "Reading ser_info struct failed. Try a standard baudrate.";
             return false;
         }
@@ -267,40 +240,33 @@ bool SerialPort::setBaudrate(int baudrate)
         qDebug() << "Baud base: " << ser_info.baud_base;
         
         cfsetspeed(&options, B38400);
-        if (0 != tcsetattr(mFd, TCSANOW, &options))
-        {
+        if (0 != tcsetattr(mFd, TCSANOW, &options)) {
             qCritical() << "Writing serial port options failed";
             return false;
         }
         
-        if (0 != ioctl(mFd, TIOCSSERIAL, &ser_info))
-        {
+        if (0 != ioctl(mFd, TIOCSSERIAL, &ser_info)) {
             qCritical() << "Writing ser_info struct failed";
             return false;
         }
         
         qDebug() << "Custom type baudrate set";
-    } else
-    {
+    } else {
         cfsetspeed(&options, baud);
-        if (0 != tcsetattr(mFd, TCSANOW, &options))
-        {
+        if (0 != tcsetattr(mFd, TCSANOW, &options)) {
             qCritical() << "Writing serial port options failed";
             return false;
         }
         
         qDebug() << "Standard type baudrate set";
         
-        if (0 != ioctl(mFd, TIOCGSERIAL, &ser_info))
-        {
+        if (0 != ioctl(mFd, TIOCGSERIAL, &ser_info)) {
             qWarning() << "Reading ser_info struct failed.";
-        } else
-        {
+        } else {
             ser_info.flags &= ~ASYNC_SPD_CUST;
             ser_info.custom_divisor = 0;
             qDebug() << "Baud base: " << ser_info.baud_base;
-            if (0 != ioctl(mFd, TIOCSSERIAL, &ser_info))
-            {
+            if (0 != ioctl(mFd, TIOCSSERIAL, &ser_info)) {
                 qCritical() << "Writing ser_info struct failed";
             }
         }
@@ -312,15 +278,13 @@ bool SerialPort::setBaudrate(int baudrate)
 
 bool SerialPort::setDataBits(SerialDataBits dataBits)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return false;
     }
     
     struct termios options;
-    if (0 != tcgetattr(mFd, &options))
-    {
+    if (0 != tcgetattr(mFd, &options)) {
         qCritical() << "Reading serial port options failed.";
         return false;
     }
@@ -345,8 +309,7 @@ bool SerialPort::setDataBits(SerialDataBits dataBits)
         break;
     }
     
-    if (0 != tcsetattr(mFd, TCSANOW, &options))
-    {
+    if (0 != tcsetattr(mFd, TCSANOW, &options)) {
         qCritical() << "Writing serial port options failed.";
         return false;
     }
@@ -357,15 +320,13 @@ bool SerialPort::setDataBits(SerialDataBits dataBits)
 
 bool SerialPort::setStopBits(SerialStopBits stopBits)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return false;
     }
     
     struct termios options;
-    if (0 != tcgetattr(mFd, &options))
-    {
+    if (0 != tcgetattr(mFd, &options)) {
         qCritical() << "Reading serial port options failed.";
         return false;
     }
@@ -380,8 +341,7 @@ bool SerialPort::setStopBits(SerialStopBits stopBits)
         break;
     }
     
-    if (0 != tcsetattr(mFd, TCSANOW, &options))
-    {
+    if (0 != tcsetattr(mFd, TCSANOW, &options)) {
         qCritical() << "Writing serial port options failed.";
         return false;
     }
@@ -392,15 +352,13 @@ bool SerialPort::setStopBits(SerialStopBits stopBits)
 
 bool SerialPort::setParity(SerialParity parity)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return false;
     }
     
     struct termios options;
-    if (0 != tcgetattr(mFd, &options))
-    {
+    if (0 != tcgetattr(mFd, &options)) {
         qCritical() << "Reading serial port options failed.";
         return false;
     }
@@ -422,8 +380,7 @@ bool SerialPort::setParity(SerialParity parity)
         
     }
     
-    if (0 != tcsetattr(mFd, TCSANOW, &options))
-    {
+    if (0 != tcsetattr(mFd, TCSANOW, &options)) {
         qCritical() << "Writing serial port options failed.";
         return false;
     }
@@ -434,24 +391,21 @@ bool SerialPort::setParity(SerialParity parity)
 
 bool SerialPort::readByte(char &byte)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return false;
     }
     
     {
         QMutexLocker locker(&mMutex);
-        if (mBufferRead == mBufferWrite)
-        {
+        if (mBufferRead == mBufferWrite) {
             return false;
         }
         
         char tmp = mReadBuffer[mBufferRead];
         mBufferRead++;
         
-        if (mBufferRead == mBufferSize)
-        {
+        if (mBufferRead == mBufferSize) {
             mBufferRead = 0;
         }
         
@@ -462,25 +416,21 @@ bool SerialPort::readByte(char &byte)
 
 int SerialPort::readBytes(char* buffer, int bytes)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return -1;
     }
     
     {
         QMutexLocker locker(&mMutex);
-        for (int i = 0;i < bytes;i++)
-        {
-            if (mBufferRead == mBufferWrite)
-            {
+        for (int i = 0;i < bytes;i++) {
+            if (mBufferRead == mBufferWrite) {
                 return i;
             }
             
             buffer[i] = mReadBuffer[mBufferRead];
             mBufferRead++;
-            if (mBufferRead == mBufferSize)
-            {
+            if (mBufferRead == mBufferSize) {
                 mBufferRead = 0;
             }
         }
@@ -491,8 +441,7 @@ int SerialPort::readBytes(char* buffer, int bytes)
 
 int SerialPort::readString(QString& string, int length)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return -1;
     }
@@ -500,21 +449,17 @@ int SerialPort::readString(QString& string, int length)
     string = "";
     
     QMutexLocker locker(&mMutex);
-    for (int i = 0;i < length;i++)
-    {
-        if (mBufferRead == mBufferWrite)
-        {
+    for (int i = 0;i < length;i++) {
+        if (mBufferRead == mBufferWrite) {
             return i;
         }
         
-        if ('\0' != mReadBuffer[mBufferRead])
-        {
+        if ('\0' != mReadBuffer[mBufferRead]) {
             string.append(mReadBuffer[mBufferRead]);
         }
         
         mBufferRead++;
-        if (mBufferRead == mBufferSize)
-        {
+        if (mBufferRead == mBufferSize) {
             mBufferRead = 0;
         }
     }
@@ -524,8 +469,7 @@ int SerialPort::readString(QString& string, int length)
 
 QByteArray SerialPort::readAll()
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return 0;
     }
@@ -543,8 +487,7 @@ QByteArray SerialPort::readAll()
 
 int SerialPort::writeData(const char *data, int length, bool block)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return -2;
     }
@@ -554,60 +497,49 @@ int SerialPort::writeData(const char *data, int length, bool block)
     fd_set set;
     timespec timeout;
     
-    if (block)
-    {
-        while (length)
-        {
+    if (block) {
+        while (length) {
             FD_ZERO(&set); /* clear the set */
             FD_SET(mFd, &set); /* add our file descriptor to the set */
             timeout.tv_sec = 0;
             timeout.tv_nsec = 1000000;
             res = pselect(mFd + 1, NULL, &set, NULL, &timeout, NULL);
             
-            if(res < 0)
-            {
+            if(res < 0) {
                 qCritical().nospace() << "PSelect failed in writeData (" << res << "), ignoring";
                 //return res;
-            } else if(res == 0)
-            {
+            } else if(res == 0) {
                 // Timeout
-            } else
-            {
+            } else {
                 res = write(mFd, data + written, length);
-                if (res >= 0)
-                {
+                if (res >= 0) {
                     length -= res;
                     written += res;
-                } else
-                {
+                } else {
                     qCritical().nospace() << "Writing to serial port failed (" << res << "), ignoring";
                     //return res;
                 }
             }
             
-            if (!mIsOpen)
-            {
+            if (!mIsOpen) {
                 qCritical() << "Serial port closed during write";
                 return -2;
             }
         }
         return written;
-    } else
-    {
+    } else {
         return write(mFd, data, length);
     }
 }
 
 bool SerialPort::writeByte(char byte, bool block)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return false;
     }
     
-    if (1 == writeData(&byte, 1, block))
-    {
+    if (1 == writeData(&byte, 1, block)) {
         return true;
     }
     
@@ -616,19 +548,16 @@ bool SerialPort::writeByte(char byte, bool block)
 
 int SerialPort::bytesAvailable()
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return -1;
     }
     
     {
         QMutexLocker locker(&mMutex);
-        if (mBufferRead <= mBufferWrite)
-        {
+        if (mBufferRead <= mBufferWrite) {
             return mBufferWrite - mBufferRead;
-        } else
-        {
+        } else {
             return (mBufferSize - 1) - mBufferRead + mBufferWrite;
         }
     }
@@ -636,19 +565,16 @@ int SerialPort::bytesAvailable()
 
 bool SerialPort::writeString(const QString& string, bool block)
 {
-    if (string.length() == writeData(string.toLocal8Bit().data(), string.length(), block))
-    {
+    if (string.length() == writeData(string.toLocal8Bit().data(), string.length(), block)) {
         return true;
-    } else
-    {
+    } else {
         return false;
     }
 }
 
 int SerialPort::captureBytes(char *buffer, int num, int timeoutMs, const QString& preTransmit)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return -1;
     }
@@ -660,10 +586,8 @@ int SerialPort::captureBytes(char *buffer, int num, int timeoutMs, const QString
         mCaptureWrite = 0;
     }
     
-    if (preTransmit.length() > 0)
-    {
-        if (!writeString(preTransmit))
-        {
+    if (preTransmit.length() > 0) {
+        if (!writeString(preTransmit)) {
             return -2;
         }
     }
@@ -681,8 +605,7 @@ int SerialPort::captureBytes(char *buffer, int num, int timeoutMs, const QString
 
 int SerialPort::captureBytes(char *buffer, int num, int timeoutMs, const char *preTransmit, int preTransLen)
 {
-    if (!mIsOpen)
-    {
+    if (!mIsOpen) {
         qCritical() << "Serial port not open.";
         return -1;
     }
@@ -694,10 +617,8 @@ int SerialPort::captureBytes(char *buffer, int num, int timeoutMs, const char *p
         mCaptureWrite = 0;
     }
     
-    if (preTransLen > 0)
-    {
-        if (0 > writeData(preTransmit, preTransLen))
-        {
+    if (preTransLen > 0) {
+        if (0 > writeData(preTransmit, preTransLen)) {
             return -2;
         }
     }
@@ -721,57 +642,44 @@ void SerialPort::run()
     fd_set set;
     timespec timeout;
     
-    while (false == mAbort)
-    {
+    while (false == mAbort) {
         FD_ZERO(&set); /* clear the set */
         FD_SET(mFd, &set); /* add our file descriptor to the set */
         timeout.tv_sec = 0;
         timeout.tv_nsec = 10000000;
         res = pselect(mFd + 1, &set, NULL, NULL, &timeout, NULL);
         
-        if(res < 0)
-        {
+        if(res < 0) {
             qWarning() << "Select failed in read thread";
-        } else if(res == 0)
-        {
+        } else if(res == 0) {
             // Timeout
-        } else
-        {
+        } else {
             res = read(mFd, buffer, 1024);
-            if (res > 0)
-            {
+            if (res > 0) {
                 failed_reads = 0;
                 
                 QMutexLocker locker(&mMutex);
-                for (int i = 0;i < res;i++)
-                {
-                    if (mCaptureBytes > 0)
-                    {
-                        if (mCaptureBuffer != 0)
-                        {
+                for (int i = 0;i < res;i++) {
+                    if (mCaptureBytes > 0) {
+                        if (mCaptureBuffer != 0) {
                             mCaptureBuffer[mCaptureWrite] = buffer[i];
                             mCaptureWrite++;
                         }
                         mCaptureBytes--;
-                        if (mCaptureBytes == 0)
-                        {
+                        if (mCaptureBytes == 0) {
                             mCondition.wakeOne();
                         }
-                    } else
-                    {
+                    } else {
                         mReadBuffer[mBufferWrite] = buffer[i];
                         mBufferWrite++;
-                        //qDebug() << (quint8)buffer[i];
                         
-                        if (mBufferWrite == mBufferSize)
-                        {
+                        if (mBufferWrite == mBufferSize) {
                             mBufferWrite = 0;
                         }
                         Q_EMIT serial_data_available();
                     }
                 }
-            } else
-            {
+            } else {
                 if (res < 0) {
                     qCritical().nospace() << "Reading failed. MSG: " << strerror(errno);
                 } else {

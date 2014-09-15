@@ -23,15 +23,6 @@
 #include <QThread>
 #include <QWaitCondition>
 
-#include <cstdio>   /* Standard input/output definitions */
-#include <unistd.h>  /* UNIX standard function definitions */
-#include <fcntl.h>   /* File control definitions */
-#include <errno.h>   /* Error number definitions */
-#include <termios.h> /* POSIX terminal control definitions */
-#include <linux/serial.h>
-#include <sys/ioctl.h>
-#include <iostream>
-
 class SerialPort : public QThread
 {
     Q_OBJECT

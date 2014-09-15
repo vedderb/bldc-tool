@@ -21,6 +21,7 @@
 #include <QFileDialog>
 #include <string.h>
 #include <cmath>
+#include <QMessageBox>
 #include "digitalfiltering.h"
 
 namespace {
@@ -62,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mRealtimeGraphsAdded = false;
     keyLeft = false;
     keyRight = false;
+    mcconfLoaded = false;
 
     connect(mPort, SIGNAL(serial_data_available()),
             this, SLOT(serialDataAvailable()));
@@ -232,6 +234,27 @@ void MainWindow::timerSlot()
             mPacketInterface->getValues();
         }
     }
+
+    // Enable/disable fields in the configuration page
+    static int isSlIntBefore = true;
+    if (ui->mcconfCommIntButton->isChecked() != isSlIntBefore) {
+        if (ui->mcconfCommIntButton->isChecked()) {
+            ui->mcconfSlMinErpmBox->setEnabled(true);
+            ui->mcconfSlBemfKBox->setEnabled(true);
+            ui->mcconfSlBrErpmBox->setEnabled(true);
+            ui->mcconfSlIntLimBox->setEnabled(true);
+            ui->mcconfSlIntLimScaleBrBox->setEnabled(true);
+            ui->mcconfSlMinErpmIlBox->setEnabled(true);
+        } else {
+            ui->mcconfSlMinErpmBox->setEnabled(true);
+            ui->mcconfSlBemfKBox->setEnabled(false);
+            ui->mcconfSlBrErpmBox->setEnabled(false);
+            ui->mcconfSlIntLimBox->setEnabled(false);
+            ui->mcconfSlIntLimScaleBrBox->setEnabled(false);
+            ui->mcconfSlMinErpmIlBox->setEnabled(false);
+        }
+    }
+    isSlIntBefore = ui->mcconfCommIntButton->isChecked();
 
     // Handle key events
     static double keyPower = 0.0;
@@ -929,7 +952,7 @@ void MainWindow::mcValuesReceived(PacketInterface::MC_VALUES values)
         mRealtimeGraphsAdded = true;
     }
 
-    // Set data
+    // Temperature plot
     graphIndex = 0;
     ui->realtimePlotTemperature->graph(graphIndex++)->setData(xAxis, tempMos1Vec);
     ui->realtimePlotTemperature->graph(graphIndex++)->setData(xAxis, tempMos2Vec);
@@ -939,7 +962,7 @@ void MainWindow::mcValuesReceived(PacketInterface::MC_VALUES values)
     ui->realtimePlotTemperature->graph(graphIndex++)->setData(xAxis, tempMos6Vec);
     ui->realtimePlotTemperature->graph(graphIndex++)->setData(xAxis, tempPcbVec);
 
-    // Next plot
+    // Current and duty-plot
     graphIndex = 0;
     ui->realtimePlotRest->graph(graphIndex++)->setData(xAxis, currInVec);
     ui->realtimePlotRest->graph(graphIndex++)->setData(xAxis, currMotorVec);
@@ -1094,7 +1117,7 @@ void MainWindow::mcconfReceived(PacketInterface::mc_configuration mcconf)
     ui->mcconfLimMinVinBox->setValue(mcconf.l_min_vin);
     ui->mcconfLimMaxVinBox->setValue(mcconf.l_max_vin);
 
-    ui->mcconfSlIsSensorlessBox->setChecked(mcconf.sl_is_sensorless);
+    ui->mcconfSlBox->setChecked(mcconf.sl_is_sensorless);
     ui->mcconfSlMinErpmBox->setValue(mcconf.sl_min_erpm);
     ui->mcconfSlMinErpmIlBox->setValue(mcconf.sl_min_erpm_cycle_int_limit);
     ui->mcconfSlIntLimBox->setValue(mcconf.sl_cycle_int_limit);
@@ -1114,6 +1137,8 @@ void MainWindow::mcconfReceived(PacketInterface::mc_configuration mcconf)
     ui->mcconfCcBoostBox->setValue(mcconf.cc_startup_boost_duty);
     ui->mcconfCcMinBox->setValue(mcconf.cc_min_current);
     ui->mcconfCcGainBox->setValue(mcconf.cc_gain);
+
+    mcconfLoaded = true;
 }
 
 void MainWindow::on_connectButton_clicked()
@@ -1350,8 +1375,14 @@ void MainWindow::on_mcconfReadButton_clicked()
     mPacketInterface->getMcconf();
 }
 
-void MainWindow::on_mcconfWritepushButton_clicked()
+void MainWindow::on_mcconfWriteButton_clicked()
 {
+    if (!mcconfLoaded) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "The configuration should be read or loaded at least once before writing it.");
+        return;
+    }
+
     PacketInterface::mc_configuration mcconf;
 
     if (ui->mcconfPwmModeSyncButton->isChecked()) {
@@ -1381,7 +1412,7 @@ void MainWindow::on_mcconfWritepushButton_clicked()
     mcconf.l_min_vin = ui->mcconfLimMinVinBox->value();
     mcconf.l_max_vin = ui->mcconfLimMaxVinBox->value();
 
-    mcconf.sl_is_sensorless = ui->mcconfSlIsSensorlessBox->isChecked();
+    mcconf.sl_is_sensorless = ui->mcconfSlBox->isChecked();
     mcconf.sl_min_erpm = ui->mcconfSlMinErpmBox->value();
     mcconf.sl_min_erpm_cycle_int_limit = ui->mcconfSlMinErpmIlBox->value();
     mcconf.sl_cycle_int_limit = ui->mcconfSlIntLimBox->value();
@@ -1403,4 +1434,19 @@ void MainWindow::on_mcconfWritepushButton_clicked()
     mcconf.cc_gain = ui->mcconfCcGainBox->value();
 
     mPacketInterface->setMcconf(mcconf);
+}
+
+void MainWindow::on_currentBrakeButton_clicked()
+{
+    mPacketInterface->setCurrentBrake(ui->currentBrakeBox->value());
+}
+
+void MainWindow::on_mcconfLoadXmlButton_clicked()
+{
+
+}
+
+void MainWindow::on_mcconfSaveXmlButton_clicked()
+{
+
 }

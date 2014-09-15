@@ -73,7 +73,10 @@ private slots:
     void on_experimentClearSamplesButton_clicked();
     void on_experimentSaveSamplesButton_clicked();
     void on_mcconfReadButton_clicked();
-    void on_mcconfWritepushButton_clicked();
+    void on_mcconfWriteButton_clicked();
+    void on_currentBrakeButton_clicked();
+    void on_mcconfLoadXmlButton_clicked();
+    void on_mcconfSaveXmlButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -121,6 +124,7 @@ private:
     PacketInterface *mPacketInterface;
     bool keyLeft;
     bool keyRight;
+    bool mcconfLoaded;
 
     QVector<QVector<double> > mExperimentSamples;
 
