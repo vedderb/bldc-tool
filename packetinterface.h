@@ -55,7 +55,8 @@ public:
         COMM_TERMINAL_CMD,
         COMM_PRINT,
         COMM_ROTOR_POSITION,
-        COMM_EXPERIMENT_SAMPLE
+        COMM_EXPERIMENT_SAMPLE,
+        COMM_DETECT_MOTOR_PARAM
     } COMM_PACKET_ID;
 
     typedef enum {
@@ -127,6 +128,7 @@ public:
     bool samplePrint(bool at_start, int sample_len, int dec);
     bool getMcconf();
     bool setMcconf(const PacketInterface::mc_configuration &mcconf);
+    bool detectMotorParam(double current, double min_rpm, double low_duty);
 
 signals:
     void dataToSend(QByteArray &data);
@@ -136,6 +138,7 @@ signals:
     void rotorPosReceived(double pos);
     void experimentSamplesReceived(QVector<double> samples);
     void mcconfReceived(PacketInterface::mc_configuration mcconf);
+    void motorParamReceived(double cycle_int_limit, double bemf_coupling_k);
     
 public slots:
     void timerSlot();

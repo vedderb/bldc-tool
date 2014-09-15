@@ -83,35 +83,20 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(experimentSamplesReceived(QVector<double>)));
     connect(mPacketInterface, SIGNAL(mcconfReceived(PacketInterface::mc_configuration)),
             this, SLOT(mcconfReceived(PacketInterface::mc_configuration)));
+    connect(mPacketInterface, SIGNAL(motorParamReceived(double,double)),
+            this, SLOT(motorParamReceived(double,double)));
 
     mSerialization = new Serialization(this);
 
-    ui->currentPlot->setRangeDrag(Qt::Horizontal | Qt::Vertical);
-    ui->currentPlot->setRangeZoom(Qt::Horizontal | Qt::Vertical);
-
-    ui->voltagePlot->setRangeDrag(Qt::Horizontal | Qt::Vertical);
-    ui->voltagePlot->setRangeZoom(Qt::Horizontal | Qt::Vertical);
-
-    ui->filterPlot->setRangeDrag(Qt::Horizontal | Qt::Vertical);
-    ui->filterPlot->setRangeZoom(Qt::Horizontal | Qt::Vertical);
-
-    ui->filterResponsePlot->setRangeDrag(Qt::Horizontal | Qt::Vertical);
-    ui->filterResponsePlot->setRangeZoom(Qt::Horizontal | Qt::Vertical);
-
-    ui->filterPlot2->setRangeDrag(Qt::Horizontal | Qt::Vertical);
-    ui->filterPlot2->setRangeZoom(Qt::Horizontal | Qt::Vertical);
-
-    ui->filterResponsePlot2->setRangeDrag(Qt::Horizontal | Qt::Vertical);
-    ui->filterResponsePlot2->setRangeZoom(Qt::Horizontal | Qt::Vertical);
-
-    ui->realtimePlotTemperature->setRangeDrag(Qt::Horizontal | Qt::Vertical);
-    ui->realtimePlotTemperature->setRangeZoom(Qt::Horizontal | Qt::Vertical);
-
-    ui->realtimePlotRest->setRangeDrag(Qt::Horizontal | Qt::Vertical);
-    ui->realtimePlotRest->setRangeZoom(Qt::Horizontal | Qt::Vertical);
-
-    ui->realtimePlotPosition->setRangeDrag(Qt::Horizontal | Qt::Vertical);
-    ui->realtimePlotPosition->setRangeZoom(Qt::Horizontal | Qt::Vertical);
+    ui->currentPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    ui->voltagePlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    ui->filterPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    ui->filterResponsePlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    ui->filterPlot2->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    ui->filterResponsePlot2->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    ui->realtimePlotTemperature->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    ui->realtimePlotRest->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    ui->realtimePlotPosition->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
     QFont legendFont = font();
     legendFont.setPointSize(9);
@@ -120,7 +105,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->realtimePlotPosition->graph(0)->setName("Position");
     ui->realtimePlotPosition->legend->setVisible(true);
     ui->realtimePlotPosition->legend->setFont(legendFont);
-    ui->realtimePlotPosition->legend->setPositionStyle(QCPLegend::psBottomRight);
+    ui->realtimePlotPosition->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
     ui->realtimePlotPosition->legend->setBrush(QBrush(QColor(255,255,255,230)));
     ui->realtimePlotPosition->xAxis->setLabel("Sample");
     ui->realtimePlotPosition->yAxis->setLabel("Deg");
@@ -498,14 +483,12 @@ void MainWindow::timerSlot()
 
         if (ui->filterScatterBox->isChecked()) {
             ui->filterPlot->graph(0)->setLineStyle(QCPGraph::lsLine);
-            ui->filterPlot->graph(0)->setScatterStyle(QCP::ssCircle);
-            ui->filterPlot->graph(0)->setScatterSize(3);
+            ui->filterPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
         }
 
         if (ui->filterScatterBox2->isChecked()) {
             ui->filterPlot2->graph(0)->setLineStyle(QCPGraph::lsLine);
-            ui->filterPlot2->graph(0)->setScatterStyle(QCP::ssCircle);
-            ui->filterPlot2->graph(0)->setScatterSize(3);
+            ui->filterPlot2->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
         }
 
         // Plot response
@@ -538,28 +521,28 @@ void MainWindow::timerSlot()
 
         ui->filterPlot->legend->setVisible(true);
         ui->filterPlot->legend->setFont(legendFont);
-        ui->filterPlot->legend->setPositionStyle(QCPLegend::psBottomRight);
+        ui->filterPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
         ui->filterPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
         ui->filterPlot->xAxis->setLabel("Index");
         ui->filterPlot->yAxis->setLabel("Value");
 
         ui->filterPlot2->legend->setVisible(true);
         ui->filterPlot2->legend->setFont(legendFont);
-        ui->filterPlot2->legend->setPositionStyle(QCPLegend::psBottomRight);
+        ui->filterPlot2->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
         ui->filterPlot2->legend->setBrush(QBrush(QColor(255,255,255,230)));
         ui->filterPlot2->xAxis->setLabel("Index");
         ui->filterPlot2->yAxis->setLabel("Value");
 
         ui->filterResponsePlot->legend->setVisible(true);
         ui->filterResponsePlot->legend->setFont(legendFont);
-        ui->filterResponsePlot->legend->setPositionStyle(QCPLegend::psBottomRight);
+        ui->filterResponsePlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
         ui->filterResponsePlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
         ui->filterResponsePlot->xAxis->setLabel("Frequency (Hz)");
         ui->filterResponsePlot->yAxis->setLabel("Gain");
 
         ui->filterResponsePlot2->legend->setVisible(true);
         ui->filterResponsePlot2->legend->setFont(legendFont);
-        ui->filterResponsePlot2->legend->setPositionStyle(QCPLegend::psBottomRight);
+        ui->filterResponsePlot2->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
         ui->filterResponsePlot2->legend->setBrush(QBrush(QColor(255,255,255,230)));
         ui->filterResponsePlot2->xAxis->setLabel("Frequency (Hz)");
         ui->filterResponsePlot2->yAxis->setLabel("Gain");
@@ -590,78 +573,55 @@ void MainWindow::timerSlot()
         const double f_samp = (ui->sampleFreqBox->value() / ui->sampleIntBox->value());
 
         int size = curr1Array.size();
-        double last_3 = -10;
-        double rpm_3 = -10;
 
         QVector<double> curr1(size/2);
-        for (int i=0; i<(size); i+=2)
-        {
+        for (int i=0; i<(size); i+=2) {
             curr1[i/2] = (double)((qint16)(((unsigned char)curr1Array[i] << 8) | (unsigned char)curr1Array[i + 1]));
         }
 
         QVector<double> curr2(size/2);
-        for (int i=0; i<(size); i+=2)
-        {
+        for (int i=0; i<(size); i+=2) {
             curr2[i/2] = (double)((qint16)(((unsigned char)curr2Array[i] << 8) | (unsigned char)curr2Array[i + 1]));
         }
 
         QVector<double> ph1(size/2);
-        for (int i=0; i<(size); i+=2)
-        {
+        for (int i=0; i<(size); i+=2) {
             ph1[i/2] = (double)((qint16)(((unsigned char)ph1Array[i] << 8) | (unsigned char)ph1Array[i + 1]));
         }
 
         QVector<double> ph2(size/2);
-        for (int i=0; i<(size); i+=2)
-        {
+        for (int i=0; i<(size); i+=2) {
             ph2[i/2] = (double)((qint16)(((unsigned char)ph2Array[i] << 8) | (unsigned char)ph2Array[i + 1]));
         }
 
         QVector<double> ph3(size/2);
-        for (int i=0; i<(size); i+=2)
-        {
+        for (int i=0; i<(size); i+=2) {
             ph3[i/2] = (double)((qint16)(((unsigned char)ph3Array[i] << 8) | (unsigned char)ph3Array[i + 1]));
         }
 
         QVector<double> vZero(size/2);
-        for (int i=0; i<(size); i+=2)
-        {
+        for (int i=0; i<(size); i+=2) {
             vZero[i/2] = (double)((qint16)(((unsigned char)vZeroArray[i] << 8) | (unsigned char)vZeroArray[i + 1]));
         }
 
-        // TODO: Calculate RPM properly with the correct switching/sampling frequency
         QVector<double> position(size/2);
-        for (int i=0;i < (size / 2);i++)
-        {
+        for (int i=0;i < (size / 2);i++) {
             position[i] = (double)((quint8)statusArray.at(i) & 7);
-            if (i > 0 && position[i] == 3 && position[i - 1] != 3) {
-                if (last_3 < 0) {
-                    last_3 = i;
-                } else if (rpm_3 < 0) {
-                    // Calculate RPM
-                    double diff = fabs(last_3 - i);
-                    rpm_3 = (1 / (diff / f_samp)) * 60.0;
-                    ui->rpmLcdNumber->display(rpm_3);
-                }
-            }
         }
 
         QVector<double> position_hall(size/2);
-        for (int i=0;i < (size / 2);i++)
-        {
+        for (int i=0;i < (size / 2);i++) {
             position_hall[i] = (double)((quint8)(statusArray.at(i) >> 3) & 7) / 1.0;
         }
 
         QVector<double> totCurrentMc(size/2);
-        for (int i=0; i<(size); i+=2)
-        {
+        for (int i=0; i<(size); i+=2) {
             totCurrentMc[i/2] = (double)((qint16)(((unsigned char)currTotArray[i] << 8) | (unsigned char)currTotArray[i + 1]));
             totCurrentMc[i/2] /= 100;
         }
 
         QVector<double> fSw(size/2);
-        for (int i=0; i<(size); i+=2)
-        {
+        for (int i=0; i<(size); i+=2) {
             fSw[i/2] = (double)((qint16)(((unsigned char)fSwArray[i] << 8) | (unsigned char)fSwArray[i + 1]));
             fSw[i/2] *= 10.0;
             fSw[i/2] /= (double)ui->sampleIntBox->value();
@@ -671,8 +631,7 @@ void MainWindow::timerSlot()
         QVector<double> curr3(curr2.size());
         QVector<double> totCurrent(curr2.size());
 
-        for (int i=0;i < curr2.size(); i++)
-        {
+        for (int i=0;i < curr2.size(); i++) {
             curr1[i] *= (3.3 / 4095.0) / (0.001 * 10.0);
             curr2[i] *= (3.3 / 4095.0) / (0.001 * 10.0);
             curr3[i] = -(curr1[i] + curr2[i]);
@@ -824,13 +783,11 @@ void MainWindow::timerSlot()
 
         QPen phasePen;
         phasePen.setStyle(Qt::DotLine);
-        phasePen.setColor(Qt::darkMagenta);
-        phasePen.setWidth(2);
+        phasePen.setColor(Qt::blue);
 
         QPen phasePen2;
         phasePen2.setStyle(Qt::DotLine);
-        phasePen2.setColor(Qt::darkYellow);
-        phasePen2.setWidth(2);
+        phasePen2.setColor(Qt::red);
 
         int graphIndex = 0;
 
@@ -933,7 +890,7 @@ void MainWindow::timerSlot()
         // Plot settings
         ui->currentPlot->legend->setVisible(true);
         ui->currentPlot->legend->setFont(legendFont);
-        ui->currentPlot->legend->setPositionStyle(QCPLegend::psBottomRight);
+        ui->currentPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
         ui->currentPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
         if (ui->currentSpectrumButton->isChecked()) {
             ui->currentPlot->xAxis->setLabel("Frequency (Hz)");
@@ -945,7 +902,7 @@ void MainWindow::timerSlot()
 
         ui->voltagePlot->legend->setVisible(true);
         ui->voltagePlot->legend->setFont(legendFont);
-        ui->voltagePlot->legend->setPositionStyle(QCPLegend::psBottomRight);
+        ui->voltagePlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
         ui->voltagePlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
         ui->voltagePlot->xAxis->setLabel("Seconds (s)");
         ui->voltagePlot->yAxis->setLabel("Volts (V)");
@@ -990,7 +947,6 @@ void MainWindow::mcValuesReceived(PacketInterface::MC_VALUES values)
     QPen dotPen;
     dotPen.setStyle(Qt::DotLine);
     dotPen.setColor(Qt::blue);
-    dotPen.setWidth(2);
 
     QFont legendFont = font();
     legendFont.setPointSize(9);
@@ -1063,14 +1019,14 @@ void MainWindow::mcValuesReceived(PacketInterface::MC_VALUES values)
 
         ui->realtimePlotTemperature->legend->setVisible(true);
         ui->realtimePlotTemperature->legend->setFont(legendFont);
-        ui->realtimePlotTemperature->legend->setPositionStyle(QCPLegend::psBottomRight);
+        ui->realtimePlotTemperature->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
         ui->realtimePlotTemperature->legend->setBrush(QBrush(QColor(255,255,255,230)));
         ui->realtimePlotTemperature->xAxis->setLabel("Seconds (s)");
         ui->realtimePlotTemperature->yAxis->setLabel("Deg C");
 
         ui->realtimePlotRest->legend->setVisible(true);
         ui->realtimePlotRest->legend->setFont(legendFont);
-        ui->realtimePlotRest->legend->setPositionStyle(QCPLegend::psBottomRight);
+        ui->realtimePlotRest->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
         ui->realtimePlotRest->legend->setBrush(QBrush(QColor(255,255,255,230)));
         ui->realtimePlotRest->xAxis->setLabel("Seconds (s)");
         ui->realtimePlotRest->yAxis->setLabel("Ampere (A)");
@@ -1208,6 +1164,19 @@ void MainWindow::mcconfReceived(PacketInterface::mc_configuration mcconf)
     setMcconfGui(mcconf);
 }
 
+void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling_k)
+{
+    if (cycle_int_limit < 0.01 && bemf_coupling_k < 0.01) {
+        ui->mcconfDetectResultBrowser->setText("Detection failed.");
+    } else {
+        ui->mcconfDetectResultBrowser->setText(QString().sprintf("Detection results:\n"
+                                                                 "Integrator limit: %.2f\n"
+                                                                 "BEMF Coupling: %.2f",
+                                                                 cycle_int_limit,
+                                                                 bemf_coupling_k));
+    }
+}
+
 void MainWindow::on_connectButton_clicked()
 {
     mPort->openPort(ui->serialDeviceEdit->text());
@@ -1333,25 +1302,19 @@ void MainWindow::on_rescaleButton_clicked()
 
 void MainWindow::on_horizontalZoomBox_clicked()
 {
-    Qt::Orientations orient;
+    Qt::Orientations plotOrientations = (Qt::Orientations)
+            ((ui->horizontalZoomBox->isChecked() ? Qt::Horizontal : 0) |
+            (ui->verticalZoomBox->isChecked() ? Qt::Vertical : 0));
 
-    if (ui->horizontalZoomBox->isChecked()) {
-        orient |= Qt::Horizontal;
-    }
-
-    if (ui->verticalZoomBox->isChecked()) {
-        orient |= Qt::Vertical;
-    }
-
-    ui->currentPlot->setRangeZoom(orient);
-    ui->voltagePlot->setRangeZoom(orient);
-    ui->filterPlot->setRangeZoom(orient);
-    ui->filterResponsePlot->setRangeZoom(orient);
-    ui->filterPlot2->setRangeZoom(orient);
-    ui->filterResponsePlot2->setRangeZoom(orient);
-    ui->realtimePlotTemperature->setRangeZoom(orient);
-    ui->realtimePlotRest->setRangeZoom(orient);
-    ui->realtimePlotPosition->setRangeZoom(orient);
+    ui->currentPlot->axisRect()->setRangeZoom(plotOrientations);
+    ui->voltagePlot->axisRect()->setRangeZoom(plotOrientations);
+    ui->filterPlot->axisRect()->setRangeZoom(plotOrientations);
+    ui->filterResponsePlot->axisRect()->setRangeZoom(plotOrientations);
+    ui->filterPlot2->axisRect()->setRangeZoom(plotOrientations);
+    ui->filterResponsePlot2->axisRect()->setRangeZoom(plotOrientations);
+    ui->realtimePlotTemperature->axisRect()->setRangeZoom(plotOrientations);
+    ui->realtimePlotRest->axisRect()->setRangeZoom(plotOrientations);
+    ui->realtimePlotPosition->axisRect()->setRangeZoom(plotOrientations);
 }
 
 void MainWindow::on_verticalZoomBox_clicked()
@@ -1470,4 +1433,11 @@ void MainWindow::on_mcconfSaveXmlButton_clicked()
 {
     PacketInterface::mc_configuration mcconf = getMcconfGui();
     mSerialization->writeMcconfXml(mcconf, this);
+}
+
+void MainWindow::on_mcconfDetectMotorParamButton_clicked()
+{
+    mPacketInterface->detectMotorParam(ui->mcconfDetectCurrentBox->value(),
+                                       ui->mcconfDetectErpmBox->value(),
+                                       ui->mcconfDetectLowDutyBox->value());
 }

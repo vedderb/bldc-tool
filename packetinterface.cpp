@@ -194,6 +194,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     QByteArray tmpArray;
     QVector<double> samples;
     mc_configuration mcconf;
+    double detect_cycle_int_limit;
+    double detect_coupling_k;
 
     unsigned char id = data[0];
     data++;
@@ -289,6 +291,13 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.meta_description = "Configuration loaded from the motor controller.";
 
         emit mcconfReceived(mcconf);
+        break;
+
+    case COMM_DETECT_MOTOR_PARAM:
+        ind = 0;
+        detect_cycle_int_limit = (double)utility::buffer_get_int32(data, &ind) / 1000.0;
+        detect_coupling_k = (double)utility::buffer_get_int32(data, &ind) / 1000.0;
+        emit motorParamReceived(detect_cycle_int_limit, detect_coupling_k);
         break;
 
     default:
@@ -413,5 +422,15 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_min_current * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_gain * 1000000.0), &send_index);
 
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::detectMotorParam(double current, double min_rpm, double low_duty)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_DETECT_MOTOR_PARAM;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(current * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(min_rpm * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(low_duty * 1000.0), &send_index);
     return sendPacket(mSendBuffer, send_index);
 }

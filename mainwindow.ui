@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1161</width>
-    <height>732</height>
+    <width>1265</width>
+    <height>730</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>BLDC Tool</string>
@@ -104,16 +110,6 @@
             <property name="currentIndex">
              <number>0</number>
             </property>
-            <widget class="QWidget" name="tab_4">
-             <attribute name="title">
-              <string>Description</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_25">
-              <item>
-               <widget class="QPlainTextEdit" name="mcconfDescEdit"/>
-              </item>
-             </layout>
-            </widget>
             <widget class="QWidget" name="tab_12">
              <attribute name="title">
               <string>Limits</string>
@@ -510,7 +506,7 @@
                       <double>10000.000000000000000</double>
                      </property>
                      <property name="singleStep">
-                      <double>10.000000000000000</double>
+                      <double>1.000000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -623,6 +619,131 @@
                     </spacer>
                    </item>
                   </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_11">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="title">
+                 <string>Detect parameters</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_25">
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_26">
+                   <item>
+                    <widget class="QPushButton" name="mcconfDetectMotorParamButton">
+                     <property name="text">
+                      <string>Start detection</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QGridLayout" name="gridLayout_7">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_43">
+                       <property name="text">
+                        <string>Current</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfDetectCurrentBox">
+                       <property name="value">
+                        <double>6.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_44">
+                       <property name="text">
+                        <string>Min ERPM</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfDetectErpmBox">
+                       <property name="minimum">
+                        <double>10.000000000000000</double>
+                       </property>
+                       <property name="maximum">
+                        <double>10000.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>10.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>600.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_42">
+                       <property name="toolTip">
+                        <string>The duty cycle at which the BEMF coupling is measured. A value between 0.03 and 0.15 usually works.</string>
+                       </property>
+                       <property name="text">
+                        <string>Low duty</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfDetectLowDutyBox">
+                       <property name="maximum">
+                        <double>0.400000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.010000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>0.050000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer_5">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QTextBrowser" name="mcconfDetectBrowser">
+                   <property name="html">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Try to detect the integrator limit and the BEMF coupling. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QTextBrowser" name="mcconfDetectResultBrowser">
+                   <property name="html">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Detection results will be printed here.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </widget>
@@ -839,6 +960,16 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_4">
+             <attribute name="title">
+              <string>Description</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_25">
+              <item>
+               <widget class="QPlainTextEdit" name="mcconfDescEdit"/>
               </item>
              </layout>
             </widget>
@@ -1485,46 +1616,12 @@
         </widget>
         <widget class="QWidget" name="tab_3">
          <attribute name="title">
-          <string>Misc</string>
+          <string>Inductance Position Detection</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <layout class="QGridLayout" name="gridLayout_8">
-            <item row="1" column="1">
-             <widget class="QPushButton" name="detectButton">
-              <property name="text">
-               <string>Detect</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>Calculated RPM</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="3">
-             <widget class="QLCDNumber" name="rpmLcdNumber">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>35</height>
-               </size>
-              </property>
-              <property name="digitCount">
-               <number>8</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_11">
-              <property name="text">
-               <string>Rotor Position</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
              <widget class="QProgressBar" name="rotorPosBar">
               <property name="maximum">
                <number>359</number>
@@ -1537,7 +1634,21 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
+            <item row="0" column="1">
+             <widget class="QPushButton" name="detectButton">
+              <property name="text">
+               <string>Detect</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Rotor Position</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
              <widget class="QPushButton" name="stopDetectButton">
               <property name="text">
                <string>Stop</string>
@@ -2088,12 +2199,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>35</x>
-     <y>592</y>
+     <x>65</x>
+     <y>607</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2104,12 +2215,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>685</x>
-     <y>667</y>
+     <x>985</x>
+     <y>687</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2120,12 +2231,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>374</x>
-     <y>621</y>
+     <x>486</x>
+     <y>642</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2136,12 +2247,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1129</x>
-     <y>458</y>
+     <x>1236</x>
+     <y>511</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2152,12 +2263,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>35</x>
-     <y>653</y>
+     <x>65</x>
+     <y>674</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2168,12 +2279,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>35</x>
-     <y>622</y>
+     <x>65</x>
+     <y>640</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2184,12 +2295,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>374</x>
-     <y>651</y>
+     <x>486</x>
+     <y>675</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2200,12 +2311,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>202</x>
-     <y>592</y>
+     <x>334</x>
+     <y>607</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2216,12 +2327,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>519</x>
-     <y>553</y>
+     <x>160</x>
+     <y>90</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2232,12 +2343,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>472</x>
-     <y>592</y>
+     <x>703</x>
+     <y>607</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2248,12 +2359,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>639</x>
-     <y>592</y>
+     <x>815</x>
+     <y>607</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2264,12 +2375,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>555</x>
-     <y>622</y>
+     <x>702</x>
+     <y>644</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2280,12 +2391,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>472</x>
-     <y>655</y>
+     <x>703</x>
+     <y>676</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2296,12 +2407,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>811</x>
-     <y>651</y>
+     <x>967</x>
+     <y>675</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2312,12 +2423,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>811</x>
-     <y>621</y>
+     <x>967</x>
+     <y>642</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2328,12 +2439,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>519</x>
-     <y>553</y>
+     <x>160</x>
+     <y>90</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2344,12 +2455,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>61</x>
-     <y>521</y>
+     <x>105</x>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2360,12 +2471,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>149</x>
-     <y>521</y>
+     <x>257</x>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2376,12 +2487,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>237</x>
-     <y>521</y>
+     <x>358</x>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2392,12 +2503,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>325</x>
-     <y>521</y>
+     <x>482</x>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2408,12 +2519,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>432</x>
-     <y>521</y>
+     <x>631</x>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2424,12 +2535,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>561</x>
-     <y>521</y>
+     <x>723</x>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2444,8 +2555,8 @@
      <y>667</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2456,12 +2567,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>107</x>
-     <y>667</y>
+     <x>193</x>
+     <y>687</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2472,12 +2583,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>186</x>
-     <y>667</y>
+     <x>282</x>
+     <y>687</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2488,12 +2599,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>384</x>
-     <y>667</y>
+     <x>511</x>
+     <y>687</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2504,12 +2615,12 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>266</x>
-     <y>667</y>
+     <x>419</x>
+     <y>687</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
     </hint>
    </hints>
   </connection>
@@ -2520,12 +2631,28 @@
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>745</x>
-     <y>521</y>
+     <x>872</x>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1129</x>
-     <y>643</y>
+     <x>1236</x>
+     <y>638</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>terminalEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>sendTerminalButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>775</x>
+     <y>668</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>823</x>
+     <y>668</y>
     </hint>
    </hints>
   </connection>
