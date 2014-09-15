@@ -104,6 +104,16 @@
             <property name="currentIndex">
              <number>0</number>
             </property>
+            <widget class="QWidget" name="tab_4">
+             <attribute name="title">
+              <string>Description</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_25">
+              <item>
+               <widget class="QPlainTextEdit" name="mcconfDescEdit"/>
+              </item>
+             </layout>
+            </widget>
             <widget class="QWidget" name="tab_12">
              <attribute name="title">
               <string>Limits</string>

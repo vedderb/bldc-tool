@@ -107,6 +107,8 @@ public:
         float cc_startup_boost_duty;
         float cc_min_current;
         float cc_gain;
+        // Fields that are only present in Qt
+        QString meta_description;
     } mc_configuration;
 
     explicit PacketInterface(QObject *parent = 0);

@@ -19,13 +19,15 @@ SOURCES += main.cpp\
     serialport.cpp \
     digitalfiltering.cpp \
     packetinterface.cpp \
-    utility.cpp
+    utility.cpp \
+    serialization.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
     serialport.h \
     digitalfiltering.h \
     packetinterface.h \
-    utility.h
+    utility.h \
+    serialization.h
 
 FORMS    += mainwindow.ui

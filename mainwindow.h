@@ -25,6 +25,7 @@
 #include "qcustomplot.h"
 #include "serialport.h"
 #include "packetinterface.h"
+#include "serialization.h"
 
 namespace Ui {
 class MainWindow;
@@ -38,6 +39,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     bool eventFilter(QObject *object, QEvent *e);
+    PacketInterface::mc_configuration getMcconfGui();
+    void setMcconfGui(const PacketInterface::mc_configuration &mcconf);
 
 private slots:
     void serialDataAvailable();
@@ -83,6 +86,7 @@ private:
     SerialPort *mPort;
     QTimer *mTimer;
     QLabel *mStatusLabel;
+    Serialization *mSerialization;
     int mSampleInt;
     QByteArray curr1Array;
     QByteArray curr2Array;

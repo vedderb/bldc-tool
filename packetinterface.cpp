@@ -286,6 +286,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.cc_min_current = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.cc_gain = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
 
+        mcconf.meta_description = "Configuration loaded from the motor controller.";
+
         emit mcconfReceived(mcconf);
         break;
 
