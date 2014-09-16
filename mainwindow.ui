@@ -453,7 +453,7 @@
                    <item row="0" column="0">
                     <widget class="QLabel" name="label_26">
                      <property name="toolTip">
-                      <string>Important for startup</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important for startup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="text">
                       <string>Minimum ERPM</string>
@@ -463,7 +463,7 @@
                    <item row="5" column="0">
                     <widget class="QLabel" name="label_41">
                      <property name="toolTip">
-                      <string>Important. There is a command in the terminal that can be used to estimate this parameter.</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important. The detection function below can be used to determine this parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="text">
                       <string>BEMF Coupling</string>
@@ -473,7 +473,7 @@
                    <item row="2" column="0">
                     <widget class="QLabel" name="label_28">
                      <property name="toolTip">
-                      <string>Important. There is a command in the terminal that can be used to estimate this parameter.</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important. The detection function below can be used to determine this parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="text">
                       <string>Integrator limit</string>
@@ -483,7 +483,7 @@
                    <item row="1" column="0">
                     <widget class="QLabel" name="label_27">
                      <property name="toolTip">
-                      <string>Important for startup</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important for startup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="text">
                       <string>Minimum ERPM for integrator limit</string>
@@ -513,7 +513,7 @@
                    <item row="3" column="0">
                     <widget class="QLabel" name="label_29">
                      <property name="toolTip">
-                      <string>For phase advance, not so important</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For phase advance, not so important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="text">
                       <string>Integrator limit scale at BR ERPM</string>
@@ -543,7 +543,7 @@
                    <item row="4" column="0">
                     <widget class="QLabel" name="label_30">
                      <property name="toolTip">
-                      <string>For phase advance, not so important</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For phase advance, not so important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="text">
                       <string>BR ERPM</string>
