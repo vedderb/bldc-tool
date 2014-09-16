@@ -122,8 +122,11 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
 {
     Q_UNUSED(object);
 
-    if (e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease)
-    {
+    if (!mPort->isOpen()) {
+        return false;
+    }
+
+    if (e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(e);
         bool isPress = e->type() == QEvent::KeyPress;
 
@@ -246,7 +249,7 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     mcconf.cc_min_current = ui->mcconfCcMinBox->value();
     mcconf.cc_gain = ui->mcconfCcGainBox->value();
 
-    mcconf.meta_description = ui->mcconfDescEdit->toPlainText();
+    mcconf.meta_description = ui->mcconfDescEdit->toHtml();
 
     return mcconf;
 }
@@ -318,8 +321,7 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     ui->mcconfCcMinBox->setValue(mcconf.cc_min_current);
     ui->mcconfCcGainBox->setValue(mcconf.cc_gain);
 
-    ui->mcconfDescEdit->clear();
-    ui->mcconfDescEdit->appendPlainText(mcconf.meta_description);
+    ui->mcconfDescEdit->document()->setHtml(mcconf.meta_description);
 
     mcconfLoaded = true;
 }

@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     digitalfiltering.cpp \
     packetinterface.cpp \
     utility.cpp \
-    serialization.cpp
+    serialization.cpp \
+    mrichtextedit.cpp \
+    mtextedit.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -28,6 +30,11 @@ HEADERS  += mainwindow.h \
     digitalfiltering.h \
     packetinterface.h \
     utility.h \
-    serialization.h
+    serialization.h \
+    mrichtextedit.h \
+    mtextedit.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    mrichtextedit.ui
+
+RESOURCES +=
