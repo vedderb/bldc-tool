@@ -122,7 +122,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
 {
     Q_UNUSED(object);
 
-    if (!mPort->isOpen()) {
+    if (!mPort->isOpen() || !ui->overrideKbBox->isChecked()) {
         return false;
     }
 
@@ -1351,11 +1351,6 @@ void MainWindow::on_filterLogScaleBox2_clicked(bool checked)
 void MainWindow::on_detectButton_clicked()
 {
     mPacketInterface->setDetect();
-}
-
-void MainWindow::on_resetBufferButton_clicked()
-{
-    clearBuffers();
 }
 
 void MainWindow::appendDoubleAndTrunc(QVector<double> *vec, double num, int maxSize)

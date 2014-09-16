@@ -32,7 +32,7 @@
  */
 class MRichTextEdit : public QWidget, protected Ui::MRichTextEdit {
     Q_OBJECT
-  public:
+public:
     MRichTextEdit(QWidget *parent = 0);
 
     QString toPlainText() const { return f_textedit->toPlainText(); }
@@ -41,10 +41,10 @@ class MRichTextEdit : public QWidget, protected Ui::MRichTextEdit {
     QTextCursor textCursor() const { return f_textedit->textCursor(); }
     void setTextCursor(const QTextCursor& cursor) { f_textedit->setTextCursor(cursor); }
 
-  public slots:
+public slots:
     void setText(const QString &text);
 
-  protected slots:
+protected slots:
     void setPlainText(const QString &text) { f_textedit->setPlainText(text); }
     void setHtml(const QString &text)      { f_textedit->setHtml(text); }
     void textRemoveFormat();
@@ -67,7 +67,7 @@ class MRichTextEdit : public QWidget, protected Ui::MRichTextEdit {
     void insertImage();
     void textSource();
 
-  protected:
+protected:
     void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
     void fontChanged(const QFont &f);
     void bgColorChanged(const QColor &c);

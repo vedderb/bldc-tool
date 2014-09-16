@@ -70,7 +70,6 @@ private slots:
     void on_filterLogScaleBox_clicked(bool checked);
     void on_filterLogScaleBox2_clicked(bool checked);
     void on_detectButton_clicked();
-    void on_resetBufferButton_clicked();
     void on_clearTerminalButton_clicked();
     void on_sendTerminalButton_clicked();
     void on_stopDetectButton_clicked();

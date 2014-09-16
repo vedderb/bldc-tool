@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>864</width>
+    <width>888</width>
     <height>303</height>
    </rect>
   </property>
@@ -491,7 +491,7 @@
       <item>
        <widget class="QToolButton" name="f_image">
         <property name="text">
-         <string notr="true">Image</string>
+         <string notr="true">Insert Image</string>
         </property>
        </widget>
       </item>

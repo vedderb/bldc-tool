@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1265</width>
-    <height>730</height>
+    <width>1271</width>
+    <height>734</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1894,7 +1894,7 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="5" column="0">
              <widget class="QLabel" name="label_12">
               <property name="toolTip">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Current to use when running the motor with the up and down arrow keys. Page down can be used to brake the motor with this current.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1911,7 +1911,7 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
+            <item row="5" column="1">
              <widget class="QDoubleSpinBox" name="arrowCurrentBox">
               <property name="maximum">
                <double>200.000000000000000</double>
@@ -1937,6 +1937,13 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="value">
                <double>3.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="dutyButton">
+              <property name="text">
+               <string>Duty Cycle</string>
               </property>
              </widget>
             </item>
@@ -1972,13 +1979,6 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="dutyButton">
-              <property name="text">
-               <string>Duty Cycle</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
              <widget class="QPushButton" name="rpmButton">
               <property name="text">
@@ -1986,17 +1986,27 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
+            <item row="7" column="0">
              <widget class="QPushButton" name="offButton">
               <property name="text">
                <string>Release</string>
               </property>
              </widget>
             </item>
-            <item row="5" column="1">
+            <item row="7" column="1">
              <widget class="QPushButton" name="offBrakeButton">
               <property name="text">
                <string>Full Brake</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QCheckBox" name="overrideKbBox">
+              <property name="text">
+               <string>Keyboard Control</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -2069,7 +2079,7 @@ p, li { white-space: pre-wrap; }
             <item row="3" column="0">
              <widget class="QLabel" name="label_5">
               <property name="text">
-               <string>Fs</string>
+               <string>Fs for FFT</string>
               </property>
              </widget>
             </item>
@@ -2138,13 +2148,6 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
            </layout>
-          </item>
-          <item>
-           <widget class="QPushButton" name="resetBufferButton">
-            <property name="text">
-             <string>Reset sample buffers</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
