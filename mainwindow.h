@@ -53,6 +53,7 @@ private slots:
     void experimentSamplesReceived(QVector<double> samples);
     void mcconfReceived(PacketInterface::mc_configuration mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k);
+    void appconfReceived(PacketInterface::app_configuration appconf);
 
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();
@@ -81,6 +82,9 @@ private slots:
     void on_mcconfLoadXmlButton_clicked();
     void on_mcconfSaveXmlButton_clicked();
     void on_mcconfDetectMotorParamButton_clicked();
+    void on_appconfReadButton_clicked();
+    void on_appconfWriteButton_clicked();
+    void on_appconfRebootButton_clicked();
 
 private:
     Ui::MainWindow *ui;

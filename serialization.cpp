@@ -59,6 +59,7 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeTextElement("cc_startup_boost_duty", QString::number(mcconf.cc_startup_boost_duty));
     xmlwriter.writeTextElement("cc_min_current", QString::number(mcconf.cc_min_current));
     xmlwriter.writeTextElement("cc_gain", QString::number(mcconf.cc_gain));
+    xmlwriter.writeTextElement("m_fault_stop_time_ms", QString::number(mcconf.m_fault_stop_time_ms));
     xmlwriter.writeTextElement("meta_description", mcconf.meta_description);
 
     xmlwriter.writeEndElement();
@@ -71,7 +72,7 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
 bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWidget *parent)
 {
     QString filename = QFileDialog::getOpenFileName(parent,
-                                            tr("Save Configuration"), ".",
+                                            tr("Load Configuration"), ".",
                                                     tr("Xml files (*.xml)"));
 
     bool retval = true;
@@ -124,6 +125,7 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     else if (xmlreader.name() == "cc_startup_boost_duty") {mcconf.cc_startup_boost_duty = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "cc_min_current") {mcconf.cc_min_current = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "cc_gain") {mcconf.cc_gain = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "m_fault_stop_time_ms") {mcconf.m_fault_stop_time_ms = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "meta_description") {mcconf.meta_description = xmlreader.readElementText();}
 
                     xmlreader.readNext();

@@ -194,6 +194,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     QByteArray tmpArray;
     QVector<double> samples;
     mc_configuration mcconf;
+    app_configuration appconf;
     double detect_cycle_int_limit;
     double detect_coupling_k;
 
@@ -288,9 +289,20 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.cc_min_current = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.cc_gain = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
 
+        mcconf.m_fault_stop_time_ms = utility::buffer_get_int32(data, &ind);
+
         mcconf.meta_description = "Configuration loaded from the motor controller.";
 
         emit mcconfReceived(mcconf);
+        break;
+
+    case COMM_GET_APPCONF:
+        ind = 0;
+        appconf.app_to_use = (app_use)data[ind++];
+        appconf.app_ppm_ctrl_type = (ppm_control_type)data[ind++];
+        appconf.app_ppm_pid_max_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_uart_baudrate = utility::buffer_get_uint32(data, &ind);
+        emit appconfReceived(appconf);
         break;
 
     case COMM_DETECT_MOTOR_PARAM:
@@ -422,6 +434,8 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_min_current * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_gain * 1000000.0), &send_index);
 
+    utility::buffer_append_int32(mSendBuffer, mcconf.m_fault_stop_time_ms, &send_index);
+
     return sendPacket(mSendBuffer, send_index);
 }
 
@@ -433,4 +447,33 @@ bool PacketInterface::detectMotorParam(double current, double min_rpm, double lo
     utility::buffer_append_int32(mSendBuffer, (int32_t)(min_rpm * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(low_duty * 1000.0), &send_index);
     return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::getAppConf()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_GET_APPCONF);
+    return sendPacket(buffer);
+}
+
+bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appconf)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SET_APPCONF;
+
+    mSendBuffer[send_index++] = appconf.app_to_use;
+    mSendBuffer[send_index++] = appconf.app_ppm_ctrl_type;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_pid_max_erpm * 1000.0), &send_index);
+    utility::buffer_append_uint32(mSendBuffer, appconf.app_uart_baudrate, &send_index);
+
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::reboot()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_REBOOT);
+    return sendPacket(buffer);
 }

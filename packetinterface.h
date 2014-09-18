@@ -51,12 +51,15 @@ public:
         COMM_SET_SERVO_OFFSET,
         COMM_SET_MCCONF,
         COMM_GET_MCCONF,
+        COMM_SET_APPCONF,
+        COMM_GET_APPCONF,
         COMM_SAMPLE_PRINT,
         COMM_TERMINAL_CMD,
         COMM_PRINT,
         COMM_ROTOR_POSITION,
         COMM_EXPERIMENT_SAMPLE,
-        COMM_DETECT_MOTOR_PARAM
+        COMM_DETECT_MOTOR_PARAM,
+        COMM_REBOOT
     } COMM_PACKET_ID;
 
     typedef enum {
@@ -96,9 +99,9 @@ public:
         float sl_cycle_int_rpm_br;
         float sl_bemf_coupling_k;
         // Hall sensor
-        int hall_dir;
-        int hall_fwd_add;
-        int hall_rev_add;
+        int8_t hall_dir;
+        int8_t hall_fwd_add;
+        int8_t hall_rev_add;
         // Speed PID
         float s_pid_kp;
         float s_pid_ki;
@@ -108,9 +111,42 @@ public:
         float cc_startup_boost_duty;
         float cc_min_current;
         float cc_gain;
+        // Misc
+        int32_t m_fault_stop_time_ms;
         // Fields that are only present in Qt
         QString meta_description;
     } mc_configuration;
+
+    // Applications to use
+    typedef enum {
+        APP_NONE = 0,
+        APP_PPM,
+        APP_UARTCOMM,
+        APP_CUSTOM
+    } app_use;
+
+    // PPM control types
+    typedef enum {
+        PPM_CTRL_TYPE_CURRENT = 0,
+        PPM_CTRL_TYPE_CURRENT_NOREV,
+        PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE,
+        PPM_CTRL_TYPE_DUTY,
+        PPM_CTRL_TYPE_DUTY_NOREV,
+        PPM_CTRL_TYPE_PID,
+        PPM_CTRL_TYPE_PID_NOREV
+    } ppm_control_type;
+
+    typedef struct {
+        // Application to use
+        app_use app_to_use;
+
+        // PPM application settings
+        ppm_control_type app_ppm_ctrl_type;
+        float app_ppm_pid_max_erpm;
+
+        // UART application settings
+        quint32 app_uart_baudrate;
+    } app_configuration;
 
     explicit PacketInterface(QObject *parent = 0);
     ~PacketInterface();
@@ -129,6 +165,9 @@ public:
     bool getMcconf();
     bool setMcconf(const PacketInterface::mc_configuration &mcconf);
     bool detectMotorParam(double current, double min_rpm, double low_duty);
+    bool getAppConf();
+    bool setAppConf(const PacketInterface::app_configuration &appconf);
+    bool reboot();
 
 signals:
     void dataToSend(QByteArray &data);
@@ -139,6 +178,7 @@ signals:
     void experimentSamplesReceived(QVector<double> samples);
     void mcconfReceived(PacketInterface::mc_configuration mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k);
+    void appconfReceived(PacketInterface::app_configuration appconf);
     
 public slots:
     void timerSlot();

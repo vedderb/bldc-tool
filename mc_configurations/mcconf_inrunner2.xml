@@ -31,6 +31,7 @@
     <cc_startup_boost_duty>0.08</cc_startup_boost_duty>
     <cc_min_current>1</cc_min_current>
     <cc_gain>0.0046</cc_gain>
+    <m_fault_stop_time_ms>3000</m_fault_stop_time_ms>
     <meta_description>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }

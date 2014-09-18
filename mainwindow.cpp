@@ -85,6 +85,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(mcconfReceived(PacketInterface::mc_configuration)));
     connect(mPacketInterface, SIGNAL(motorParamReceived(double,double)),
             this, SLOT(motorParamReceived(double,double)));
+    connect(mPacketInterface, SIGNAL(appconfReceived(PacketInterface::app_configuration)),
+            this, SLOT(appconfReceived(PacketInterface::app_configuration)));
 
     mSerialization = new Serialization(this);
 
@@ -249,6 +251,8 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     mcconf.cc_min_current = ui->mcconfCcMinBox->value();
     mcconf.cc_gain = ui->mcconfCcGainBox->value();
 
+    mcconf.m_fault_stop_time_ms = ui->mcconfMFaultStopTimeBox->value();
+
     mcconf.meta_description = ui->mcconfDescEdit->toHtml();
 
     return mcconf;
@@ -320,6 +324,8 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     ui->mcconfCcBoostBox->setValue(mcconf.cc_startup_boost_duty);
     ui->mcconfCcMinBox->setValue(mcconf.cc_min_current);
     ui->mcconfCcGainBox->setValue(mcconf.cc_gain);
+
+    ui->mcconfMFaultStopTimeBox->setValue(mcconf.m_fault_stop_time_ms);
 
     ui->mcconfDescEdit->document()->setHtml(mcconf.meta_description);
 
@@ -1179,6 +1185,66 @@ void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling
     }
 }
 
+void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
+{
+    switch (appconf.app_to_use) {
+    case PacketInterface::APP_NONE:
+        ui->appconfUseNoAppButton->setChecked(true);
+        break;
+
+    case PacketInterface::APP_PPM:
+        ui->appconfUsePpmButton->setChecked(true);
+        break;
+
+    case PacketInterface::APP_UARTCOMM:
+        ui->appconfUseUartButton->setChecked(true);
+        break;
+
+    case PacketInterface::APP_CUSTOM:
+        ui->appconfUseCustomButton->setChecked(true);
+        break;
+
+    default:
+        break;
+    }
+
+    switch (appconf.app_ppm_ctrl_type) {
+    case PacketInterface::PPM_CTRL_TYPE_CURRENT:
+        ui->appconfPpmCurrentButton->setChecked(true);
+        break;
+
+    case PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV:
+        ui->appconfPpmCurrentNorevButton->setChecked(true);
+        break;
+
+    case PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE:
+        ui->appconfPpmCurrentNorevBrakeButton->setChecked(true);
+        break;
+
+    case PacketInterface::PPM_CTRL_TYPE_DUTY:
+        ui->appconfPpmDutyButton->setChecked(true);
+        break;
+
+    case PacketInterface::PPM_CTRL_TYPE_DUTY_NOREV:
+        ui->appconfPpmDutyNorevButton->setChecked(true);
+        break;
+
+    case PacketInterface::PPM_CTRL_TYPE_PID:
+        ui->appconfPpmPidButton->setChecked(true);
+        break;
+
+    case PacketInterface::PPM_CTRL_TYPE_PID_NOREV:
+        ui->appconfPpmPidNorevButton->setChecked(true);
+        break;
+
+    default:
+        break;
+    }
+
+    ui->appconfPpmPidMaxErpmBox->setValue(appconf.app_ppm_pid_max_erpm);
+    ui->appconfUartBaudBox->setValue(appconf.app_uart_baudrate);
+}
+
 void MainWindow::on_connectButton_clicked()
 {
     mPort->openPort(ui->serialDeviceEdit->text());
@@ -1437,4 +1503,50 @@ void MainWindow::on_mcconfDetectMotorParamButton_clicked()
     mPacketInterface->detectMotorParam(ui->mcconfDetectCurrentBox->value(),
                                        ui->mcconfDetectErpmBox->value(),
                                        ui->mcconfDetectLowDutyBox->value());
+}
+
+void MainWindow::on_appconfReadButton_clicked()
+{
+    mPacketInterface->getAppConf();
+}
+
+void MainWindow::on_appconfWriteButton_clicked()
+{
+    PacketInterface::app_configuration appconf;
+
+    if (ui->appconfUseNoAppButton->isChecked()) {
+        appconf.app_to_use = PacketInterface::APP_NONE;
+    } else if (ui->appconfUsePpmButton->isChecked()) {
+        appconf.app_to_use = PacketInterface::APP_PPM;
+    } else if (ui->appconfUseUartButton->isChecked()) {
+        appconf.app_to_use = PacketInterface::APP_UARTCOMM;
+    } else if (ui->appconfUseCustomButton->isChecked()) {
+        appconf.app_to_use = PacketInterface::APP_CUSTOM;
+    }
+
+    if (ui->appconfPpmCurrentButton->isChecked()) {
+        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT;
+    } else if (ui->appconfPpmCurrentNorevButton->isChecked()) {
+        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV;
+    } else if (ui->appconfPpmCurrentNorevBrakeButton->isChecked()) {
+        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE;
+    } else if (ui->appconfPpmDutyButton->isChecked()) {
+        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_DUTY;
+    } else if (ui->appconfPpmDutyNorevButton->isChecked()) {
+        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_DUTY_NOREV;
+    } else if (ui->appconfPpmPidButton->isChecked()) {
+        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_PID;
+    } else if (ui->appconfPpmPidNorevButton->isChecked()) {
+        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_PID_NOREV;
+    }
+
+    appconf.app_ppm_pid_max_erpm = ui->appconfPpmPidMaxErpmBox->value();
+    appconf.app_uart_baudrate = ui->appconfUartBaudBox->value();
+
+    mPacketInterface->setAppConf(appconf);
+}
+
+void MainWindow::on_appconfRebootButton_clicked()
+{
+    mPacketInterface->reboot();
 }
