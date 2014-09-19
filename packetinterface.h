@@ -146,6 +146,7 @@ public:
 
         // UART application settings
         quint32 app_uart_baudrate;
+        quint32 app_uart_timeout;
     } app_configuration;
 
     explicit PacketInterface(QObject *parent = 0);

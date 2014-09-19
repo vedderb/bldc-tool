@@ -1203,13 +1203,6 @@ p, li { white-space: pre-wrap; }
                  <string>Settings</string>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_16">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_46">
-                   <property name="text">
-                    <string>Baud rate</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="0" column="1">
                   <widget class="QSpinBox" name="appconfUartBaudBox">
                    <property name="maximum">
@@ -1217,6 +1210,30 @@ p, li { white-space: pre-wrap; }
                    </property>
                    <property name="singleStep">
                     <number>2400</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_46">
+                   <property name="text">
+                    <string>Baud rate</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_47">
+                   <property name="text">
+                    <string>Timeout (in milliseconds)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QSpinBox" name="appconfUartTimeoutBox">
+                   <property name="maximum">
+                    <number>30000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>100</number>
                    </property>
                   </widget>
                  </item>
@@ -1231,7 +1248,7 @@ p, li { white-space: pre-wrap; }
                 <property name="sizeHint" stdset="0">
                  <size>
                   <width>20</width>
-                  <height>503</height>
+                  <height>470</height>
                  </size>
                 </property>
                </spacer>

@@ -1243,6 +1243,7 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
 
     ui->appconfPpmPidMaxErpmBox->setValue(appconf.app_ppm_pid_max_erpm);
     ui->appconfUartBaudBox->setValue(appconf.app_uart_baudrate);
+    ui->appconfUartTimeoutBox->setValue(appconf.app_uart_timeout);
 }
 
 void MainWindow::on_connectButton_clicked()
@@ -1542,6 +1543,7 @@ void MainWindow::on_appconfWriteButton_clicked()
 
     appconf.app_ppm_pid_max_erpm = ui->appconfPpmPidMaxErpmBox->value();
     appconf.app_uart_baudrate = ui->appconfUartBaudBox->value();
+    appconf.app_uart_timeout = ui->appconfUartTimeoutBox->value();
 
     mPacketInterface->setAppConf(appconf);
 }
