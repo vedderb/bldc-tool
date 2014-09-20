@@ -121,7 +121,8 @@ public:
     typedef enum {
         APP_NONE = 0,
         APP_PPM,
-        APP_UARTCOMM,
+        APP_UART,
+        APP_PPM_UART,
         APP_CUSTOM
     } app_use;
 
@@ -143,6 +144,10 @@ public:
         // PPM application settings
         ppm_control_type app_ppm_ctrl_type;
         float app_ppm_pid_max_erpm;
+        float app_ppm_hyst;
+        quint32 app_ppm_timeout;
+        float app_ppm_pulse_start;
+        float app_ppm_pulse_width;
 
         // UART application settings
         quint32 app_uart_baudrate;

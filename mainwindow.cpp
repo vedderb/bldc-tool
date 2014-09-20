@@ -1196,8 +1196,12 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
         ui->appconfUsePpmButton->setChecked(true);
         break;
 
-    case PacketInterface::APP_UARTCOMM:
+    case PacketInterface::APP_UART:
         ui->appconfUseUartButton->setChecked(true);
+        break;
+
+    case PacketInterface::APP_PPM_UART:
+        ui->appconfUsePpmUartButton->setChecked(true);
         break;
 
     case PacketInterface::APP_CUSTOM:
@@ -1242,6 +1246,11 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     }
 
     ui->appconfPpmPidMaxErpmBox->setValue(appconf.app_ppm_pid_max_erpm);
+    ui->appconfPpmTimeoutBox->setValue(appconf.app_ppm_timeout);
+    ui->appconfPpmHystBox->setValue(appconf.app_ppm_hyst);
+    ui->appconfPpmPulseStartBox->setValue(appconf.app_ppm_pulse_start);
+    ui->appconfPpmPulseWidthBox->setValue(appconf.app_ppm_pulse_width);
+
     ui->appconfUartBaudBox->setValue(appconf.app_uart_baudrate);
     ui->appconfUartTimeoutBox->setValue(appconf.app_uart_timeout);
 }
@@ -1520,7 +1529,9 @@ void MainWindow::on_appconfWriteButton_clicked()
     } else if (ui->appconfUsePpmButton->isChecked()) {
         appconf.app_to_use = PacketInterface::APP_PPM;
     } else if (ui->appconfUseUartButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_UARTCOMM;
+        appconf.app_to_use = PacketInterface::APP_UART;
+    } else if (ui->appconfUsePpmUartButton->isChecked()) {
+        appconf.app_to_use = PacketInterface::APP_PPM_UART;
     } else if (ui->appconfUseCustomButton->isChecked()) {
         appconf.app_to_use = PacketInterface::APP_CUSTOM;
     }
@@ -1542,6 +1553,11 @@ void MainWindow::on_appconfWriteButton_clicked()
     }
 
     appconf.app_ppm_pid_max_erpm = ui->appconfPpmPidMaxErpmBox->value();
+    appconf.app_ppm_timeout = ui->appconfPpmTimeoutBox->value();
+    appconf.app_ppm_hyst = ui->appconfPpmHystBox->value();
+    appconf.app_ppm_pulse_start = ui->appconfPpmPulseStartBox->value();
+    appconf.app_ppm_pulse_width = ui->appconfPpmPulseWidthBox->value();
+
     appconf.app_uart_baudrate = ui->appconfUartBaudBox->value();
     appconf.app_uart_timeout = ui->appconfUartTimeoutBox->value();
 

@@ -299,8 +299,14 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     case COMM_GET_APPCONF:
         ind = 0;
         appconf.app_to_use = (app_use)data[ind++];
+
         appconf.app_ppm_ctrl_type = (ppm_control_type)data[ind++];
         appconf.app_ppm_pid_max_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_ppm_hyst = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_ppm_timeout = utility::buffer_get_uint32(data, &ind);
+        appconf.app_ppm_pulse_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_ppm_pulse_width = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+
         appconf.app_uart_baudrate = utility::buffer_get_uint32(data, &ind);
         appconf.app_uart_timeout = utility::buffer_get_uint32(data, &ind);
         emit appconfReceived(appconf);
@@ -462,10 +468,15 @@ bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appco
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_APPCONF;
-
     mSendBuffer[send_index++] = appconf.app_to_use;
+
     mSendBuffer[send_index++] = appconf.app_ppm_ctrl_type;
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_pid_max_erpm * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_hyst * 1000.0), &send_index);
+    utility::buffer_append_uint32(mSendBuffer, appconf.app_ppm_timeout, &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_pulse_start * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_pulse_width * 1000.0), &send_index);
+
     utility::buffer_append_uint32(mSendBuffer, appconf.app_uart_baudrate, &send_index);
     utility::buffer_append_uint32(mSendBuffer, appconf.app_uart_timeout, &send_index);
 
