@@ -60,7 +60,8 @@ public:
         COMM_EXPERIMENT_SAMPLE,
         COMM_DETECT_MOTOR_PARAM,
         COMM_REBOOT,
-        COMM_ALIVE
+        COMM_ALIVE,
+        COMM_GET_DECODED_PPM
     } COMM_PACKET_ID;
 
     typedef enum {
@@ -179,6 +180,7 @@ public:
     bool setAppConf(const PacketInterface::app_configuration &appconf);
     bool reboot();
     bool sendAlive();
+    bool getDecodedPpm();
 
 signals:
     void dataToSend(QByteArray &data);
@@ -190,6 +192,7 @@ signals:
     void mcconfReceived(PacketInterface::mc_configuration mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k);
     void appconfReceived(PacketInterface::app_configuration appconf);
+    void decodedPpmReceived(double value);
     
 public slots:
     void timerSlot();

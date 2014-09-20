@@ -87,6 +87,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(motorParamReceived(double,double)));
     connect(mPacketInterface, SIGNAL(appconfReceived(PacketInterface::app_configuration)),
             this, SLOT(appconfReceived(PacketInterface::app_configuration)));
+    connect(mPacketInterface, SIGNAL(decodedPpmReceived(double)),
+            this, SLOT(decodedPpmReceived(double)));
 
     mSerialization = new Serialization(this);
 
@@ -353,14 +355,13 @@ void MainWindow::timerSlot()
     mPacketInterface->sendAlive();
 
     // Update MC readings
-    if (ui->realtimeActivateBox->isChecked() && mPort->isOpen()) {
-        static int div_cnt = 0;
-        div_cnt++;
+    if (ui->realtimeActivateBox->isChecked()) {
+        mPacketInterface->getValues();
+    }
 
-        if (div_cnt >= 1) {
-            div_cnt = 0;
-            mPacketInterface->getValues();
-        }
+    // Update decoded servo value
+    if (ui->appconfUpdatePpmBox->isChecked()) {
+        mPacketInterface->getDecodedPpm();
     }
 
     // Enable/disable fields in the configuration page
@@ -1261,6 +1262,11 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     ui->appconfPpmPulseWidthBox->setValue(appconf.app_ppm_pulse_width);
 
     ui->appconfUartBaudBox->setValue(appconf.app_uart_baudrate);
+}
+
+void MainWindow::decodedPpmReceived(double ppm_value)
+{
+    ui->appconfDecodedPpmBar->setValue((ppm_value + 1.0) * 500.0);
 }
 
 void MainWindow::on_connectButton_clicked()

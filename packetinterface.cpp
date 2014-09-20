@@ -197,6 +197,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     app_configuration appconf;
     double detect_cycle_int_limit;
     double detect_coupling_k;
+    double dec_ppm;
 
     unsigned char id = data[0];
     data++;
@@ -318,6 +319,11 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         detect_cycle_int_limit = (double)utility::buffer_get_int32(data, &ind) / 1000.0;
         detect_coupling_k = (double)utility::buffer_get_int32(data, &ind) / 1000.0;
         emit motorParamReceived(detect_cycle_int_limit, detect_coupling_k);
+        break;
+
+    case COMM_GET_DECODED_PPM:
+        dec_ppm = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        emit decodedPpmReceived(dec_ppm);
         break;
 
     default:
@@ -498,5 +504,13 @@ bool PacketInterface::sendAlive()
     QByteArray buffer;
     buffer.clear();
     buffer.append((char)COMM_ALIVE);
+    return sendPacket(buffer);
+}
+
+bool PacketInterface::getDecodedPpm()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_GET_DECODED_PPM);
     return sendPacket(buffer);
 }
