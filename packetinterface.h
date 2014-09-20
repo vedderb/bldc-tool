@@ -59,7 +59,8 @@ public:
         COMM_ROTOR_POSITION,
         COMM_EXPERIMENT_SAMPLE,
         COMM_DETECT_MOTOR_PARAM,
-        COMM_REBOOT
+        COMM_REBOOT,
+        COMM_ALIVE
     } COMM_PACKET_ID;
 
     typedef enum {
@@ -128,7 +129,8 @@ public:
 
     // PPM control types
     typedef enum {
-        PPM_CTRL_TYPE_CURRENT = 0,
+        PPM_CTRL_TYPE_NONE = 0,
+        PPM_CTRL_TYPE_CURRENT,
         PPM_CTRL_TYPE_CURRENT_NOREV,
         PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE,
         PPM_CTRL_TYPE_DUTY,
@@ -138,6 +140,10 @@ public:
     } ppm_control_type;
 
     typedef struct {
+        // Settings
+        quint32 timeout_msec;
+        float timeout_brake_current;
+
         // Application to use
         app_use app_to_use;
 
@@ -145,13 +151,11 @@ public:
         ppm_control_type app_ppm_ctrl_type;
         float app_ppm_pid_max_erpm;
         float app_ppm_hyst;
-        quint32 app_ppm_timeout;
         float app_ppm_pulse_start;
         float app_ppm_pulse_width;
 
         // UART application settings
         quint32 app_uart_baudrate;
-        quint32 app_uart_timeout;
     } app_configuration;
 
     explicit PacketInterface(QObject *parent = 0);
@@ -174,6 +178,7 @@ public:
     bool getAppConf();
     bool setAppConf(const PacketInterface::app_configuration &appconf);
     bool reboot();
+    bool sendAlive();
 
 signals:
     void dataToSend(QByteArray &data);

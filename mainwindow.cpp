@@ -349,6 +349,9 @@ void MainWindow::timerSlot()
         mStatusLabel->setText("Not connected");
     }
 
+    // Send alive command
+    mPacketInterface->sendAlive();
+
     // Update MC readings
     if (ui->realtimeActivateBox->isChecked() && mPort->isOpen()) {
         static int div_cnt = 0;
@@ -1187,6 +1190,9 @@ void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling
 
 void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
 {
+    ui->appconfTimeoutBox->setValue(appconf.timeout_msec);
+    ui->appconfTimeoutBrakeCurrentBox->setValue(appconf.timeout_brake_current);
+
     switch (appconf.app_to_use) {
     case PacketInterface::APP_NONE:
         ui->appconfUseNoAppButton->setChecked(true);
@@ -1213,6 +1219,10 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     }
 
     switch (appconf.app_ppm_ctrl_type) {
+    case PacketInterface::PPM_CTRL_TYPE_NONE:
+        ui->appconfPpmDisabledButton->setChecked(true);
+        break;
+
     case PacketInterface::PPM_CTRL_TYPE_CURRENT:
         ui->appconfPpmCurrentButton->setChecked(true);
         break;
@@ -1246,13 +1256,11 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     }
 
     ui->appconfPpmPidMaxErpmBox->setValue(appconf.app_ppm_pid_max_erpm);
-    ui->appconfPpmTimeoutBox->setValue(appconf.app_ppm_timeout);
     ui->appconfPpmHystBox->setValue(appconf.app_ppm_hyst);
     ui->appconfPpmPulseStartBox->setValue(appconf.app_ppm_pulse_start);
     ui->appconfPpmPulseWidthBox->setValue(appconf.app_ppm_pulse_width);
 
     ui->appconfUartBaudBox->setValue(appconf.app_uart_baudrate);
-    ui->appconfUartTimeoutBox->setValue(appconf.app_uart_timeout);
 }
 
 void MainWindow::on_connectButton_clicked()
@@ -1524,6 +1532,9 @@ void MainWindow::on_appconfWriteButton_clicked()
 {
     PacketInterface::app_configuration appconf;
 
+    appconf.timeout_msec = ui->appconfTimeoutBox->value();
+    appconf.timeout_brake_current = ui->appconfTimeoutBrakeCurrentBox->value();
+
     if (ui->appconfUseNoAppButton->isChecked()) {
         appconf.app_to_use = PacketInterface::APP_NONE;
     } else if (ui->appconfUsePpmButton->isChecked()) {
@@ -1536,7 +1547,9 @@ void MainWindow::on_appconfWriteButton_clicked()
         appconf.app_to_use = PacketInterface::APP_CUSTOM;
     }
 
-    if (ui->appconfPpmCurrentButton->isChecked()) {
+    if (ui->appconfPpmDisabledButton->isChecked()) {
+        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_NONE;
+    } else if (ui->appconfPpmCurrentButton->isChecked()) {
         appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT;
     } else if (ui->appconfPpmCurrentNorevButton->isChecked()) {
         appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV;
@@ -1553,13 +1566,11 @@ void MainWindow::on_appconfWriteButton_clicked()
     }
 
     appconf.app_ppm_pid_max_erpm = ui->appconfPpmPidMaxErpmBox->value();
-    appconf.app_ppm_timeout = ui->appconfPpmTimeoutBox->value();
     appconf.app_ppm_hyst = ui->appconfPpmHystBox->value();
     appconf.app_ppm_pulse_start = ui->appconfPpmPulseStartBox->value();
     appconf.app_ppm_pulse_width = ui->appconfPpmPulseWidthBox->value();
 
     appconf.app_uart_baudrate = ui->appconfUartBaudBox->value();
-    appconf.app_uart_timeout = ui->appconfUartTimeoutBox->value();
 
     mPacketInterface->setAppConf(appconf);
 }
