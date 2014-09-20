@@ -16,7 +16,7 @@
     <l_rpm_lim_neg_torque>1</l_rpm_lim_neg_torque>
     <sl_is_sensorless>1</sl_is_sensorless>
     <sl_min_erpm>300</sl_min_erpm>
-    <sl_min_erpm_cycle_int_limit>1300</sl_min_erpm_cycle_int_limit>
+    <sl_min_erpm_cycle_int_limit>900</sl_min_erpm_cycle_int_limit>
     <sl_cycle_int_limit>42</sl_cycle_int_limit>
     <sl_cycle_int_limit_high_fac>0.8</sl_cycle_int_limit_high_fac>
     <sl_cycle_int_rpm_br>80000</sl_cycle_int_rpm_br>
