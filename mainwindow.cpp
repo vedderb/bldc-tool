@@ -1261,6 +1261,13 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     ui->appconfPpmPulseStartBox->setValue(appconf.app_ppm_pulse_start);
     ui->appconfPpmPulseWidthBox->setValue(appconf.app_ppm_pulse_width);
 
+    if (appconf.app_ppm_rpm_lim_end >= 200000.0) {
+        ui->appconfPpmRpmLimBox->setChecked(false);
+    } else {
+        ui->appconfPpmRpmLimStartBox->setValue(appconf.app_ppm_rpm_lim_start);
+        ui->appconfPpmRpmLimEndBox->setValue(appconf.app_ppm_rpm_lim_end);
+    }
+
     ui->appconfUartBaudBox->setValue(appconf.app_uart_baudrate);
 }
 
@@ -1575,6 +1582,14 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.app_ppm_hyst = ui->appconfPpmHystBox->value();
     appconf.app_ppm_pulse_start = ui->appconfPpmPulseStartBox->value();
     appconf.app_ppm_pulse_width = ui->appconfPpmPulseWidthBox->value();
+
+    if (ui->appconfPpmRpmLimBox->isChecked()) {
+        appconf.app_ppm_rpm_lim_start = ui->appconfPpmRpmLimStartBox->value();
+        appconf.app_ppm_rpm_lim_end = ui->appconfPpmRpmLimEndBox->value();
+    } else {
+        appconf.app_ppm_rpm_lim_start = 200000.0;
+        appconf.app_ppm_rpm_lim_end = 250000.0;
+    }
 
     appconf.app_uart_baudrate = ui->appconfUartBaudBox->value();
 

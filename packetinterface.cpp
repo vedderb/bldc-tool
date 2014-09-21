@@ -309,6 +309,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         appconf.app_ppm_hyst = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.app_ppm_pulse_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.app_ppm_pulse_width = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_ppm_rpm_lim_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_ppm_rpm_lim_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
 
         appconf.app_uart_baudrate = utility::buffer_get_uint32(data, &ind);
         emit appconfReceived(appconf);
@@ -485,6 +487,8 @@ bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appco
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_hyst * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_pulse_start * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_pulse_width * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_rpm_lim_start * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_rpm_lim_end * 1000.0), &send_index);
 
     utility::buffer_append_uint32(mSendBuffer, appconf.app_uart_baudrate, &send_index);
 

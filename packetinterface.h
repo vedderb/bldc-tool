@@ -154,6 +154,8 @@ public:
         float app_ppm_hyst;
         float app_ppm_pulse_start;
         float app_ppm_pulse_width;
+        float app_ppm_rpm_lim_start;
+        float app_ppm_rpm_lim_end;
 
         // UART application settings
         quint32 app_uart_baudrate;
