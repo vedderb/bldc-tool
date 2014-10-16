@@ -943,6 +943,8 @@ void MainWindow::mcValuesReceived(PacketInterface::MC_VALUES values)
 {
     const int maxS = 500;
 
+    ui->rtDataWidget->setValues(values);
+
     appendDoubleAndTrunc(&tempMos1Vec, values.temp_mos1, maxS);
     appendDoubleAndTrunc(&tempMos2Vec, values.temp_mos2, maxS);
     appendDoubleAndTrunc(&tempMos3Vec, values.temp_mos3, maxS);

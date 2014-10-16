@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     utility.cpp \
     serialization.cpp \
     mrichtextedit.cpp \
-    mtextedit.cpp
+    mtextedit.cpp \
+    rtdatawidget.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -32,7 +33,8 @@ HEADERS  += mainwindow.h \
     utility.h \
     serialization.h \
     mrichtextedit.h \
-    mtextedit.h
+    mtextedit.h \
+    rtdatawidget.h
 
 FORMS    += mainwindow.ui \
     mrichtextedit.ui

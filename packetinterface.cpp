@@ -224,6 +224,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         values.watt_hours_charged = ((double)utility::buffer_get_int32(data, &ind)) / 10000.0;
         values.tachometer = utility::buffer_get_int32(data, &ind);
         values.tachometer_abs = utility::buffer_get_int32(data, &ind);
+        values.fault_code = (mc_fault_code)data[ind++];
+        values.fault_str = faultToStr(values.fault_code);
 
         emit valuesReceived(values);
         break;
@@ -336,6 +338,18 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
 
     default:
         break;
+    }
+}
+
+QString PacketInterface::faultToStr(PacketInterface::mc_fault_code fault)
+{
+    switch (fault) {
+    case FAULT_CODE_NONE: return "FAULT_CODE_NONE";
+    case FAULT_CODE_OVER_VOLTAGE: return "FAULT_CODE_OVER_VOLTAGE";
+    case FAULT_CODE_UNDER_VOLTAGE: return "FAULT_CODE_UNDER_VOLTAGE";
+    case FAULT_CODE_DRV8302: return "FAULT_CODE_DRV8302";
+    case FAULT_CODE_ABS_OVER_CURRENT: return "FAULT_CODE_ABS_OVER_CURRENT";
+    default: return "Unknown fault";
     }
 }
 

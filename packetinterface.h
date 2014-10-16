@@ -26,6 +26,14 @@ class PacketInterface : public QObject
 {
     Q_OBJECT
 public:
+    typedef enum {
+        FAULT_CODE_NONE = 0,
+        FAULT_CODE_OVER_VOLTAGE,
+        FAULT_CODE_UNDER_VOLTAGE,
+        FAULT_CODE_DRV8302,
+        FAULT_CODE_ABS_OVER_CURRENT
+    } mc_fault_code;
+
     typedef struct {
         double v_in;
         double temp_mos1;
@@ -45,6 +53,8 @@ public:
         double watt_hours_charged;
         int tachometer;
         int tachometer_abs;
+        mc_fault_code fault_code;
+        QString fault_str;
     } MC_VALUES;
 
     typedef enum {
@@ -208,6 +218,7 @@ public slots:
 private:
     unsigned short crc16(const unsigned char *buf, unsigned int len);
     void processPacket(const unsigned char *data, int len);
+    QString faultToStr(mc_fault_code fault);
 
     QTimer *mTimer;
     quint8 *mSendBuffer;
