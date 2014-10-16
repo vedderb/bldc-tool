@@ -39,6 +39,12 @@ public:
         double current_in;
         double rpm;
         double duty_now;
+        double amp_hours;
+        double amp_hours_charged;
+        double watt_hours;
+        double watt_hours_charged;
+        int tachometer;
+        int tachometer_abs;
     } MC_VALUES;
 
     typedef enum {

@@ -218,6 +218,12 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         values.duty_now = ((double)utility::buffer_get_int16(data, &ind)) / 1000.0;
         values.rpm = (double)utility::buffer_get_int32(data, &ind);
         values.v_in = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
+        values.amp_hours = ((double)utility::buffer_get_int32(data, &ind)) / 10000.0;
+        values.amp_hours_charged = ((double)utility::buffer_get_int32(data, &ind)) / 10000.0;
+        values.watt_hours = ((double)utility::buffer_get_int32(data, &ind)) / 10000.0;
+        values.watt_hours_charged = ((double)utility::buffer_get_int32(data, &ind)) / 10000.0;
+        values.tachometer = utility::buffer_get_int32(data, &ind);
+        values.tachometer_abs = utility::buffer_get_int32(data, &ind);
 
         emit valuesReceived(values);
         break;
