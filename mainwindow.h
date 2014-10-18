@@ -55,6 +55,7 @@ private slots:
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k);
     void appconfReceived(PacketInterface::app_configuration appconf);
     void decodedPpmReceived(double ppm_value);
+    void decodedChukReceived(double chuk_value);
 
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();

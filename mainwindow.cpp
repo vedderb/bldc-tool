@@ -89,6 +89,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(appconfReceived(PacketInterface::app_configuration)));
     connect(mPacketInterface, SIGNAL(decodedPpmReceived(double)),
             this, SLOT(decodedPpmReceived(double)));
+    connect(mPacketInterface, SIGNAL(decodedChukReceived(double)),
+            this, SLOT(decodedChukReceived(double)));
 
     mSerialization = new Serialization(this);
 
@@ -362,6 +364,11 @@ void MainWindow::timerSlot()
     // Update decoded servo value
     if (ui->appconfUpdatePpmBox->isChecked()) {
         mPacketInterface->getDecodedPpm();
+    }
+
+    // Update decoded nunchuk value
+    if (ui->appconfUpdateChukBox->isChecked()) {
+        mPacketInterface->getDecodedChuk();
     }
 
     // Enable/disable fields in the configuration page
@@ -1213,6 +1220,10 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
         ui->appconfUsePpmUartButton->setChecked(true);
         break;
 
+    case PacketInterface::APP_NUNCHUK:
+        ui->appconfUseNunchukButton->setChecked(true);
+        break;
+
     case PacketInterface::APP_CUSTOM:
         ui->appconfUseCustomButton->setChecked(true);
         break;
@@ -1271,11 +1282,37 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     }
 
     ui->appconfUartBaudBox->setValue(appconf.app_uart_baudrate);
+
+    switch (appconf.app_chuk_ctrl_type) {
+    case PacketInterface::CHUK_CTRL_TYPE_NONE:
+        ui->appconfChukDisabledButton->setChecked(true);
+        break;
+
+    case PacketInterface::CHUK_CTRL_TYPE_CURRENT:
+        ui->appconfChukCurrentButton->setChecked(true);
+        break;
+
+    case PacketInterface::CHUK_CTRL_TYPE_CURRENT_NOREV:
+        ui->appconfChukCurrentNorevButton->setChecked(true);
+        break;
+
+    default:
+        break;
+    }
+
+    ui->appconfChukHystBox->setValue(appconf.app_chuk_hyst);
+    ui->appconfChukRpmLimStartBox->setValue(appconf.app_chuk_rpm_lim_start);
+    ui->appconfChukRpmLimEndBox->setValue(appconf.app_chuk_rpm_lim_end);
 }
 
 void MainWindow::decodedPpmReceived(double ppm_value)
 {
     ui->appconfDecodedPpmBar->setValue((ppm_value + 1.0) * 500.0);
+}
+
+void MainWindow::decodedChukReceived(double chuk_value)
+{
+    ui->appconfDecodedChukBar->setValue((chuk_value + 1.0) * 500.0);
 }
 
 void MainWindow::on_connectButton_clicked()
@@ -1558,6 +1595,8 @@ void MainWindow::on_appconfWriteButton_clicked()
         appconf.app_to_use = PacketInterface::APP_UART;
     } else if (ui->appconfUsePpmUartButton->isChecked()) {
         appconf.app_to_use = PacketInterface::APP_PPM_UART;
+    } else if (ui->appconfUseNunchukButton->isChecked()) {
+        appconf.app_to_use = PacketInterface::APP_NUNCHUK;
     } else if (ui->appconfUseCustomButton->isChecked()) {
         appconf.app_to_use = PacketInterface::APP_CUSTOM;
     }
@@ -1594,6 +1633,18 @@ void MainWindow::on_appconfWriteButton_clicked()
     }
 
     appconf.app_uart_baudrate = ui->appconfUartBaudBox->value();
+
+    if (ui->appconfChukDisabledButton->isChecked()) {
+        appconf.app_chuk_ctrl_type = PacketInterface::CHUK_CTRL_TYPE_NONE;
+    } else if (ui->appconfChukCurrentButton->isChecked()) {
+        appconf.app_chuk_ctrl_type = PacketInterface::CHUK_CTRL_TYPE_CURRENT;
+    } else if (ui->appconfChukCurrentNorevButton->isChecked()) {
+        appconf.app_chuk_ctrl_type = PacketInterface::CHUK_CTRL_TYPE_CURRENT_NOREV;
+    }
+
+    appconf.app_chuk_hyst = ui->appconfChukHystBox->value();
+    appconf.app_chuk_rpm_lim_start = ui->appconfChukRpmLimStartBox->value();
+    appconf.app_chuk_rpm_lim_end = ui->appconfChukRpmLimEndBox->value();
 
     mPacketInterface->setAppConf(appconf);
 }

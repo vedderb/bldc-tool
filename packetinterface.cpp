@@ -321,6 +321,11 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         appconf.app_ppm_rpm_lim_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
 
         appconf.app_uart_baudrate = utility::buffer_get_uint32(data, &ind);
+
+        appconf.app_chuk_ctrl_type = (chuk_control_type)data[ind++];
+        appconf.app_chuk_hyst = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_chuk_rpm_lim_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_chuk_rpm_lim_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         emit appconfReceived(appconf);
         break;
 
@@ -334,6 +339,11 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     case COMM_GET_DECODED_PPM:
         dec_ppm = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
         emit decodedPpmReceived(dec_ppm);
+        break;
+
+    case COMM_GET_DECODED_CHUK:
+        dec_ppm = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        emit decodedChukReceived(dec_ppm);
         break;
 
     default:
@@ -512,6 +522,11 @@ bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appco
 
     utility::buffer_append_uint32(mSendBuffer, appconf.app_uart_baudrate, &send_index);
 
+    mSendBuffer[send_index++] = appconf.app_chuk_ctrl_type;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_hyst * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_rpm_lim_start * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_rpm_lim_end * 1000.0), &send_index);
+
     return sendPacket(mSendBuffer, send_index);
 }
 
@@ -536,5 +551,13 @@ bool PacketInterface::getDecodedPpm()
     QByteArray buffer;
     buffer.clear();
     buffer.append((char)COMM_GET_DECODED_PPM);
+    return sendPacket(buffer);
+}
+
+bool PacketInterface::getDecodedChuk()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_GET_DECODED_CHUK);
     return sendPacket(buffer);
 }
