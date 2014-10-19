@@ -42,7 +42,7 @@ void RtDataWidget::paintEvent(QPaintEvent *event)
     const double fs = 12;
     const double box1_w = 400;
     const double box2_w = 400;
-    const double box_h = 125;
+    const double box_h = 140;
     const double vidw = event->rect().width();
 
     QString str;
@@ -55,12 +55,14 @@ void RtDataWidget::paintEvent(QPaintEvent *event)
                 "Electrical speed : %.1f rpm\n"
                 "Battery current  : %.2f A\n"
                 "Motor current    : %.2f A\n"
+                "MOSFET Temp      : %.2f Deg C\n"
                 "Fault code       : %s",
                 mValues.v_in * mValues.current_in,
                 mValues.duty_now * 100.0,
                 mValues.rpm,
                 mValues.current_in,
                 mValues.current_motor,
+                mValues.temp_mos1,
                 mValues.fault_str.toLocal8Bit().data());
 
     painter.setOpacity(0.7);
@@ -80,12 +82,14 @@ void RtDataWidget::paintEvent(QPaintEvent *event)
                 "Drawn energy    : %.2f Wh\n"
                 "Charged energy  : %.2f Wh\n"
                 "Tacho           : %i counts\n"
+                "Tacho ABS       : %i counts\n"
                 "Battery voltage : %.1f V",
                 mValues.amp_hours * 1000.0,
                 mValues.amp_hours_charged * 1000.0,
                 mValues.watt_hours,
                 mValues.watt_hours_charged,
                 mValues.tachometer,
+                mValues.tachometer_abs,
                 mValues.v_in);
 
     painter.setOpacity(0.7);
