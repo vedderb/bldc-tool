@@ -233,6 +233,10 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     mcconf.l_rpm_lim_neg_torque = ui->mcconfLimErpmLimitNegTorqueBox->isChecked();
     mcconf.l_min_vin = ui->mcconfLimMinVinBox->value();
     mcconf.l_max_vin = ui->mcconfLimMaxVinBox->value();
+    mcconf.l_temp_fet_start = ui->mcconfLimTempFetStartBox->value();
+    mcconf.l_temp_fet_end = ui->mcconfLimTempFetEndBox->value();
+    mcconf.l_temp_motor_start = ui->mcconfLimTempMotorStartBox->value();
+    mcconf.l_temp_motor_end = ui->mcconfLimTempMotorEndBox->value();
 
     mcconf.sl_is_sensorless = ui->mcconfSlBox->isChecked();
     mcconf.sl_min_erpm = ui->mcconfSlMinErpmBox->value();
@@ -307,6 +311,10 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     ui->mcconfLimErpmLimitNegTorqueBox->setChecked(mcconf.l_rpm_lim_neg_torque);
     ui->mcconfLimMinVinBox->setValue(mcconf.l_min_vin);
     ui->mcconfLimMaxVinBox->setValue(mcconf.l_max_vin);
+    ui->mcconfLimTempFetStartBox->setValue(mcconf.l_temp_fet_start);
+    ui->mcconfLimTempFetEndBox->setValue(mcconf.l_temp_fet_end);
+    ui->mcconfLimTempMotorStartBox->setValue(mcconf.l_temp_motor_start);
+    ui->mcconfLimTempMotorEndBox->setValue(mcconf.l_temp_motor_end);
 
     ui->mcconfSlBox->setChecked(mcconf.sl_is_sensorless);
     ui->mcconfSlMinErpmBox->setValue(mcconf.sl_min_erpm);

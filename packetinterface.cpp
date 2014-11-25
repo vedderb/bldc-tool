@@ -276,6 +276,10 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.l_max_vin = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_slow_abs_current = data[ind++];
         mcconf.l_rpm_lim_neg_torque = data[ind++];
+        mcconf.l_temp_fet_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.l_temp_fet_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.l_temp_motor_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.l_temp_motor_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
 
         mcconf.sl_is_sensorless = data[ind++];
         mcconf.sl_min_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
@@ -458,6 +462,10 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_vin * 1000.0), &send_index);
     mSendBuffer[send_index++] = mcconf.l_slow_abs_current;
     mSendBuffer[send_index++] = mcconf.l_rpm_lim_neg_torque;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_fet_start * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_fet_end * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_motor_start * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_motor_end * 1000.0), &send_index);
 
     mSendBuffer[send_index++] = mcconf.sl_is_sensorless;
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_min_erpm * 1000.0), &send_index);

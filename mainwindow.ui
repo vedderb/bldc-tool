@@ -56,233 +56,352 @@
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_24">
               <item>
-               <widget class="QGroupBox" name="groupBox_8">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="title">
-                 <string>Current</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_18">
-                 <item>
-                  <layout class="QGridLayout" name="gridLayout_9">
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_19">
-                     <property name="text">
-                      <string>Batt min (regen)</string>
-                     </property>
-                    </widget>
+               <layout class="QGridLayout" name="gridLayout_24">
+                <item row="0" column="0">
+                 <widget class="QGroupBox" name="groupBox_8">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="title">
+                   <string>Current</string>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_18">
+                   <item>
+                    <layout class="QGridLayout" name="gridLayout_9">
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="label_19">
+                       <property name="text">
+                        <string>Batt min (regen)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="0">
+                      <widget class="QLabel" name="label_20">
+                       <property name="text">
+                        <string>Absolute max</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMinBox">
+                       <property name="minimum">
+                        <double>-200.000000000000000</double>
+                       </property>
+                       <property name="maximum">
+                        <double>0.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_18">
+                       <property name="text">
+                        <string>Batt max</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_17">
+                       <property name="text">
+                        <string>Motor min (regen)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimCurrentAbsMaxBox">
+                       <property name="maximum">
+                        <double>200.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimCurrentMinBox">
+                       <property name="minimum">
+                        <double>-200.000000000000000</double>
+                       </property>
+                       <property name="maximum">
+                        <double>0.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMaxBox">
+                       <property name="maximum">
+                        <double>200.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_16">
+                       <property name="text">
+                        <string>Motor max</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimCurrentMaxBox">
+                       <property name="maximum">
+                        <double>200.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="0">
+                      <widget class="QCheckBox" name="mcconfLimCurrentSlowAbsMaxBox">
+                       <property name="text">
+                        <string>Slow absolute max</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </item>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_20">
-                     <property name="text">
-                      <string>Absolute max</string>
-                     </property>
-                    </widget>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QGroupBox" name="groupBox_9">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="title">
+                   <string>RPM</string>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_19">
+                   <item>
+                    <layout class="QGridLayout" name="gridLayout_10">
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_21">
+                       <property name="text">
+                        <string>Min ERPM</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimMaxErpmBox">
+                       <property name="maximum">
+                        <double>200000.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>100.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimMaxErpmFbrakeBox">
+                       <property name="maximum">
+                        <double>100000.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>100.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimMinErpmBox">
+                       <property name="minimum">
+                        <double>-200000.000000000000000</double>
+                       </property>
+                       <property name="maximum">
+                        <double>0.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>100.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_22">
+                       <property name="text">
+                        <string>Max ERPM</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QCheckBox" name="mcconfLimErpmLimitNegTorqueBox">
+                       <property name="text">
+                        <string>Limit ERPM with negative torque</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="label_23">
+                       <property name="text">
+                        <string>Max ERPM at full brake</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="0">
+                      <spacer name="verticalSpacer_11">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
                    </item>
-                   <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMinBox">
-                     <property name="minimum">
-                      <double>-200.000000000000000</double>
-                     </property>
-                     <property name="maximum">
-                      <double>0.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_18">
-                     <property name="text">
-                      <string>Batt max</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_17">
-                     <property name="text">
-                      <string>Motor min (regen)</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentAbsMaxBox">
-                     <property name="maximum">
-                      <double>200.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentMinBox">
-                     <property name="minimum">
-                      <double>-200.000000000000000</double>
-                     </property>
-                     <property name="maximum">
-                      <double>0.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMaxBox">
-                     <property name="maximum">
-                      <double>200.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QGroupBox" name="groupBox_27">
+                  <property name="title">
+                   <string>Temperature</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_23">
                    <item row="0" column="0">
-                    <widget class="QLabel" name="label_16">
+                    <widget class="QLabel" name="label_57">
                      <property name="text">
-                      <string>Motor max</string>
+                      <string>MOSFET Start</string>
                      </property>
                     </widget>
                    </item>
                    <item row="0" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimCurrentMaxBox">
+                    <widget class="QDoubleSpinBox" name="mcconfLimTempFetStartBox">
+                     <property name="minimum">
+                      <double>-100.000000000000000</double>
+                     </property>
                      <property name="maximum">
-                      <double>200.000000000000000</double>
+                      <double>300.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>5.000000000000000</double>
                      </property>
                     </widget>
                    </item>
-                   <item row="5" column="0">
-                    <widget class="QCheckBox" name="mcconfLimCurrentSlowAbsMaxBox">
-                     <property name="text">
-                      <string>Slow absolute max</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_9">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="title">
-                 <string>RPM</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_19">
-                 <item>
-                  <layout class="QGridLayout" name="gridLayout_10">
                    <item row="1" column="0">
-                    <widget class="QLabel" name="label_21">
+                    <widget class="QLabel" name="label_58">
                      <property name="text">
-                      <string>Min ERPM</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimMaxErpmBox">
-                     <property name="maximum">
-                      <double>200000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>100.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimMaxErpmFbrakeBox">
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>100.000000000000000</double>
+                      <string>MOSFET End</string>
                      </property>
                     </widget>
                    </item>
                    <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimMinErpmBox">
+                    <widget class="QDoubleSpinBox" name="mcconfLimTempFetEndBox">
                      <property name="minimum">
-                      <double>-200000.000000000000000</double>
+                      <double>-100.000000000000000</double>
                      </property>
                      <property name="maximum">
-                      <double>0.000000000000000</double>
+                      <double>300.000000000000000</double>
                      </property>
                      <property name="singleStep">
-                      <double>100.000000000000000</double>
+                      <double>5.000000000000000</double>
                      </property>
                     </widget>
                    </item>
                    <item row="2" column="0">
-                    <widget class="QLabel" name="label_22">
+                    <widget class="QLabel" name="label_59">
                      <property name="text">
-                      <string>Max ERPM</string>
+                      <string>Motor Start</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfLimTempMotorStartBox">
+                     <property name="minimum">
+                      <double>-100.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>300.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>5.000000000000000</double>
                      </property>
                     </widget>
                    </item>
                    <item row="3" column="0">
-                    <widget class="QLabel" name="label_23">
+                    <widget class="QLabel" name="label_60">
                      <property name="text">
-                      <string>Max ERPM at full brake</string>
+                      <string>Motor End</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0">
-                    <widget class="QCheckBox" name="mcconfLimErpmLimitNegTorqueBox">
-                     <property name="text">
-                      <string>Limit ERPM with negative torque</string>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfLimTempMotorEndBox">
+                     <property name="minimum">
+                      <double>-100.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>300.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>5.000000000000000</double>
                      </property>
                     </widget>
                    </item>
                   </layout>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_10">
-                <property name="title">
-                 <string>Voltage</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_20">
-                 <item>
-                  <layout class="QGridLayout" name="gridLayout_11">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_24">
-                     <property name="text">
-                      <string>Minimum input voltage</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimMinVinBox">
-                     <property name="minimum">
-                      <double>6.000000000000000</double>
-                     </property>
-                     <property name="maximum">
-                      <double>60.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_25">
-                     <property name="text">
-                      <string>Maximum input voltage</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfLimMaxVinBox">
-                     <property name="minimum">
-                      <double>6.000000000000000</double>
-                     </property>
-                     <property name="maximum">
-                      <double>60.000000000000000</double>
-                     </property>
-                    </widget>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QGroupBox" name="groupBox_10">
+                  <property name="title">
+                   <string>Voltage</string>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_20">
+                   <item>
+                    <layout class="QGridLayout" name="gridLayout_11">
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_25">
+                       <property name="text">
+                        <string>Maximum input voltage</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_24">
+                       <property name="text">
+                        <string>Minimum input voltage</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimMinVinBox">
+                       <property name="minimum">
+                        <double>6.000000000000000</double>
+                       </property>
+                       <property name="maximum">
+                        <double>60.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimMaxVinBox">
+                       <property name="minimum">
+                        <double>6.000000000000000</double>
+                       </property>
+                       <property name="maximum">
+                        <double>60.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <spacer name="verticalSpacer_12">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
                    </item>
                   </layout>
-                 </item>
-                </layout>
-               </widget>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <spacer name="verticalSpacer_4">
@@ -291,8 +410,8 @@
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>20</width>
-                  <height>40</height>
+                  <width>17</width>
+                  <height>172</height>
                  </size>
                 </property>
                </spacer>
@@ -672,7 +791,7 @@ p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Try to detect the integrator limit and the BEMF coupling. &lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Current is the current that should be used to spin up the motor and min ERPM is the ERPM below which auto-commutation should happen. Adjust them until the motor able to spin up when clicking start detection.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Current is the current that should be used to spin up the motor and min ERPM is the ERPM below which auto-commutation should happen. Adjust them until the motor is able to spin up when clicking start detection.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Low duty is the duty cycle at which the BEMF coupling is measured. It should be kept as low as possible as long as the motor is able to run smoothly at it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
@@ -1258,7 +1377,7 @@ p, li { white-space: pre-wrap; }
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_49">
                    <property name="text">
-                    <string>Hysteresis</string>
+                    <string>Deadband</string>
                    </property>
                   </widget>
                  </item>
@@ -1512,7 +1631,7 @@ p, li { white-space: pre-wrap; }
                  <item row="0" column="0">
                   <widget class="QLabel" name="label_54">
                    <property name="text">
-                    <string>Hysteresis</string>
+                    <string>Deadband</string>
                    </property>
                   </widget>
                  </item>
@@ -1561,12 +1680,6 @@ p, li { white-space: pre-wrap; }
                   </widget>
                  </item>
                 </layout>
-                <zorder>appconfChukRpmLimEndBox</zorder>
-                <zorder>label_54</zorder>
-                <zorder>label_56</zorder>
-                <zorder>label_55</zorder>
-                <zorder>appconfChukRpmLimStartBox</zorder>
-                <zorder>appconfChukHystBox</zorder>
                 <zorder>label_56</zorder>
                 <zorder>appconfChukRpmLimStartBox</zorder>
                 <zorder>label_54</zorder>
@@ -1614,30 +1727,17 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This has been tested with the wireless Nyko Kama nunchuk. The receiver can be connected directly to the I2C port on the ESC. The y-axis on the joystick is used for acceleration/braking. The buttons have the following dunctions:&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This has been tested with the wireless Nyko Kama nunchuk. The receiver can be connected directly to the I2C port on the ESC. The y-axis on the joystick is used for acceleration/braking. The buttons have the following functions:&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;C-Button:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Cruise control. If the C-button is pressed, the ESC will maintail the current speed with a PID control loop. The joystick can still be used to accelerate and brake, but as soon as it is returned to the center position the new speed will be maintained, as long as the C-button is pressed.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Cruise control. If the C-button is pressed, the ESC will maintail the current speed with a PID control loop. The joystick can still be used to accelerate and brake, but as soon as it is returned to the center position the new speed will be maintained, as long as the C-button remains pressed.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z-Button:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The Z-button is used to override the soft speed limit at &lt;span style=&quot; font-style:italic;&quot;&gt;RPM limit start and RPM limit end&lt;/span&gt;. When the speed limit is active (the Z button is not pressed), the output will start becoming limited when the RPM reaches &lt;span style=&quot; font-style:italic;&quot;&gt;RPM limit start&lt;/span&gt;. At &lt;span style=&quot; font-style:italic;&quot;&gt;RPM limit end&lt;/span&gt; the output will be completely switched off and inbetween there is a soft transition. Note that RPM is electrical RPM and has to be divided by half the number of motor poles. The speed limit can be disabled by setting the limit values very high.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The Z-button is used to override the soft speed limit at &lt;span style=&quot; font-style:italic;&quot;&gt;RPM limit start &lt;/span&gt;and&lt;span style=&quot; font-style:italic;&quot;&gt; RPM limit end&lt;/span&gt;. When the speed limit is active (the Z button is not pressed), the output will start becoming limited when the RPM reaches &lt;span style=&quot; font-style:italic;&quot;&gt;RPM limit start&lt;/span&gt;. At &lt;span style=&quot; font-style:italic;&quot;&gt;RPM limit end&lt;/span&gt; the output will be completely switched off and inbetween there is a soft transition. Note that RPM is electrical RPM and has to be divided by half the number of motor poles. The speed limit can be disabled by setting the limit values very high.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;There is also a safety function. If nothing received from the nunchuk (including the accelerometers) changes for longer than the timeout value in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab, the timeout function will be activated and either stop the motor or brake with the current specified next to the timeout value.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;There is also a safety function. If nothing received from the nunchuk (including the accelerometers) changes for longer than the timeout value in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab, the timeout function will be activated and either release the motor or brake with the current specified next to the timeout value.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_11">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>50</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </widget>

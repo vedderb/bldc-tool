@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MCConfiguration>
+    <pwm_mode>1</pwm_mode>
+    <comm_mode>0</comm_mode>
+    <l_current_max>55</l_current_max>
+    <l_current_min>-55</l_current_min>
+    <l_in_current_max>55</l_in_current_max>
+    <l_in_current_min>-20</l_in_current_min>
+    <l_abs_current_max>115</l_abs_current_max>
+    <l_min_erpm>-100000</l_min_erpm>
+    <l_max_erpm>100000</l_max_erpm>
+    <l_max_erpm_fbrake>1500</l_max_erpm_fbrake>
+    <l_min_vin>8</l_min_vin>
+    <l_max_vin>51</l_max_vin>
+    <l_slow_abs_current>1</l_slow_abs_current>
+    <l_rpm_lim_neg_torque>1</l_rpm_lim_neg_torque>
+    <l_temp_fet_start>80</l_temp_fet_start>
+    <l_temp_fet_end>100</l_temp_fet_end>
+    <l_temp_motor_start>80</l_temp_motor_start>
+    <l_temp_motor_end>100</l_temp_motor_end>
+    <sl_is_sensorless>1</sl_is_sensorless>
+    <sl_min_erpm>200</sl_min_erpm>
+    <sl_min_erpm_cycle_int_limit>700</sl_min_erpm_cycle_int_limit>
+    <sl_cycle_int_limit>60</sl_cycle_int_limit>
+    <sl_cycle_int_limit_high_fac>0.8</sl_cycle_int_limit_high_fac>
+    <sl_cycle_int_rpm_br>80000</sl_cycle_int_rpm_br>
+    <sl_bemf_coupling_k>600</sl_bemf_coupling_k>
+    <hall_dir>0</hall_dir>
+    <hall_fwd_add>0</hall_fwd_add>
+    <hall_rev_add>0</hall_rev_add>
+    <s_pid_kp>0.0003</s_pid_kp>
+    <s_pid_ki>0.004</s_pid_ki>
+    <s_pid_kd>0</s_pid_kd>
+    <s_pid_min_rpm>900</s_pid_min_rpm>
+    <cc_startup_boost_duty>0.03</cc_startup_boost_duty>
+    <cc_min_current>0.5</cc_min_current>
+    <cc_gain>0.0046</cc_gain>
+    <m_fault_stop_time_ms>3000</m_fault_stop_time_ms>
+    <meta_description>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Configuration for the red 270kv motor I got from Austin and Dexter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</meta_description>
+</MCConfiguration>
