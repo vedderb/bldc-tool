@@ -66,6 +66,7 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeTextElement("sl_is_sensorless", QString::number(mcconf.sl_is_sensorless));
     xmlwriter.writeTextElement("sl_min_erpm", QString::number(mcconf.sl_min_erpm));
     xmlwriter.writeTextElement("sl_min_erpm_cycle_int_limit", QString::number(mcconf.sl_min_erpm_cycle_int_limit));
+    xmlwriter.writeTextElement("sl_max_fullbreak_current_dir_change", QString::number(mcconf.sl_max_fullbreak_current_dir_change));
     xmlwriter.writeTextElement("sl_cycle_int_limit", QString::number(mcconf.sl_cycle_int_limit));
     xmlwriter.writeTextElement("sl_cycle_int_limit_high_fac", QString::number(mcconf.sl_cycle_int_limit_high_fac));
     xmlwriter.writeTextElement("sl_cycle_int_rpm_br", QString::number(mcconf.sl_cycle_int_rpm_br));
@@ -136,6 +137,7 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     else if (xmlreader.name() == "sl_is_sensorless") {mcconf.sl_is_sensorless = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "sl_min_erpm") {mcconf.sl_min_erpm = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_min_erpm_cycle_int_limit") {mcconf.sl_min_erpm_cycle_int_limit = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "sl_max_fullbreak_current_dir_change") {mcconf.sl_max_fullbreak_current_dir_change = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_cycle_int_limit") {mcconf.sl_cycle_int_limit = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_cycle_int_limit_high_fac") {mcconf.sl_cycle_int_limit_high_fac = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_cycle_int_rpm_br") {mcconf.sl_cycle_int_rpm_br = xmlreader.readElementText().toDouble();}

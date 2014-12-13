@@ -489,7 +489,7 @@
                  </item>
                  <item>
                   <layout class="QGridLayout" name="gridLayout_12">
-                   <item row="4" column="1">
+                   <item row="5" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfSlBrErpmBox">
                      <property name="maximum">
                       <double>200000.000000000000000</double>
@@ -519,7 +519,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="5" column="0">
+                   <item row="6" column="0">
                     <widget class="QLabel" name="label_41">
                      <property name="toolTip">
                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important. The detection function below can be used to determine this parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -529,7 +529,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="0">
+                   <item row="3" column="0">
                     <widget class="QLabel" name="label_28">
                      <property name="toolTip">
                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important. The detection function below can be used to determine this parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -539,13 +539,13 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_27">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important for startup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimBox">
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
                      </property>
-                     <property name="text">
-                      <string>Minimum ERPM for integrator limit</string>
+                     <property name="singleStep">
+                      <double>1.000000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -559,17 +559,17 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimBox">
-                     <property name="maximum">
-                      <double>10000.000000000000000</double>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_27">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important for startup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
-                     <property name="singleStep">
-                      <double>1.000000000000000</double>
+                     <property name="text">
+                      <string>Minimum ERPM for integrator limit</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="0">
+                   <item row="4" column="0">
                     <widget class="QLabel" name="label_29">
                      <property name="toolTip">
                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For phase advance, not so important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -579,7 +579,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="5" column="1">
+                   <item row="6" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfSlBemfKBox">
                      <property name="maximum">
                       <double>5000.000000000000000</double>
@@ -589,7 +589,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="1">
+                   <item row="4" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfSlIntLimScaleBrBox">
                      <property name="maximum">
                       <double>1.000000000000000</double>
@@ -599,13 +599,27 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="4" column="0">
+                   <item row="5" column="0">
                     <widget class="QLabel" name="label_30">
                      <property name="toolTip">
                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For phase advance, not so important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="text">
                       <string>BR ERPM</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_61">
+                     <property name="text">
+                      <string>Maximum full brake current during direction change</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSlMaxFbCurrBox">
+                     <property name="maximum">
+                      <double>300.000000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -3072,12 +3086,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>65</x>
-     <y>607</y>
+     <x>39</x>
+     <y>84</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3088,12 +3102,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>985</x>
-     <y>687</y>
+     <x>102</x>
+     <y>60</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3104,12 +3118,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>486</x>
-     <y>642</y>
+     <x>50</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3120,12 +3134,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1236</x>
-     <y>511</y>
+     <x>1253</x>
+     <y>539</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3136,12 +3150,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>65</x>
-     <y>674</y>
+     <x>39</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3152,12 +3166,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>65</x>
-     <y>640</y>
+     <x>39</x>
+     <y>79</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3168,12 +3182,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>486</x>
-     <y>675</y>
+     <x>50</x>
+     <y>84</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3184,12 +3198,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>334</x>
-     <y>607</y>
+     <x>46</x>
+     <y>85</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3200,12 +3214,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>160</x>
-     <y>90</y>
+     <x>110</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3216,12 +3230,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>703</x>
-     <y>607</y>
+     <x>78</x>
+     <y>84</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3232,12 +3246,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>815</x>
-     <y>607</y>
+     <x>85</x>
+     <y>85</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3248,12 +3262,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>702</x>
-     <y>644</y>
+     <x>82</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3264,12 +3278,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>703</x>
-     <y>676</y>
+     <x>78</x>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3280,12 +3294,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>967</x>
-     <y>675</y>
+     <x>89</x>
+     <y>84</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3296,12 +3310,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>967</x>
-     <y>642</y>
+     <x>89</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3312,12 +3326,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>160</x>
-     <y>90</y>
+     <x>110</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3328,12 +3342,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>105</x>
-     <y>540</y>
+     <x>34</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3344,12 +3358,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>257</x>
-     <y>540</y>
+     <x>44</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3360,12 +3374,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>358</x>
-     <y>540</y>
+     <x>54</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3376,12 +3390,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>482</x>
-     <y>540</y>
+     <x>64</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3392,12 +3406,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>631</x>
-     <y>540</y>
+     <x>74</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3408,12 +3422,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>723</x>
-     <y>540</y>
+     <x>84</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3425,11 +3439,11 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>29</x>
-     <y>667</y>
+     <y>60</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3440,12 +3454,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>193</x>
-     <y>687</y>
+     <x>42</x>
+     <y>60</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3456,12 +3470,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>282</x>
-     <y>687</y>
+     <x>55</x>
+     <y>60</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3472,12 +3486,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>511</x>
-     <y>687</y>
+     <x>82</x>
+     <y>60</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3488,12 +3502,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>419</x>
-     <y>687</y>
+     <x>69</x>
+     <y>60</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3504,12 +3518,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>872</x>
-     <y>540</y>
+     <x>100</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1236</x>
-     <y>638</y>
+     <x>1253</x>
+     <y>666</y>
     </hint>
    </hints>
   </connection>
@@ -3520,12 +3534,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>775</x>
-     <y>668</y>
+     <x>47</x>
+     <y>61</y>
     </hint>
     <hint type="destinationlabel">
-     <x>823</x>
-     <y>668</y>
+     <x>70</x>
+     <y>61</y>
     </hint>
    </hints>
   </connection>

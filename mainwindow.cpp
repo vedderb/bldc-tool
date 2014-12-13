@@ -240,6 +240,7 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
 
     mcconf.sl_is_sensorless = ui->mcconfSlBox->isChecked();
     mcconf.sl_min_erpm = ui->mcconfSlMinErpmBox->value();
+    mcconf.sl_max_fullbreak_current_dir_change = ui->mcconfSlMaxFbCurrBox->value();
     mcconf.sl_min_erpm_cycle_int_limit = ui->mcconfSlMinErpmIlBox->value();
     mcconf.sl_cycle_int_limit = ui->mcconfSlIntLimBox->value();
     mcconf.sl_cycle_int_limit_high_fac = ui->mcconfSlIntLimScaleBrBox->value();
@@ -318,6 +319,7 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
 
     ui->mcconfSlBox->setChecked(mcconf.sl_is_sensorless);
     ui->mcconfSlMinErpmBox->setValue(mcconf.sl_min_erpm);
+    ui->mcconfSlMaxFbCurrBox->setValue(mcconf.sl_max_fullbreak_current_dir_change);
     ui->mcconfSlMinErpmIlBox->setValue(mcconf.sl_min_erpm_cycle_int_limit);
     ui->mcconfSlIntLimBox->setValue(mcconf.sl_cycle_int_limit);
     ui->mcconfSlIntLimScaleBrBox->setValue(mcconf.sl_cycle_int_limit_high_fac);
@@ -384,6 +386,7 @@ void MainWindow::timerSlot()
     if (ui->mcconfCommIntButton->isChecked() != isSlIntBefore) {
         if (ui->mcconfCommIntButton->isChecked()) {
             ui->mcconfSlMinErpmBox->setEnabled(true);
+            ui->mcconfSlMaxFbCurrBox->setEnabled(true);
             ui->mcconfSlBemfKBox->setEnabled(true);
             ui->mcconfSlBrErpmBox->setEnabled(true);
             ui->mcconfSlIntLimBox->setEnabled(true);
@@ -391,6 +394,7 @@ void MainWindow::timerSlot()
             ui->mcconfSlMinErpmIlBox->setEnabled(true);
         } else {
             ui->mcconfSlMinErpmBox->setEnabled(true);
+            ui->mcconfSlMaxFbCurrBox->setEnabled(true);
             ui->mcconfSlBemfKBox->setEnabled(false);
             ui->mcconfSlBrErpmBox->setEnabled(false);
             ui->mcconfSlIntLimBox->setEnabled(false);
@@ -1564,7 +1568,7 @@ void MainWindow::on_currentBrakeButton_clicked()
 
 void MainWindow::on_mcconfLoadXmlButton_clicked()
 {
-    PacketInterface::mc_configuration mcconf;
+    PacketInterface::mc_configuration mcconf = getMcconfGui();
     if (mSerialization->readMcconfXml(mcconf, this)) {
         setMcconfGui(mcconf);
     }

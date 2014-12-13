@@ -284,6 +284,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.sl_is_sensorless = data[ind++];
         mcconf.sl_min_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.sl_min_erpm_cycle_int_limit = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.sl_max_fullbreak_current_dir_change = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.sl_cycle_int_limit = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.sl_cycle_int_limit_high_fac = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.sl_cycle_int_rpm_br = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
@@ -470,6 +471,7 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     mSendBuffer[send_index++] = mcconf.sl_is_sensorless;
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_min_erpm * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_min_erpm_cycle_int_limit * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_max_fullbreak_current_dir_change * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_cycle_int_limit * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_cycle_int_limit_high_fac * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_cycle_int_rpm_br * 1000.0), &send_index);

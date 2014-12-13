@@ -117,6 +117,7 @@ public:
         bool sl_is_sensorless;
         float sl_min_erpm;
         float sl_min_erpm_cycle_int_limit;
+        float sl_max_fullbreak_current_dir_change;
         float sl_cycle_int_limit;
         float sl_cycle_int_limit_high_fac;
         float sl_cycle_int_rpm_br;
