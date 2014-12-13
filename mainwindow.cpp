@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     keyLeft = false;
     keyRight = false;
     mcconfLoaded = false;
+    appconfLoaded = false;
 
     connect(mPort, SIGNAL(serial_data_available()),
             this, SLOT(serialDataAvailable()));
@@ -230,6 +231,7 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     mcconf.l_max_erpm = ui->mcconfLimMaxErpmBox->value();
     mcconf.l_min_erpm = ui->mcconfLimMinErpmBox->value();
     mcconf.l_max_erpm_fbrake = ui->mcconfLimMaxErpmFbrakeBox->value();
+    mcconf.l_max_erpm_fbrake_cc = ui->mcconfLimMaxErpmFbrakeCcBox->value();
     mcconf.l_rpm_lim_neg_torque = ui->mcconfLimErpmLimitNegTorqueBox->isChecked();
     mcconf.l_min_vin = ui->mcconfLimMinVinBox->value();
     mcconf.l_max_vin = ui->mcconfLimMaxVinBox->value();
@@ -309,6 +311,7 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     ui->mcconfLimMaxErpmBox->setValue(mcconf.l_max_erpm);
     ui->mcconfLimMinErpmBox->setValue(mcconf.l_min_erpm);
     ui->mcconfLimMaxErpmFbrakeBox->setValue(mcconf.l_max_erpm_fbrake);
+    ui->mcconfLimMaxErpmFbrakeCcBox->setValue(mcconf.l_max_erpm_fbrake_cc);
     ui->mcconfLimErpmLimitNegTorqueBox->setChecked(mcconf.l_rpm_lim_neg_torque);
     ui->mcconfLimMinVinBox->setValue(mcconf.l_min_vin);
     ui->mcconfLimMaxVinBox->setValue(mcconf.l_max_vin);
@@ -1315,6 +1318,8 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     ui->appconfChukHystBox->setValue(appconf.app_chuk_hyst);
     ui->appconfChukRpmLimStartBox->setValue(appconf.app_chuk_rpm_lim_start);
     ui->appconfChukRpmLimEndBox->setValue(appconf.app_chuk_rpm_lim_end);
+
+    appconfLoaded = true;
 }
 
 void MainWindow::decodedPpmReceived(double ppm_value)
@@ -1594,6 +1599,12 @@ void MainWindow::on_appconfReadButton_clicked()
 
 void MainWindow::on_appconfWriteButton_clicked()
 {
+    if (!appconfLoaded) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "The configuration should be read at least once before writing it.");
+        return;
+    }
+
     PacketInterface::app_configuration appconf;
 
     appconf.timeout_msec = ui->appconfTimeoutBox->value();

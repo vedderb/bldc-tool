@@ -105,6 +105,7 @@ public:
         float l_min_erpm;
         float l_max_erpm;
         float l_max_erpm_fbrake;
+        float l_max_erpm_fbrake_cc;
         float l_min_vin;
         float l_max_vin;
         bool l_slow_abs_current;

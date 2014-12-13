@@ -136,6 +136,7 @@ private:
     bool keyLeft;
     bool keyRight;
     bool mcconfLoaded;
+    bool appconfLoaded;
 
     QVector<QVector<double> > mExperimentSamples;
 

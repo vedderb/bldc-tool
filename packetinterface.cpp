@@ -272,6 +272,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.l_min_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_max_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_max_erpm_fbrake = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.l_max_erpm_fbrake_cc = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_min_vin = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_max_vin = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_slow_abs_current = data[ind++];
@@ -459,6 +460,7 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_min_erpm * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_erpm * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_erpm_fbrake * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_erpm_fbrake_cc * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_min_vin * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_vin * 1000.0), &send_index);
     mSendBuffer[send_index++] = mcconf.l_slow_abs_current;
