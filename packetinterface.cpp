@@ -332,6 +332,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         appconf.app_chuk_hyst = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.app_chuk_rpm_lim_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.app_chuk_rpm_lim_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_chuk_ramp_time_pos = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_chuk_ramp_time_neg = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         emit appconfReceived(appconf);
         break;
 
@@ -538,6 +540,8 @@ bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appco
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_hyst * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_rpm_lim_start * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_rpm_lim_end * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_ramp_time_pos * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_ramp_time_neg * 1000.0), &send_index);
 
     return sendPacket(mSendBuffer, send_index);
 }

@@ -196,6 +196,8 @@ public:
         float app_chuk_hyst;
         float app_chuk_rpm_lim_start;
         float app_chuk_rpm_lim_end;
+        float app_chuk_ramp_time_pos;
+        float app_chuk_ramp_time_neg;
     } app_configuration;
 
     explicit PacketInterface(QObject *parent = 0);

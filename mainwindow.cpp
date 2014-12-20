@@ -1318,6 +1318,8 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     ui->appconfChukHystBox->setValue(appconf.app_chuk_hyst);
     ui->appconfChukRpmLimStartBox->setValue(appconf.app_chuk_rpm_lim_start);
     ui->appconfChukRpmLimEndBox->setValue(appconf.app_chuk_rpm_lim_end);
+    ui->appconfChukRampTimePosBox->setValue(appconf.app_chuk_ramp_time_pos);
+    ui->appconfChukRampTimeNegBox->setValue(appconf.app_chuk_ramp_time_neg);
 
     appconfLoaded = true;
 }
@@ -1668,6 +1670,8 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.app_chuk_hyst = ui->appconfChukHystBox->value();
     appconf.app_chuk_rpm_lim_start = ui->appconfChukRpmLimStartBox->value();
     appconf.app_chuk_rpm_lim_end = ui->appconfChukRpmLimEndBox->value();
+    appconf.app_chuk_ramp_time_pos = ui->appconfChukRampTimePosBox->value();
+    appconf.app_chuk_ramp_time_neg = ui->appconfChukRampTimeNegBox->value();
 
     mPacketInterface->setAppConf(appconf);
 }

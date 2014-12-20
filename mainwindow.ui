@@ -1710,6 +1710,40 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_63">
+                   <property name="text">
+                    <string>Positive ramping time constant</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="appconfChukRampTimePosBox">
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>1.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="label_64">
+                   <property name="text">
+                    <string>Negative ramping tume constant</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="1">
+                  <widget class="QDoubleSpinBox" name="appconfChukRampTimeNegBox">
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.500000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                 <zorder>label_56</zorder>
                 <zorder>appconfChukRpmLimStartBox</zorder>
@@ -1717,6 +1751,10 @@ p, li { white-space: pre-wrap; }
                 <zorder>appconfChukHystBox</zorder>
                 <zorder>label_55</zorder>
                 <zorder>appconfChukRpmLimEndBox</zorder>
+                <zorder>label_63</zorder>
+                <zorder>appconfChukRampTimePosBox</zorder>
+                <zorder>label_64</zorder>
+                <zorder>appconfChukRampTimeNegBox</zorder>
                </widget>
               </item>
               <item>
@@ -1764,7 +1802,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Cruise control. If the C-button is pressed, the ESC will maintail the current speed with a PID control loop. The joystick can still be used to accelerate and brake, but as soon as it is returned to the center position the new speed will be maintained, as long as the C-button remains pressed.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z-Button:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The Z-button is used to override the soft speed limit at &lt;span style=&quot; font-style:italic;&quot;&gt;RPM limit start &lt;/span&gt;and&lt;span style=&quot; font-style:italic;&quot;&gt; RPM limit end&lt;/span&gt;. When the speed limit is active (the Z button is not pressed), the output will start becoming limited when the RPM reaches &lt;span style=&quot; font-style:italic;&quot;&gt;RPM limit start&lt;/span&gt;. At &lt;span style=&quot; font-style:italic;&quot;&gt;RPM limit end&lt;/span&gt; the output will be completely switched off and inbetween there is a soft transition. Note that RPM is electrical RPM and has to be divided by half the number of motor poles. The speed limit can be disabled by setting the limit values very high.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The Z-button is used to change the direction of the motor if reverse is activated. Without reverse, Z has no effect.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;There is also a safety function. If nothing received from the nunchuk (including the accelerometers) changes for longer than the timeout value in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab, the timeout function will be activated and either release the motor or brake with the current specified next to the timeout value.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>

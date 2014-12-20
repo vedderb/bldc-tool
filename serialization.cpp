@@ -55,6 +55,7 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeTextElement("l_min_erpm", QString::number(mcconf.l_min_erpm));
     xmlwriter.writeTextElement("l_max_erpm", QString::number(mcconf.l_max_erpm));
     xmlwriter.writeTextElement("l_max_erpm_fbrake", QString::number(mcconf.l_max_erpm_fbrake));
+    xmlwriter.writeTextElement("l_max_erpm_fbrake_cc", QString::number(mcconf.l_max_erpm_fbrake_cc));
     xmlwriter.writeTextElement("l_min_vin", QString::number(mcconf.l_min_vin));
     xmlwriter.writeTextElement("l_max_vin", QString::number(mcconf.l_max_vin));
     xmlwriter.writeTextElement("l_slow_abs_current", QString::number(mcconf.l_slow_abs_current));
@@ -126,6 +127,7 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     else if (xmlreader.name() == "l_min_erpm") {mcconf.l_min_erpm = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_max_erpm") {mcconf.l_max_erpm = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_max_erpm_fbrake") {mcconf.l_max_erpm_fbrake = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "l_max_erpm_fbrake_cc") {mcconf.l_max_erpm_fbrake_cc = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_min_vin") {mcconf.l_min_vin = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_max_vin") {mcconf.l_max_vin = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_slow_abs_current") {mcconf.l_slow_abs_current = xmlreader.readElementText().toInt();}
