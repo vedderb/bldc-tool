@@ -1,4 +1,4 @@
-A Qt gui to control and debug my custom BLDC controller. A complete description and tutorial about how to use it can be found here: http://vedder.se/2014/01/a-custom-bldc-motor-controller/
+A Qt gui to control and debug my custom BLDC controller. A complete description and tutorial about how to use it can be found here: http://vedder.se/2015/01/vesc-open-source-esc/
 
 Quick build instructions for Ubuntu:
 
