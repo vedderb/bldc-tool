@@ -9,7 +9,8 @@
     <l_abs_current_max>110</l_abs_current_max>
     <l_min_erpm>-100000</l_min_erpm>
     <l_max_erpm>100000</l_max_erpm>
-    <l_max_erpm_fbrake>1500</l_max_erpm_fbrake>
+    <l_max_erpm_fbrake>600</l_max_erpm_fbrake>
+    <l_max_erpm_fbrake_cc>1500</l_max_erpm_fbrake_cc>
     <l_min_vin>8</l_min_vin>
     <l_max_vin>50</l_max_vin>
     <l_slow_abs_current>1</l_slow_abs_current>
@@ -21,6 +22,7 @@
     <sl_is_sensorless>1</sl_is_sensorless>
     <sl_min_erpm>400</sl_min_erpm>
     <sl_min_erpm_cycle_int_limit>1500</sl_min_erpm_cycle_int_limit>
+    <sl_max_fullbreak_current_dir_change>10</sl_max_fullbreak_current_dir_change>
     <sl_cycle_int_limit>38</sl_cycle_int_limit>
     <sl_cycle_int_limit_high_fac>0.8</sl_cycle_int_limit_high_fac>
     <sl_cycle_int_rpm_br>80000</sl_cycle_int_rpm_br>
