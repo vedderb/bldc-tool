@@ -367,6 +367,8 @@ QString PacketInterface::faultToStr(PacketInterface::mc_fault_code fault)
     case FAULT_CODE_UNDER_VOLTAGE: return "FAULT_CODE_UNDER_VOLTAGE";
     case FAULT_CODE_DRV8302: return "FAULT_CODE_DRV8302";
     case FAULT_CODE_ABS_OVER_CURRENT: return "FAULT_CODE_ABS_OVER_CURRENT";
+    case FAULT_CODE_OVER_TEMP_FET: return "FAULT_CODE_OVER_TEMP_FET";
+    case FAULT_CODE_OVER_TEMP_MOTOR: return "FAULT_CODE_OVER_TEMP_MOTOR";
     default: return "Unknown fault";
     }
 }

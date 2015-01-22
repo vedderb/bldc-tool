@@ -5,7 +5,7 @@
     <l_current_max>80</l_current_max>
     <l_current_min>-80</l_current_min>
     <l_in_current_max>60</l_in_current_max>
-    <l_in_current_min>-20</l_in_current_min>
+    <l_in_current_min>-40</l_in_current_min>
     <l_abs_current_max>130</l_abs_current_max>
     <l_min_erpm>-100000</l_min_erpm>
     <l_max_erpm>100000</l_max_erpm>
@@ -21,12 +21,12 @@
     <l_temp_motor_end>100</l_temp_motor_end>
     <sl_is_sensorless>1</sl_is_sensorless>
     <sl_min_erpm>200</sl_min_erpm>
-    <sl_min_erpm_cycle_int_limit>1000</sl_min_erpm_cycle_int_limit>
+    <sl_min_erpm_cycle_int_limit>1500</sl_min_erpm_cycle_int_limit>
     <sl_max_fullbreak_current_dir_change>10</sl_max_fullbreak_current_dir_change>
     <sl_cycle_int_limit>65</sl_cycle_int_limit>
     <sl_cycle_int_limit_high_fac>0.8</sl_cycle_int_limit_high_fac>
     <sl_cycle_int_rpm_br>80000</sl_cycle_int_rpm_br>
-    <sl_bemf_coupling_k>700</sl_bemf_coupling_k>
+    <sl_bemf_coupling_k>600</sl_bemf_coupling_k>
     <hall_dir>0</hall_dir>
     <hall_fwd_add>0</hall_fwd_add>
     <hall_rev_add>0</hall_rev_add>
