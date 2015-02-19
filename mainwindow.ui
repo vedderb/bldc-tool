@@ -592,7 +592,7 @@
                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For phase advance, not so important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="text">
-                      <string>Integrator limit scale at BR ERPM</string>
+                      <string>Phase advance at BR ERPM</string>
                      </property>
                     </widget>
                    </item>
@@ -1164,6 +1164,36 @@ p, li { white-space: pre-wrap; }
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_34">
               <item>
+               <widget class="QGroupBox" name="groupBox_28">
+                <property name="title">
+                 <string>Settings</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_25">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_65">
+                   <property name="text">
+                    <string>Controller ID</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="appconfControllerIdBox">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QCheckBox" name="appconfSendCanStatusBox">
+                   <property name="text">
+                    <string>Send status over CAN</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
                <widget class="QGroupBox" name="groupBox_18">
                 <property name="title">
                  <string>App to use (Changing this requires a reboot)</string>
@@ -1302,55 +1332,17 @@ p, li { white-space: pre-wrap; }
                 <layout class="QHBoxLayout" name="horizontalLayout_28">
                  <item>
                   <layout class="QGridLayout" name="gridLayout_13">
-                   <item row="0" column="1">
-                    <widget class="QRadioButton" name="appconfPpmDutyButton">
-                     <property name="text">
-                      <string>Duty cycle</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
+                   <item row="0" column="2">
                     <widget class="QRadioButton" name="appconfPpmDutyNorevButton">
                      <property name="text">
                       <string>Duty cycle no reverse</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
-                    <widget class="QRadioButton" name="appconfPpmPidButton">
+                   <item row="0" column="1">
+                    <widget class="QRadioButton" name="appconfPpmDutyButton">
                      <property name="text">
-                      <string>PID speed control</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QRadioButton" name="appconfPpmPidNorevButton">
-                     <property name="text">
-                      <string>PID speed control no reverse</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QRadioButton" name="appconfPpmCurrentNorevBrakeButton">
-                     <property name="text">
-                      <string>Current no reverse with brake</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QRadioButton" name="appconfPpmCurrentNorevButton">
-                     <property name="text">
-                      <string>Current no reverse</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QRadioButton" name="appconfPpmCurrentButton">
-                     <property name="text">
-                      <string>Current</string>
-                     </property>
-                     <property name="checked">
-                      <bool>false</bool>
+                      <string>Duty cycle</string>
                      </property>
                     </widget>
                    </item>
@@ -1361,6 +1353,44 @@ p, li { white-space: pre-wrap; }
                      </property>
                      <property name="checked">
                       <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <widget class="QRadioButton" name="appconfPpmPidNorevButton">
+                     <property name="text">
+                      <string>PID speed control no reverse</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QRadioButton" name="appconfPpmCurrentNorevBrakeButton">
+                     <property name="text">
+                      <string>Current no reverse with brake</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QRadioButton" name="appconfPpmCurrentButton">
+                     <property name="text">
+                      <string>Current</string>
+                     </property>
+                     <property name="checked">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QRadioButton" name="appconfPpmCurrentNorevButton">
+                     <property name="text">
+                      <string>Current no reverse</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QRadioButton" name="appconfPpmPidButton">
+                     <property name="text">
+                      <string>PID speed control</string>
                      </property>
                     </widget>
                    </item>
@@ -1429,6 +1459,13 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_45">
+                   <property name="text">
+                    <string>PID max ERPM</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="1" column="1">
                   <widget class="QDoubleSpinBox" name="appconfPpmHystBox">
                    <property name="maximum">
@@ -1446,13 +1483,6 @@ p, li { white-space: pre-wrap; }
                    </property>
                    <property name="singleStep">
                     <double>0.100000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_45">
-                   <property name="text">
-                    <string>PID max ERPM</string>
                    </property>
                   </widget>
                  </item>
@@ -1499,6 +1529,58 @@ p, li { white-space: pre-wrap; }
                    </property>
                    <property name="singleStep">
                     <double>100.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="appconfPpmMultiGroup">
+                <property name="title">
+                 <string>Multiple ESCs over CAN</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_37">
+                 <item>
+                  <widget class="QCheckBox" name="appconfPpmTcBox">
+                   <property name="text">
+                    <string>Enable Traction Control (current mode only)</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_14">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_67">
+                   <property name="text">
+                    <string>Traction Control ERPM diff</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="appconfPpmTcErpmBox">
+                   <property name="maximum">
+                    <double>100000.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>3000.000000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -1602,7 +1684,7 @@ p, li { white-space: pre-wrap; }
              <attribute name="title">
               <string>Nunchuk</string>
              </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_38">
+             <layout class="QVBoxLayout" name="verticalLayout_32">
               <item>
                <widget class="QGroupBox" name="groupBox_24">
                 <property name="title">
@@ -1610,7 +1692,7 @@ p, li { white-space: pre-wrap; }
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_31">
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_37">
+                  <layout class="QHBoxLayout" name="horizontalLayout_35">
                    <item>
                     <widget class="QRadioButton" name="appconfChukDisabledButton">
                      <property name="text">
@@ -1655,6 +1737,12 @@ p, li { white-space: pre-wrap; }
               </item>
               <item>
                <widget class="QGroupBox" name="groupBox_25">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="title">
                  <string>Settings</string>
                 </property>
@@ -1676,6 +1764,23 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="label_63">
+                   <property name="text">
+                    <string>Positive ramping time constant</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QDoubleSpinBox" name="appconfChukRampTimePosBox">
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>1.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_56">
                    <property name="text">
@@ -1690,6 +1795,23 @@ p, li { white-space: pre-wrap; }
                    </property>
                    <property name="singleStep">
                     <double>100.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="label_64">
+                   <property name="text">
+                    <string>Negative ramping tume constant</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="3">
+                  <widget class="QDoubleSpinBox" name="appconfChukRampTimeNegBox">
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.500000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -1710,40 +1832,6 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="label_63">
-                   <property name="text">
-                    <string>Positive ramping time constant</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
-                  <widget class="QDoubleSpinBox" name="appconfChukRampTimePosBox">
-                   <property name="singleStep">
-                    <double>0.100000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>1.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_64">
-                   <property name="text">
-                    <string>Negative ramping tume constant</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QDoubleSpinBox" name="appconfChukRampTimeNegBox">
-                   <property name="singleStep">
-                    <double>0.100000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>0.500000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                 <zorder>label_56</zorder>
                 <zorder>appconfChukRpmLimStartBox</zorder>
@@ -1755,6 +1843,58 @@ p, li { white-space: pre-wrap; }
                 <zorder>appconfChukRampTimePosBox</zorder>
                 <zorder>label_64</zorder>
                 <zorder>appconfChukRampTimeNegBox</zorder>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="appconfChukMultiGroup">
+                <property name="title">
+                 <string>Multiple ESCs over CAN</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_36">
+                 <item>
+                  <widget class="QCheckBox" name="appconfChukTcBox">
+                   <property name="text">
+                    <string>Enable Traction Control</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_13">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_66">
+                   <property name="text">
+                    <string>Traction Control ERPM diff</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="appconfChukTcErpmBox">
+                   <property name="maximum">
+                    <double>100000.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>3000.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </widget>
               </item>
               <item>

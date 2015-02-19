@@ -245,7 +245,7 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     mcconf.sl_max_fullbreak_current_dir_change = ui->mcconfSlMaxFbCurrBox->value();
     mcconf.sl_min_erpm_cycle_int_limit = ui->mcconfSlMinErpmIlBox->value();
     mcconf.sl_cycle_int_limit = ui->mcconfSlIntLimBox->value();
-    mcconf.sl_cycle_int_limit_high_fac = ui->mcconfSlIntLimScaleBrBox->value();
+    mcconf.sl_phase_advance_at_br = ui->mcconfSlIntLimScaleBrBox->value();
     mcconf.sl_cycle_int_rpm_br = ui->mcconfSlBrErpmBox->value();
     mcconf.sl_bemf_coupling_k = ui->mcconfSlBemfKBox->value();
 
@@ -325,7 +325,7 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     ui->mcconfSlMaxFbCurrBox->setValue(mcconf.sl_max_fullbreak_current_dir_change);
     ui->mcconfSlMinErpmIlBox->setValue(mcconf.sl_min_erpm_cycle_int_limit);
     ui->mcconfSlIntLimBox->setValue(mcconf.sl_cycle_int_limit);
-    ui->mcconfSlIntLimScaleBrBox->setValue(mcconf.sl_cycle_int_limit_high_fac);
+    ui->mcconfSlIntLimScaleBrBox->setValue(mcconf.sl_phase_advance_at_br);
     ui->mcconfSlBrErpmBox->setValue(mcconf.sl_cycle_int_rpm_br);
     ui->mcconfSlBemfKBox->setValue(mcconf.sl_bemf_coupling_k);
 
@@ -399,9 +399,9 @@ void MainWindow::timerSlot()
             ui->mcconfSlMinErpmBox->setEnabled(true);
             ui->mcconfSlMaxFbCurrBox->setEnabled(true);
             ui->mcconfSlBemfKBox->setEnabled(false);
-            ui->mcconfSlBrErpmBox->setEnabled(false);
+            ui->mcconfSlBrErpmBox->setEnabled(true);
             ui->mcconfSlIntLimBox->setEnabled(false);
-            ui->mcconfSlIntLimScaleBrBox->setEnabled(false);
+            ui->mcconfSlIntLimScaleBrBox->setEnabled(true);
             ui->mcconfSlMinErpmIlBox->setEnabled(false);
         }
     }
@@ -1215,8 +1215,10 @@ void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling
 
 void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
 {
+    ui->appconfControllerIdBox->setValue(appconf.controller_id);
     ui->appconfTimeoutBox->setValue(appconf.timeout_msec);
     ui->appconfTimeoutBrakeCurrentBox->setValue(appconf.timeout_brake_current);
+    ui->appconfSendCanStatusBox->setChecked(appconf.send_can_status);
 
     switch (appconf.app_to_use) {
     case PacketInterface::APP_NONE:
@@ -1247,7 +1249,7 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
         break;
     }
 
-    switch (appconf.app_ppm_ctrl_type) {
+    switch (appconf.app_ppm_conf.ctrl_type) {
     case PacketInterface::PPM_CTRL_TYPE_NONE:
         ui->appconfPpmDisabledButton->setChecked(true);
         break;
@@ -1284,21 +1286,25 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
         break;
     }
 
-    ui->appconfPpmPidMaxErpmBox->setValue(appconf.app_ppm_pid_max_erpm);
-    ui->appconfPpmHystBox->setValue(appconf.app_ppm_hyst);
-    ui->appconfPpmPulseStartBox->setValue(appconf.app_ppm_pulse_start);
-    ui->appconfPpmPulseWidthBox->setValue(appconf.app_ppm_pulse_width);
+    ui->appconfPpmPidMaxErpmBox->setValue(appconf.app_ppm_conf.pid_max_erpm);
+    ui->appconfPpmHystBox->setValue(appconf.app_ppm_conf.hyst);
+    ui->appconfPpmPulseStartBox->setValue(appconf.app_ppm_conf.pulse_start);
+    ui->appconfPpmPulseWidthBox->setValue(appconf.app_ppm_conf.pulse_width);
 
-    if (appconf.app_ppm_rpm_lim_end >= 200000.0) {
+    if (appconf.app_ppm_conf.rpm_lim_end >= 200000.0) {
         ui->appconfPpmRpmLimBox->setChecked(false);
     } else {
-        ui->appconfPpmRpmLimStartBox->setValue(appconf.app_ppm_rpm_lim_start);
-        ui->appconfPpmRpmLimEndBox->setValue(appconf.app_ppm_rpm_lim_end);
+        ui->appconfPpmRpmLimStartBox->setValue(appconf.app_ppm_conf.rpm_lim_start);
+        ui->appconfPpmRpmLimEndBox->setValue(appconf.app_ppm_conf.rpm_lim_end);
     }
+
+    ui->appconfPpmMultiGroup->setChecked(appconf.app_ppm_conf.multi_esc);
+    ui->appconfPpmTcBox->setChecked(appconf.app_ppm_conf.tc);
+    ui->appconfPpmTcErpmBox->setValue(appconf.app_ppm_conf.tc_max_diff);
 
     ui->appconfUartBaudBox->setValue(appconf.app_uart_baudrate);
 
-    switch (appconf.app_chuk_ctrl_type) {
+    switch (appconf.app_chuk_conf.ctrl_type) {
     case PacketInterface::CHUK_CTRL_TYPE_NONE:
         ui->appconfChukDisabledButton->setChecked(true);
         break;
@@ -1315,11 +1321,15 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
         break;
     }
 
-    ui->appconfChukHystBox->setValue(appconf.app_chuk_hyst);
-    ui->appconfChukRpmLimStartBox->setValue(appconf.app_chuk_rpm_lim_start);
-    ui->appconfChukRpmLimEndBox->setValue(appconf.app_chuk_rpm_lim_end);
-    ui->appconfChukRampTimePosBox->setValue(appconf.app_chuk_ramp_time_pos);
-    ui->appconfChukRampTimeNegBox->setValue(appconf.app_chuk_ramp_time_neg);
+    ui->appconfChukHystBox->setValue(appconf.app_chuk_conf.hyst);
+    ui->appconfChukRpmLimStartBox->setValue(appconf.app_chuk_conf.rpm_lim_start);
+    ui->appconfChukRpmLimEndBox->setValue(appconf.app_chuk_conf.rpm_lim_end);
+    ui->appconfChukRampTimePosBox->setValue(appconf.app_chuk_conf.ramp_time_pos);
+    ui->appconfChukRampTimeNegBox->setValue(appconf.app_chuk_conf.ramp_time_neg);
+
+    ui->appconfChukMultiGroup->setChecked(appconf.app_chuk_conf.multi_esc);
+    ui->appconfChukTcBox->setChecked(appconf.app_chuk_conf.tc);
+    ui->appconfChukTcErpmBox->setValue(appconf.app_chuk_conf.tc_max_diff);
 
     appconfLoaded = true;
 }
@@ -1609,8 +1619,10 @@ void MainWindow::on_appconfWriteButton_clicked()
 
     PacketInterface::app_configuration appconf;
 
+    appconf.controller_id = ui->appconfControllerIdBox->value();
     appconf.timeout_msec = ui->appconfTimeoutBox->value();
     appconf.timeout_brake_current = ui->appconfTimeoutBrakeCurrentBox->value();
+    appconf.send_can_status = ui->appconfSendCanStatusBox->isChecked();
 
     if (ui->appconfUseNoAppButton->isChecked()) {
         appconf.app_to_use = PacketInterface::APP_NONE;
@@ -1627,51 +1639,59 @@ void MainWindow::on_appconfWriteButton_clicked()
     }
 
     if (ui->appconfPpmDisabledButton->isChecked()) {
-        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_NONE;
+        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_NONE;
     } else if (ui->appconfPpmCurrentButton->isChecked()) {
-        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT;
+        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT;
     } else if (ui->appconfPpmCurrentNorevButton->isChecked()) {
-        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV;
+        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV;
     } else if (ui->appconfPpmCurrentNorevBrakeButton->isChecked()) {
-        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE;
+        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE;
     } else if (ui->appconfPpmDutyButton->isChecked()) {
-        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_DUTY;
+        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_DUTY;
     } else if (ui->appconfPpmDutyNorevButton->isChecked()) {
-        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_DUTY_NOREV;
+        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_DUTY_NOREV;
     } else if (ui->appconfPpmPidButton->isChecked()) {
-        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_PID;
+        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_PID;
     } else if (ui->appconfPpmPidNorevButton->isChecked()) {
-        appconf.app_ppm_ctrl_type = PacketInterface::PPM_CTRL_TYPE_PID_NOREV;
+        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_PID_NOREV;
     }
 
-    appconf.app_ppm_pid_max_erpm = ui->appconfPpmPidMaxErpmBox->value();
-    appconf.app_ppm_hyst = ui->appconfPpmHystBox->value();
-    appconf.app_ppm_pulse_start = ui->appconfPpmPulseStartBox->value();
-    appconf.app_ppm_pulse_width = ui->appconfPpmPulseWidthBox->value();
+    appconf.app_ppm_conf.pid_max_erpm = ui->appconfPpmPidMaxErpmBox->value();
+    appconf.app_ppm_conf.hyst = ui->appconfPpmHystBox->value();
+    appconf.app_ppm_conf.pulse_start = ui->appconfPpmPulseStartBox->value();
+    appconf.app_ppm_conf.pulse_width = ui->appconfPpmPulseWidthBox->value();
 
     if (ui->appconfPpmRpmLimBox->isChecked()) {
-        appconf.app_ppm_rpm_lim_start = ui->appconfPpmRpmLimStartBox->value();
-        appconf.app_ppm_rpm_lim_end = ui->appconfPpmRpmLimEndBox->value();
+        appconf.app_ppm_conf.rpm_lim_start = ui->appconfPpmRpmLimStartBox->value();
+        appconf.app_ppm_conf.rpm_lim_end = ui->appconfPpmRpmLimEndBox->value();
     } else {
-        appconf.app_ppm_rpm_lim_start = 200000.0;
-        appconf.app_ppm_rpm_lim_end = 250000.0;
+        appconf.app_ppm_conf.rpm_lim_start = 200000.0;
+        appconf.app_ppm_conf.rpm_lim_end = 250000.0;
     }
+
+    appconf.app_ppm_conf.multi_esc = ui->appconfPpmMultiGroup->isChecked();
+    appconf.app_ppm_conf.tc = ui->appconfPpmTcBox->isChecked();
+    appconf.app_ppm_conf.tc_max_diff = ui->appconfPpmTcErpmBox->value();
 
     appconf.app_uart_baudrate = ui->appconfUartBaudBox->value();
 
     if (ui->appconfChukDisabledButton->isChecked()) {
-        appconf.app_chuk_ctrl_type = PacketInterface::CHUK_CTRL_TYPE_NONE;
+        appconf.app_chuk_conf.ctrl_type = PacketInterface::CHUK_CTRL_TYPE_NONE;
     } else if (ui->appconfChukCurrentButton->isChecked()) {
-        appconf.app_chuk_ctrl_type = PacketInterface::CHUK_CTRL_TYPE_CURRENT;
+        appconf.app_chuk_conf.ctrl_type = PacketInterface::CHUK_CTRL_TYPE_CURRENT;
     } else if (ui->appconfChukCurrentNorevButton->isChecked()) {
-        appconf.app_chuk_ctrl_type = PacketInterface::CHUK_CTRL_TYPE_CURRENT_NOREV;
+        appconf.app_chuk_conf.ctrl_type = PacketInterface::CHUK_CTRL_TYPE_CURRENT_NOREV;
     }
 
-    appconf.app_chuk_hyst = ui->appconfChukHystBox->value();
-    appconf.app_chuk_rpm_lim_start = ui->appconfChukRpmLimStartBox->value();
-    appconf.app_chuk_rpm_lim_end = ui->appconfChukRpmLimEndBox->value();
-    appconf.app_chuk_ramp_time_pos = ui->appconfChukRampTimePosBox->value();
-    appconf.app_chuk_ramp_time_neg = ui->appconfChukRampTimeNegBox->value();
+    appconf.app_chuk_conf.hyst = ui->appconfChukHystBox->value();
+    appconf.app_chuk_conf.rpm_lim_start = ui->appconfChukRpmLimStartBox->value();
+    appconf.app_chuk_conf.rpm_lim_end = ui->appconfChukRpmLimEndBox->value();
+    appconf.app_chuk_conf.ramp_time_pos = ui->appconfChukRampTimePosBox->value();
+    appconf.app_chuk_conf.ramp_time_neg = ui->appconfChukRampTimeNegBox->value();
+
+    appconf.app_chuk_conf.multi_esc = ui->appconfChukMultiGroup->isChecked();
+    appconf.app_chuk_conf.tc = ui->appconfChukTcBox->isChecked();
+    appconf.app_chuk_conf.tc_max_diff = ui->appconfChukTcErpmBox->value();
 
     mPacketInterface->setAppConf(appconf);
 }

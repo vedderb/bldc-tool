@@ -12,7 +12,7 @@
     <l_max_erpm_fbrake>300</l_max_erpm_fbrake>
     <l_max_erpm_fbrake_cc>1500</l_max_erpm_fbrake_cc>
     <l_min_vin>8</l_min_vin>
-    <l_max_vin>38</l_max_vin>
+    <l_max_vin>56</l_max_vin>
     <l_slow_abs_current>1</l_slow_abs_current>
     <l_rpm_lim_neg_torque>1</l_rpm_lim_neg_torque>
     <l_temp_fet_start>80</l_temp_fet_start>
@@ -34,7 +34,7 @@
     <s_pid_ki>0.004</s_pid_ki>
     <s_pid_kd>0</s_pid_kd>
     <s_pid_min_rpm>900</s_pid_min_rpm>
-    <cc_startup_boost_duty>0.04</cc_startup_boost_duty>
+    <cc_startup_boost_duty>0.02</cc_startup_boost_duty>
     <cc_min_current>0.5</cc_min_current>
     <cc_gain>0.0046</cc_gain>
     <m_fault_stop_time_ms>1000</m_fault_stop_time_ms>

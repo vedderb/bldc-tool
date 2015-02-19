@@ -69,7 +69,7 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeTextElement("sl_min_erpm_cycle_int_limit", QString::number(mcconf.sl_min_erpm_cycle_int_limit));
     xmlwriter.writeTextElement("sl_max_fullbreak_current_dir_change", QString::number(mcconf.sl_max_fullbreak_current_dir_change));
     xmlwriter.writeTextElement("sl_cycle_int_limit", QString::number(mcconf.sl_cycle_int_limit));
-    xmlwriter.writeTextElement("sl_cycle_int_limit_high_fac", QString::number(mcconf.sl_cycle_int_limit_high_fac));
+    xmlwriter.writeTextElement("sl_cycle_int_limit_high_fac", QString::number(mcconf.sl_phase_advance_at_br));
     xmlwriter.writeTextElement("sl_cycle_int_rpm_br", QString::number(mcconf.sl_cycle_int_rpm_br));
     xmlwriter.writeTextElement("sl_bemf_coupling_k", QString::number(mcconf.sl_bemf_coupling_k));
     xmlwriter.writeTextElement("hall_dir", QString::number(mcconf.hall_dir));
@@ -141,7 +141,7 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     else if (xmlreader.name() == "sl_min_erpm_cycle_int_limit") {mcconf.sl_min_erpm_cycle_int_limit = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_max_fullbreak_current_dir_change") {mcconf.sl_max_fullbreak_current_dir_change = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_cycle_int_limit") {mcconf.sl_cycle_int_limit = xmlreader.readElementText().toDouble();}
-                    else if (xmlreader.name() == "sl_cycle_int_limit_high_fac") {mcconf.sl_cycle_int_limit_high_fac = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "sl_cycle_int_limit_high_fac") {mcconf.sl_phase_advance_at_br = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_cycle_int_rpm_br") {mcconf.sl_cycle_int_rpm_br = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_bemf_coupling_k") {mcconf.sl_bemf_coupling_k = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "hall_dir") {mcconf.hall_dir = xmlreader.readElementText().toInt();}
