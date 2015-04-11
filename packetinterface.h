@@ -151,6 +151,7 @@ public:
         APP_UART,
         APP_PPM_UART,
         APP_NUNCHUK,
+        APP_NRF,
         APP_CUSTOM
     } app_use;
 

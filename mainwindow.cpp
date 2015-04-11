@@ -1241,6 +1241,10 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
         ui->appconfUseNunchukButton->setChecked(true);
         break;
 
+    case PacketInterface::APP_NRF:
+        ui->appconfUseNrfButton->setChecked(true);
+        break;
+
     case PacketInterface::APP_CUSTOM:
         ui->appconfUseCustomButton->setChecked(true);
         break;
@@ -1634,6 +1638,8 @@ void MainWindow::on_appconfWriteButton_clicked()
         appconf.app_to_use = PacketInterface::APP_PPM_UART;
     } else if (ui->appconfUseNunchukButton->isChecked()) {
         appconf.app_to_use = PacketInterface::APP_NUNCHUK;
+    } else if (ui->appconfUseNrfButton->isChecked()) {
+        appconf.app_to_use = PacketInterface::APP_NRF;
     } else if (ui->appconfUseCustomButton->isChecked()) {
         appconf.app_to_use = PacketInterface::APP_CUSTOM;
     }
