@@ -222,6 +222,12 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
         mcconf.comm_mode = PacketInterface::COMM_MODE_DELAY;
     }
 
+    if (ui->mcconfTypeBldcButton->isChecked()) {
+        mcconf.motor_type = PacketInterface::MOTOR_TYPE_BLDC;
+    } else if (ui->mcconfTypeDcButton->isChecked()) {
+        mcconf.motor_type = PacketInterface::MOTOR_TYPE_DC;
+    }
+
     mcconf.l_current_max = ui->mcconfLimCurrentMaxBox->value();
     mcconf.l_current_min = ui->mcconfLimCurrentMinBox->value();
     mcconf.l_in_current_max = ui->mcconfLimCurrentInMaxBox->value();
@@ -300,6 +306,19 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     default:
         break;
 
+    }
+
+    switch (mcconf.motor_type) {
+    case PacketInterface::MOTOR_TYPE_BLDC:
+        ui->mcconfTypeBldcButton->setChecked(true);
+        break;
+
+    case PacketInterface::MOTOR_TYPE_DC:
+        ui->mcconfTypeDcButton->setChecked(true);
+        break;
+
+    default:
+        break;
     }
 
     ui->mcconfLimCurrentMaxBox->setValue(mcconf.l_current_max);

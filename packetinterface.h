@@ -89,6 +89,11 @@ public:
     } mc_comm_mode;
 
     typedef enum {
+        MOTOR_TYPE_BLDC = 0,
+        MOTOR_TYPE_DC,
+    } mc_motor_type;
+
+    typedef enum {
         PWM_MODE_NONSYNCHRONOUS_HISW = 0, // This mode is not recommended
         PWM_MODE_SYNCHRONOUS, // The recommended and most tested mode
         PWM_MODE_BIPOLAR // Some glitches occasionally, can kill MOSFETs
@@ -98,6 +103,7 @@ public:
         // Switching and drive
         mc_pwm_mode pwm_mode;
         mc_comm_mode comm_mode;
+        mc_motor_type motor_type;
         // Limits
         float l_current_max;
         float l_current_min;

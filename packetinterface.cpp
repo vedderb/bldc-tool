@@ -263,6 +263,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         ind = 0;
         mcconf.pwm_mode = (mc_pwm_mode)data[ind++];
         mcconf.comm_mode = (mc_comm_mode)data[ind++];
+        mcconf.motor_type = (mc_motor_type)data[ind++];
 
         mcconf.l_current_max = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_current_min = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
@@ -463,6 +464,7 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
 
     mSendBuffer[send_index++] = mcconf.pwm_mode;
     mSendBuffer[send_index++] = mcconf.comm_mode;
+    mSendBuffer[send_index++] = mcconf.motor_type;
 
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_current_max * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_current_min * 1000.0), &send_index);

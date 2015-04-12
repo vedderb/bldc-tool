@@ -52,9 +52,48 @@
             </property>
             <widget class="QWidget" name="tab_12">
              <attribute name="title">
-              <string>Limits</string>
+              <string>Motor</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_24">
+              <item>
+               <widget class="QGroupBox" name="groupBox_29">
+                <property name="title">
+                 <string>Motor Type</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_34">
+                 <item>
+                  <widget class="QRadioButton" name="mcconfTypeBldcButton">
+                   <property name="text">
+                    <string>BLDC</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QRadioButton" name="mcconfTypeDcButton">
+                   <property name="text">
+                    <string>DC</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_15">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </item>
               <item>
                <layout class="QGridLayout" name="gridLayout_24">
                 <item row="0" column="0">
@@ -66,7 +105,7 @@
                    </sizepolicy>
                   </property>
                   <property name="title">
-                   <string>Current</string>
+                   <string>Current Limits</string>
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_18">
                    <item>
@@ -168,7 +207,7 @@
                    </sizepolicy>
                   </property>
                   <property name="title">
-                   <string>RPM</string>
+                   <string>RPM Limits</string>
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_19">
                    <item>
@@ -272,7 +311,7 @@
                 <item row="1" column="0">
                  <widget class="QGroupBox" name="groupBox_27">
                   <property name="title">
-                   <string>Temperature</string>
+                   <string>Temperature Limits</string>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_23">
                    <item row="0" column="0">
@@ -361,7 +400,7 @@
                 <item row="1" column="1">
                  <widget class="QGroupBox" name="groupBox_10">
                   <property name="title">
-                   <string>Voltage</string>
+                   <string>Voltage Limits</string>
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_20">
                    <item>
