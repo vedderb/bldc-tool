@@ -1313,6 +1313,7 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     ui->appconfPpmHystBox->setValue(appconf.app_ppm_conf.hyst);
     ui->appconfPpmPulseStartBox->setValue(appconf.app_ppm_conf.pulse_start);
     ui->appconfPpmPulseWidthBox->setValue(appconf.app_ppm_conf.pulse_width);
+    ui->appconfPpmMedianFilterBox->setChecked(appconf.app_ppm_conf.median_filter);
 
     if (appconf.app_ppm_conf.rpm_lim_end >= 200000.0) {
         ui->appconfPpmRpmLimBox->setChecked(false);
@@ -1685,6 +1686,7 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.app_ppm_conf.hyst = ui->appconfPpmHystBox->value();
     appconf.app_ppm_conf.pulse_start = ui->appconfPpmPulseStartBox->value();
     appconf.app_ppm_conf.pulse_width = ui->appconfPpmPulseWidthBox->value();
+    appconf.app_ppm_conf.median_filter = ui->appconfPpmMedianFilterBox->isChecked();
 
     if (ui->appconfPpmRpmLimBox->isChecked()) {
         appconf.app_ppm_conf.rpm_lim_start = ui->appconfPpmRpmLimStartBox->value();
