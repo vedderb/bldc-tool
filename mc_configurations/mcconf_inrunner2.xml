@@ -2,6 +2,7 @@
 <MCConfiguration>
     <pwm_mode>1</pwm_mode>
     <comm_mode>0</comm_mode>
+    <motor_type>0</motor_type>
     <l_current_max>80</l_current_max>
     <l_current_min>-80</l_current_min>
     <l_in_current_max>80</l_in_current_max>
@@ -34,9 +35,13 @@
     <s_pid_ki>0.002</s_pid_ki>
     <s_pid_kd>0</s_pid_kd>
     <s_pid_min_rpm>950</s_pid_min_rpm>
+    <p_pid_kp>0.0001</p_pid_kp>
+    <p_pid_ki>0.002</p_pid_ki>
+    <p_pid_kd>0</p_pid_kd>
     <cc_startup_boost_duty>0.08</cc_startup_boost_duty>
     <cc_min_current>1</cc_min_current>
     <cc_gain>0.0046</cc_gain>
+    <cc_ramp_step_max>0.04</cc_ramp_step_max>
     <m_fault_stop_time_ms>3000</m_fault_stop_time_ms>
     <meta_description>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;

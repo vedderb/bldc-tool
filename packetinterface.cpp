@@ -61,6 +61,9 @@ PacketInterface::PacketInterface(QObject *parent) :
     mRxState = 0;
     mRxTimer = 0;
 
+    mSendCan = false;
+    mCanId = 0;
+
     mPayloadLength = 0;
     mRxDataPtr = 0;
     mCrcLow = 0;
@@ -161,20 +164,34 @@ unsigned short PacketInterface::crc16(const unsigned char *buf, unsigned int len
     return cksum;
 }
 
-bool PacketInterface::sendPacket(const unsigned char *data, int len)
+bool PacketInterface::sendPacket(const unsigned char *data, int len_packet)
 {
-    unsigned char buffer[len + 5];
-    buffer[0] = 2;
-    buffer[1] = len;
+    int len_tot = len_packet;
 
-    memcpy(buffer + 2, data, len);
+    if (mSendCan) {
+        len_tot += 2;
+    }
 
-    unsigned short crc = crc16(data, len);
-    buffer[len + 2] = crc >> 8;
-    buffer[len + 3] = crc;
-    buffer[len + 4] = 3;
+    unsigned int ind = 0;
+    unsigned char buffer[len_tot + 5];
 
-    QByteArray sendData = QByteArray::fromRawData((char*)buffer, len + 5);
+    buffer[ind++] = 2;
+    buffer[ind++] = len_tot;
+
+    if (mSendCan) {
+        buffer[ind++] = COMM_FORWARD_CAN;
+        buffer[ind++] = mCanId;
+    }
+
+    memcpy(buffer + ind, data, len_packet);
+    ind += len_packet;
+
+    unsigned short crc = crc16(buffer + 2, len_tot);
+    buffer[ind++] = crc >> 8;
+    buffer[ind++] = crc;
+    buffer[ind++] = 3;
+
+    QByteArray sendData = QByteArray::fromRawData((char*)buffer, len_tot + 5);
 
     emit dataToSend(sendData);
 
@@ -301,9 +318,14 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.s_pid_kd = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
         mcconf.s_pid_min_rpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
 
+        mcconf.p_pid_kp = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        mcconf.p_pid_ki = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        mcconf.p_pid_kd = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
+
         mcconf.cc_startup_boost_duty = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
         mcconf.cc_min_current = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.cc_gain = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        mcconf.cc_ramp_step_max = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
 
         mcconf.m_fault_stop_time_ms = utility::buffer_get_int32(data, &ind);
 
@@ -318,6 +340,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         appconf.timeout_msec = utility::buffer_get_uint32(data, &ind);
         appconf.timeout_brake_current = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.send_can_status = data[ind++];
+        appconf.send_can_status_rate_hz = utility::buffer_get_uint16(data, &ind);
 
         appconf.app_to_use = (app_use)data[ind++];
 
@@ -432,6 +455,14 @@ bool PacketInterface::setRpm(int rpm)
     return sendPacket(mSendBuffer, send_index);
 }
 
+bool PacketInterface::setPos(double pos)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SET_POS;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(pos * 1000000.0), &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
 bool PacketInterface::setDetect()
 {
     QByteArray buffer;
@@ -503,9 +534,14 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.s_pid_kd * 1000000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.s_pid_min_rpm * 1000.0), &send_index);
 
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.p_pid_kp * 1000000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.p_pid_ki * 1000000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.p_pid_kd * 1000000.0), &send_index);
+
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_startup_boost_duty * 1000000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_min_current * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_gain * 1000000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_ramp_step_max * 1000000.0), &send_index);
 
     utility::buffer_append_int32(mSendBuffer, mcconf.m_fault_stop_time_ms, &send_index);
 
@@ -538,6 +574,7 @@ bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appco
     utility::buffer_append_uint32(mSendBuffer, appconf.timeout_msec, &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.timeout_brake_current * 1000.0), &send_index);
     mSendBuffer[send_index++] = appconf.send_can_status;
+    utility::buffer_append_uint16(mSendBuffer, appconf.send_can_status_rate_hz, &send_index);
 
     mSendBuffer[send_index++] = appconf.app_to_use;
 
@@ -598,4 +635,10 @@ bool PacketInterface::getDecodedChuk()
     buffer.clear();
     buffer.append((char)COMM_GET_DECODED_CHUK);
     return sendPacket(buffer);
+}
+
+void PacketInterface::setSendCan(bool sendCan, unsigned int id)
+{
+    mSendCan = sendCan;
+    mCanId = id;
 }

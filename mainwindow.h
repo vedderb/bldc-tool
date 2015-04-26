@@ -87,6 +87,7 @@ private slots:
     void on_appconfReadButton_clicked();
     void on_appconfWriteButton_clicked();
     void on_appconfRebootButton_clicked();
+    void on_posCtrlButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -130,6 +131,7 @@ private:
 
     bool mRealtimeGraphsAdded;
     bool mDoReplot;
+    bool mDoReplotPos;
     bool mDoRescale;
     bool mDoFilterReplot;
     PacketInterface *mPacketInterface;

@@ -57,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->statusBar->addPermanentWidget(mStatusLabel);
     mSampleInt = 0;
     mDoReplot = false;
+    mDoReplotPos = false;
     mDoRescale = true;
     mDoFilterReplot = true;
     mPacketInterface = new PacketInterface(this);
@@ -264,9 +265,14 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     mcconf.s_pid_kd = ui->mcconfSpidKdBox->value();
     mcconf.s_pid_min_rpm = ui->mcconfSpidMinRpmBox->value();
 
+    mcconf.p_pid_kp = ui->mcconfPpidKpBox->value();
+    mcconf.p_pid_ki = ui->mcconfPpidKiBox->value();
+    mcconf.p_pid_kd = ui->mcconfPpidKdBox->value();
+
     mcconf.cc_startup_boost_duty = ui->mcconfCcBoostBox->value();
     mcconf.cc_min_current = ui->mcconfCcMinBox->value();
     mcconf.cc_gain = ui->mcconfCcGainBox->value();
+    mcconf.cc_ramp_step_max = ui->mcconfCcMaxRampStepBox->value();
 
     mcconf.m_fault_stop_time_ms = ui->mcconfMFaultStopTimeBox->value();
 
@@ -357,9 +363,14 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     ui->mcconfSpidKdBox->setValue(mcconf.s_pid_kd);
     ui->mcconfSpidMinRpmBox->setValue(mcconf.s_pid_min_rpm);
 
+    ui->mcconfPpidKpBox->setValue(mcconf.p_pid_kp);
+    ui->mcconfPpidKiBox->setValue(mcconf.p_pid_ki);
+    ui->mcconfPpidKdBox->setValue(mcconf.p_pid_kd);
+
     ui->mcconfCcBoostBox->setValue(mcconf.cc_startup_boost_duty);
     ui->mcconfCcMinBox->setValue(mcconf.cc_min_current);
     ui->mcconfCcGainBox->setValue(mcconf.cc_gain);
+    ui->mcconfCcMaxRampStepBox->setValue(mcconf.cc_ramp_step_max);
 
     ui->mcconfMFaultStopTimeBox->setValue(mcconf.m_fault_stop_time_ms);
 
@@ -402,6 +413,9 @@ void MainWindow::timerSlot()
     if (ui->appconfUpdateChukBox->isChecked()) {
         mPacketInterface->getDecodedChuk();
     }
+
+    // Update CAN fwd function
+    mPacketInterface->setSendCan(ui->canFwdBox->isChecked(), ui->canIdBox->value());
 
     // Enable/disable fields in the configuration page
     static int isSlIntBefore = true;
@@ -971,6 +985,20 @@ void MainWindow::timerSlot()
         mDoReplot = false;
         mDoRescale = false;
     }
+
+    if (mDoReplotPos) {
+        QVector<double> xAxis(positionVec.size());
+        for (int i = 0;i < positionVec.size();i++) {
+            xAxis[i] = (double)i;
+        }
+
+        ui->rotorPosBar->setValue((int)positionVec.last());
+        ui->realtimePlotPosition->graph(0)->setData(xAxis, positionVec);
+        ui->realtimePlotPosition->rescaleAxes();
+        ui->realtimePlotPosition->replot();
+
+        mDoReplotPos = false;
+    }
 }
 
 void MainWindow::packetDataToSend(QByteArray &data)
@@ -1180,17 +1208,8 @@ void MainWindow::samplesReceived(QByteArray data)
 
 void MainWindow::rotorPosReceived(double pos)
 {
-    appendDoubleAndTrunc(&positionVec, pos, 500);
-
-    QVector<double> xAxis(positionVec.size());
-    for (int i = 0;i < positionVec.size();i++) {
-        xAxis[i] = (double)i;
-    }
-
-    ui->rotorPosBar->setValue((int)pos);
-    ui->realtimePlotPosition->graph(0)->setData(xAxis, positionVec);
-    ui->realtimePlotPosition->rescaleAxes();
-    ui->realtimePlotPosition->replot();
+    appendDoubleAndTrunc(&positionVec, pos, 1500);
+    mDoReplotPos = true;
 }
 
 void MainWindow::experimentSamplesReceived(QVector<double> samples)
@@ -1238,6 +1257,7 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     ui->appconfTimeoutBox->setValue(appconf.timeout_msec);
     ui->appconfTimeoutBrakeCurrentBox->setValue(appconf.timeout_brake_current);
     ui->appconfSendCanStatusBox->setChecked(appconf.send_can_status);
+    ui->appconfSendCanStatusRateBox->setValue(appconf.send_can_status_rate_hz);
 
     switch (appconf.app_to_use) {
     case PacketInterface::APP_NONE:
@@ -1647,6 +1667,7 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.timeout_msec = ui->appconfTimeoutBox->value();
     appconf.timeout_brake_current = ui->appconfTimeoutBrakeCurrentBox->value();
     appconf.send_can_status = ui->appconfSendCanStatusBox->isChecked();
+    appconf.send_can_status_rate_hz = ui->appconfSendCanStatusRateBox->value();
 
     if (ui->appconfUseNoAppButton->isChecked()) {
         appconf.app_to_use = PacketInterface::APP_NONE;
@@ -1726,4 +1747,9 @@ void MainWindow::on_appconfWriteButton_clicked()
 void MainWindow::on_appconfRebootButton_clicked()
 {
     mPacketInterface->reboot();
+}
+
+void MainWindow::on_posCtrlButton_clicked()
+{
+    mPacketInterface->setPos(ui->posCtrlBox->value());
 }

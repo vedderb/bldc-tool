@@ -65,6 +65,7 @@ public:
         COMM_SET_CURRENT,
         COMM_SET_CURRENT_BRAKE,
         COMM_SET_RPM,
+        COMM_SET_POS,
         COMM_SET_DETECT,
         COMM_SET_SERVO_OFFSET,
         COMM_SET_MCCONF,
@@ -80,7 +81,8 @@ public:
         COMM_REBOOT,
         COMM_ALIVE,
         COMM_GET_DECODED_PPM,
-        COMM_GET_DECODED_CHUK
+        COMM_GET_DECODED_CHUK,
+        COMM_FORWARD_CAN
     } COMM_PACKET_ID;
 
     typedef enum {
@@ -140,10 +142,15 @@ public:
         float s_pid_ki;
         float s_pid_kd;
         float s_pid_min_rpm;
+        // Pos PID
+        float p_pid_kp;
+        float p_pid_ki;
+        float p_pid_kd;
         // Current controller
         float cc_startup_boost_duty;
         float cc_min_current;
         float cc_gain;
+        float cc_ramp_step_max;
         // Misc
         int32_t m_fault_stop_time_ms;
         // Fields that are only present in Qt
@@ -212,6 +219,7 @@ public:
         quint32 timeout_msec;
         float timeout_brake_current;
         bool send_can_status;
+        quint32 send_can_status_rate_hz;
 
         // Application to use
         app_use app_to_use;
@@ -229,7 +237,7 @@ public:
     explicit PacketInterface(QObject *parent = 0);
     ~PacketInterface();
 
-    bool sendPacket(const unsigned char *data, int len);
+    bool sendPacket(const unsigned char *data, int len_packet);
     bool sendPacket(QByteArray data);
     void processData(QByteArray &data);
     bool getValues();
@@ -238,6 +246,7 @@ public:
     bool setCurrent(double current);
     bool setCurrentBrake(double current);
     bool setRpm(int rpm);
+    bool setPos(double pos);
     bool setDetect();
     bool samplePrint(bool at_start, int sample_len, int dec);
     bool getMcconf();
@@ -249,6 +258,7 @@ public:
     bool sendAlive();
     bool getDecodedPpm();
     bool getDecodedChuk();
+    void setSendCan(bool mSendCan, unsigned int id);
 
 signals:
     void dataToSend(QByteArray &data);
@@ -273,6 +283,8 @@ private:
 
     QTimer *mTimer;
     quint8 *mSendBuffer;
+    bool mSendCan;
+    unsigned int mCanId;
 
     // Packet state machine variables
     int mRxTimer;

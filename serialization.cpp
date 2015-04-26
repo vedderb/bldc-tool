@@ -47,6 +47,7 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeStartElement("MCConfiguration");
     xmlwriter.writeTextElement("pwm_mode", QString::number(mcconf.pwm_mode));
     xmlwriter.writeTextElement("comm_mode", QString::number(mcconf.comm_mode));
+    xmlwriter.writeTextElement("motor_type", QString::number(mcconf.motor_type));
     xmlwriter.writeTextElement("l_current_max", QString::number(mcconf.l_current_max));
     xmlwriter.writeTextElement("l_current_min", QString::number(mcconf.l_current_min));
     xmlwriter.writeTextElement("l_in_current_max", QString::number(mcconf.l_in_current_max));
@@ -79,9 +80,13 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeTextElement("s_pid_ki", QString::number(mcconf.s_pid_ki));
     xmlwriter.writeTextElement("s_pid_kd", QString::number(mcconf.s_pid_kd));
     xmlwriter.writeTextElement("s_pid_min_rpm", QString::number(mcconf.s_pid_min_rpm));
+    xmlwriter.writeTextElement("p_pid_kp", QString::number(mcconf.p_pid_kp));
+    xmlwriter.writeTextElement("p_pid_ki", QString::number(mcconf.p_pid_ki));
+    xmlwriter.writeTextElement("p_pid_kd", QString::number(mcconf.p_pid_kd));
     xmlwriter.writeTextElement("cc_startup_boost_duty", QString::number(mcconf.cc_startup_boost_duty));
     xmlwriter.writeTextElement("cc_min_current", QString::number(mcconf.cc_min_current));
     xmlwriter.writeTextElement("cc_gain", QString::number(mcconf.cc_gain));
+    xmlwriter.writeTextElement("cc_ramp_step_max", QString::number(mcconf.cc_ramp_step_max));
     xmlwriter.writeTextElement("m_fault_stop_time_ms", QString::number(mcconf.m_fault_stop_time_ms));
     xmlwriter.writeTextElement("meta_description", mcconf.meta_description);
 
@@ -119,6 +124,7 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
 
                     if(xmlreader.name() == "pwm_mode") {mcconf.pwm_mode = (PacketInterface::mc_pwm_mode)xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "comm_mode") {mcconf.comm_mode = (PacketInterface::mc_comm_mode)xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "motor_type") {mcconf.motor_type = (PacketInterface::mc_motor_type)xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "l_current_max") {mcconf.l_current_max = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_current_min") {mcconf.l_current_min = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_in_current_max") {mcconf.l_in_current_max = xmlreader.readElementText().toDouble();}
@@ -151,9 +157,13 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     else if (xmlreader.name() == "s_pid_ki") {mcconf.s_pid_ki = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "s_pid_kd") {mcconf.s_pid_kd = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "s_pid_min_rpm") {mcconf.s_pid_min_rpm = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "p_pid_kp") {mcconf.p_pid_kp = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "p_pid_ki") {mcconf.p_pid_ki = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "p_pid_kd") {mcconf.p_pid_kd = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "cc_startup_boost_duty") {mcconf.cc_startup_boost_duty = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "cc_min_current") {mcconf.cc_min_current = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "cc_gain") {mcconf.cc_gain = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "cc_ramp_step_max") {mcconf.cc_ramp_step_max = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "m_fault_stop_time_ms") {mcconf.m_fault_stop_time_ms = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "meta_description") {mcconf.meta_description = xmlreader.readElementText();}
 
