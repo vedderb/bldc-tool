@@ -37,7 +37,7 @@
     <s_pid_min_rpm>900</s_pid_min_rpm>
     <p_pid_kp>0.1</p_pid_kp>
     <p_pid_ki>0</p_pid_ki>
-    <p_pid_kd>0.0015</p_pid_kd>
+    <p_pid_kd>0.0025</p_pid_kd>
     <cc_startup_boost_duty>0</cc_startup_boost_duty>
     <cc_min_current>0.2</cc_min_current>
     <cc_gain>0.003</cc_gain>
