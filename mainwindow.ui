@@ -1585,10 +1585,20 @@ p, li { white-space: pre-wrap; }
                  <string>Settings</string>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_17">
+                 <item row="4" column="0">
+                  <widget class="QCheckBox" name="appconfPpmMedianFilterBox">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use a median filter to reject niose. This will introduce one sample delay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Use Median Filter</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="3" column="0">
                   <widget class="QLabel" name="label_51">
                    <property name="text">
-                    <string>Width after minimum pulse (milliseconds)</string>
+                    <string>Minimum pulsewidth (milliseconds)</string>
                    </property>
                   </widget>
                  </item>
@@ -1612,7 +1622,7 @@ p, li { white-space: pre-wrap; }
                  <item row="2" column="1">
                   <widget class="QDoubleSpinBox" name="appconfPpmPulseStartBox">
                    <property name="maximum">
-                    <double>2.000000000000000</double>
+                    <double>10.000000000000000</double>
                    </property>
                    <property name="singleStep">
                     <double>0.100000000000000</double>
@@ -1623,6 +1633,16 @@ p, li { white-space: pre-wrap; }
                   <widget class="QLabel" name="label_50">
                    <property name="text">
                     <string>Minimum pulsewidth (milliseconds)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="appconfPpmPulseWidthBox">
+                   <property name="maximum">
+                    <double>20.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
                    </property>
                   </widget>
                  </item>
@@ -1643,23 +1663,13 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="1">
-                  <widget class="QDoubleSpinBox" name="appconfPpmPulseWidthBox">
-                   <property name="maximum">
-                    <double>2.000000000000000</double>
-                   </property>
-                   <property name="singleStep">
-                    <double>0.100000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QCheckBox" name="appconfPpmMedianFilterBox">
+                 <item row="5" column="0">
+                  <widget class="QCheckBox" name="appconfPpmSafeStartBox">
                    <property name="toolTip">
-                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use a median filter to reject niose. This will introduce one sample delay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Don't give throttle unless the received output has been 0 for at leas 50 pulses. The counter is reset on boot, every time a new configuration is loaded and when a timeout occurs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                    <property name="text">
-                    <string>Use Median Filter</string>
+                    <string>Safe Start</string>
                    </property>
                   </widget>
                  </item>
@@ -1673,6 +1683,9 @@ p, li { white-space: pre-wrap; }
                 </property>
                 <property name="checkable">
                  <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_20">
                  <item row="0" column="1">
@@ -1770,6 +1783,13 @@ p, li { white-space: pre-wrap; }
                  <string>Display</string>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_19">
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="appconfUpdatePpmBox">
+                   <property name="text">
+                    <string>Decoded PPM value</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="0" column="1">
                   <widget class="QProgressBar" name="appconfDecodedPpmBar">
                    <property name="minimum">
@@ -1786,10 +1806,10 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="0">
-                  <widget class="QCheckBox" name="appconfUpdatePpmBox">
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="appconfDecodedPpmLenLabel">
                    <property name="text">
-                    <string>Decoded PPM value</string>
+                    <string>Last received pulsewidth: 0.000 ms</string>
                    </property>
                   </widget>
                  </item>

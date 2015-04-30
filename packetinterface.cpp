@@ -215,6 +215,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     double detect_cycle_int_limit;
     double detect_coupling_k;
     double dec_ppm;
+    double ppm_last_len;
 
     unsigned char id = data[0];
     data++;
@@ -348,8 +349,9 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         appconf.app_ppm_conf.pid_max_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.app_ppm_conf.hyst = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.app_ppm_conf.pulse_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_ppm_conf.pulse_width = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_ppm_conf.pulse_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.app_ppm_conf.median_filter = data[ind++];
+        appconf.app_ppm_conf.safe_start = data[ind++];
         appconf.app_ppm_conf.rpm_lim_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.app_ppm_conf.rpm_lim_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         appconf.app_ppm_conf.multi_esc = data[ind++];
@@ -379,7 +381,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
 
     case COMM_GET_DECODED_PPM:
         dec_ppm = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        emit decodedPpmReceived(dec_ppm);
+        ppm_last_len = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        emit decodedPpmReceived(dec_ppm, ppm_last_len);
         break;
 
     case COMM_GET_DECODED_CHUK:
@@ -582,8 +585,9 @@ bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appco
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.pid_max_erpm * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.hyst * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.pulse_start * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.pulse_width * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.pulse_end * 1000.0), &send_index);
     mSendBuffer[send_index++] = appconf.app_ppm_conf.median_filter;
+    mSendBuffer[send_index++] = appconf.app_ppm_conf.safe_start;
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.rpm_lim_start * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.rpm_lim_end * 1000.0), &send_index);
     mSendBuffer[send_index++] = appconf.app_ppm_conf.multi_esc;

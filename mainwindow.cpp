@@ -89,8 +89,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(motorParamReceived(double,double)));
     connect(mPacketInterface, SIGNAL(appconfReceived(PacketInterface::app_configuration)),
             this, SLOT(appconfReceived(PacketInterface::app_configuration)));
-    connect(mPacketInterface, SIGNAL(decodedPpmReceived(double)),
-            this, SLOT(decodedPpmReceived(double)));
+    connect(mPacketInterface, SIGNAL(decodedPpmReceived(double,double)),
+            this, SLOT(decodedPpmReceived(double,double)));
     connect(mPacketInterface, SIGNAL(decodedChukReceived(double)),
             this, SLOT(decodedChukReceived(double)));
 
@@ -1332,8 +1332,9 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     ui->appconfPpmPidMaxErpmBox->setValue(appconf.app_ppm_conf.pid_max_erpm);
     ui->appconfPpmHystBox->setValue(appconf.app_ppm_conf.hyst);
     ui->appconfPpmPulseStartBox->setValue(appconf.app_ppm_conf.pulse_start);
-    ui->appconfPpmPulseWidthBox->setValue(appconf.app_ppm_conf.pulse_width);
+    ui->appconfPpmPulseWidthBox->setValue(appconf.app_ppm_conf.pulse_end);
     ui->appconfPpmMedianFilterBox->setChecked(appconf.app_ppm_conf.median_filter);
+    ui->appconfPpmSafeStartBox->setChecked(appconf.app_ppm_conf.safe_start);
 
     if (appconf.app_ppm_conf.rpm_lim_end >= 200000.0) {
         ui->appconfPpmRpmLimBox->setChecked(false);
@@ -1378,9 +1379,13 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     appconfLoaded = true;
 }
 
-void MainWindow::decodedPpmReceived(double ppm_value)
+void MainWindow::decodedPpmReceived(double ppm_value, double ppm_last_len)
 {
+    QString lenStr;
+    lenStr.sprintf("Last received pulsewidth: %.3f ms", ppm_last_len);
+
     ui->appconfDecodedPpmBar->setValue((ppm_value + 1.0) * 500.0);
+    ui->appconfDecodedPpmLenLabel->setText(lenStr);
 }
 
 void MainWindow::decodedChukReceived(double chuk_value)
@@ -1706,8 +1711,9 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.app_ppm_conf.pid_max_erpm = ui->appconfPpmPidMaxErpmBox->value();
     appconf.app_ppm_conf.hyst = ui->appconfPpmHystBox->value();
     appconf.app_ppm_conf.pulse_start = ui->appconfPpmPulseStartBox->value();
-    appconf.app_ppm_conf.pulse_width = ui->appconfPpmPulseWidthBox->value();
+    appconf.app_ppm_conf.pulse_end = ui->appconfPpmPulseWidthBox->value();
     appconf.app_ppm_conf.median_filter = ui->appconfPpmMedianFilterBox->isChecked();
+    appconf.app_ppm_conf.safe_start = ui->appconfPpmSafeStartBox->isChecked();
 
     if (ui->appconfPpmRpmLimBox->isChecked()) {
         appconf.app_ppm_conf.rpm_lim_start = ui->appconfPpmRpmLimStartBox->value();

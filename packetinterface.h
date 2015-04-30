@@ -185,8 +185,9 @@ public:
         float pid_max_erpm;
         float hyst;
         float pulse_start;
-        float pulse_width;
+        float pulse_end;
         bool median_filter;
+        bool safe_start;
         float rpm_lim_start;
         float rpm_lim_end;
         bool multi_esc;
@@ -270,7 +271,7 @@ signals:
     void mcconfReceived(PacketInterface::mc_configuration mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k);
     void appconfReceived(PacketInterface::app_configuration appconf);
-    void decodedPpmReceived(double value);
+    void decodedPpmReceived(double value, double last_len);
     void decodedChukReceived(double value);
     
 public slots:
