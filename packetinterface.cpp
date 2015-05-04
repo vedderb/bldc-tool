@@ -216,12 +216,28 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     double detect_coupling_k;
     double dec_ppm;
     double ppm_last_len;
+    double dec_adc;
+    double dec_adc_voltage;
+    int fw_major;
+    int fw_minor;
 
     unsigned char id = data[0];
     data++;
     len--;
 
     switch (id) {
+    case COMM_FW_VERSION:
+        if (len == 2) {
+            ind = 0;
+            fw_major = data[ind++];
+            fw_minor = data[ind++];
+        } else {
+            fw_major = -1;
+            fw_minor = -1;
+        }
+        emit fwVersionReceived(fw_major, fw_minor);
+        break;
+
     case COMM_GET_VALUES:
         ind = 0;
         values.temp_mos1 = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
@@ -358,6 +374,21 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         appconf.app_ppm_conf.tc = data[ind++];
         appconf.app_ppm_conf.tc_max_diff = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
 
+        appconf.app_adc_conf.ctrl_type = (adc_control_type)data[ind++];
+        appconf.app_adc_conf.hyst = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_adc_conf.voltage_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_adc_conf.voltage_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_adc_conf.use_filter = data[ind++];
+        appconf.app_adc_conf.safe_start = data[ind++];
+        appconf.app_adc_conf.button_inverted = data[ind++];
+        appconf.app_adc_conf.voltage_inverted = data[ind++];
+        appconf.app_adc_conf.rpm_lim_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_adc_conf.rpm_lim_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_adc_conf.multi_esc = data[ind++];
+        appconf.app_adc_conf.tc = data[ind++];
+        appconf.app_adc_conf.tc_max_diff = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_adc_conf.update_rate_hz = utility::buffer_get_uint16(data, &ind);
+
         appconf.app_uart_baudrate = utility::buffer_get_uint32(data, &ind);
 
         appconf.app_chuk_conf.ctrl_type = (chuk_control_type)data[ind++];
@@ -380,14 +411,31 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         break;
 
     case COMM_GET_DECODED_PPM:
+        ind = 0;
         dec_ppm = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
         ppm_last_len = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
         emit decodedPpmReceived(dec_ppm, ppm_last_len);
         break;
 
+    case COMM_GET_DECODED_ADC:
+        ind = 0;
+        dec_adc = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        dec_adc_voltage = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        emit decodedAdcReceived(dec_adc, dec_adc_voltage);
+        break;
+
     case COMM_GET_DECODED_CHUK:
+        ind = 0;
         dec_ppm = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
         emit decodedChukReceived(dec_ppm);
+        break;
+
+    case COMM_SET_MCCONF:
+        emit ackReceived("MCCONF Write OK");
+        break;
+
+    case COMM_SET_APPCONF:
+        emit ackReceived("APPCONF Write OK");
         break;
 
     default:
@@ -407,6 +455,14 @@ QString PacketInterface::faultToStr(PacketInterface::mc_fault_code fault)
     case FAULT_CODE_OVER_TEMP_MOTOR: return "FAULT_CODE_OVER_TEMP_MOTOR";
     default: return "Unknown fault";
     }
+}
+
+bool PacketInterface::getFwVersion()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_FW_VERSION);
+    return sendPacket(buffer);
 }
 
 bool PacketInterface::getValues()
@@ -594,6 +650,21 @@ bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appco
     mSendBuffer[send_index++] = appconf.app_ppm_conf.tc;
     utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.tc_max_diff * 1000.0), &send_index);
 
+    mSendBuffer[send_index++] = appconf.app_adc_conf.ctrl_type;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.hyst * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.voltage_start * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.voltage_end * 1000.0), &send_index);
+    mSendBuffer[send_index++] = appconf.app_adc_conf.use_filter;
+    mSendBuffer[send_index++] = appconf.app_adc_conf.safe_start;
+    mSendBuffer[send_index++] = appconf.app_adc_conf.button_inverted;
+    mSendBuffer[send_index++] = appconf.app_adc_conf.voltage_inverted;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.rpm_lim_start * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.rpm_lim_end * 1000.0), &send_index);
+    mSendBuffer[send_index++] = appconf.app_adc_conf.multi_esc;
+    mSendBuffer[send_index++] = appconf.app_adc_conf.tc;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.tc_max_diff * 1000.0), &send_index);
+    utility::buffer_append_uint16(mSendBuffer, appconf.app_adc_conf.update_rate_hz, &send_index);
+
     utility::buffer_append_uint32(mSendBuffer, appconf.app_uart_baudrate, &send_index);
 
     mSendBuffer[send_index++] = appconf.app_chuk_conf.ctrl_type;
@@ -630,6 +701,14 @@ bool PacketInterface::getDecodedPpm()
     QByteArray buffer;
     buffer.clear();
     buffer.append((char)COMM_GET_DECODED_PPM);
+    return sendPacket(buffer);
+}
+
+bool PacketInterface::getDecodedAdc()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_GET_DECODED_ADC);
     return sendPacket(buffer);
 }
 

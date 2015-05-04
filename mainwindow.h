@@ -39,13 +39,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     bool eventFilter(QObject *object, QEvent *e);
-    PacketInterface::mc_configuration getMcconfGui();
-    void setMcconfGui(const PacketInterface::mc_configuration &mcconf);
 
 private slots:
     void serialDataAvailable();
     void timerSlot();
     void packetDataToSend(QByteArray &data);
+    void fwVersionReceived(int major, int minor);
+    void ackReceived(QString ackType);
     void mcValuesReceived(PacketInterface::MC_VALUES values);
     void printReceived(QString str);
     void samplesReceived(QByteArray data);
@@ -55,6 +55,7 @@ private slots:
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k);
     void appconfReceived(PacketInterface::app_configuration appconf);
     void decodedPpmReceived(double ppm_value, double ppm_last_len);
+    void decodedAdcReceived(double adc_value, double adc_voltage);
     void decodedChukReceived(double chuk_value);
 
     void on_connectButton_clicked();
@@ -94,6 +95,9 @@ private:
     SerialPort *mPort;
     QTimer *mTimer;
     QLabel *mStatusLabel;
+    int mStatusInfoTime;
+    bool mFwVersionReceived;
+    QList<QPair<int, int> > mCompatibleFws;
     Serialization *mSerialization;
     int mSampleInt;
     QByteArray curr1Array;
@@ -137,11 +141,14 @@ private:
     PacketInterface *mPacketInterface;
     bool keyLeft;
     bool keyRight;
-    bool mcconfLoaded;
-    bool appconfLoaded;
+    bool mMcconfLoaded;
+    bool mAppconfLoaded;
 
     QVector<QVector<double> > mExperimentSamples;
 
+    PacketInterface::mc_configuration getMcconfGui();
+    void setMcconfGui(const PacketInterface::mc_configuration &mcconf);
+    void showStatusInfo(QString info, bool isGood);
     void appendDoubleAndTrunc(QVector<double> *vec, double num, int maxSize);
     void clearBuffers();
     void saveExperimentSamplesToFile(QString path);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1343</width>
-    <height>763</height>
+    <width>1280</width>
+    <height>729</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1333,6 +1333,9 @@ p, li { white-space: pre-wrap; }
                   <property name="checkable">
                    <bool>true</bool>
                   </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
                   <layout class="QGridLayout" name="gridLayout_25">
                    <item row="0" column="0">
                     <widget class="QLabel" name="label_12">
@@ -1361,41 +1364,34 @@ p, li { white-space: pre-wrap; }
                 <layout class="QHBoxLayout" name="horizontalLayout_33">
                  <item>
                   <layout class="QGridLayout" name="gridLayout_22">
-                   <item row="0" column="0">
-                    <widget class="QRadioButton" name="appconfUseNoAppButton">
+                   <item row="1" column="0">
+                    <widget class="QRadioButton" name="appconfUseUartButton">
                      <property name="text">
-                      <string>No application</string>
-                     </property>
-                     <property name="checked">
-                      <bool>true</bool>
+                      <string>UART</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
+                   <item row="1" column="1">
                     <widget class="QRadioButton" name="appconfUsePpmUartButton">
                      <property name="text">
                       <string>PPM and UART</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0">
-                    <widget class="QRadioButton" name="appconfUsePpmButton">
+                   <item row="2" column="2">
+                    <widget class="QRadioButton" name="appconfUseCustomButton">
                      <property name="text">
-                      <string>PPM</string>
+                      <string>Custom user application</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
-                    <widget class="QRadioButton" name="appconfUseNunchukButton">
+                   <item row="0" column="0">
+                    <widget class="QRadioButton" name="appconfUseNoAppButton">
                      <property name="text">
-                      <string>Nunchuk</string>
+                      <string>No app</string>
                      </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QRadioButton" name="appconfUseUartButton">
-                     <property name="text">
-                      <string>UART</string>
+                     <property name="checked">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -1406,10 +1402,31 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="2">
-                    <widget class="QRadioButton" name="appconfUseCustomButton">
+                   <item row="2" column="0">
+                    <widget class="QRadioButton" name="appconfUseNunchukButton">
                      <property name="text">
-                      <string>Custom user application</string>
+                      <string>Nunchuk</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QRadioButton" name="appconfUsePpmButton">
+                     <property name="text">
+                      <string>PPM</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QRadioButton" name="appconfUseAdcButton">
+                     <property name="text">
+                      <string>ADC</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QRadioButton" name="appconfUseAdcUartButton">
+                     <property name="text">
+                      <string>ADC and UART</string>
                      </property>
                     </widget>
                    </item>
@@ -1598,7 +1615,7 @@ p, li { white-space: pre-wrap; }
                  <item row="3" column="0">
                   <widget class="QLabel" name="label_51">
                    <property name="text">
-                    <string>Minimum pulsewidth (milliseconds)</string>
+                    <string>Maximum Pulsewidth (ms)</string>
                    </property>
                   </widget>
                  </item>
@@ -1632,7 +1649,7 @@ p, li { white-space: pre-wrap; }
                  <item row="2" column="0">
                   <widget class="QLabel" name="label_50">
                    <property name="text">
-                    <string>Minimum pulsewidth (milliseconds)</string>
+                    <string>Minimum Pulsewidth (ms)</string>
                    </property>
                   </widget>
                  </item>
@@ -1733,6 +1750,9 @@ p, li { white-space: pre-wrap; }
                 <property name="checkable">
                  <bool>true</bool>
                 </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_37">
                  <item>
                   <widget class="QCheckBox" name="appconfPpmTcBox">
@@ -1778,19 +1798,18 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBox_23">
+               <widget class="QGroupBox" name="appconfUpdatePpmBox">
                 <property name="title">
                  <string>Display</string>
                 </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
                 <layout class="QGridLayout" name="gridLayout_19">
                  <item row="0" column="0">
-                  <widget class="QCheckBox" name="appconfUpdatePpmBox">
-                   <property name="text">
-                    <string>Decoded PPM value</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
                   <widget class="QProgressBar" name="appconfDecodedPpmBar">
                    <property name="minimum">
                     <number>0</number>
@@ -1807,9 +1826,12 @@ p, li { white-space: pre-wrap; }
                   </widget>
                  </item>
                  <item row="0" column="2">
-                  <widget class="QLabel" name="appconfDecodedPpmLenLabel">
+                  <widget class="QLCDNumber" name="appconfPpmPulsewidthNumber"/>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="label_80">
                    <property name="text">
-                    <string>Last received pulsewidth: 0.000 ms</string>
+                    <string>Pulsewidth (ms):</string>
                    </property>
                   </widget>
                  </item>
@@ -1825,6 +1847,404 @@ p, li { white-space: pre-wrap; }
                  <size>
                   <width>20</width>
                   <height>221</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_22">
+             <attribute name="title">
+              <string>ADC</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_16">
+              <item>
+               <widget class="QGroupBox" name="groupBox_31">
+                <property name="title">
+                 <string>Control mode</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_40">
+                 <item>
+                  <layout class="QGridLayout" name="gridLayout_30">
+                   <item row="0" column="3">
+                    <widget class="QRadioButton" name="appconfAdcCurrentButtonButton">
+                     <property name="text">
+                      <string>Current button</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QRadioButton" name="appconfAdcDisabledButton">
+                     <property name="text">
+                      <string>Disabled</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="4">
+                    <widget class="QRadioButton" name="appconfAdcCurrentNorevCenterButton">
+                     <property name="text">
+                      <string>Current norev center</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QRadioButton" name="appconfAdcCurrentNorevButtonButton">
+                     <property name="text">
+                      <string>Current norev button</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QRadioButton" name="appconfAdcCurrentButton">
+                     <property name="text">
+                      <string>Current</string>
+                     </property>
+                     <property name="checked">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QRadioButton" name="appconfAdcDutyCycleButton">
+                     <property name="text">
+                      <string>Duty cycle</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QRadioButton" name="appconfAdcDutyCycleCenterButton">
+                     <property name="text">
+                      <string>Duty cycle center</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <widget class="QRadioButton" name="appconfAdcDutyCycleButtonButton">
+                     <property name="text">
+                      <string>Duty cycle button</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QRadioButton" name="appconfAdcCurrentCenterButton">
+                     <property name="text">
+                      <string>Current center</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_16">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>411</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_33">
+                <property name="title">
+                 <string>Settings</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_33">
+                 <item row="0" column="1">
+                  <widget class="QSpinBox" name="appconfAdcUpdateRateBox">
+                   <property name="maximum">
+                    <number>10000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>10</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_77">
+                   <property name="text">
+                    <string>Minimum Voltage (V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="appconfAdcVoltageEndBox">
+                   <property name="maximum">
+                    <double>20.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="appconfAdcHystBox">
+                   <property name="maximum">
+                    <double>1.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.050000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_75">
+                   <property name="text">
+                    <string>Maximum Voltage (V)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="QCheckBox" name="appconfAdcInvertButtonBox">
+                   <property name="text">
+                    <string>Invert Button</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="4">
+                  <spacer name="horizontalSpacer_18">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_78">
+                   <property name="text">
+                    <string>Update Rate (Hz)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="3">
+                  <widget class="QCheckBox" name="appconfAdcSafeStartBox">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Don't give throttle unless the received output has been 0 for at leas 50 pulses. The counter is reset on boot, every time a new configuration is loaded and when a timeout occurs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Safe Start</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_76">
+                   <property name="text">
+                    <string>Deadband</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="appconfAdcVoltageStartBox">
+                   <property name="maximum">
+                    <double>10.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="3">
+                  <widget class="QCheckBox" name="appconfAdcInvertVoltageBox">
+                   <property name="text">
+                    <string>Invert Voltage</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QCheckBox" name="appconfAdcFilterBox">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use a median filter to reject niose. This will introduce one sample delay.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Use Filter</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QWidget" name="widget" native="true">
+                   <property name="minimumSize">
+                    <size>
+                     <width>50</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="appconfAdcRpmLimBox">
+                <property name="title">
+                 <string>Soft RPM limit (current mode only)</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_32">
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="appconfAdcRpmLimStartBox">
+                   <property name="maximum">
+                    <double>200000.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>100.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_73">
+                   <property name="text">
+                    <string>RPM limit start</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_74">
+                   <property name="text">
+                    <string>RPM limit end</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="appconfAdcRpmLimEndBox">
+                   <property name="maximum">
+                    <double>200000.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>100.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="appconfAdcMultiGroup">
+                <property name="title">
+                 <string>Multiple ESCs over CAN</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_41">
+                 <item>
+                  <widget class="QCheckBox" name="appconfAdcTcBox">
+                   <property name="text">
+                    <string>Enable Traction Control (current mode only)</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_17">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_72">
+                   <property name="text">
+                    <string>Traction Control ERPM diff</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="appconfAdcTcErpmBox">
+                   <property name="maximum">
+                    <double>100000.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>3000.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="appconfAdcUpdateBox">
+                <property name="title">
+                 <string>Display</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_31">
+                 <item row="0" column="0">
+                  <widget class="QProgressBar" name="appconfAdcDecodedBar">
+                   <property name="minimum">
+                    <number>0</number>
+                   </property>
+                   <property name="maximum">
+                    <number>1000</number>
+                   </property>
+                   <property name="value">
+                    <number>0</number>
+                   </property>
+                   <property name="format">
+                    <string>%p%</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLCDNumber" name="appconfAdcVoltageNumber">
+                   <property name="value" stdset="0">
+                    <double>0.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="label_79">
+                   <property name="text">
+                    <string>Voltage (V):</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_14">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>76</height>
                  </size>
                 </property>
                </spacer>
@@ -1998,7 +2418,7 @@ p, li { white-space: pre-wrap; }
                  <item row="1" column="2">
                   <widget class="QLabel" name="label_64">
                    <property name="text">
-                    <string>Negative ramping tume constant</string>
+                    <string>Negative ramping time constant</string>
                    </property>
                   </widget>
                  </item>
@@ -2095,18 +2515,17 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBox_26">
+               <widget class="QGroupBox" name="appconfUpdateChukBox">
                 <property name="title">
                  <string>Display</string>
                 </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_32">
-                 <item>
-                  <widget class="QCheckBox" name="appconfUpdateChukBox">
-                   <property name="text">
-                    <string>Decoded y-axis value</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item>
                   <widget class="QProgressBar" name="appconfDecodedChukBar">
                    <property name="minimum">
