@@ -19,6 +19,7 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QFileDialog>
+#include <QFile>
 #include <string.h>
 #include <cmath>
 #include <QMessageBox>
@@ -50,7 +51,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Compatible firmwares
     mFwVersionReceived = false;
-    mCompatibleFws.append(qMakePair(1, 0));
+    mCompatibleFws.append(qMakePair(1, 1));
+
+    QString supportedFWs;
+    for (int i = 0;i < mCompatibleFws.size();i++) {
+        QString tmp;
+        tmp.sprintf("%d.%d", mCompatibleFws.at(i).first, mCompatibleFws.at(i).second);
+        if (i < (mCompatibleFws.size() - 1)) {
+            tmp.append("\n");
+        }
+        supportedFWs.append(tmp);
+    }
+    ui->firmwareSupportedLabel->setText(supportedFWs);
 
     mPort = new SerialPort(this);
 
@@ -443,11 +455,22 @@ void MainWindow::timerSlot()
         }
     } else {
         if (mPort->isOpen()) {
-            mStatusLabel->setText("Connected");
+            if (mPacketInterface->isLimitedMode()) {
+                mStatusLabel->setText("Connected, limited");
+            } else {
+                mStatusLabel->setText("Connected");
+            }
         } else {
             mStatusLabel->setText("Not connected");
         }
     }
+
+    // Update fw upload bar and label
+    double fw_prog = mPacketInterface->getFirmwareUploadProgress();
+    if (fw_prog > 0.0) {
+        ui->firmwareBar->setValue(fw_prog * 1000);
+    }
+    ui->firmwareUploadStatusLabel->setText(mPacketInterface->getFirmwareUploadStatus());
 
     // Send alive command
     mPacketInterface->sendAlive();
@@ -1071,18 +1094,38 @@ void MainWindow::fwVersionReceived(int major, int minor)
         QMessageBox messageBox;
         messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
                             " update it and try again.");
+        ui->firmwareVersionLabel->setText("Old Firmware");
     } else if (!mCompatibleFws.contains(qMakePair(major, minor))) {
-        mFwVersionReceived = false;
-        mPort->closePort();
-        QMessageBox messageBox;
-        messageBox.critical(this, "Error", "This version of BLDC Tool and the firmware on the"
-                            " connected VESC are not compatible. Please update BLDC Tool"
-                            " and/or the VESC firmware.");
+        if (qMakePair(major, minor) >= qMakePair(1, 1)) {
+            mFwVersionReceived = true;
+            mPacketInterface->setLimitedMode(true);
+            QMessageBox messageBox;
+            messageBox.warning(this, "Warning", "This version of BLDC Tool and the firmware on the"
+                                " connected VESC are not compatible. Please update BLDC Tool"
+                                " and/or the VESC firmware. Since the connected VESC has a firmware"
+                                " with bootloader support, it can be updated from the Firmware tab."
+                                " Until then, limited communication mode will be used where only the"
+                                " firmware can be changed.");
+        } else {
+            mFwVersionReceived = false;
+            mPort->closePort();
+            QMessageBox messageBox;
+            messageBox.critical(this, "Error", "This version of BLDC Tool and the firmware on the"
+                                " connected VESC are not compatible. Please update BLDC Tool"
+                                " and/or the VESC firmware.");
+        }
     } else {
         mFwVersionReceived = true;
         QString fwStr;
+        mPacketInterface->setLimitedMode(false);
         fwStr.sprintf("VESC Firmware Version %d.%d", major, minor);
         showStatusInfo(fwStr, true);
+    }
+
+    if (major >= 0) {
+        QString fwText;
+        fwText.sprintf("%d.%d", major, minor);
+        ui->firmwareVersionLabel->setText(fwText);
     }
 }
 
@@ -1970,4 +2013,45 @@ void MainWindow::on_appconfRebootButton_clicked()
 void MainWindow::on_posCtrlButton_clicked()
 {
     mPacketInterface->setPos(ui->posCtrlBox->value());
+}
+
+void MainWindow::on_firmwareChooseButton_clicked()
+{
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    tr("Choose Firmware File"), ".",
+                                                    tr("Binary files (*.bin)"));
+    ui->firmwareEdit->setText(filename);
+}
+
+void MainWindow::on_firmwareUploadButton_clicked()
+{
+    QFile file(ui->firmwareEdit->text());
+    if (!file.open(QIODevice::ReadOnly)) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "Could not open file. Make sure that the path is valid.");
+        return;
+    }
+
+    if (file.size() > 400000) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "The selected file is too large to be a firmware.");
+        return;
+    }
+
+    QFileInfo fileInfo(file.fileName());
+
+    if (!(fileInfo.fileName().startsWith("BLDC_4") || fileInfo.fileName().startsWith("VESC"))
+            || !fileInfo.fileName().endsWith(".bin")) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "The selected file name seems invalid.");
+        return;
+    }
+
+    QByteArray fw = file.readAll();
+    mPacketInterface->startFirmwareUpload(fw);
+}
+
+void MainWindow::on_firmwareVersionReadButton_clicked()
+{
+    mPacketInterface->getFwVersion();
 }

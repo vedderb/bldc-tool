@@ -89,6 +89,9 @@ private slots:
     void on_appconfWriteButton_clicked();
     void on_appconfRebootButton_clicked();
     void on_posCtrlButton_clicked();
+    void on_firmwareChooseButton_clicked();
+    void on_firmwareUploadButton_clicked();
+    void on_firmwareVersionReadButton_clicked();
 
 private:
     Ui::MainWindow *ui;

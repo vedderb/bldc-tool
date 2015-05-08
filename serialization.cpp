@@ -100,7 +100,7 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
 bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWidget *parent)
 {
     QString filename = QFileDialog::getOpenFileName(parent,
-                                            tr("Load Configuration"), ".",
+                                                    tr("Load Configuration"), ".",
                                                     tr("Xml files (*.xml)"));
 
     bool retval = true;

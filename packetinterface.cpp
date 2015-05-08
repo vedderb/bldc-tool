@@ -56,18 +56,28 @@ const unsigned short crc16_tab[] = { 0x0000, 0x1021, 0x2042, 0x3063, 0x4084,
 PacketInterface::PacketInterface(QObject *parent) :
     QObject(parent)
 {
-    mSendBuffer = new quint8[255];
+    mSendBuffer = new quint8[512];
 
     mRxState = 0;
     mRxTimer = 0;
 
     mSendCan = false;
     mCanId = 0;
+    mIsLimitedMode = false;
 
+    // Packet state
     mPayloadLength = 0;
     mRxDataPtr = 0;
     mCrcLow = 0;
     mCrcHigh = 0;
+
+    // Firmware state
+    mFirmwareIsUploading = false;
+    mFirmwareState = 0;
+    mFimwarePtr = 0;
+    mFirmwareTimer = 0;
+    mFirmwareRetries = 0;
+    mFirmwareUploadStatus = "FW Upload Status";
 
     mTimer = new QTimer(this);
     mTimer->setInterval(10);
@@ -145,12 +155,30 @@ void PacketInterface::processData(QByteArray &data)
     }
 }
 
+void PacketInterface::setLimitedMode(bool is_limited)
+{
+    mIsLimitedMode = is_limited;
+}
+
+bool PacketInterface::isLimitedMode()
+{
+    return mIsLimitedMode;
+}
+
 void PacketInterface::timerSlot()
 {
     if (mRxTimer) {
         mRxTimer--;
     } else {
         mRxState = 0;
+    }
+
+    if (mFirmwareIsUploading) {
+        if (mFirmwareTimer) {
+            mFirmwareTimer--;
+        } else {
+            firmwareUploadUpdate(true);
+        }
     }
 }
 
@@ -167,6 +195,11 @@ unsigned short PacketInterface::crc16(const unsigned char *buf, unsigned int len
 bool PacketInterface::sendPacket(const unsigned char *data, int len_packet)
 {
     int len_tot = len_packet;
+
+    // Only allow firmware commands in limited mode
+    if (mIsLimitedMode && data[0] > COMM_WRITE_NEW_APP_DATA) {
+        return false;
+    }
 
     if (mSendCan) {
         len_tot += 2;
@@ -236,6 +269,11 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
             fw_minor = -1;
         }
         emit fwVersionReceived(fw_major, fw_minor);
+        break;
+
+    case COMM_ERASE_NEW_APP:
+    case COMM_WRITE_NEW_APP_DATA:
+        firmwareUploadUpdate(!data[0]);
         break;
 
     case COMM_GET_VALUES:
@@ -457,12 +495,135 @@ QString PacketInterface::faultToStr(PacketInterface::mc_fault_code fault)
     }
 }
 
+void PacketInterface::firmwareUploadUpdate(bool isTimeout)
+{
+    if (!mFirmwareIsUploading) {
+        return;
+    }
+
+    const int app_packet_size = 20;
+
+    if (mFirmwareState == 0) {
+        mFirmwareUploadStatus = "Buffer Erase";
+        if (isTimeout) {
+            // Erase timed out, abort.
+            mFirmwareIsUploading = false;
+            mFimwarePtr = 0;
+            mFirmwareUploadStatus = "Buffer Erase Timeout";
+        } else {
+            mFirmwareState++;
+            mFirmwareRetries = 5;
+            mFirmwareTimer = 100;
+            firmwareUploadUpdate(true);
+        }
+    } else if (mFirmwareState == 1) {
+        mFirmwareUploadStatus = "CRC/Size Write";
+        if (isTimeout) {
+            if (mFirmwareRetries > 0) {
+                mFirmwareRetries--;
+                mFirmwareTimer = 100;
+            } else {
+                mFirmwareIsUploading = false;
+                mFimwarePtr = 0;
+                mFirmwareState = 0;
+                mFirmwareUploadStatus = "CRC/Size Write Timeout";
+                return;
+            }
+
+            quint16 crc = crc16((const unsigned char*)mNewFirmware.constData(), mNewFirmware.size());
+
+            qint32 send_index = 0;
+            mSendBuffer[send_index++] = COMM_WRITE_NEW_APP_DATA;
+            utility::buffer_append_uint32(mSendBuffer, 0, &send_index);
+            utility::buffer_append_uint32(mSendBuffer, mNewFirmware.size(), &send_index);
+            utility::buffer_append_uint16(mSendBuffer, crc, &send_index);
+            sendPacket(mSendBuffer, send_index);
+        } else {
+            mFirmwareState++;
+            mFirmwareRetries = 5;
+            mFirmwareTimer = 100;
+            firmwareUploadUpdate(true);
+        }
+    } else if (mFirmwareState == 2) {
+        mFirmwareUploadStatus = "FW Data Write";
+        if (isTimeout) {
+            if (mFirmwareRetries > 0) {
+                mFirmwareRetries--;
+                mFirmwareTimer = 100;
+            } else {
+                mFirmwareIsUploading = false;
+                mFimwarePtr = 0;
+                mFirmwareState = 0;
+                mFirmwareUploadStatus = "FW Data Write Timeout";
+                return;
+            }
+
+            int fw_size_left = mNewFirmware.size() - mFimwarePtr;
+            int send_size = fw_size_left > app_packet_size ? app_packet_size : fw_size_left;
+
+            qint32 send_index = 0;
+            mSendBuffer[send_index++] = COMM_WRITE_NEW_APP_DATA;
+            utility::buffer_append_uint32(mSendBuffer, mFimwarePtr + 6, &send_index);
+            memcpy(mSendBuffer + send_index, mNewFirmware.constData() + mFimwarePtr, send_size);
+            send_index += send_size;
+            sendPacket(mSendBuffer, send_index);
+        } else {
+            mFirmwareRetries = 5;
+            mFirmwareTimer = 100;
+            mFimwarePtr += app_packet_size;
+
+            if (mFimwarePtr >= mNewFirmware.size()) {
+                mFirmwareIsUploading = false;
+                mFimwarePtr = 0;
+                mFirmwareState = 0;
+                mFirmwareUploadStatus = "FW Upload Done";
+                // Upload done. Enter bootloader!
+                QByteArray buffer;
+                buffer.append((char)COMM_JUMP_TO_BOOTLOADER);
+                sendPacket(buffer);
+            } else {
+                firmwareUploadUpdate(true);
+            }
+        }
+    }
+}
+
 bool PacketInterface::getFwVersion()
 {
     QByteArray buffer;
     buffer.clear();
     buffer.append((char)COMM_FW_VERSION);
     return sendPacket(buffer);
+}
+
+bool PacketInterface::startFirmwareUpload(QByteArray &newFirmware)
+{
+    mFirmwareIsUploading = true;
+    mFirmwareState = 0;
+    mFimwarePtr = 0;
+    mFirmwareTimer = 500;
+    mNewFirmware.clear();
+    mNewFirmware.append(newFirmware);
+    mFirmwareUploadStatus = "Buffer Erase";
+
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_ERASE_NEW_APP;
+    utility::buffer_append_uint32(mSendBuffer, mNewFirmware.size(), &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
+double PacketInterface::getFirmwareUploadProgress()
+{
+    if (mFirmwareIsUploading) {
+        return (double)mFimwarePtr / (double)mNewFirmware.size();
+    } else {
+        return -1.0;
+    }
+}
+
+QString PacketInterface::getFirmwareUploadStatus()
+{
+    return mFirmwareUploadStatus;
 }
 
 bool PacketInterface::getValues()

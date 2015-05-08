@@ -61,6 +61,9 @@ public:
 
     typedef enum {
         COMM_FW_VERSION = 0,
+        COMM_JUMP_TO_BOOTLOADER,
+        COMM_ERASE_NEW_APP,
+        COMM_WRITE_NEW_APP_DATA,
         COMM_GET_VALUES,
         COMM_SET_DUTY,
         COMM_SET_CURRENT,
@@ -278,7 +281,12 @@ public:
     bool sendPacket(const unsigned char *data, int len_packet);
     bool sendPacket(QByteArray data);
     void processData(QByteArray &data);
+    void setLimitedMode(bool is_limited);
+    bool isLimitedMode();
     bool getFwVersion();
+    bool startFirmwareUpload(QByteArray &newFirmware);
+    double getFirmwareUploadProgress();
+    QString getFirmwareUploadStatus();
     bool getValues();
     bool sendTerminalCmd(QString cmd);
     bool setDutyCycle(double dutyCycle);
@@ -323,11 +331,22 @@ private:
     unsigned short crc16(const unsigned char *buf, unsigned int len);
     void processPacket(const unsigned char *data, int len);
     QString faultToStr(mc_fault_code fault);
+    void firmwareUploadUpdate(bool isTimeout);
 
     QTimer *mTimer;
     quint8 *mSendBuffer;
     bool mSendCan;
     unsigned int mCanId;
+    bool mIsLimitedMode;
+
+    // FW upload state
+    QByteArray mNewFirmware;
+    bool mFirmwareIsUploading;
+    int mFirmwareState;
+    int mFimwarePtr;
+    int mFirmwareTimer;
+    int mFirmwareRetries;
+    QString mFirmwareUploadStatus;
 
     // Packet state machine variables
     int mRxTimer;
