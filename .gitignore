@@ -1,0 +1,6 @@
+*.o
+moc_*
+ui_*
+Makefile
+BLDC_Tool.app
+BLDC_Tool
