@@ -467,8 +467,11 @@ void MainWindow::timerSlot()
 
     // Update fw upload bar and label
     double fw_prog = mPacketInterface->getFirmwareUploadProgress();
-    if (fw_prog > 0.0) {
+    if (fw_prog >= 0.0) {
         ui->firmwareBar->setValue(fw_prog * 1000);
+        ui->firmwareUploadButton->setEnabled(false);
+    } else {
+        ui->firmwareUploadButton->setEnabled(true);
     }
     ui->firmwareUploadStatusLabel->setText(mPacketInterface->getFirmwareUploadStatus());
 
@@ -2020,6 +2023,11 @@ void MainWindow::on_firmwareChooseButton_clicked()
     QString filename = QFileDialog::getOpenFileName(this,
                                                     tr("Choose Firmware File"), ".",
                                                     tr("Binary files (*.bin)"));
+
+    if (filename.isNull()) {
+        return;
+    }
+
     ui->firmwareEdit->setText(filename);
 }
 
