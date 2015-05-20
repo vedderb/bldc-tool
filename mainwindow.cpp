@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Compatible firmwares
     mFwVersionReceived = false;
-    mCompatibleFws.append(qMakePair(1, 1));
+    mCompatibleFws.append(qMakePair(1, 2));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -270,6 +270,8 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     mcconf.l_temp_fet_end = ui->mcconfLimTempFetEndBox->value();
     mcconf.l_temp_motor_start = ui->mcconfLimTempMotorStartBox->value();
     mcconf.l_temp_motor_end = ui->mcconfLimTempMotorEndBox->value();
+    mcconf.l_min_duty = ui->mcconfLimMinDutyBox->value();
+    mcconf.l_max_duty = ui->mcconfLimMaxDutyBox->value();
 
     mcconf.sl_is_sensorless = ui->mcconfSlBox->isChecked();
     mcconf.sl_min_erpm = ui->mcconfSlMinErpmBox->value();
@@ -368,6 +370,8 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     ui->mcconfLimTempFetEndBox->setValue(mcconf.l_temp_fet_end);
     ui->mcconfLimTempMotorStartBox->setValue(mcconf.l_temp_motor_start);
     ui->mcconfLimTempMotorEndBox->setValue(mcconf.l_temp_motor_end);
+    ui->mcconfLimMinDutyBox->setValue(mcconf.l_min_duty);
+    ui->mcconfLimMaxDutyBox->setValue(mcconf.l_max_duty);
 
     ui->mcconfSlBox->setChecked(mcconf.sl_is_sensorless);
     ui->mcconfSlMinErpmBox->setValue(mcconf.sl_min_erpm);
@@ -467,7 +471,7 @@ void MainWindow::timerSlot()
 
     // Update fw upload bar and label
     double fw_prog = mPacketInterface->getFirmwareUploadProgress();
-    if (fw_prog >= 0.0) {
+    if (fw_prog > -0.1) {
         ui->firmwareBar->setValue(fw_prog * 1000);
         ui->firmwareUploadButton->setEnabled(false);
     } else {

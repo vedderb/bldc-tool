@@ -129,6 +129,8 @@ public:
         float l_temp_fet_end;
         float l_temp_motor_start;
         float l_temp_motor_end;
+        float l_min_duty;
+        float l_max_duty;
         // Sensorless
         bool sl_is_sensorless;
         float sl_min_erpm;
@@ -278,7 +280,7 @@ public:
     explicit PacketInterface(QObject *parent = 0);
     ~PacketInterface();
 
-    bool sendPacket(const unsigned char *data, int len_packet);
+    bool sendPacket(const unsigned char *data, unsigned int len_packet);
     bool sendPacket(QByteArray data);
     void processData(QByteArray &data);
     void setLimitedMode(bool is_limited);
@@ -349,11 +351,12 @@ private:
     QString mFirmwareUploadStatus;
 
     // Packet state machine variables
+    static const unsigned int mMaxBufferLen = 4096;
     int mRxTimer;
     int mRxState;
     unsigned int mPayloadLength;
-    unsigned char mRxBuffer[32768];
-    unsigned char mRxDataPtr;
+    unsigned char mRxBuffer[mMaxBufferLen];
+    unsigned int mRxDataPtr;
     unsigned char mCrcLow;
     unsigned char mCrcHigh;
     

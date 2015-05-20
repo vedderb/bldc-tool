@@ -65,6 +65,8 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeTextElement("l_temp_fet_end", QString::number(mcconf.l_temp_fet_end));
     xmlwriter.writeTextElement("l_temp_motor_start", QString::number(mcconf.l_temp_motor_start));
     xmlwriter.writeTextElement("l_temp_motor_end", QString::number(mcconf.l_temp_motor_end));
+    xmlwriter.writeTextElement("l_min_duty", QString::number(mcconf.l_min_duty));
+    xmlwriter.writeTextElement("l_max_duty", QString::number(mcconf.l_max_duty));
     xmlwriter.writeTextElement("sl_is_sensorless", QString::number(mcconf.sl_is_sensorless));
     xmlwriter.writeTextElement("sl_min_erpm", QString::number(mcconf.sl_min_erpm));
     xmlwriter.writeTextElement("sl_min_erpm_cycle_int_limit", QString::number(mcconf.sl_min_erpm_cycle_int_limit));
@@ -142,6 +144,8 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     else if (xmlreader.name() == "l_temp_fet_end") {mcconf.l_temp_fet_end = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_temp_motor_start") {mcconf.l_temp_motor_start = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_temp_motor_end") {mcconf.l_temp_motor_end = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "l_min_duty") {mcconf.l_min_duty = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "l_max_duty") {mcconf.l_max_duty = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_is_sensorless") {mcconf.sl_is_sensorless = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "sl_min_erpm") {mcconf.sl_min_erpm = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_min_erpm_cycle_int_limit") {mcconf.sl_min_erpm_cycle_int_limit = xmlreader.readElementText().toDouble();}

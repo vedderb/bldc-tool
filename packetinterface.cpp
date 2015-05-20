@@ -56,7 +56,7 @@ const unsigned short crc16_tab[] = { 0x0000, 0x1021, 0x2042, 0x3063, 0x4084,
 PacketInterface::PacketInterface(QObject *parent) :
     QObject(parent)
 {
-    mSendBuffer = new quint8[512];
+    mSendBuffer = new quint8[mMaxBufferLen + 20];
 
     mRxState = 0;
     mRxTimer = 0;
@@ -102,21 +102,37 @@ void PacketInterface::processData(QByteArray &data)
         switch (mRxState) {
         case 0:
             if (rx_data == 2) {
+                mRxState += 2;
+                mRxTimer = rx_timeout;
+                mRxDataPtr = 0;
+                mPayloadLength = 0;
+            } else if (rx_data == 3) {
                 mRxState++;
                 mRxTimer = rx_timeout;
                 mRxDataPtr = 0;
+                mPayloadLength = 0;
             } else {
                 mRxState = 0;
             }
             break;
 
         case 1:
-            mPayloadLength = rx_data;
+            mPayloadLength = (unsigned int)rx_data << 8;
             mRxState++;
             mRxTimer = rx_timeout;
             break;
 
         case 2:
+            mPayloadLength |= (unsigned int)rx_data;
+            if (mPayloadLength <= mMaxBufferLen) {
+                mRxState++;
+                mRxTimer = rx_timeout;
+            } else {
+                mRxState = 0;
+            }
+            break;
+
+        case 3:
             mRxBuffer[mRxDataPtr++] = rx_data;
             if (mRxDataPtr == mPayloadLength) {
                 mRxState++;
@@ -124,19 +140,19 @@ void PacketInterface::processData(QByteArray &data)
             mRxTimer = rx_timeout;
             break;
 
-        case 3:
+        case 4:
             mCrcHigh = rx_data;
             mRxState++;
             mRxTimer = rx_timeout;
             break;
 
-        case 4:
+        case 5:
             mCrcLow = rx_data;
             mRxState++;
             mRxTimer = rx_timeout;
             break;
 
-        case 5:
+        case 6:
             if (rx_data == 3) {
                 if (crc16(mRxBuffer, mPayloadLength) ==
                         ((unsigned short)mCrcHigh << 8 | (unsigned short)mCrcLow)) {
@@ -192,7 +208,7 @@ unsigned short PacketInterface::crc16(const unsigned char *buf, unsigned int len
     return cksum;
 }
 
-bool PacketInterface::sendPacket(const unsigned char *data, int len_packet)
+bool PacketInterface::sendPacket(const unsigned char *data, unsigned int len_packet)
 {
     int len_tot = len_packet;
 
@@ -206,10 +222,19 @@ bool PacketInterface::sendPacket(const unsigned char *data, int len_packet)
     }
 
     unsigned int ind = 0;
-    unsigned char buffer[len_tot + 5];
+    unsigned int data_offs = 0;
+    unsigned char *buffer = new unsigned char[len_tot + 6];
 
-    buffer[ind++] = 2;
-    buffer[ind++] = len_tot;
+    if (len_tot <= 256) {
+        buffer[ind++] = 2;
+        buffer[ind++] = len_tot;
+        data_offs = 2;
+    } else {
+        buffer[ind++] = 3;
+        buffer[ind++] = len_tot >> 8;
+        buffer[ind++] = len_tot & 0xFF;
+        data_offs = 3;
+    }
 
     if (mSendCan) {
         buffer[ind++] = COMM_FORWARD_CAN;
@@ -219,14 +244,16 @@ bool PacketInterface::sendPacket(const unsigned char *data, int len_packet)
     memcpy(buffer + ind, data, len_packet);
     ind += len_packet;
 
-    unsigned short crc = crc16(buffer + 2, len_tot);
+    unsigned short crc = crc16(buffer + data_offs, len_tot);
     buffer[ind++] = crc >> 8;
     buffer[ind++] = crc;
     buffer[ind++] = 3;
 
-    QByteArray sendData = QByteArray::fromRawData((char*)buffer, len_tot + 5);
+    QByteArray sendData = QByteArray::fromRawData((char*)buffer, ind);
 
     emit dataToSend(sendData);
+
+    delete buffer;
 
     return true;
 }
@@ -354,6 +381,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.l_temp_fet_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_temp_motor_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_temp_motor_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.l_min_duty = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        mcconf.l_max_duty = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
 
         mcconf.sl_is_sensorless = data[ind++];
         mcconf.sl_min_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
@@ -501,7 +530,9 @@ void PacketInterface::firmwareUploadUpdate(bool isTimeout)
         return;
     }
 
-    const int app_packet_size = 20;
+    const int app_packet_size = 200;
+    const int retries = 5;
+    const int timeout = 50;
 
     if (mFirmwareState == 0) {
         mFirmwareUploadStatus = "Buffer Erase";
@@ -512,8 +543,8 @@ void PacketInterface::firmwareUploadUpdate(bool isTimeout)
             mFirmwareUploadStatus = "Buffer Erase Timeout";
         } else {
             mFirmwareState++;
-            mFirmwareRetries = 5;
-            mFirmwareTimer = 100;
+            mFirmwareRetries = retries;
+            mFirmwareTimer = timeout;
             firmwareUploadUpdate(true);
         }
     } else if (mFirmwareState == 1) {
@@ -521,7 +552,7 @@ void PacketInterface::firmwareUploadUpdate(bool isTimeout)
         if (isTimeout) {
             if (mFirmwareRetries > 0) {
                 mFirmwareRetries--;
-                mFirmwareTimer = 100;
+                mFirmwareTimer = timeout;
             } else {
                 mFirmwareIsUploading = false;
                 mFimwarePtr = 0;
@@ -540,8 +571,8 @@ void PacketInterface::firmwareUploadUpdate(bool isTimeout)
             sendPacket(mSendBuffer, send_index);
         } else {
             mFirmwareState++;
-            mFirmwareRetries = 5;
-            mFirmwareTimer = 100;
+            mFirmwareRetries = retries;
+            mFirmwareTimer = timeout;
             firmwareUploadUpdate(true);
         }
     } else if (mFirmwareState == 2) {
@@ -549,7 +580,7 @@ void PacketInterface::firmwareUploadUpdate(bool isTimeout)
         if (isTimeout) {
             if (mFirmwareRetries > 0) {
                 mFirmwareRetries--;
-                mFirmwareTimer = 100;
+                mFirmwareTimer = timeout;
             } else {
                 mFirmwareIsUploading = false;
                 mFimwarePtr = 0;
@@ -568,8 +599,8 @@ void PacketInterface::firmwareUploadUpdate(bool isTimeout)
             send_index += send_size;
             sendPacket(mSendBuffer, send_index);
         } else {
-            mFirmwareRetries = 5;
-            mFirmwareTimer = 100;
+            mFirmwareRetries = retries;
+            mFirmwareTimer = timeout;
             mFimwarePtr += app_packet_size;
 
             if (mFimwarePtr >= mNewFirmware.size()) {
@@ -735,6 +766,8 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_fet_end * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_motor_start * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_motor_end * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_min_duty * 1000000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_duty * 1000000.0), &send_index);
 
     mSendBuffer[send_index++] = mcconf.sl_is_sensorless;
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_min_erpm * 1000.0), &send_index);
