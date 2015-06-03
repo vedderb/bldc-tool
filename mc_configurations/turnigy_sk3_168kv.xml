@@ -20,6 +20,8 @@
     <l_temp_fet_end>100</l_temp_fet_end>
     <l_temp_motor_start>80</l_temp_motor_start>
     <l_temp_motor_end>100</l_temp_motor_end>
+    <l_min_duty>0.005</l_min_duty>
+    <l_max_duty>0.95</l_max_duty>
     <sl_is_sensorless>1</sl_is_sensorless>
     <sl_min_erpm>140</sl_min_erpm>
     <sl_min_erpm_cycle_int_limit>1100</sl_min_erpm_cycle_int_limit>
@@ -38,7 +40,7 @@
     <p_pid_kp>0.0001</p_pid_kp>
     <p_pid_ki>0.002</p_pid_ki>
     <p_pid_kd>0</p_pid_kd>
-    <cc_startup_boost_duty>0.02</cc_startup_boost_duty>
+    <cc_startup_boost_duty>0.025</cc_startup_boost_duty>
     <cc_min_current>0.5</cc_min_current>
     <cc_gain>0.0046</cc_gain>
     <cc_ramp_step_max>0.04</cc_ramp_step_max>
@@ -46,12 +48,12 @@
     <meta_description>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Turnigy SK3 Motor on my electric longboard.&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;Specs&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Turns&lt;/span&gt;: 16T&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Voltage&lt;/span&gt;: 12S Lipoly&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;RPM/V&lt;/span&gt;: 168kv&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Poles&lt;/span&gt;: 14&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Internal resistance&lt;/span&gt;: 0.019 Ohm&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Max Loading&lt;/span&gt;: 70A&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Max Power&lt;/span&gt;: 2400W&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Shaft Dia&lt;/span&gt;: 8.0mm&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bolt holes&lt;/span&gt;: 32mm&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bolt thread&lt;/span&gt;: M4&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Weight&lt;/span&gt;: 840g&lt;br /&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Motor Plug&lt;/span&gt;: 4.0mm Bullet Connector&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Turnigy SK3 Motor on my electric longboard.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;Specs&lt;/span&gt;&lt;br /&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Turns&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 16T&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Voltage&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 12S Lipoly&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;RPM/V&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 168kv&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Poles&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 14&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Internal resistance&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 0.019 Ohm&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Max Loading&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 70A&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Max Power&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 2400W&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Shaft Dia&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 8.0mm&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Bolt holes&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 32mm&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Bolt thread&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: M4&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Weight&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 840g&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Motor Plug&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;: 4.0mm Bullet Connector&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;data:image/1849988479.JPG;base64,/
 9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJ
 C4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyM
