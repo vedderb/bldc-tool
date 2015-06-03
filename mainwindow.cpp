@@ -52,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mCompatibleFws.append(qMakePair(1, 2));
+    mCompatibleFws.append(qMakePair(1, 3));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -1123,6 +1124,14 @@ void MainWindow::fwVersionReceived(int major, int minor)
         }
     } else {
         mFwVersionReceived = true;
+
+        QPair<int, int> max = *std::max_element(mCompatibleFws.begin(), mCompatibleFws.end());
+        if (qMakePair(major, minor) < max) {
+            QMessageBox messageBox;
+            messageBox.warning(this, "Warning", "The connected VESC has compatible, but old"
+                                                " firmware. It is recommended that you update it.");
+        }
+
         QString fwStr;
         mPacketInterface->setLimitedMode(false);
         fwStr.sprintf("VESC Firmware Version %d.%d", major, minor);
