@@ -23,6 +23,7 @@
 #include <string.h>
 #include <cmath>
 #include <QMessageBox>
+#include <algorithm>
 #include "digitalfiltering.h"
 
 namespace {
@@ -53,7 +54,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mFwVersionReceived = false;
     mCompatibleFws.append(qMakePair(1, 2));
     mCompatibleFws.append(qMakePair(1, 3));
-    mCompatibleFws.append(qMakePair(1, 4));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -66,8 +66,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     ui->firmwareSupportedLabel->setText(supportedFWs);
 
-    mPort = new SerialPort(this);
-
+//    mPort = new SerialPort(this);
+    mPort = new QextSerialPort(QextSerialPort::EventDriven,this);
     mTimer = new QTimer(this);
     mTimer->setInterval(20);
     mTimer->start();
@@ -87,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mAppconfLoaded = false;
     mStatusInfoTime = 0;
 
-    connect(mPort, SIGNAL(serial_data_available()),
+    connect(mPort, SIGNAL(readyRead()),
             this, SLOT(serialDataAvailable()));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
@@ -1091,52 +1091,46 @@ void MainWindow::timerSlot()
 void MainWindow::packetDataToSend(QByteArray &data)
 {
     if (mPort->isOpen()) {
-        mPort->writeData(data.data(), data.size());
+        mPort->write(data.data(), data.size());
+       // mPort->writeData(data.data(), data.size());
     }
 }
 
 void MainWindow::fwVersionReceived(int major, int minor)
 {
-    QPair<int, int> highest_supported = *std::max_element(mCompatibleFws.begin(), mCompatibleFws.end());
-    QPair<int, int> fw_connected = qMakePair(major, minor);
-
     if (major < 0) {
         mFwVersionReceived = false;
-        mPort->closePort();
+     //   mPort->closePort();
+        mPort->close();
         QMessageBox messageBox;
         messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
-                            " update it using a programmer.");
+                            " update it and try again.");
         ui->firmwareVersionLabel->setText("Old Firmware");
-    } else if (fw_connected > highest_supported) {
-        mFwVersionReceived = true;
-        mPacketInterface->setLimitedMode(true);
-        QMessageBox messageBox;
-        messageBox.warning(this, "Warning", "The connected VESC has newer firmware than this version of"
-                                            " BLDC Tool supports. It is recommended that you update BLDC "
-                                            " Tool to the latest version. Alternatively, the firmware on"
-                                            " the connected VESC can be downgraded in the firmware tab."
-                                            " Until then, limited communication mode will be used where"
-                                            " only the firmware can be changed.");
-    } else if (!mCompatibleFws.contains(fw_connected)) {
-        if (fw_connected >= qMakePair(1, 1)) {
+    } else if (!mCompatibleFws.contains(qMakePair(major, minor))) {
+        if (qMakePair(major, minor) >= qMakePair(1, 1)) {
             mFwVersionReceived = true;
             mPacketInterface->setLimitedMode(true);
             QMessageBox messageBox;
-            messageBox.warning(this, "Warning", "The connected VESC has too old firmware. Since the"
-                                " connected VESC has firmware with bootloader support, it can be"
-                                " updated from the Firmware tab."
+            messageBox.warning(this, "Warning", "This version of BLDC Tool and the firmware on the"
+                                " connected VESC are not compatible. Please update BLDC Tool"
+                                " and/or the VESC firmware. Since the connected VESC has a firmware"
+                                " with bootloader support, it can be updated from the Firmware tab."
                                 " Until then, limited communication mode will be used where only the"
                                 " firmware can be changed.");
         } else {
             mFwVersionReceived = false;
-            mPort->closePort();
+          //  mPort->closePort();
+            mPort->close();
             QMessageBox messageBox;
-            messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
-                                " update it using a programmer.");
+            messageBox.critical(this, "Error", "This version of BLDC Tool and the firmware on the"
+                                " connected VESC are not compatible. Please update BLDC Tool"
+                                " and/or the VESC firmware.");
         }
     } else {
         mFwVersionReceived = true;
-        if (fw_connected < highest_supported) {
+
+        QPair<int, int> max = *std::max_element(mCompatibleFws.begin(), mCompatibleFws.end());
+        if (qMakePair(major, minor) < max) {
             QMessageBox messageBox;
             messageBox.warning(this, "Warning", "The connected VESC has compatible, but old"
                                                 " firmware. It is recommended that you update it.");
@@ -1627,12 +1621,22 @@ void MainWindow::decodedChukReceived(double chuk_value)
 
 void MainWindow::on_connectButton_clicked()
 {
-    mPort->openPort(ui->serialDeviceEdit->text());
+   // mPort->openPort(ui->serialDeviceEdit->text());
+    mPort->setPortName(ui->serialDeviceEdit->text());
+    mPort->open(QIODevice::ReadWrite);
+
+    mPort->setBaudRate(BAUD115200);
+    mPort->setDataBits(DATA_8);   //8 bits
+    mPort->setParity(PAR_NONE);   //no parity
+    mPort->setStopBits(STOP_1);   //1 stop bit
+    mPort->setFlowControl(FLOW_OFF);  //no flow control
+    mPort->setTimeout(-1);             // TODO ? useless ?
 }
 
 void MainWindow::on_disconnectButton_clicked()
 {
-    mPort->closePort();
+   // mPort->closePort();
+     mPort->close();
 }
 
 void MainWindow::on_getDataButton_clicked()

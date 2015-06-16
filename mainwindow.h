@@ -23,7 +23,8 @@
 #include <QTimer>
 #include <QByteArray>
 #include "qcustomplot.h"
-#include "serialport.h"
+//#include "serialport.h"
+#include "qextserialport.h"
 #include "packetinterface.h"
 #include "serialization.h"
 
@@ -95,7 +96,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    SerialPort *mPort;
+    QextSerialPort *mPort;
     QTimer *mTimer;
     QLabel *mStatusLabel;
     int mStatusInfoTime;
