@@ -16,7 +16,7 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     qcustomplot.cpp \
-  #  serialport.cpp \
+    serialport.cpp \
     digitalfiltering.cpp \
     packetinterface.cpp \
     utility.cpp \
@@ -27,7 +27,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
-  #  serialport.h \
+    serialport.h \
     digitalfiltering.h \
     packetinterface.h \
     utility.h \
@@ -40,5 +40,3 @@ FORMS    += mainwindow.ui \
     mrichtextedit.ui
 
 RESOURCES +=
-
-include(qextserialport-1.2rc/src/qextserialport.pri)
