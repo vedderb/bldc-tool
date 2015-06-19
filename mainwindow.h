@@ -52,7 +52,7 @@ private slots:
     void rotorPosReceived(double pos);
     void experimentSamplesReceived(QVector<double> samples);
     void mcconfReceived(PacketInterface::mc_configuration mcconf);
-    void motorParamReceived(double cycle_int_limit, double bemf_coupling_k);
+    void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
     void appconfReceived(PacketInterface::app_configuration appconf);
     void decodedPpmReceived(double ppm_value, double ppm_last_len);
     void decodedAdcReceived(double adc_value, double adc_voltage);

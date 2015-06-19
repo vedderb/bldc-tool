@@ -96,6 +96,12 @@ public:
     } mc_comm_mode;
 
     typedef enum {
+        SENSOR_MODE_SENSORLESS = 0,
+        SENSOR_MODE_SENSORED,
+        SENSOR_MODE_HYBRID
+    } mc_sensor_mode;
+
+    typedef enum {
         MOTOR_TYPE_BLDC = 0,
         MOTOR_TYPE_DC,
     } mc_motor_type;
@@ -111,6 +117,7 @@ public:
         mc_pwm_mode pwm_mode;
         mc_comm_mode comm_mode;
         mc_motor_type motor_type;
+        mc_sensor_mode sensor_mode;
         // Limits
         float l_current_max;
         float l_current_min;
@@ -132,7 +139,6 @@ public:
         float l_min_duty;
         float l_max_duty;
         // Sensorless
-        bool sl_is_sensorless;
         float sl_min_erpm;
         float sl_min_erpm_cycle_int_limit;
         float sl_max_fullbreak_current_dir_change;
@@ -141,9 +147,8 @@ public:
         float sl_cycle_int_rpm_br;
         float sl_bemf_coupling_k;
         // Hall sensor
-        int8_t hall_dir;
-        int8_t hall_fwd_add;
-        int8_t hall_rev_add;
+        int8_t hall_table[8];
+        float hall_sl_erpm;
         // Speed PID
         float s_pid_kp;
         float s_pid_ki;
@@ -320,7 +325,7 @@ signals:
     void rotorPosReceived(double pos);
     void experimentSamplesReceived(QVector<double> samples);
     void mcconfReceived(PacketInterface::mc_configuration mcconf);
-    void motorParamReceived(double cycle_int_limit, double bemf_coupling_k);
+    void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
     void appconfReceived(PacketInterface::app_configuration appconf);
     void decodedPpmReceived(double value, double last_len);
     void decodedAdcReceived(double value, double voltage);

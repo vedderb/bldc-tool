@@ -274,6 +274,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     app_configuration appconf;
     double detect_cycle_int_limit;
     double detect_coupling_k;
+    QVector<int> detect_hall_table;
+    int detect_hall_res;
     double dec_ppm;
     double ppm_last_len;
     double dec_adc;
@@ -363,6 +365,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.pwm_mode = (mc_pwm_mode)data[ind++];
         mcconf.comm_mode = (mc_comm_mode)data[ind++];
         mcconf.motor_type = (mc_motor_type)data[ind++];
+        mcconf.sensor_mode = (mc_sensor_mode)data[ind++];
 
         mcconf.l_current_max = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.l_current_min = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
@@ -384,7 +387,6 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.l_min_duty = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
         mcconf.l_max_duty = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
 
-        mcconf.sl_is_sensorless = data[ind++];
         mcconf.sl_min_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.sl_min_erpm_cycle_int_limit = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.sl_max_fullbreak_current_dir_change = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
@@ -393,9 +395,9 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.sl_cycle_int_rpm_br = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
         mcconf.sl_bemf_coupling_k = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
 
-        mcconf.hall_dir = data[ind++];
-        mcconf.hall_fwd_add = data[ind++];
-        mcconf.hall_rev_add = data[ind++];
+        memcpy(mcconf.hall_table, data + ind, 8);
+        ind += 8;
+        mcconf.hall_sl_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
 
         mcconf.s_pid_kp = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
         mcconf.s_pid_ki = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
@@ -474,7 +476,11 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         ind = 0;
         detect_cycle_int_limit = (double)utility::buffer_get_int32(data, &ind) / 1000.0;
         detect_coupling_k = (double)utility::buffer_get_int32(data, &ind) / 1000.0;
-        emit motorParamReceived(detect_cycle_int_limit, detect_coupling_k);
+        for (int i = 0;i < 8;i++) {
+            detect_hall_table.append((const signed char)(data[ind++]));
+        }
+        detect_hall_res = (const signed char)(data[ind++]);
+        emit motorParamReceived(detect_cycle_int_limit, detect_coupling_k, detect_hall_table, detect_hall_res);
         break;
 
     case COMM_GET_DECODED_PPM:
@@ -748,6 +754,7 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     mSendBuffer[send_index++] = mcconf.pwm_mode;
     mSendBuffer[send_index++] = mcconf.comm_mode;
     mSendBuffer[send_index++] = mcconf.motor_type;
+    mSendBuffer[send_index++] = mcconf.sensor_mode;
 
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_current_max * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_current_min * 1000.0), &send_index);
@@ -769,7 +776,6 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_min_duty * 1000000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_duty * 1000000.0), &send_index);
 
-    mSendBuffer[send_index++] = mcconf.sl_is_sensorless;
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_min_erpm * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_min_erpm_cycle_int_limit * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_max_fullbreak_current_dir_change * 1000.0), &send_index);
@@ -778,9 +784,9 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_cycle_int_rpm_br * 1000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_bemf_coupling_k * 1000.0), &send_index);
 
-    mSendBuffer[send_index++] = mcconf.hall_dir;
-    mSendBuffer[send_index++] = mcconf.hall_fwd_add;
-    mSendBuffer[send_index++] = mcconf.hall_rev_add;
+    memcpy(mSendBuffer + send_index, mcconf.hall_table, 8);
+    send_index += 8;
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.hall_sl_erpm * 1000.0), &send_index);
 
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.s_pid_kp * 1000000.0), &send_index);
     utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.s_pid_ki * 1000000.0), &send_index);

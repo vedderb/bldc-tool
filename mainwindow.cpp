@@ -51,9 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Compatible firmwares
     mFwVersionReceived = false;
-    mCompatibleFws.append(qMakePair(1, 2));
-    mCompatibleFws.append(qMakePair(1, 3));
-    mCompatibleFws.append(qMakePair(1, 4));
+    mCompatibleFws.append(qMakePair(1, 5));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -109,8 +107,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(experimentSamplesReceived(QVector<double>)));
     connect(mPacketInterface, SIGNAL(mcconfReceived(PacketInterface::mc_configuration)),
             this, SLOT(mcconfReceived(PacketInterface::mc_configuration)));
-    connect(mPacketInterface, SIGNAL(motorParamReceived(double,double)),
-            this, SLOT(motorParamReceived(double,double)));
+    connect(mPacketInterface, SIGNAL(motorParamReceived(double,double,QVector<int>,int)),
+            this, SLOT(motorParamReceived(double,double,QVector<int>,int)));
     connect(mPacketInterface, SIGNAL(appconfReceived(PacketInterface::app_configuration)),
             this, SLOT(appconfReceived(PacketInterface::app_configuration)));
     connect(mPacketInterface, SIGNAL(decodedPpmReceived(double,double)),
@@ -255,6 +253,14 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
         mcconf.motor_type = PacketInterface::MOTOR_TYPE_DC;
     }
 
+    if (ui->mcconfSensorModeSensorlessButton->isChecked()) {
+        mcconf.sensor_mode = PacketInterface::SENSOR_MODE_SENSORLESS;
+    } else if (ui->mcconfSensorModeSensoredButton->isChecked()) {
+        mcconf.sensor_mode = PacketInterface::SENSOR_MODE_SENSORED;
+    } else if (ui->mcconfSensorModeHybridButton->isChecked()) {
+        mcconf.sensor_mode = PacketInterface::SENSOR_MODE_HYBRID;
+    }
+
     mcconf.l_current_max = ui->mcconfLimCurrentMaxBox->value();
     mcconf.l_current_min = ui->mcconfLimCurrentMinBox->value();
     mcconf.l_in_current_max = ui->mcconfLimCurrentInMaxBox->value();
@@ -275,7 +281,6 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     mcconf.l_min_duty = ui->mcconfLimMinDutyBox->value();
     mcconf.l_max_duty = ui->mcconfLimMaxDutyBox->value();
 
-    mcconf.sl_is_sensorless = ui->mcconfSlBox->isChecked();
     mcconf.sl_min_erpm = ui->mcconfSlMinErpmBox->value();
     mcconf.sl_max_fullbreak_current_dir_change = ui->mcconfSlMaxFbCurrBox->value();
     mcconf.sl_min_erpm_cycle_int_limit = ui->mcconfSlMinErpmIlBox->value();
@@ -284,9 +289,15 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     mcconf.sl_cycle_int_rpm_br = ui->mcconfSlBrErpmBox->value();
     mcconf.sl_bemf_coupling_k = ui->mcconfSlBemfKBox->value();
 
-    mcconf.hall_dir = ui->mcconfHallDirBox->value();
-    mcconf.hall_fwd_add = ui->mcconfHallFwdAddBox->value();
-    mcconf.hall_rev_add = ui->mcconfHallRevAddBox->value();
+    mcconf.hall_table[0] = ui->mcconfHallTab0Box->value();
+    mcconf.hall_table[1] = ui->mcconfHallTab1Box->value();
+    mcconf.hall_table[2] = ui->mcconfHallTab2Box->value();
+    mcconf.hall_table[3] = ui->mcconfHallTab3Box->value();
+    mcconf.hall_table[4] = ui->mcconfHallTab4Box->value();
+    mcconf.hall_table[5] = ui->mcconfHallTab5Box->value();
+    mcconf.hall_table[6] = ui->mcconfHallTab6Box->value();
+    mcconf.hall_table[7] = ui->mcconfHallTab7Box->value();
+    mcconf.hall_sl_erpm = ui->mcconfHallSlErpmBox->value();
 
     mcconf.s_pid_kp = ui->mcconfSpidKpBox->value();
     mcconf.s_pid_ki = ui->mcconfSpidKiBox->value();
@@ -355,6 +366,23 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
         break;
     }
 
+    switch (mcconf.sensor_mode) {
+    case PacketInterface::SENSOR_MODE_SENSORLESS:
+        ui->mcconfSensorModeSensorlessButton->setChecked(true);
+        break;
+
+    case PacketInterface::SENSOR_MODE_SENSORED:
+        ui->mcconfSensorModeSensoredButton->setChecked(true);
+        break;
+
+    case PacketInterface::SENSOR_MODE_HYBRID:
+        ui->mcconfSensorModeHybridButton->setChecked(true);
+        break;
+
+    default:
+        break;
+    }
+
     ui->mcconfLimCurrentMaxBox->setValue(mcconf.l_current_max);
     ui->mcconfLimCurrentMinBox->setValue(mcconf.l_current_min);
     ui->mcconfLimCurrentInMaxBox->setValue(mcconf.l_in_current_max);
@@ -375,7 +403,6 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     ui->mcconfLimMinDutyBox->setValue(mcconf.l_min_duty);
     ui->mcconfLimMaxDutyBox->setValue(mcconf.l_max_duty);
 
-    ui->mcconfSlBox->setChecked(mcconf.sl_is_sensorless);
     ui->mcconfSlMinErpmBox->setValue(mcconf.sl_min_erpm);
     ui->mcconfSlMaxFbCurrBox->setValue(mcconf.sl_max_fullbreak_current_dir_change);
     ui->mcconfSlMinErpmIlBox->setValue(mcconf.sl_min_erpm_cycle_int_limit);
@@ -384,9 +411,15 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     ui->mcconfSlBrErpmBox->setValue(mcconf.sl_cycle_int_rpm_br);
     ui->mcconfSlBemfKBox->setValue(mcconf.sl_bemf_coupling_k);
 
-    ui->mcconfHallDirBox->setValue(mcconf.hall_dir);
-    ui->mcconfHallFwdAddBox->setValue(mcconf.hall_fwd_add);
-    ui->mcconfHallRevAddBox->setValue(mcconf.hall_rev_add);
+    ui->mcconfHallTab0Box->setValue(mcconf.hall_table[0]);
+    ui->mcconfHallTab1Box->setValue(mcconf.hall_table[1]);
+    ui->mcconfHallTab2Box->setValue(mcconf.hall_table[2]);
+    ui->mcconfHallTab3Box->setValue(mcconf.hall_table[3]);
+    ui->mcconfHallTab4Box->setValue(mcconf.hall_table[4]);
+    ui->mcconfHallTab5Box->setValue(mcconf.hall_table[5]);
+    ui->mcconfHallTab6Box->setValue(mcconf.hall_table[6]);
+    ui->mcconfHallTab7Box->setValue(mcconf.hall_table[7]);
+    ui->mcconfHallSlErpmBox->setValue(mcconf.hall_sl_erpm);
 
     ui->mcconfSpidKpBox->setValue(mcconf.s_pid_kp);
     ui->mcconfSpidKiBox->setValue(mcconf.s_pid_ki);
@@ -1391,18 +1424,44 @@ void MainWindow::mcconfReceived(PacketInterface::mc_configuration mcconf)
     showStatusInfo("MCCONF Received", true);
 }
 
-void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling_k)
+void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res)
 {
     if (cycle_int_limit < 0.01 && bemf_coupling_k < 0.01) {
         showStatusInfo("Bad Detection Result Received", false);
         ui->mcconfDetectResultBrowser->setText("Detection failed.");
     } else {
         showStatusInfo("Detection Result Received", true);
+
+        QString hall_str;
+        if (hall_res == 0) {
+            hall_str.sprintf("Detected hall sensor table:\n"
+                             "%i, %i, %i, %i, %i, %i, %i, %i\n",
+                             hall_table.at(0), hall_table.at(1),
+                             hall_table.at(2), hall_table.at(3),
+                             hall_table.at(4), hall_table.at(5),
+                             hall_table.at(6), hall_table.at(7));
+        } else if (hall_res == -1) {
+            hall_str.sprintf("Hall sensor detection failed:\n"
+                             "%i, %i, %i, %i, %i, %i, %i, %i\n",
+                             hall_table.at(0), hall_table.at(1),
+                             hall_table.at(2), hall_table.at(3),
+                             hall_table.at(4), hall_table.at(5),
+                             hall_table.at(6), hall_table.at(7));
+        } else if (hall_res == -2) {
+            hall_str.sprintf("WS2811 enabled. Hall sensors cannot be used.\n");
+        } else if (hall_res == -3) {
+            hall_str.sprintf("Encoder enabled. Hall sensors cannot be used.\n");
+        } else {
+            hall_str.sprintf("Unknown hall error: %d\n", hall_res);
+        }
+
         ui->mcconfDetectResultBrowser->setText(QString().sprintf("Detection results:\n"
                                                                  "Integrator limit: %.2f\n"
-                                                                 "BEMF Coupling: %.2f",
+                                                                 "BEMF Coupling: %.2f\n\n"
+                                                                 "%s",
                                                                  cycle_int_limit,
-                                                                 bemf_coupling_k));
+                                                                 bemf_coupling_k,
+                                                                 hall_str.toLocal8Bit().data()));
     }
 }
 

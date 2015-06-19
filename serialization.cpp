@@ -48,6 +48,7 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeTextElement("pwm_mode", QString::number(mcconf.pwm_mode));
     xmlwriter.writeTextElement("comm_mode", QString::number(mcconf.comm_mode));
     xmlwriter.writeTextElement("motor_type", QString::number(mcconf.motor_type));
+    xmlwriter.writeTextElement("sensor_mode", QString::number(mcconf.sensor_mode));
     xmlwriter.writeTextElement("l_current_max", QString::number(mcconf.l_current_max));
     xmlwriter.writeTextElement("l_current_min", QString::number(mcconf.l_current_min));
     xmlwriter.writeTextElement("l_in_current_max", QString::number(mcconf.l_in_current_max));
@@ -67,7 +68,6 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeTextElement("l_temp_motor_end", QString::number(mcconf.l_temp_motor_end));
     xmlwriter.writeTextElement("l_min_duty", QString::number(mcconf.l_min_duty));
     xmlwriter.writeTextElement("l_max_duty", QString::number(mcconf.l_max_duty));
-    xmlwriter.writeTextElement("sl_is_sensorless", QString::number(mcconf.sl_is_sensorless));
     xmlwriter.writeTextElement("sl_min_erpm", QString::number(mcconf.sl_min_erpm));
     xmlwriter.writeTextElement("sl_min_erpm_cycle_int_limit", QString::number(mcconf.sl_min_erpm_cycle_int_limit));
     xmlwriter.writeTextElement("sl_max_fullbreak_current_dir_change", QString::number(mcconf.sl_max_fullbreak_current_dir_change));
@@ -75,9 +75,15 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     xmlwriter.writeTextElement("sl_cycle_int_limit_high_fac", QString::number(mcconf.sl_phase_advance_at_br));
     xmlwriter.writeTextElement("sl_cycle_int_rpm_br", QString::number(mcconf.sl_cycle_int_rpm_br));
     xmlwriter.writeTextElement("sl_bemf_coupling_k", QString::number(mcconf.sl_bemf_coupling_k));
-    xmlwriter.writeTextElement("hall_dir", QString::number(mcconf.hall_dir));
-    xmlwriter.writeTextElement("hall_fwd_add", QString::number(mcconf.hall_fwd_add));
-    xmlwriter.writeTextElement("hall_rev_add", QString::number(mcconf.hall_rev_add));
+    xmlwriter.writeTextElement("hall_table_0", QString::number(mcconf.hall_table[0]));
+    xmlwriter.writeTextElement("hall_table_1", QString::number(mcconf.hall_table[1]));
+    xmlwriter.writeTextElement("hall_table_2", QString::number(mcconf.hall_table[2]));
+    xmlwriter.writeTextElement("hall_table_3", QString::number(mcconf.hall_table[3]));
+    xmlwriter.writeTextElement("hall_table_4", QString::number(mcconf.hall_table[4]));
+    xmlwriter.writeTextElement("hall_table_5", QString::number(mcconf.hall_table[5]));
+    xmlwriter.writeTextElement("hall_table_6", QString::number(mcconf.hall_table[6]));
+    xmlwriter.writeTextElement("hall_table_7", QString::number(mcconf.hall_table[7]));
+    xmlwriter.writeTextElement("hall_sl_erpm", QString::number(mcconf.hall_sl_erpm));
     xmlwriter.writeTextElement("s_pid_kp", QString::number(mcconf.s_pid_kp));
     xmlwriter.writeTextElement("s_pid_ki", QString::number(mcconf.s_pid_ki));
     xmlwriter.writeTextElement("s_pid_kd", QString::number(mcconf.s_pid_kd));
@@ -127,6 +133,7 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     if(xmlreader.name() == "pwm_mode") {mcconf.pwm_mode = (PacketInterface::mc_pwm_mode)xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "comm_mode") {mcconf.comm_mode = (PacketInterface::mc_comm_mode)xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "motor_type") {mcconf.motor_type = (PacketInterface::mc_motor_type)xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "sensor_mode") {mcconf.sensor_mode = (PacketInterface::mc_sensor_mode)xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "l_current_max") {mcconf.l_current_max = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_current_min") {mcconf.l_current_min = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_in_current_max") {mcconf.l_in_current_max = xmlreader.readElementText().toDouble();}
@@ -146,7 +153,6 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     else if (xmlreader.name() == "l_temp_motor_end") {mcconf.l_temp_motor_end = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_min_duty") {mcconf.l_min_duty = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_max_duty") {mcconf.l_max_duty = xmlreader.readElementText().toDouble();}
-                    else if (xmlreader.name() == "sl_is_sensorless") {mcconf.sl_is_sensorless = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "sl_min_erpm") {mcconf.sl_min_erpm = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_min_erpm_cycle_int_limit") {mcconf.sl_min_erpm_cycle_int_limit = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_max_fullbreak_current_dir_change") {mcconf.sl_max_fullbreak_current_dir_change = xmlreader.readElementText().toDouble();}
@@ -154,9 +160,15 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     else if (xmlreader.name() == "sl_cycle_int_limit_high_fac") {mcconf.sl_phase_advance_at_br = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_cycle_int_rpm_br") {mcconf.sl_cycle_int_rpm_br = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "sl_bemf_coupling_k") {mcconf.sl_bemf_coupling_k = xmlreader.readElementText().toDouble();}
-                    else if (xmlreader.name() == "hall_dir") {mcconf.hall_dir = xmlreader.readElementText().toInt();}
-                    else if (xmlreader.name() == "hall_fwd_add") {mcconf.hall_fwd_add = xmlreader.readElementText().toInt();}
-                    else if (xmlreader.name() == "hall_rev_add") {mcconf.hall_rev_add = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "hall_table_0") {mcconf.hall_table[0] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "hall_table_1") {mcconf.hall_table[1] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "hall_table_2") {mcconf.hall_table[2] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "hall_table_3") {mcconf.hall_table[3] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "hall_table_4") {mcconf.hall_table[4] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "hall_table_5") {mcconf.hall_table[5] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "hall_table_6") {mcconf.hall_table[6] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "hall_table_7") {mcconf.hall_table[7] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "hall_sl_erpm") {mcconf.hall_sl_erpm = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "s_pid_kp") {mcconf.s_pid_kp = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "s_pid_ki") {mcconf.s_pid_ki = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "s_pid_kd") {mcconf.s_pid_kd = xmlreader.readElementText().toDouble();}
