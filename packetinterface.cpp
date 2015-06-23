@@ -530,6 +530,11 @@ QString PacketInterface::faultToStr(PacketInterface::mc_fault_code fault)
     }
 }
 
+inline double PacketInterface::roundDouble(double x)
+{
+	return x < 0.0 ? ceil(x - 0.5) : floor(x + 0.5);
+}
+
 void PacketInterface::firmwareUploadUpdate(bool isTimeout)
 {
     if (!mFirmwareIsUploading) {
@@ -756,51 +761,51 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     mSendBuffer[send_index++] = mcconf.motor_type;
     mSendBuffer[send_index++] = mcconf.sensor_mode;
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_current_max * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_current_min * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_in_current_max * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_in_current_min * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_abs_current_max * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_min_erpm * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_erpm * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_erpm_fbrake * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_erpm_fbrake_cc * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_min_vin * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_vin * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_current_max * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_current_min * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_in_current_max * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_in_current_min * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_abs_current_max * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_min_erpm * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_erpm * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_erpm_fbrake * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_erpm_fbrake_cc * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_min_vin * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_vin * 1000.0)), &send_index);
     mSendBuffer[send_index++] = mcconf.l_slow_abs_current;
     mSendBuffer[send_index++] = mcconf.l_rpm_lim_neg_torque;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_fet_start * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_fet_end * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_motor_start * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_temp_motor_end * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_min_duty * 1000000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.l_max_duty * 1000000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_temp_fet_start * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_temp_fet_end * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_temp_motor_start * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_temp_motor_end * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_min_duty * 1000000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_duty * 1000000.0)), &send_index);
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_min_erpm * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_min_erpm_cycle_int_limit * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_max_fullbreak_current_dir_change * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_cycle_int_limit * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_phase_advance_at_br * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_cycle_int_rpm_br * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.sl_bemf_coupling_k * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_min_erpm * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_min_erpm_cycle_int_limit * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_max_fullbreak_current_dir_change * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_cycle_int_limit * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_phase_advance_at_br * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_cycle_int_rpm_br * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_bemf_coupling_k * 1000.0)), &send_index);
 
     memcpy(mSendBuffer + send_index, mcconf.hall_table, 8);
     send_index += 8;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.hall_sl_erpm * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.hall_sl_erpm * 1000.0)), &send_index);
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.s_pid_kp * 1000000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.s_pid_ki * 1000000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.s_pid_kd * 1000000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.s_pid_min_rpm * 1000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.s_pid_kp * 1000000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.s_pid_ki * 1000000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.s_pid_kd * 1000000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.s_pid_min_rpm * 1000.0)), &send_index);
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.p_pid_kp * 1000000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.p_pid_ki * 1000000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.p_pid_kd * 1000000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.p_pid_kp * 1000000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.p_pid_ki * 1000000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.p_pid_kd * 1000000.0)), &send_index);
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_startup_boost_duty * 1000000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_min_current * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_gain * 1000000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(mcconf.cc_ramp_step_max * 1000000.0), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.cc_startup_boost_duty * 1000000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.cc_min_current * 1000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.cc_gain * 1000000.0)), &send_index);
+    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.cc_ramp_step_max * 1000000.0)), &send_index);
 
     utility::buffer_append_int32(mSendBuffer, mcconf.m_fault_stop_time_ms, &send_index);
 
