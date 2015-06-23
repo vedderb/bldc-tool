@@ -338,6 +338,7 @@ private:
     unsigned short crc16(const unsigned char *buf, unsigned int len);
     void processPacket(const unsigned char *data, int len);
     QString faultToStr(mc_fault_code fault);
+    static inline double roundDouble(double x);
     void firmwareUploadUpdate(bool isTimeout);
 
     QTimer *mTimer;
