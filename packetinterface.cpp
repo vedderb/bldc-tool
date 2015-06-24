@@ -307,22 +307,22 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
 
     case COMM_GET_VALUES:
         ind = 0;
-        values.temp_mos1 = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
-        values.temp_mos2 = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
-        values.temp_mos3 = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
-        values.temp_mos4 = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
-        values.temp_mos5 = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
-        values.temp_mos6 = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
-        values.temp_pcb = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
-        values.current_motor = ((double)utility::buffer_get_int32(data, &ind)) / 100.0;
-        values.current_in = ((double)utility::buffer_get_int32(data, &ind)) / 100.0;
-        values.duty_now = ((double)utility::buffer_get_int16(data, &ind)) / 1000.0;
-        values.rpm = (double)utility::buffer_get_int32(data, &ind);
-        values.v_in = ((double)utility::buffer_get_int16(data, &ind)) / 10.0;
-        values.amp_hours = ((double)utility::buffer_get_int32(data, &ind)) / 10000.0;
-        values.amp_hours_charged = ((double)utility::buffer_get_int32(data, &ind)) / 10000.0;
-        values.watt_hours = ((double)utility::buffer_get_int32(data, &ind)) / 10000.0;
-        values.watt_hours_charged = ((double)utility::buffer_get_int32(data, &ind)) / 10000.0;
+        values.temp_mos1 = utility::buffer_get_double16(data, 10.0, &ind);
+        values.temp_mos2 = utility::buffer_get_double16(data, 10.0, &ind);
+        values.temp_mos3 = utility::buffer_get_double16(data, 10.0, &ind);
+        values.temp_mos4 = utility::buffer_get_double16(data, 10.0, &ind);
+        values.temp_mos5 = utility::buffer_get_double16(data, 10.0, &ind);
+        values.temp_mos6 = utility::buffer_get_double16(data, 10.0, &ind);
+        values.temp_pcb = utility::buffer_get_double16(data, 10.0, &ind);
+        values.current_motor = utility::buffer_get_double32(data, 100.0, &ind);
+        values.current_in = utility::buffer_get_double32(data, 100.0, &ind);
+        values.duty_now = utility::buffer_get_double16(data, 1000.0, &ind);
+        values.rpm = utility::buffer_get_double32(data, 1.0, &ind);
+        values.v_in = utility::buffer_get_double16(data, 10.0, &ind);
+        values.amp_hours = utility::buffer_get_double32(data, 10000.0, &ind);
+        values.amp_hours_charged = utility::buffer_get_double32(data, 10000.0, &ind);
+        values.watt_hours = utility::buffer_get_double32(data, 10000.0, &ind);
+        values.watt_hours_charged = utility::buffer_get_double32(data, 10000.0, &ind);
         values.tachometer = utility::buffer_get_int32(data, &ind);
         values.tachometer_abs = utility::buffer_get_int32(data, &ind);
         values.fault_code = (mc_fault_code)data[ind++];
@@ -346,7 +346,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
 
     case COMM_ROTOR_POSITION:
         ind = 0;
-        emit rotorPosReceived((double)utility::buffer_get_int32(data, &ind) / 100000.0);
+        emit rotorPosReceived(utility::buffer_get_double32(data, 100000.0, &ind));
         break;
 
     case COMM_EXPERIMENT_SAMPLE:
@@ -354,7 +354,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         ind = 0;
 
         while (ind < len) {
-            samples.append(((double)utility::buffer_get_int32(data, &ind)) / 10000.0);
+            samples.append(utility::buffer_get_double32(data, 10000.0, &ind));
         }
 
         emit experimentSamplesReceived(samples);
@@ -367,51 +367,51 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.motor_type = (mc_motor_type)data[ind++];
         mcconf.sensor_mode = (mc_sensor_mode)data[ind++];
 
-        mcconf.l_current_max = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_current_min = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_in_current_max = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_in_current_min = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_abs_current_max = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_min_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_max_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_max_erpm_fbrake = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_max_erpm_fbrake_cc = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_min_vin = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_max_vin = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.l_current_max = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_current_min = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_in_current_max = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_in_current_min = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_abs_current_max = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_min_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_max_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_max_erpm_fbrake = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_max_erpm_fbrake_cc = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_min_vin = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_max_vin = utility::buffer_get_double32(data, 1000.0, &ind);
         mcconf.l_slow_abs_current = data[ind++];
         mcconf.l_rpm_lim_neg_torque = data[ind++];
-        mcconf.l_temp_fet_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_temp_fet_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_temp_motor_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_temp_motor_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.l_min_duty = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        mcconf.l_max_duty = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        mcconf.l_temp_fet_start = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_temp_fet_end = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_temp_motor_start = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_temp_motor_end = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_min_duty = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.l_max_duty = utility::buffer_get_double32(data, 1000000.0, &ind);
 
-        mcconf.sl_min_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.sl_min_erpm_cycle_int_limit = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.sl_max_fullbreak_current_dir_change = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.sl_cycle_int_limit = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.sl_phase_advance_at_br = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.sl_cycle_int_rpm_br = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.sl_bemf_coupling_k = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.sl_min_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.sl_min_erpm_cycle_int_limit = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.sl_max_fullbreak_current_dir_change = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.sl_cycle_int_limit = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.sl_phase_advance_at_br = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.sl_cycle_int_rpm_br = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.sl_bemf_coupling_k = utility::buffer_get_double32(data, 1000.0, &ind);
 
         memcpy(mcconf.hall_table, data + ind, 8);
         ind += 8;
-        mcconf.hall_sl_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.hall_sl_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
 
-        mcconf.s_pid_kp = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        mcconf.s_pid_ki = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        mcconf.s_pid_kd = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        mcconf.s_pid_min_rpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        mcconf.s_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.s_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.s_pid_kd = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.s_pid_min_rpm = utility::buffer_get_double32(data, 1000.0, &ind);
 
-        mcconf.p_pid_kp = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        mcconf.p_pid_ki = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        mcconf.p_pid_kd = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        mcconf.p_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.p_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.p_pid_kd = utility::buffer_get_double32(data, 1000000.0, &ind);
 
-        mcconf.cc_startup_boost_duty = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        mcconf.cc_min_current = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        mcconf.cc_gain = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        mcconf.cc_ramp_step_max = (float)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        mcconf.cc_startup_boost_duty = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.cc_min_current = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.cc_gain = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.cc_ramp_step_max = utility::buffer_get_double32(data, 1000000.0, &ind);
 
         mcconf.m_fault_stop_time_ms = utility::buffer_get_int32(data, &ind);
 
@@ -424,58 +424,58 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         ind = 0;
         appconf.controller_id = data[ind++];
         appconf.timeout_msec = utility::buffer_get_uint32(data, &ind);
-        appconf.timeout_brake_current = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.timeout_brake_current = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.send_can_status = data[ind++];
         appconf.send_can_status_rate_hz = utility::buffer_get_uint16(data, &ind);
 
         appconf.app_to_use = (app_use)data[ind++];
 
         appconf.app_ppm_conf.ctrl_type = (ppm_control_type)data[ind++];
-        appconf.app_ppm_conf.pid_max_erpm = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_ppm_conf.hyst = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_ppm_conf.pulse_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_ppm_conf.pulse_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_ppm_conf.pid_max_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_ppm_conf.hyst = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_ppm_conf.pulse_start = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_ppm_conf.pulse_end = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_ppm_conf.median_filter = data[ind++];
         appconf.app_ppm_conf.safe_start = data[ind++];
-        appconf.app_ppm_conf.rpm_lim_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_ppm_conf.rpm_lim_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_ppm_conf.rpm_lim_start = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_ppm_conf.rpm_lim_end = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_ppm_conf.multi_esc = data[ind++];
         appconf.app_ppm_conf.tc = data[ind++];
-        appconf.app_ppm_conf.tc_max_diff = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_ppm_conf.tc_max_diff = utility::buffer_get_double32(data, 1000.0, &ind);
 
         appconf.app_adc_conf.ctrl_type = (adc_control_type)data[ind++];
-        appconf.app_adc_conf.hyst = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_adc_conf.voltage_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_adc_conf.voltage_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_adc_conf.hyst = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_adc_conf.voltage_start = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_adc_conf.voltage_end = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_adc_conf.use_filter = data[ind++];
         appconf.app_adc_conf.safe_start = data[ind++];
         appconf.app_adc_conf.button_inverted = data[ind++];
         appconf.app_adc_conf.voltage_inverted = data[ind++];
-        appconf.app_adc_conf.rpm_lim_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_adc_conf.rpm_lim_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_adc_conf.rpm_lim_start = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_adc_conf.rpm_lim_end = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_adc_conf.multi_esc = data[ind++];
         appconf.app_adc_conf.tc = data[ind++];
-        appconf.app_adc_conf.tc_max_diff = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_adc_conf.tc_max_diff = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_adc_conf.update_rate_hz = utility::buffer_get_uint16(data, &ind);
 
         appconf.app_uart_baudrate = utility::buffer_get_uint32(data, &ind);
 
         appconf.app_chuk_conf.ctrl_type = (chuk_control_type)data[ind++];
-        appconf.app_chuk_conf.hyst = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_chuk_conf.rpm_lim_start = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_chuk_conf.rpm_lim_end = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_chuk_conf.ramp_time_pos = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
-        appconf.app_chuk_conf.ramp_time_neg = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_chuk_conf.hyst = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_chuk_conf.rpm_lim_start = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_chuk_conf.rpm_lim_end = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_chuk_conf.ramp_time_pos = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_chuk_conf.ramp_time_neg = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_chuk_conf.multi_esc = data[ind++];
         appconf.app_chuk_conf.tc = data[ind++];
-        appconf.app_chuk_conf.tc_max_diff = (float)utility::buffer_get_int32(data, &ind) / 1000.0;
+        appconf.app_chuk_conf.tc_max_diff = utility::buffer_get_double32(data, 1000.0, &ind);
         emit appconfReceived(appconf);
         break;
 
     case COMM_DETECT_MOTOR_PARAM:
         ind = 0;
-        detect_cycle_int_limit = (double)utility::buffer_get_int32(data, &ind) / 1000.0;
-        detect_coupling_k = (double)utility::buffer_get_int32(data, &ind) / 1000.0;
+        detect_cycle_int_limit = utility::buffer_get_double32(data, 1000.0, &ind);
+        detect_coupling_k = utility::buffer_get_double32(data, 1000.0, &ind);
         for (int i = 0;i < 8;i++) {
             detect_hall_table.append((const signed char)(data[ind++]));
         }
@@ -485,21 +485,21 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
 
     case COMM_GET_DECODED_PPM:
         ind = 0;
-        dec_ppm = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        ppm_last_len = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        dec_ppm = utility::buffer_get_double32(data, 1000000.0, &ind);
+        ppm_last_len = utility::buffer_get_double32(data, 1000000.0, &ind);
         emit decodedPpmReceived(dec_ppm, ppm_last_len);
         break;
 
     case COMM_GET_DECODED_ADC:
         ind = 0;
-        dec_adc = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
-        dec_adc_voltage = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        dec_adc = utility::buffer_get_double32(data, 1000000.0, &ind);
+        dec_adc_voltage = utility::buffer_get_double32(data, 1000000.0, &ind);
         emit decodedAdcReceived(dec_adc, dec_adc_voltage);
         break;
 
     case COMM_GET_DECODED_CHUK:
         ind = 0;
-        dec_ppm = (double)utility::buffer_get_int32(data, &ind) / 1000000.0;
+        dec_ppm = utility::buffer_get_double32(data, 1000000.0, &ind);
         emit decodedChukReceived(dec_ppm);
         break;
 
@@ -528,11 +528,6 @@ QString PacketInterface::faultToStr(PacketInterface::mc_fault_code fault)
     case FAULT_CODE_OVER_TEMP_MOTOR: return "FAULT_CODE_OVER_TEMP_MOTOR";
     default: return "Unknown fault";
     }
-}
-
-inline double PacketInterface::roundDouble(double x)
-{
-	return x < 0.0 ? ceil(x - 0.5) : floor(x + 0.5);
 }
 
 void PacketInterface::firmwareUploadUpdate(bool isTimeout)
@@ -689,7 +684,7 @@ bool PacketInterface::setDutyCycle(double dutyCycle)
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_DUTY;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(dutyCycle * 100000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, dutyCycle, 100000.0, &send_index);
     return sendPacket(mSendBuffer, send_index);
 }
 
@@ -697,7 +692,7 @@ bool PacketInterface::setCurrent(double current)
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_CURRENT;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(current * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, current, 1000.0, &send_index);
     return sendPacket(mSendBuffer, send_index);
 }
 
@@ -705,7 +700,7 @@ bool PacketInterface::setCurrentBrake(double current)
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_CURRENT_BRAKE;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(current * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, current, 1000.0, &send_index);
     return sendPacket(mSendBuffer, send_index);
 }
 
@@ -721,7 +716,7 @@ bool PacketInterface::setPos(double pos)
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_POS;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(pos * 1000000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, pos, 1000000.0, &send_index);
     return sendPacket(mSendBuffer, send_index);
 }
 
@@ -761,51 +756,51 @@ bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
     mSendBuffer[send_index++] = mcconf.motor_type;
     mSendBuffer[send_index++] = mcconf.sensor_mode;
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_current_max * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_current_min * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_in_current_max * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_in_current_min * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_abs_current_max * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_min_erpm * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_erpm * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_erpm_fbrake * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_erpm_fbrake_cc * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_min_vin * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_vin * 1000.0)), &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.l_current_max, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_current_min, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_in_current_max, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_in_current_min, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_abs_current_max, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_min_erpm, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_erpm, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_erpm_fbrake, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_erpm_fbrake_cc, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_min_vin, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_vin, 1000, &send_index);
     mSendBuffer[send_index++] = mcconf.l_slow_abs_current;
     mSendBuffer[send_index++] = mcconf.l_rpm_lim_neg_torque;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_temp_fet_start * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_temp_fet_end * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_temp_motor_start * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_temp_motor_end * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_min_duty * 1000000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.l_max_duty * 1000000.0)), &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_temp_fet_start, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_temp_fet_end, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_temp_motor_start, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_temp_motor_end, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_min_duty, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_duty, 1000000, &send_index);
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_min_erpm * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_min_erpm_cycle_int_limit * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_max_fullbreak_current_dir_change * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_cycle_int_limit * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_phase_advance_at_br * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_cycle_int_rpm_br * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.sl_bemf_coupling_k * 1000.0)), &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.sl_min_erpm, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.sl_min_erpm_cycle_int_limit, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.sl_max_fullbreak_current_dir_change, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.sl_cycle_int_limit, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.sl_phase_advance_at_br, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.sl_cycle_int_rpm_br, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.sl_bemf_coupling_k, 1000, &send_index);
 
     memcpy(mSendBuffer + send_index, mcconf.hall_table, 8);
     send_index += 8;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.hall_sl_erpm * 1000.0)), &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.hall_sl_erpm, 1000, &send_index);
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.s_pid_kp * 1000000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.s_pid_ki * 1000000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.s_pid_kd * 1000000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.s_pid_min_rpm * 1000.0)), &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kp, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_ki, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kd, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_min_rpm, 1000, &send_index);
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.p_pid_kp * 1000000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.p_pid_ki * 1000000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.p_pid_kd * 1000000.0)), &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_kp, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_ki, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_kd, 1000000, &send_index);
 
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.cc_startup_boost_duty * 1000000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.cc_min_current * 1000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.cc_gain * 1000000.0)), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(roundDouble(mcconf.cc_ramp_step_max * 1000000.0)), &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.cc_startup_boost_duty, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.cc_min_current, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.cc_gain, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.cc_ramp_step_max, 1000000, &send_index);
 
     utility::buffer_append_int32(mSendBuffer, mcconf.m_fault_stop_time_ms, &send_index);
 
@@ -816,9 +811,9 @@ bool PacketInterface::detectMotorParam(double current, double min_rpm, double lo
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_DETECT_MOTOR_PARAM;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(current * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(min_rpm * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(low_duty * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, current, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, min_rpm, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, low_duty, 1000.0, &send_index);
     return sendPacket(mSendBuffer, send_index);
 }
 
@@ -836,51 +831,51 @@ bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appco
     mSendBuffer[send_index++] = COMM_SET_APPCONF;
     mSendBuffer[send_index++] = appconf.controller_id;
     utility::buffer_append_uint32(mSendBuffer, appconf.timeout_msec, &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.timeout_brake_current * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.timeout_brake_current, 1000.0, &send_index);
     mSendBuffer[send_index++] = appconf.send_can_status;
     utility::buffer_append_uint16(mSendBuffer, appconf.send_can_status_rate_hz, &send_index);
 
     mSendBuffer[send_index++] = appconf.app_to_use;
 
     mSendBuffer[send_index++] = appconf.app_ppm_conf.ctrl_type;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.pid_max_erpm * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.hyst * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.pulse_start * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.pulse_end * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_ppm_conf.pid_max_erpm, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_ppm_conf.hyst, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_ppm_conf.pulse_start, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_ppm_conf.pulse_end, 1000.0, &send_index);
     mSendBuffer[send_index++] = appconf.app_ppm_conf.median_filter;
     mSendBuffer[send_index++] = appconf.app_ppm_conf.safe_start;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.rpm_lim_start * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.rpm_lim_end * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_ppm_conf.rpm_lim_start, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_ppm_conf.rpm_lim_end, 1000.0, &send_index);
     mSendBuffer[send_index++] = appconf.app_ppm_conf.multi_esc;
     mSendBuffer[send_index++] = appconf.app_ppm_conf.tc;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_ppm_conf.tc_max_diff * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_ppm_conf.tc_max_diff, 1000.0, &send_index);
 
     mSendBuffer[send_index++] = appconf.app_adc_conf.ctrl_type;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.hyst * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.voltage_start * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.voltage_end * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.hyst, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.voltage_start, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.voltage_end, 1000.0, &send_index);
     mSendBuffer[send_index++] = appconf.app_adc_conf.use_filter;
     mSendBuffer[send_index++] = appconf.app_adc_conf.safe_start;
     mSendBuffer[send_index++] = appconf.app_adc_conf.button_inverted;
     mSendBuffer[send_index++] = appconf.app_adc_conf.voltage_inverted;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.rpm_lim_start * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.rpm_lim_end * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.rpm_lim_start, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.rpm_lim_end, 1000.0, &send_index);
     mSendBuffer[send_index++] = appconf.app_adc_conf.multi_esc;
     mSendBuffer[send_index++] = appconf.app_adc_conf.tc;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_adc_conf.tc_max_diff * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.tc_max_diff, 1000.0, &send_index);
     utility::buffer_append_uint16(mSendBuffer, appconf.app_adc_conf.update_rate_hz, &send_index);
 
     utility::buffer_append_uint32(mSendBuffer, appconf.app_uart_baudrate, &send_index);
 
     mSendBuffer[send_index++] = appconf.app_chuk_conf.ctrl_type;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_conf.hyst * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_conf.rpm_lim_start * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_conf.rpm_lim_end * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_conf.ramp_time_pos * 1000.0), &send_index);
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_conf.ramp_time_neg * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.hyst, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.rpm_lim_start, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.rpm_lim_end, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.ramp_time_pos, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.ramp_time_neg, 1000.0, &send_index);
     mSendBuffer[send_index++] = appconf.app_chuk_conf.multi_esc;
     mSendBuffer[send_index++] = appconf.app_chuk_conf.tc;
-    utility::buffer_append_int32(mSendBuffer, (int32_t)(appconf.app_chuk_conf.tc_max_diff * 1000.0), &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.tc_max_diff, 1000.0, &send_index);
 
     return sendPacket(mSendBuffer, send_index);
 }
