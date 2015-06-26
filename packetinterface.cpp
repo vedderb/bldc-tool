@@ -223,7 +223,7 @@ bool PacketInterface::sendPacket(const unsigned char *data, unsigned int len_pac
 
     unsigned int ind = 0;
     unsigned int data_offs = 0;
-    unsigned char *buffer = new unsigned char[len_tot + 6];
+    static unsigned char buffer[mMaxBufferLen];
 
     if (len_tot <= 256) {
         buffer[ind++] = 2;
@@ -252,8 +252,6 @@ bool PacketInterface::sendPacket(const unsigned char *data, unsigned int len_pac
     QByteArray sendData = QByteArray::fromRawData((char*)buffer, ind);
 
     emit dataToSend(sendData);
-
-    delete buffer;
 
     return true;
 }
