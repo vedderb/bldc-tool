@@ -22,6 +22,8 @@
 #include <QTimer>
 #include <QVector>
 
+#include <stdint.h>
+
 class PacketInterface : public QObject
 {
     Q_OBJECT
