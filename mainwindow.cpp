@@ -49,6 +49,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+#ifdef Q_OS_WIN
+    ui->serialDeviceEdit->setText("COM3");
+#elif defined(Q_OS_MAC)
+    ui->serialDeviceEdit->setText("/dev/tty.usbmodem261");
+#else
+    ui->serialDeviceEdit->setText("/dev/ttyACM0");
+#endif
     // Compatible firmwares
     mFwVersionReceived = false;
     mCompatibleFws.append(qMakePair(1, 5));
@@ -65,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     ui->firmwareSupportedLabel->setText(supportedFWs);
 
-    mPort = new SerialPort(this);
+    mPort = new QSerialPort(this);
 
     mTimer = new QTimer(this);
     mTimer->setInterval(20);
@@ -86,8 +93,10 @@ MainWindow::MainWindow(QWidget *parent) :
     mAppconfLoaded = false;
     mStatusInfoTime = 0;
 
-    connect(mPort, SIGNAL(serial_data_available()),
+    connect(mPort, SIGNAL(readyRead()),
             this, SLOT(serialDataAvailable()));
+    connect(mPort, SIGNAL(error(QSerialPort::SerialPortError)),
+            this, SLOT(serialPortError(QSerialPort::SerialPortError)));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
     connect(mPacketInterface, SIGNAL(dataToSend(QByteArray&)),
@@ -462,6 +471,35 @@ void MainWindow::serialDataAvailable()
         mPacketInterface->processData(data);
     }
 }
+
+void MainWindow::serialPortError(QSerialPort::SerialPortError error)
+{
+    QString message;
+    switch (error) {
+    case QSerialPort::NoError:
+        break;
+    case QSerialPort::DeviceNotFoundError:
+        message = tr("Device not found");
+        break;
+    case QSerialPort::OpenError:
+        message = tr("Can't open device");
+        break;
+    case QSerialPort::NotOpenError:
+        message = tr("Not open error");
+        break;
+    default:
+        message = QString::number(error);
+        break;
+    }
+
+    if(!message.isEmpty()) {
+        if(mPort->isOpen()) {
+            mPort->close();
+        }
+        QMessageBox::warning(this, tr("Error!"), tr("Error: ") + message);
+    }
+}
+
 
 void MainWindow::timerSlot()
 {
@@ -1125,7 +1163,7 @@ void MainWindow::timerSlot()
 void MainWindow::packetDataToSend(QByteArray &data)
 {
     if (mPort->isOpen()) {
-        mPort->writeData(data.data(), data.size());
+        mPort->write(data);
     }
 }
 
@@ -1136,7 +1174,7 @@ void MainWindow::fwVersionReceived(int major, int minor)
 
     if (major < 0) {
         mFwVersionReceived = false;
-        mPort->closePort();
+        mPort->close();
         QMessageBox messageBox;
         messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
                             " update it using a programmer.");
@@ -1163,7 +1201,7 @@ void MainWindow::fwVersionReceived(int major, int minor)
                                 " firmware can be changed.");
         } else {
             mFwVersionReceived = false;
-            mPort->closePort();
+            mPort->close();
             QMessageBox messageBox;
             messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
                                 " update it using a programmer.");
@@ -1687,12 +1725,24 @@ void MainWindow::decodedChukReceived(double chuk_value)
 
 void MainWindow::on_connectButton_clicked()
 {
-    mPort->openPort(ui->serialDeviceEdit->text());
+    mPort->setPortName(ui->serialDeviceEdit->text().trimmed());
+    mPort->open(QIODevice::ReadWrite);
+
+    if(!mPort->isOpen()) {
+        return;
+    }
+
+    mPort->setBaudRate(QSerialPort::Baud115200);
+    mPort->setDataBits(QSerialPort::Data8);   //8 bits
+    mPort->setParity(QSerialPort::NoParity);   //no parity
+    mPort->setStopBits(QSerialPort::OneStop);   //1 stop bit
+    mPort->setFlowControl(QSerialPort::NoFlowControl);  //no flow control
+//    mPort->setTimeout(-1);             // TODO ? useless ?
 }
 
 void MainWindow::on_disconnectButton_clicked()
 {
-    mPort->closePort();
+    mPort->close();
 }
 
 void MainWindow::on_getDataButton_clicked()
