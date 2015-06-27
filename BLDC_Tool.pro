@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += printsupport
+QT       += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,7 +17,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     qcustomplot.cpp \
-    serialport.cpp \
     digitalfiltering.cpp \
     packetinterface.cpp \
     utility.cpp \
@@ -27,7 +27,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
-    serialport.h \
     digitalfiltering.h \
     packetinterface.h \
     utility.h \

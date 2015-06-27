@@ -22,8 +22,9 @@
 #include <QLabel>
 #include <QTimer>
 #include <QByteArray>
+#include <QSerialPort>
+
 #include "qcustomplot.h"
-#include "serialport.h"
 #include "packetinterface.h"
 #include "serialization.h"
 
@@ -42,6 +43,8 @@ public:
 
 private slots:
     void serialDataAvailable();
+    void serialPortError(QSerialPort::SerialPortError error);
+
     void timerSlot();
     void packetDataToSend(QByteArray &data);
     void fwVersionReceived(int major, int minor);
@@ -95,7 +98,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    SerialPort *mPort;
+    QSerialPort *mPort;
     QTimer *mTimer;
     QLabel *mStatusLabel;
     int mStatusInfoTime;
