@@ -1,5 +1,5 @@
 /*
-    Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
+    Copyright 2012-2015 Benjamin Vedder	benjamin@vedder.se
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #else
     ui->serialDeviceEdit->setText("/dev/ttyACM0");
 #endif
+
     // Compatible firmwares
     mFwVersionReceived = false;
     mCompatibleFws.append(qMakePair(1, 5));
@@ -487,16 +488,23 @@ void MainWindow::serialPortError(QSerialPort::SerialPortError error)
     case QSerialPort::NotOpenError:
         message = tr("Not open error");
         break;
+    case QSerialPort::ResourceError:
+        message = tr("Port disconnected");
+        break;
+    case QSerialPort::UnknownError:
+        message = tr("Unknown error");
+        break;
     default:
         message = QString::number(error);
         break;
     }
 
     if(!message.isEmpty()) {
+        showStatusInfo(message, false);
+
         if(mPort->isOpen()) {
             mPort->close();
         }
-        QMessageBox::warning(this, tr("Error!"), tr("Error: ") + message);
     }
 }
 
@@ -1725,6 +1733,10 @@ void MainWindow::decodedChukReceived(double chuk_value)
 
 void MainWindow::on_connectButton_clicked()
 {
+    if(mPort->isOpen()) {
+        return;
+    }
+
     mPort->setPortName(ui->serialDeviceEdit->text().trimmed());
     mPort->open(QIODevice::ReadWrite);
 
@@ -1737,7 +1749,6 @@ void MainWindow::on_connectButton_clicked()
     mPort->setParity(QSerialPort::NoParity);   //no parity
     mPort->setStopBits(QSerialPort::OneStop);   //1 stop bit
     mPort->setFlowControl(QSerialPort::NoFlowControl);  //no flow control
-//    mPort->setTimeout(-1);             // TODO ? useless ?
 }
 
 void MainWindow::on_disconnectButton_clicked()
