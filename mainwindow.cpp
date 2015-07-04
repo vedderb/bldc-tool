@@ -1181,6 +1181,8 @@ void MainWindow::fwVersionReceived(int major, int minor)
     QPair<int, int> highest_supported = *std::max_element(mCompatibleFws.begin(), mCompatibleFws.end());
     QPair<int, int> fw_connected = qMakePair(major, minor);
 
+    bool wasReceived = mFwVersionReceived;
+
     if (major < 0) {
         mFwVersionReceived = false;
         mPort->close();
@@ -1191,36 +1193,44 @@ void MainWindow::fwVersionReceived(int major, int minor)
     } else if (fw_connected > highest_supported) {
         mFwVersionReceived = true;
         mPacketInterface->setLimitedMode(true);
-        QMessageBox messageBox;
-        messageBox.warning(this, "Warning", "The connected VESC has newer firmware than this version of"
-                                            " BLDC Tool supports. It is recommended that you update BLDC "
-                                            " Tool to the latest version. Alternatively, the firmware on"
-                                            " the connected VESC can be downgraded in the firmware tab."
-                                            " Until then, limited communication mode will be used where"
-                                            " only the firmware can be changed.");
+        if (!wasReceived) {
+            QMessageBox messageBox;
+            messageBox.warning(this, "Warning", "The connected VESC has newer firmware than this version of"
+                                                " BLDC Tool supports. It is recommended that you update BLDC "
+                                                " Tool to the latest version. Alternatively, the firmware on"
+                                                " the connected VESC can be downgraded in the firmware tab."
+                                                " Until then, limited communication mode will be used where"
+                                                " only the firmware can be changed.");
+        }
     } else if (!mCompatibleFws.contains(fw_connected)) {
         if (fw_connected >= qMakePair(1, 1)) {
             mFwVersionReceived = true;
             mPacketInterface->setLimitedMode(true);
-            QMessageBox messageBox;
-            messageBox.warning(this, "Warning", "The connected VESC has too old firmware. Since the"
-                                " connected VESC has firmware with bootloader support, it can be"
-                                " updated from the Firmware tab."
-                                " Until then, limited communication mode will be used where only the"
-                                " firmware can be changed.");
+            if (!wasReceived) {
+                QMessageBox messageBox;
+                messageBox.warning(this, "Warning", "The connected VESC has too old firmware. Since the"
+                                                    " connected VESC has firmware with bootloader support, it can be"
+                                                    " updated from the Firmware tab."
+                                                    " Until then, limited communication mode will be used where only the"
+                                                    " firmware can be changed.");
+            }
         } else {
             mFwVersionReceived = false;
             mPort->close();
-            QMessageBox messageBox;
-            messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
-                                " update it using a programmer.");
+            if (!wasReceived) {
+                QMessageBox messageBox;
+                messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
+                                                   " update it using a programmer.");
+            }
         }
     } else {
         mFwVersionReceived = true;
         if (fw_connected < highest_supported) {
-            QMessageBox messageBox;
-            messageBox.warning(this, "Warning", "The connected VESC has compatible, but old"
-                                                " firmware. It is recommended that you update it.");
+            if (!wasReceived) {
+                QMessageBox messageBox;
+                messageBox.warning(this, "Warning", "The connected VESC has compatible, but old"
+                                                    " firmware. It is recommended that you update it.");
+            }
         }
 
         QString fwStr;
