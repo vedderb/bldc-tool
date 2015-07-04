@@ -1990,6 +1990,8 @@ void MainWindow::on_mcconfLoadXmlButton_clicked()
     PacketInterface::mc_configuration mcconf = getMcconfGui();
     if (mSerialization->readMcconfXml(mcconf, this)) {
         setMcconfGui(mcconf);
+    } else {
+        showStatusInfo("Loading MCCONF failed", false);
     }
 }
 

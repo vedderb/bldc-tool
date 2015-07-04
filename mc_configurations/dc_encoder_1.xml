@@ -20,7 +20,6 @@
     <l_temp_fet_end>100</l_temp_fet_end>
     <l_temp_motor_start>80</l_temp_motor_start>
     <l_temp_motor_end>100</l_temp_motor_end>
-    <sl_is_sensorless>1</sl_is_sensorless>
     <sl_min_erpm>150</sl_min_erpm>
     <sl_min_erpm_cycle_int_limit>1100</sl_min_erpm_cycle_int_limit>
     <sl_max_fullbreak_current_dir_change>10</sl_max_fullbreak_current_dir_change>

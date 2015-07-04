@@ -19,6 +19,7 @@
 #include <QFileDialog>
 #include <qxmlstream.h>
 #include <QFile>
+#include <QDebug>
 
 Serialization::Serialization(QObject *parent) :
     QObject(parent)
@@ -124,6 +125,7 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
         if (xmlreader.isStartElement()) {
             if (xmlreader.name() == "MCConfiguration") {
                 xmlreader.readNext();
+
                 while (!xmlreader.atEnd()) {
                     if (xmlreader.isEndElement()) {
                         xmlreader.readNext();
@@ -182,12 +184,18 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                     else if (xmlreader.name() == "cc_ramp_step_max") {mcconf.cc_ramp_step_max = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "m_fault_stop_time_ms") {mcconf.m_fault_stop_time_ms = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "meta_description") {mcconf.meta_description = xmlreader.readElementText();}
+                    else {
+                        if (xmlreader.name().size() > 0) {
+                            qDebug() << "Unknown XML element";
+                            qDebug() << xmlreader.name();
+                            qDebug() << xmlreader.readElementText();
+                        }
+                    }
 
                     xmlreader.readNext();
                 }
             } else {
-                retval = false;
-                break;
+                xmlreader.readNext();
             }
         } else {
             xmlreader.readNext();
