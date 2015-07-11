@@ -536,7 +536,7 @@ void PacketInterface::firmwareUploadUpdate(bool isTimeout)
 
     const int app_packet_size = 200;
     const int retries = 5;
-    const int timeout = 50;
+    const int timeout = 250;
 
     if (mFirmwareState == 0) {
         mFirmwareUploadStatus = "Buffer Erase";

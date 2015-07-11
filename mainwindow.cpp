@@ -62,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mCompatibleFws.append(qMakePair(1, 5));
     mCompatibleFws.append(qMakePair(1, 6));
     mCompatibleFws.append(qMakePair(1, 7));
+    mCompatibleFws.append(qMakePair(1, 8));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -2218,5 +2219,6 @@ void MainWindow::on_firmwareUploadButton_clicked()
 
 void MainWindow::on_firmwareVersionReadButton_clicked()
 {
+    mFwVersionReceived = false;
     mPacketInterface->getFwVersion();
 }
