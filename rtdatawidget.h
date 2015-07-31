@@ -26,7 +26,7 @@ class RtDataWidget : public QWidget
     Q_OBJECT
 public:
     explicit RtDataWidget(QWidget *parent = 0);
-    void setValues(PacketInterface::MC_VALUES &values);
+    void setValues(MC_VALUES &values);
 
 signals:
 
@@ -36,7 +36,7 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 private:
-    PacketInterface::MC_VALUES mValues;
+    MC_VALUES mValues;
 
 };
 

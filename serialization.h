@@ -19,15 +19,15 @@
 #define SERIALIZATION_H
 
 #include <QObject>
-#include "packetinterface.h"
+#include "datatypes.h"
 
 class Serialization : public QObject
 {
     Q_OBJECT
 public:
     explicit Serialization(QObject *parent = 0);
-    bool writeMcconfXml(const PacketInterface::mc_configuration &mcconf, QWidget *parent = 0);
-    bool readMcconfXml(PacketInterface::mc_configuration &mcconf, QWidget *parent = 0);
+    bool writeMcconfXml(const mc_configuration &mcconf, QWidget *parent = 0);
+    bool readMcconfXml(mc_configuration &mcconf, QWidget *parent = 0);
 
 signals:
 

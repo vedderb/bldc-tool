@@ -24,7 +24,7 @@ RtDataWidget::RtDataWidget(QWidget *parent) :
 {
 }
 
-void RtDataWidget::setValues(PacketInterface::MC_VALUES &values)
+void RtDataWidget::setValues(MC_VALUES &values)
 {
     mValues = values;
     mValues.fault_str.remove(0, 11);

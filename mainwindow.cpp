@@ -57,12 +57,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->serialDeviceEdit->setText("/dev/ttyACM0");
 #endif
 
+    ui->udpIpEdit->setText("192.168.1.118");
+
     // Compatible firmwares
     mFwVersionReceived = false;
-    mCompatibleFws.append(qMakePair(1, 5));
-    mCompatibleFws.append(qMakePair(1, 6));
-    mCompatibleFws.append(qMakePair(1, 7));
-    mCompatibleFws.append(qMakePair(1, 8));
+    mFwRetries = 0;
+    mCompatibleFws.append(qMakePair(1, 9));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     ui->firmwareSupportedLabel->setText(supportedFWs);
 
-    mPort = new QSerialPort(this);
+    mSerialPort = new QSerialPort(this);
 
     mTimer = new QTimer(this);
     mTimer->setInterval(20);
@@ -96,9 +96,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mAppconfLoaded = false;
     mStatusInfoTime = 0;
 
-    connect(mPort, SIGNAL(readyRead()),
+    connect(mSerialPort, SIGNAL(readyRead()),
             this, SLOT(serialDataAvailable()));
-    connect(mPort, SIGNAL(error(QSerialPort::SerialPortError)),
+    connect(mSerialPort, SIGNAL(error(QSerialPort::SerialPortError)),
             this, SLOT(serialPortError(QSerialPort::SerialPortError)));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
@@ -108,8 +108,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(fwVersionReceived(int,int)));
     connect(mPacketInterface, SIGNAL(ackReceived(QString)),
             this, SLOT(ackReceived(QString)));
-    connect(mPacketInterface, SIGNAL(valuesReceived(PacketInterface::MC_VALUES)),
-            this, SLOT(mcValuesReceived(PacketInterface::MC_VALUES)));
+    connect(mPacketInterface, SIGNAL(valuesReceived(MC_VALUES)),
+            this, SLOT(mcValuesReceived(MC_VALUES)));
     connect(mPacketInterface, SIGNAL(printReceived(QString)),
             this, SLOT(printReceived(QString)));
     connect(mPacketInterface, SIGNAL(samplesReceived(QByteArray)),
@@ -118,12 +118,12 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(rotorPosReceived(double)));
     connect(mPacketInterface, SIGNAL(experimentSamplesReceived(QVector<double>)),
             this, SLOT(experimentSamplesReceived(QVector<double>)));
-    connect(mPacketInterface, SIGNAL(mcconfReceived(PacketInterface::mc_configuration)),
-            this, SLOT(mcconfReceived(PacketInterface::mc_configuration)));
+    connect(mPacketInterface, SIGNAL(mcconfReceived(mc_configuration)),
+            this, SLOT(mcconfReceived(mc_configuration)));
     connect(mPacketInterface, SIGNAL(motorParamReceived(double,double,QVector<int>,int)),
             this, SLOT(motorParamReceived(double,double,QVector<int>,int)));
-    connect(mPacketInterface, SIGNAL(appconfReceived(PacketInterface::app_configuration)),
-            this, SLOT(appconfReceived(PacketInterface::app_configuration)));
+    connect(mPacketInterface, SIGNAL(appconfReceived(app_configuration)),
+            this, SLOT(appconfReceived(app_configuration)));
     connect(mPacketInterface, SIGNAL(decodedPpmReceived(double,double)),
             this, SLOT(decodedPpmReceived(double,double)));
     connect(mPacketInterface, SIGNAL(decodedAdcReceived(double,double)),
@@ -167,7 +167,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
 {
     Q_UNUSED(object);
 
-    if (!mPort->isOpen() || !ui->overrideKbBox->isChecked()) {
+    if (!(mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) || !ui->overrideKbBox->isChecked()) {
         return false;
     }
 
@@ -242,36 +242,36 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
     return false;
 }
 
-PacketInterface::mc_configuration MainWindow::getMcconfGui()
+mc_configuration MainWindow::getMcconfGui()
 {
-    PacketInterface::mc_configuration mcconf;
+    mc_configuration mcconf;
 
     if (ui->mcconfPwmModeSyncButton->isChecked()) {
-        mcconf.pwm_mode = PacketInterface::PWM_MODE_SYNCHRONOUS;
+        mcconf.pwm_mode = PWM_MODE_SYNCHRONOUS;
     } else if (ui->mcconfPwmModeBipolarButton->isChecked()) {
-        mcconf.pwm_mode = PacketInterface::PWM_MODE_BIPOLAR;
+        mcconf.pwm_mode = PWM_MODE_BIPOLAR;
     } else if (ui->mcconfPwmModeNonsyncHiswButton->isChecked()) {
-        mcconf.pwm_mode = PacketInterface::PWM_MODE_NONSYNCHRONOUS_HISW;
+        mcconf.pwm_mode = PWM_MODE_NONSYNCHRONOUS_HISW;
     }
 
     if (ui->mcconfCommIntButton->isChecked()) {
-        mcconf.comm_mode = PacketInterface::COMM_MODE_INTEGRATE;
+        mcconf.comm_mode = COMM_MODE_INTEGRATE;
     } else if (ui->mcconfCommDelayButton->isChecked()) {
-        mcconf.comm_mode = PacketInterface::COMM_MODE_DELAY;
+        mcconf.comm_mode = COMM_MODE_DELAY;
     }
 
     if (ui->mcconfTypeBldcButton->isChecked()) {
-        mcconf.motor_type = PacketInterface::MOTOR_TYPE_BLDC;
+        mcconf.motor_type = MOTOR_TYPE_BLDC;
     } else if (ui->mcconfTypeDcButton->isChecked()) {
-        mcconf.motor_type = PacketInterface::MOTOR_TYPE_DC;
+        mcconf.motor_type = MOTOR_TYPE_DC;
     }
 
     if (ui->mcconfSensorModeSensorlessButton->isChecked()) {
-        mcconf.sensor_mode = PacketInterface::SENSOR_MODE_SENSORLESS;
+        mcconf.sensor_mode = SENSOR_MODE_SENSORLESS;
     } else if (ui->mcconfSensorModeSensoredButton->isChecked()) {
-        mcconf.sensor_mode = PacketInterface::SENSOR_MODE_SENSORED;
+        mcconf.sensor_mode = SENSOR_MODE_SENSORED;
     } else if (ui->mcconfSensorModeHybridButton->isChecked()) {
-        mcconf.sensor_mode = PacketInterface::SENSOR_MODE_HYBRID;
+        mcconf.sensor_mode = SENSOR_MODE_HYBRID;
     }
 
     mcconf.l_current_max = ui->mcconfLimCurrentMaxBox->value();
@@ -333,18 +333,18 @@ PacketInterface::mc_configuration MainWindow::getMcconfGui()
     return mcconf;
 }
 
-void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
+void MainWindow::setMcconfGui(const mc_configuration &mcconf)
 {
     switch (mcconf.pwm_mode) {
-    case PacketInterface::PWM_MODE_SYNCHRONOUS:
+    case PWM_MODE_SYNCHRONOUS:
         ui->mcconfPwmModeSyncButton->setChecked(true);
         break;
 
-    case PacketInterface::PWM_MODE_BIPOLAR:
+    case PWM_MODE_BIPOLAR:
         ui->mcconfPwmModeBipolarButton->setChecked(true);
         break;
 
-    case PacketInterface::PWM_MODE_NONSYNCHRONOUS_HISW:
+    case PWM_MODE_NONSYNCHRONOUS_HISW:
         ui->mcconfPwmModeNonsyncHiswButton->setChecked(true);
         break;
 
@@ -353,11 +353,11 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     }
 
     switch (mcconf.comm_mode) {
-    case PacketInterface::COMM_MODE_INTEGRATE:
+    case COMM_MODE_INTEGRATE:
         ui->mcconfCommIntButton->setChecked(true);
         break;
 
-    case PacketInterface::COMM_MODE_DELAY:
+    case COMM_MODE_DELAY:
         ui->mcconfCommDelayButton->setChecked(true);
         break;
 
@@ -367,11 +367,11 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     }
 
     switch (mcconf.motor_type) {
-    case PacketInterface::MOTOR_TYPE_BLDC:
+    case MOTOR_TYPE_BLDC:
         ui->mcconfTypeBldcButton->setChecked(true);
         break;
 
-    case PacketInterface::MOTOR_TYPE_DC:
+    case MOTOR_TYPE_DC:
         ui->mcconfTypeDcButton->setChecked(true);
         break;
 
@@ -380,15 +380,15 @@ void MainWindow::setMcconfGui(const PacketInterface::mc_configuration &mcconf)
     }
 
     switch (mcconf.sensor_mode) {
-    case PacketInterface::SENSOR_MODE_SENSORLESS:
+    case SENSOR_MODE_SENSORLESS:
         ui->mcconfSensorModeSensorlessButton->setChecked(true);
         break;
 
-    case PacketInterface::SENSOR_MODE_SENSORED:
+    case SENSOR_MODE_SENSORED:
         ui->mcconfSensorModeSensoredButton->setChecked(true);
         break;
 
-    case PacketInterface::SENSOR_MODE_HYBRID:
+    case SENSOR_MODE_HYBRID:
         ui->mcconfSensorModeHybridButton->setChecked(true);
         break;
 
@@ -469,8 +469,8 @@ void MainWindow::showStatusInfo(QString info, bool isGood)
 
 void MainWindow::serialDataAvailable()
 {
-    while (mPort->bytesAvailable() > 0) {
-        QByteArray data = mPort->readAll();
+    while (mSerialPort->bytesAvailable() > 0) {
+        QByteArray data = mSerialPort->readAll();
         mPacketInterface->processData(data);
     }
 }
@@ -497,15 +497,15 @@ void MainWindow::serialPortError(QSerialPort::SerialPortError error)
         message = tr("Unknown error");
         break;
     default:
-        message = QString::number(error);
+        message = "Serial port error: " + QString::number(error);
         break;
     }
 
     if(!message.isEmpty()) {
         showStatusInfo(message, false);
 
-        if(mPort->isOpen()) {
-            mPort->close();
+        if(mSerialPort->isOpen()) {
+            mSerialPort->close();
         }
     }
 }
@@ -519,18 +519,27 @@ void MainWindow::timerSlot()
     // Read FW version if needed
     static bool sendCanBefore = false;
     static int canIdBefore = 0;
-    if (mPort->isOpen()) {
+    if (mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) {
         if (sendCanBefore != ui->canFwdBox->isChecked() ||
                 canIdBefore != ui->canIdBox->value()) {
             mFwVersionReceived = false;
+            mFwRetries = 0;
         }
 
         if (!mFwVersionReceived) {
             mPacketInterface->getFwVersion();
+            mFwRetries++;
+
+            // Timeout if the firmware cannot be read
+            if (mFwRetries >= 100) {
+                showStatusInfo("No firmware read response", false);
+                on_disconnectButton_clicked();
+            }
         }
 
     } else {
         mFwVersionReceived = false;
+        mFwRetries = 0;
     }
     sendCanBefore = ui->canFwdBox->isChecked();
     canIdBefore = ui->canIdBox->value();
@@ -542,7 +551,7 @@ void MainWindow::timerSlot()
             mStatusLabel->setStyleSheet(qApp->styleSheet());
         }
     } else {
-        if (mPort->isOpen()) {
+        if (mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) {
             if (mPacketInterface->isLimitedMode()) {
                 mStatusLabel->setText("Connected, limited");
             } else {
@@ -559,6 +568,16 @@ void MainWindow::timerSlot()
         ui->firmwareBar->setValue(fw_prog * 1000);
         ui->firmwareUploadButton->setEnabled(false);
     } else {
+        // If the firmware upload just finished or failed
+        if (!ui->firmwareUploadButton->isEnabled()) {
+            mFwVersionReceived = false;
+            mFwRetries = 0;
+            if (mPacketInterface->getFirmwareUploadStatus().compare("FW Upload Done") == 0) {
+                ui->firmwareBar->setValue(1000);
+            } else {
+                ui->firmwareBar->setValue(0);
+            }
+        }
         ui->firmwareUploadButton->setEnabled(true);
     }
     ui->firmwareUploadStatusLabel->setText(mPacketInterface->getFirmwareUploadStatus());
@@ -1172,8 +1191,8 @@ void MainWindow::timerSlot()
 
 void MainWindow::packetDataToSend(QByteArray &data)
 {
-    if (mPort->isOpen()) {
-        mPort->write(data);
+    if (mSerialPort->isOpen()) {
+        mSerialPort->write(data);
     }
 }
 
@@ -1186,7 +1205,8 @@ void MainWindow::fwVersionReceived(int major, int minor)
 
     if (major < 0) {
         mFwVersionReceived = false;
-        mPort->close();
+        mFwRetries = 0;
+        on_disconnectButton_clicked();
         QMessageBox messageBox;
         messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
                             " update it using a programmer.");
@@ -1217,7 +1237,8 @@ void MainWindow::fwVersionReceived(int major, int minor)
             }
         } else {
             mFwVersionReceived = false;
-            mPort->close();
+            mFwRetries = 0;
+            on_disconnectButton_clicked();
             if (!wasReceived) {
                 QMessageBox messageBox;
                 messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
@@ -1252,7 +1273,7 @@ void MainWindow::ackReceived(QString ackType)
     showStatusInfo(ackType, true);
 }
 
-void MainWindow::mcValuesReceived(PacketInterface::MC_VALUES values)
+void MainWindow::mcValuesReceived(MC_VALUES values)
 {
     const int maxS = 500;
 
@@ -1477,7 +1498,7 @@ void MainWindow::experimentSamplesReceived(QVector<double> samples)
     }
 }
 
-void MainWindow::mcconfReceived(PacketInterface::mc_configuration mcconf)
+void MainWindow::mcconfReceived(mc_configuration mcconf)
 {
     setMcconfGui(mcconf);
     showStatusInfo("MCCONF Received", true);
@@ -1524,7 +1545,7 @@ void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling
     }
 }
 
-void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
+void MainWindow::appconfReceived(app_configuration appconf)
 {
     ui->appconfControllerIdBox->setValue(appconf.controller_id);
     ui->appconfTimeoutBox->setValue(appconf.timeout_msec);
@@ -1533,39 +1554,39 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
     ui->appconfSendCanStatusRateBox->setValue(appconf.send_can_status_rate_hz);
 
     switch (appconf.app_to_use) {
-    case PacketInterface::APP_NONE:
+    case APP_NONE:
         ui->appconfUseNoAppButton->setChecked(true);
         break;
 
-    case PacketInterface::APP_PPM:
+    case APP_PPM:
         ui->appconfUsePpmButton->setChecked(true);
         break;
 
-    case PacketInterface::APP_ADC:
+    case APP_ADC:
         ui->appconfUseAdcButton->setChecked(true);
         break;
 
-    case PacketInterface::APP_UART:
+    case APP_UART:
         ui->appconfUseUartButton->setChecked(true);
         break;
 
-    case PacketInterface::APP_PPM_UART:
+    case APP_PPM_UART:
         ui->appconfUsePpmUartButton->setChecked(true);
         break;
 
-    case PacketInterface::APP_ADC_UART:
+    case APP_ADC_UART:
         ui->appconfUseAdcUartButton->setChecked(true);
         break;
 
-    case PacketInterface::APP_NUNCHUK:
+    case APP_NUNCHUK:
         ui->appconfUseNunchukButton->setChecked(true);
         break;
 
-    case PacketInterface::APP_NRF:
+    case APP_NRF:
         ui->appconfUseNrfButton->setChecked(true);
         break;
 
-    case PacketInterface::APP_CUSTOM:
+    case APP_CUSTOM:
         ui->appconfUseCustomButton->setChecked(true);
         break;
 
@@ -1575,35 +1596,35 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
 
     // PPM
     switch (appconf.app_ppm_conf.ctrl_type) {
-    case PacketInterface::PPM_CTRL_TYPE_NONE:
+    case PPM_CTRL_TYPE_NONE:
         ui->appconfPpmDisabledButton->setChecked(true);
         break;
 
-    case PacketInterface::PPM_CTRL_TYPE_CURRENT:
+    case PPM_CTRL_TYPE_CURRENT:
         ui->appconfPpmCurrentButton->setChecked(true);
         break;
 
-    case PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV:
+    case PPM_CTRL_TYPE_CURRENT_NOREV:
         ui->appconfPpmCurrentNorevButton->setChecked(true);
         break;
 
-    case PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE:
+    case PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE:
         ui->appconfPpmCurrentNorevBrakeButton->setChecked(true);
         break;
 
-    case PacketInterface::PPM_CTRL_TYPE_DUTY:
+    case PPM_CTRL_TYPE_DUTY:
         ui->appconfPpmDutyButton->setChecked(true);
         break;
 
-    case PacketInterface::PPM_CTRL_TYPE_DUTY_NOREV:
+    case PPM_CTRL_TYPE_DUTY_NOREV:
         ui->appconfPpmDutyNorevButton->setChecked(true);
         break;
 
-    case PacketInterface::PPM_CTRL_TYPE_PID:
+    case PPM_CTRL_TYPE_PID:
         ui->appconfPpmPidButton->setChecked(true);
         break;
 
-    case PacketInterface::PPM_CTRL_TYPE_PID_NOREV:
+    case PPM_CTRL_TYPE_PID_NOREV:
         ui->appconfPpmPidNorevButton->setChecked(true);
         break;
 
@@ -1631,39 +1652,39 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
 
     // ADC
     switch (appconf.app_adc_conf.ctrl_type) {
-    case PacketInterface::ADC_CTRL_TYPE_NONE:
+    case ADC_CTRL_TYPE_NONE:
         ui->appconfAdcDisabledButton->setChecked(true);
         break;
 
-    case PacketInterface::ADC_CTRL_TYPE_CURRENT:
+    case ADC_CTRL_TYPE_CURRENT:
         ui->appconfAdcCurrentButton->setChecked(true);
         break;
 
-    case PacketInterface::ADC_CTRL_TYPE_CURRENT_REV_CENTER:
+    case ADC_CTRL_TYPE_CURRENT_REV_CENTER:
         ui->appconfAdcCurrentCenterButton->setChecked(true);
         break;
 
-    case PacketInterface::ADC_CTRL_TYPE_CURRENT_REV_BUTTON:
+    case ADC_CTRL_TYPE_CURRENT_REV_BUTTON:
         ui->appconfAdcCurrentButtonButton->setChecked(true);
         break;
 
-    case PacketInterface::ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_CENTER:
+    case ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_CENTER:
         ui->appconfAdcCurrentNorevCenterButton->setChecked(true);
         break;
 
-    case PacketInterface::ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_BUTTON:
+    case ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_BUTTON:
         ui->appconfAdcCurrentNorevButtonButton->setChecked(true);
         break;
 
-    case PacketInterface::ADC_CTRL_TYPE_DUTY:
+    case ADC_CTRL_TYPE_DUTY:
         ui->appconfAdcDutyCycleButton->setChecked(true);
         break;
 
-    case PacketInterface::ADC_CTRL_TYPE_DUTY_REV_CENTER:
+    case ADC_CTRL_TYPE_DUTY_REV_CENTER:
         ui->appconfAdcDutyCycleCenterButton->setChecked(true);
         break;
 
-    case PacketInterface::ADC_CTRL_TYPE_DUTY_REV_BUTTON:
+    case ADC_CTRL_TYPE_DUTY_REV_BUTTON:
         ui->appconfAdcDutyCycleButtonButton->setChecked(true);
         break;
 
@@ -1696,15 +1717,15 @@ void MainWindow::appconfReceived(PacketInterface::app_configuration appconf)
 
     // Nunchuk
     switch (appconf.app_chuk_conf.ctrl_type) {
-    case PacketInterface::CHUK_CTRL_TYPE_NONE:
+    case CHUK_CTRL_TYPE_NONE:
         ui->appconfChukDisabledButton->setChecked(true);
         break;
 
-    case PacketInterface::CHUK_CTRL_TYPE_CURRENT:
+    case CHUK_CTRL_TYPE_CURRENT:
         ui->appconfChukCurrentButton->setChecked(true);
         break;
 
-    case PacketInterface::CHUK_CTRL_TYPE_CURRENT_NOREV:
+    case CHUK_CTRL_TYPE_CURRENT_NOREV:
         ui->appconfChukCurrentNorevButton->setChecked(true);
         break;
 
@@ -1743,29 +1764,55 @@ void MainWindow::decodedChukReceived(double chuk_value)
     ui->appconfDecodedChukBar->setValue((chuk_value + 1.0) * 500.0);
 }
 
-void MainWindow::on_connectButton_clicked()
+void MainWindow::on_serialConnectButton_clicked()
 {
-    if(mPort->isOpen()) {
+    if(mSerialPort->isOpen()) {
         return;
     }
 
-    mPort->setPortName(ui->serialDeviceEdit->text().trimmed());
-    mPort->open(QIODevice::ReadWrite);
+    mSerialPort->setPortName(ui->serialDeviceEdit->text().trimmed());
+    mSerialPort->open(QIODevice::ReadWrite);
 
-    if(!mPort->isOpen()) {
+    if(!mSerialPort->isOpen()) {
         return;
     }
 
-    mPort->setBaudRate(QSerialPort::Baud115200);
-    mPort->setDataBits(QSerialPort::Data8);   //8 bits
-    mPort->setParity(QSerialPort::NoParity);   //no parity
-    mPort->setStopBits(QSerialPort::OneStop);   //1 stop bit
-    mPort->setFlowControl(QSerialPort::NoFlowControl);  //no flow control
+    mPacketInterface->stopUdpConnection();
+
+    mSerialPort->setBaudRate(QSerialPort::Baud115200);
+    mSerialPort->setDataBits(QSerialPort::Data8);   //8 bits
+    mSerialPort->setParity(QSerialPort::NoParity);   //no parity
+    mSerialPort->setStopBits(QSerialPort::OneStop);   //1 stop bit
+    mSerialPort->setFlowControl(QSerialPort::NoFlowControl);  //no flow control
+}
+
+void MainWindow::on_udpConnectButton_clicked()
+{
+    QHostAddress ip;
+
+    if (ip.setAddress(ui->udpIpEdit->text().trimmed())) {
+        if (mSerialPort->isOpen()) {
+            mSerialPort->close();
+        }
+
+        mPacketInterface->startUdpConnection(ip, 27800);
+    } else {
+        showStatusInfo("Invalid IP address", false);
+    }
 }
 
 void MainWindow::on_disconnectButton_clicked()
 {
-    mPort->close();
+    if (mSerialPort->isOpen()) {
+        mSerialPort->close();
+    }
+
+    if (mPacketInterface->isUdpConnected()) {
+        mPacketInterface->stopUdpConnection();
+    }
+
+    mFwVersionReceived = false;
+    mFwRetries = 0;
 }
 
 void MainWindow::on_getDataButton_clicked()
@@ -1999,7 +2046,7 @@ void MainWindow::on_currentBrakeButton_clicked()
 
 void MainWindow::on_mcconfLoadXmlButton_clicked()
 {
-    PacketInterface::mc_configuration mcconf = getMcconfGui();
+    mc_configuration mcconf = getMcconfGui();
     if (mSerialization->readMcconfXml(mcconf, this)) {
         setMcconfGui(mcconf);
     } else {
@@ -2009,7 +2056,7 @@ void MainWindow::on_mcconfLoadXmlButton_clicked()
 
 void MainWindow::on_mcconfSaveXmlButton_clicked()
 {
-    PacketInterface::mc_configuration mcconf = getMcconfGui();
+    mc_configuration mcconf = getMcconfGui();
     mSerialization->writeMcconfXml(mcconf, this);
 }
 
@@ -2033,7 +2080,7 @@ void MainWindow::on_appconfWriteButton_clicked()
         return;
     }
 
-    PacketInterface::app_configuration appconf;
+    app_configuration appconf;
 
     appconf.controller_id = ui->appconfControllerIdBox->value();
     appconf.timeout_msec = ui->appconfTimeoutBox->value();
@@ -2042,42 +2089,42 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.send_can_status_rate_hz = ui->appconfSendCanStatusRateBox->value();
 
     if (ui->appconfUseNoAppButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_NONE;
+        appconf.app_to_use = APP_NONE;
     } else if (ui->appconfUsePpmButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_PPM;
+        appconf.app_to_use = APP_PPM;
     } else if (ui->appconfUseAdcButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_ADC;
+        appconf.app_to_use = APP_ADC;
     } else if (ui->appconfUseUartButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_UART;
+        appconf.app_to_use = APP_UART;
     } else if (ui->appconfUsePpmUartButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_PPM_UART;
+        appconf.app_to_use = APP_PPM_UART;
     } else if (ui->appconfUseAdcUartButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_ADC_UART;
+        appconf.app_to_use = APP_ADC_UART;
     } else if (ui->appconfUseNunchukButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_NUNCHUK;
+        appconf.app_to_use = APP_NUNCHUK;
     } else if (ui->appconfUseNrfButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_NRF;
+        appconf.app_to_use = APP_NRF;
     } else if (ui->appconfUseCustomButton->isChecked()) {
-        appconf.app_to_use = PacketInterface::APP_CUSTOM;
+        appconf.app_to_use = APP_CUSTOM;
     }
 
     // PPM
     if (ui->appconfPpmDisabledButton->isChecked()) {
-        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_NONE;
+        appconf.app_ppm_conf.ctrl_type = PPM_CTRL_TYPE_NONE;
     } else if (ui->appconfPpmCurrentButton->isChecked()) {
-        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT;
+        appconf.app_ppm_conf.ctrl_type = PPM_CTRL_TYPE_CURRENT;
     } else if (ui->appconfPpmCurrentNorevButton->isChecked()) {
-        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV;
+        appconf.app_ppm_conf.ctrl_type = PPM_CTRL_TYPE_CURRENT_NOREV;
     } else if (ui->appconfPpmCurrentNorevBrakeButton->isChecked()) {
-        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE;
+        appconf.app_ppm_conf.ctrl_type = PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE;
     } else if (ui->appconfPpmDutyButton->isChecked()) {
-        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_DUTY;
+        appconf.app_ppm_conf.ctrl_type = PPM_CTRL_TYPE_DUTY;
     } else if (ui->appconfPpmDutyNorevButton->isChecked()) {
-        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_DUTY_NOREV;
+        appconf.app_ppm_conf.ctrl_type = PPM_CTRL_TYPE_DUTY_NOREV;
     } else if (ui->appconfPpmPidButton->isChecked()) {
-        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_PID;
+        appconf.app_ppm_conf.ctrl_type = PPM_CTRL_TYPE_PID;
     } else if (ui->appconfPpmPidNorevButton->isChecked()) {
-        appconf.app_ppm_conf.ctrl_type = PacketInterface::PPM_CTRL_TYPE_PID_NOREV;
+        appconf.app_ppm_conf.ctrl_type = PPM_CTRL_TYPE_PID_NOREV;
     }
 
     appconf.app_ppm_conf.pid_max_erpm = ui->appconfPpmPidMaxErpmBox->value();
@@ -2101,23 +2148,23 @@ void MainWindow::on_appconfWriteButton_clicked()
 
     // ADC
     if (ui->appconfAdcDisabledButton->isChecked()) {
-        appconf.app_adc_conf.ctrl_type = PacketInterface::ADC_CTRL_TYPE_NONE;
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_NONE;
     } else if (ui->appconfAdcCurrentButton->isChecked()) {
-        appconf.app_adc_conf.ctrl_type = PacketInterface::ADC_CTRL_TYPE_CURRENT;
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_CURRENT;
     } else if (ui->appconfAdcCurrentCenterButton->isChecked()) {
-        appconf.app_adc_conf.ctrl_type = PacketInterface::ADC_CTRL_TYPE_CURRENT_REV_CENTER;
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_CURRENT_REV_CENTER;
     } else if (ui->appconfAdcCurrentButtonButton->isChecked()) {
-        appconf.app_adc_conf.ctrl_type = PacketInterface::ADC_CTRL_TYPE_CURRENT_REV_BUTTON;
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_CURRENT_REV_BUTTON;
     } else if (ui->appconfAdcCurrentNorevCenterButton->isChecked()) {
-        appconf.app_adc_conf.ctrl_type = PacketInterface::ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_CENTER;
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_CENTER;
     } else if (ui->appconfAdcCurrentNorevButtonButton->isChecked()) {
-        appconf.app_adc_conf.ctrl_type = PacketInterface::ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_BUTTON;
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_BUTTON;
     } else if (ui->appconfAdcDutyCycleButton->isChecked()) {
-        appconf.app_adc_conf.ctrl_type = PacketInterface::ADC_CTRL_TYPE_DUTY;
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_DUTY;
     } else if (ui->appconfAdcDutyCycleCenterButton->isChecked()) {
-        appconf.app_adc_conf.ctrl_type = PacketInterface::ADC_CTRL_TYPE_DUTY_REV_CENTER;
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_DUTY_REV_CENTER;
     } else if (ui->appconfAdcDutyCycleButtonButton->isChecked()) {
-        appconf.app_adc_conf.ctrl_type = PacketInterface::ADC_CTRL_TYPE_DUTY_REV_BUTTON;
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_DUTY_REV_BUTTON;
     }
 
     appconf.app_adc_conf.update_rate_hz = ui->appconfAdcUpdateRateBox->value();
@@ -2146,11 +2193,11 @@ void MainWindow::on_appconfWriteButton_clicked()
 
     // Nunchuk
     if (ui->appconfChukDisabledButton->isChecked()) {
-        appconf.app_chuk_conf.ctrl_type = PacketInterface::CHUK_CTRL_TYPE_NONE;
+        appconf.app_chuk_conf.ctrl_type = CHUK_CTRL_TYPE_NONE;
     } else if (ui->appconfChukCurrentButton->isChecked()) {
-        appconf.app_chuk_conf.ctrl_type = PacketInterface::CHUK_CTRL_TYPE_CURRENT;
+        appconf.app_chuk_conf.ctrl_type = CHUK_CTRL_TYPE_CURRENT;
     } else if (ui->appconfChukCurrentNorevButton->isChecked()) {
-        appconf.app_chuk_conf.ctrl_type = PacketInterface::CHUK_CTRL_TYPE_CURRENT_NOREV;
+        appconf.app_chuk_conf.ctrl_type = CHUK_CTRL_TYPE_CURRENT_NOREV;
     }
 
     appconf.app_chuk_conf.hyst = ui->appconfChukHystBox->value();
@@ -2220,5 +2267,13 @@ void MainWindow::on_firmwareUploadButton_clicked()
 void MainWindow::on_firmwareVersionReadButton_clicked()
 {
     mFwVersionReceived = false;
+    mFwRetries = 0;
     mPacketInterface->getFwVersion();
+}
+
+void MainWindow::on_servoOutputSlider_valueChanged(int value)
+{
+    double pos = (double)value / 1000.0;
+    ui->servoOutputNumber->display(pos);
+    mPacketInterface->setServoPos(pos);
 }

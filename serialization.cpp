@@ -26,7 +26,7 @@ Serialization::Serialization(QObject *parent) :
 {
 }
 
-bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcconf, QWidget *parent)
+bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *parent)
 {
     QString filename = QFileDialog::getSaveFileName(parent,
                                             tr("Save Configuration"), ".",
@@ -106,7 +106,7 @@ bool Serialization::writeMcconfXml(const PacketInterface::mc_configuration &mcco
     return true;
 }
 
-bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWidget *parent)
+bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
 {
     QString filename = QFileDialog::getOpenFileName(parent,
                                                     tr("Load Configuration"), ".",
@@ -132,10 +132,10 @@ bool Serialization::readMcconfXml(PacketInterface::mc_configuration &mcconf, QWi
                         break;
                     }
 
-                    if(xmlreader.name() == "pwm_mode") {mcconf.pwm_mode = (PacketInterface::mc_pwm_mode)xmlreader.readElementText().toInt();}
-                    else if (xmlreader.name() == "comm_mode") {mcconf.comm_mode = (PacketInterface::mc_comm_mode)xmlreader.readElementText().toInt();}
-                    else if (xmlreader.name() == "motor_type") {mcconf.motor_type = (PacketInterface::mc_motor_type)xmlreader.readElementText().toInt();}
-                    else if (xmlreader.name() == "sensor_mode") {mcconf.sensor_mode = (PacketInterface::mc_sensor_mode)xmlreader.readElementText().toInt();}
+                    if(xmlreader.name() == "pwm_mode") {mcconf.pwm_mode = (mc_pwm_mode)xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "comm_mode") {mcconf.comm_mode = (mc_comm_mode)xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "motor_type") {mcconf.motor_type = (mc_motor_type)xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "sensor_mode") {mcconf.sensor_mode = (mc_sensor_mode)xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "l_current_max") {mcconf.l_current_max = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_current_min") {mcconf.l_current_min = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_in_current_max") {mcconf.l_in_current_max = xmlreader.readElementText().toDouble();}

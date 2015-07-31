@@ -27,6 +27,7 @@
 #include "qcustomplot.h"
 #include "packetinterface.h"
 #include "serialization.h"
+#include "datatypes.h"
 
 namespace Ui {
 class MainWindow;
@@ -49,19 +50,20 @@ private slots:
     void packetDataToSend(QByteArray &data);
     void fwVersionReceived(int major, int minor);
     void ackReceived(QString ackType);
-    void mcValuesReceived(PacketInterface::MC_VALUES values);
+    void mcValuesReceived(MC_VALUES values);
     void printReceived(QString str);
     void samplesReceived(QByteArray data);
     void rotorPosReceived(double pos);
     void experimentSamplesReceived(QVector<double> samples);
-    void mcconfReceived(PacketInterface::mc_configuration mcconf);
+    void mcconfReceived(mc_configuration mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
-    void appconfReceived(PacketInterface::app_configuration appconf);
+    void appconfReceived(app_configuration appconf);
     void decodedPpmReceived(double ppm_value, double ppm_last_len);
     void decodedAdcReceived(double adc_value, double adc_voltage);
     void decodedChukReceived(double chuk_value);
 
-    void on_connectButton_clicked();
+    void on_serialConnectButton_clicked();
+    void on_udpConnectButton_clicked();
     void on_disconnectButton_clicked();
     void on_getDataButton_clicked();
     void on_getDataStartButton_clicked();
@@ -96,13 +98,16 @@ private slots:
     void on_firmwareUploadButton_clicked();
     void on_firmwareVersionReadButton_clicked();
 
+    void on_servoOutputSlider_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
-    QSerialPort *mPort;
+    QSerialPort *mSerialPort;
     QTimer *mTimer;
     QLabel *mStatusLabel;
     int mStatusInfoTime;
     bool mFwVersionReceived;
+    int mFwRetries;
     QList<QPair<int, int> > mCompatibleFws;
     Serialization *mSerialization;
     int mSampleInt;
@@ -152,8 +157,8 @@ private:
 
     QVector<QVector<double> > mExperimentSamples;
 
-    PacketInterface::mc_configuration getMcconfGui();
-    void setMcconfGui(const PacketInterface::mc_configuration &mcconf);
+    mc_configuration getMcconfGui();
+    void setMcconfGui(const mc_configuration &mcconf);
     void showStatusInfo(QString info, bool isGood);
     void appendDoubleAndTrunc(QVector<double> *vec, double num, int maxSize);
     void clearBuffers();

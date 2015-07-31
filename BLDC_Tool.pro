@@ -7,6 +7,7 @@
 QT       += core gui
 QT       += printsupport
 QT       += serialport
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     serialization.h \
     mrichtextedit.h \
     mtextedit.h \
-    rtdatawidget.h
+    rtdatawidget.h \
+    datatypes.h
 
 FORMS    += mainwindow.ui \
     mrichtextedit.ui

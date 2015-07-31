@@ -83,6 +83,12 @@ PacketInterface::PacketInterface(QObject *parent) :
     mTimer->setInterval(10);
     mTimer->start();
 
+    mHostAddress = QHostAddress("0.0.0.0");
+    mUdpPort = 0;
+    mUdpSocket = new QUdpSocket(this);
+
+    connect(mUdpSocket, SIGNAL(readyRead()),
+            this, SLOT(readPendingDatagrams()));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 }
 
@@ -198,6 +204,21 @@ void PacketInterface::timerSlot()
     }
 }
 
+void PacketInterface::readPendingDatagrams()
+{
+    while (mUdpSocket->hasPendingDatagrams()) {
+        QByteArray datagram;
+        datagram.resize(mUdpSocket->pendingDatagramSize());
+        QHostAddress sender;
+        quint16 senderPort;
+
+        mUdpSocket->readDatagram(datagram.data(), datagram.size(),
+                                &sender, &senderPort);
+
+        processPacket((unsigned char*)datagram.data(), datagram.length());
+    }
+}
+
 unsigned short PacketInterface::crc16(const unsigned char *buf, unsigned int len)
 {
     unsigned int i;
@@ -210,6 +231,23 @@ unsigned short PacketInterface::crc16(const unsigned char *buf, unsigned int len
 
 bool PacketInterface::sendPacket(const unsigned char *data, unsigned int len_packet)
 {
+    static unsigned char buffer[mMaxBufferLen];
+    unsigned int ind = 0;
+
+    // If the IP is valid, send the packet over UDP
+    if (QString::compare(mHostAddress.toString(), "0.0.0.0") != 0) {
+        if (mSendCan) {
+            buffer[ind++] = COMM_FORWARD_CAN;
+            buffer[ind++] = mCanId;
+        }
+
+        memcpy(buffer + ind, data, len_packet);
+        ind += len_packet;
+
+        mUdpSocket->writeDatagram(QByteArray::fromRawData((const char*)buffer, ind), mHostAddress, mUdpPort);
+        return true;
+    }
+
     int len_tot = len_packet;
 
     // Only allow firmware commands in limited mode
@@ -221,9 +259,7 @@ bool PacketInterface::sendPacket(const unsigned char *data, unsigned int len_pac
         len_tot += 2;
     }
 
-    unsigned int ind = 0;
     unsigned int data_offs = 0;
-    static unsigned char buffer[mMaxBufferLen];
 
     if (len_tot <= 256) {
         buffer[ind++] = 2;
@@ -514,7 +550,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     }
 }
 
-QString PacketInterface::faultToStr(PacketInterface::mc_fault_code fault)
+QString PacketInterface::faultToStr(mc_fault_code fault)
 {
     switch (fault) {
     case FAULT_CODE_NONE: return "FAULT_CODE_NONE";
@@ -744,7 +780,7 @@ bool PacketInterface::getMcconf()
     return sendPacket(buffer);
 }
 
-bool PacketInterface::setMcconf(const PacketInterface::mc_configuration &mcconf)
+bool PacketInterface::setMcconf(const mc_configuration &mcconf)
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_MCCONF;
@@ -823,7 +859,7 @@ bool PacketInterface::getAppConf()
     return sendPacket(buffer);
 }
 
-bool PacketInterface::setAppConf(const PacketInterface::app_configuration &appconf)
+bool PacketInterface::setAppConf(const app_configuration &appconf)
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_APPCONF;
@@ -918,8 +954,36 @@ bool PacketInterface::getDecodedChuk()
     return sendPacket(buffer);
 }
 
+bool PacketInterface::setServoPos(double pos)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SET_SERVO_POS;
+    utility::buffer_append_double16(mSendBuffer, pos, 1000.0, &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
 void PacketInterface::setSendCan(bool sendCan, unsigned int id)
 {
     mSendCan = sendCan;
     mCanId = id;
+}
+
+void PacketInterface::startUdpConnection(QHostAddress ip, int port)
+{
+    mHostAddress = ip;
+    mUdpPort = port;
+    mUdpSocket->close();
+    mUdpSocket->bind(QHostAddress::Any, mUdpPort + 1);
+}
+
+void PacketInterface::stopUdpConnection()
+{
+    mHostAddress = QHostAddress("0.0.0.0");
+    mUdpPort = 0;
+    mUdpSocket->close();
+}
+
+bool PacketInterface::isUdpConnected()
+{
+    return QString::compare(mHostAddress.toString(), "0.0.0.0") != 0;
 }
