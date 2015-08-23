@@ -6,7 +6,7 @@
     <sensor_mode>0</sensor_mode>
     <l_current_max>80</l_current_max>
     <l_current_min>-80</l_current_min>
-    <l_in_current_max>60</l_in_current_max>
+    <l_in_current_max>80</l_in_current_max>
     <l_in_current_min>-40</l_in_current_min>
     <l_abs_current_max>130</l_abs_current_max>
     <l_min_erpm>-100000</l_min_erpm>
@@ -17,8 +17,8 @@
     <l_max_vin>50</l_max_vin>
     <l_slow_abs_current>1</l_slow_abs_current>
     <l_rpm_lim_neg_torque>1</l_rpm_lim_neg_torque>
-    <l_temp_fet_start>90</l_temp_fet_start>
-    <l_temp_fet_end>110</l_temp_fet_end>
+    <l_temp_fet_start>80</l_temp_fet_start>
+    <l_temp_fet_end>100</l_temp_fet_end>
     <l_temp_motor_start>80</l_temp_motor_start>
     <l_temp_motor_end>100</l_temp_motor_end>
     <l_min_duty>0.005</l_min_duty>
@@ -26,7 +26,7 @@
     <sl_min_erpm>200</sl_min_erpm>
     <sl_min_erpm_cycle_int_limit>1500</sl_min_erpm_cycle_int_limit>
     <sl_max_fullbreak_current_dir_change>10</sl_max_fullbreak_current_dir_change>
-    <sl_cycle_int_limit>65</sl_cycle_int_limit>
+    <sl_cycle_int_limit>55</sl_cycle_int_limit>
     <sl_cycle_int_limit_high_fac>0.8</sl_cycle_int_limit_high_fac>
     <sl_cycle_int_rpm_br>80000</sl_cycle_int_rpm_br>
     <sl_bemf_coupling_k>650</sl_bemf_coupling_k>

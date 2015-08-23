@@ -62,8 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(1, 9));
-    mCompatibleFws.append(qMakePair(1, 10));
+    mCompatibleFws.append(qMakePair(1, 11));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -1699,7 +1698,8 @@ void MainWindow::appconfReceived(app_configuration appconf)
     ui->appconfAdcVoltageEndBox->setValue(appconf.app_adc_conf.voltage_end);
     ui->appconfAdcFilterBox->setChecked(appconf.app_adc_conf.use_filter);
     ui->appconfAdcSafeStartBox->setChecked(appconf.app_adc_conf.safe_start);
-    ui->appconfAdcInvertButtonBox->setChecked(appconf.app_adc_conf.button_inverted);
+    ui->appconfAdcInvertCcButtonBox->setChecked(appconf.app_adc_conf.cc_button_inverted);
+    ui->appconfAdcInvertRevButtonBox->setChecked(appconf.app_adc_conf.rev_button_inverted);
     ui->appconfAdcInvertVoltageBox->setChecked(appconf.app_adc_conf.voltage_inverted);
 
     if (appconf.app_adc_conf.rpm_lim_end >= 200000.0) {
@@ -2174,7 +2174,8 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.app_adc_conf.voltage_end = ui->appconfAdcVoltageEndBox->value();
     appconf.app_adc_conf.use_filter = ui->appconfAdcFilterBox->isChecked();
     appconf.app_adc_conf.safe_start = ui->appconfAdcSafeStartBox->isChecked();
-    appconf.app_adc_conf.button_inverted = ui->appconfAdcInvertButtonBox->isChecked();
+    appconf.app_adc_conf.cc_button_inverted = ui->appconfAdcInvertCcButtonBox->isChecked();
+    appconf.app_adc_conf.rev_button_inverted = ui->appconfAdcInvertRevButtonBox->isChecked();
     appconf.app_adc_conf.voltage_inverted = ui->appconfAdcInvertVoltageBox->isChecked();
 
     if (ui->appconfAdcRpmLimBox->isChecked()) {

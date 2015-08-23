@@ -1,0 +1,54 @@
+#!/bin/bash
+
+FWPATH="../../../ARM/STM_Eclipse/BLDC_4_ChibiOS"
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+rm VESC_default.bin
+rm VESC_33k.bin
+rm VESC_0005ohm.bin
+rm VESC_ws2811.bin
+rm VESC_ws2811_33k.bin
+rm VESC_servoout.bin
+
+# default
+cd $FWPATH
+touch conf_general.h
+make -j4
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin VESC_default.bin
+
+# 33k
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DVIN_R1=33000.0"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin VESC_33k.bin
+
+# 0005ohm
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DCURRENT_SHUNT_RES=0.0005"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin VESC_0005ohm.bin
+
+# ws2811
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DWS2811_ENABLE=1"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin VESC_ws2811.bin
+
+# ws2811_33k
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DWS2811_ENABLE=1 -DVIN_R1=33000.0"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin VESC_ws2811_33k.bin
+
+# servoout
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DSERVO_OUT_ENABLE=1"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin VESC_servoout.bin
+

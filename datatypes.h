@@ -19,6 +19,7 @@
     */
 
 #include <QString>
+#include <stdint.h>
 
 typedef enum {
     FAULT_CODE_NONE = 0,
@@ -223,7 +224,8 @@ typedef struct {
     float voltage_end;
     bool use_filter;
     bool safe_start;
-    bool button_inverted;
+    bool cc_button_inverted;
+    bool rev_button_inverted;
     bool voltage_inverted;
     float rpm_lim_start;
     float rpm_lim_end;
