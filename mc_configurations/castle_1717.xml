@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MCConfiguration>
+    <pwm_mode>1</pwm_mode>
+    <comm_mode>0</comm_mode>
+    <motor_type>0</motor_type>
+    <sensor_mode>0</sensor_mode>
+    <l_current_max>110</l_current_max>
+    <l_current_min>-110</l_current_min>
+    <l_in_current_max>90</l_in_current_max>
+    <l_in_current_min>-80</l_in_current_min>
+    <l_abs_current_max>155</l_abs_current_max>
+    <l_min_erpm>-100000</l_min_erpm>
+    <l_max_erpm>100000</l_max_erpm>
+    <l_max_erpm_fbrake>500</l_max_erpm_fbrake>
+    <l_max_erpm_fbrake_cc>500</l_max_erpm_fbrake_cc>
+    <l_min_vin>8</l_min_vin>
+    <l_max_vin>40</l_max_vin>
+    <l_battery_cut_start>20</l_battery_cut_start>
+    <l_battery_cut_end>17</l_battery_cut_end>
+    <l_slow_abs_current>1</l_slow_abs_current>
+    <l_rpm_lim_neg_torque>1</l_rpm_lim_neg_torque>
+    <l_temp_fet_start>80</l_temp_fet_start>
+    <l_temp_fet_end>100</l_temp_fet_end>
+    <l_temp_motor_start>80</l_temp_motor_start>
+    <l_temp_motor_end>100</l_temp_motor_end>
+    <l_min_duty>0.005</l_min_duty>
+    <l_max_duty>0.95</l_max_duty>
+    <sl_min_erpm>100</sl_min_erpm>
+    <sl_min_erpm_cycle_int_limit>900</sl_min_erpm_cycle_int_limit>
+    <sl_max_fullbreak_current_dir_change>10</sl_max_fullbreak_current_dir_change>
+    <sl_cycle_int_limit>45</sl_cycle_int_limit>
+    <sl_cycle_int_limit_high_fac>0.5</sl_cycle_int_limit_high_fac>
+    <sl_cycle_int_rpm_br>80000</sl_cycle_int_rpm_br>
+    <sl_bemf_coupling_k>640</sl_bemf_coupling_k>
+    <hall_table_0>-1</hall_table_0>
+    <hall_table_1>1</hall_table_1>
+    <hall_table_2>3</hall_table_2>
+    <hall_table_3>2</hall_table_3>
+    <hall_table_4>5</hall_table_4>
+    <hall_table_5>6</hall_table_5>
+    <hall_table_6>4</hall_table_6>
+    <hall_table_7>-1</hall_table_7>
+    <hall_sl_erpm>2000</hall_sl_erpm>
+    <s_pid_kp>0.0001</s_pid_kp>
+    <s_pid_ki>0.002</s_pid_ki>
+    <s_pid_kd>0</s_pid_kd>
+    <s_pid_min_rpm>900</s_pid_min_rpm>
+    <p_pid_kp>0.0001</p_pid_kp>
+    <p_pid_ki>0.002</p_pid_ki>
+    <p_pid_kd>0</p_pid_kd>
+    <cc_startup_boost_duty>0.03</cc_startup_boost_duty>
+    <cc_min_current>1</cc_min_current>
+    <cc_gain>0.007</cc_gain>
+    <cc_ramp_step_max>0.04</cc_ramp_step_max>
+    <m_fault_stop_time_ms>1000</m_fault_stop_time_ms>
+    <m_duty_ramp_step>0.02</m_duty_ramp_step>
+    <m_duty_ramp_step_rpm_lim>0.0005</m_duty_ramp_step_rpm_lim>
+    <m_current_backoff_gain>0.1</m_current_backoff_gain>
+    <meta_description>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Configuration loaded from the motor controller.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</meta_description>
+</MCConfiguration>

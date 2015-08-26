@@ -125,6 +125,8 @@ typedef struct {
     float l_max_erpm_fbrake_cc;
     float l_min_vin;
     float l_max_vin;
+    float l_battery_cut_start;
+    float l_battery_cut_end;
     bool l_slow_abs_current;
     bool l_rpm_lim_neg_torque;
     float l_temp_fet_start;
@@ -160,6 +162,9 @@ typedef struct {
     float cc_ramp_step_max;
     // Misc
     int32_t m_fault_stop_time_ms;
+    float m_duty_ramp_step;
+    float m_duty_ramp_step_rpm_lim;
+    float m_current_backoff_gain;
     // Fields that are only present in Qt
     QString meta_description;
 } mc_configuration;

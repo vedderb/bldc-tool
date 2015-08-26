@@ -24,10 +24,6 @@
 #include <QUdpSocket>
 #include "datatypes.h"
 
-#ifdef Q_OS_WIN
-#include <stdint.h>
-#endif
-
 class PacketInterface : public QObject
 {
     Q_OBJECT
@@ -44,6 +40,7 @@ public:
     bool startFirmwareUpload(QByteArray &newFirmware);
     double getFirmwareUploadProgress();
     QString getFirmwareUploadStatus();
+    void cancelFirmwareUpload();
     bool getValues();
     bool sendTerminalCmd(QString cmd);
     bool setDutyCycle(double dutyCycle);

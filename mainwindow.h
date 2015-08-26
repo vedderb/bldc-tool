@@ -97,7 +97,7 @@ private slots:
     void on_firmwareChooseButton_clicked();
     void on_firmwareUploadButton_clicked();
     void on_firmwareVersionReadButton_clicked();
-
+    void on_firmwareCancelButton_clicked();
     void on_servoOutputSlider_valueChanged(int value);
 
 private:

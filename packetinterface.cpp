@@ -230,7 +230,12 @@ unsigned short PacketInterface::crc16(const unsigned char *buf, unsigned int len
 }
 
 bool PacketInterface::sendPacket(const unsigned char *data, unsigned int len_packet)
-{
+{    
+    // Only allow firmware commands in limited mode
+    if (mIsLimitedMode && data[0] > COMM_WRITE_NEW_APP_DATA) {
+        return false;
+    }
+
     static unsigned char buffer[mMaxBufferLen];
     unsigned int ind = 0;
 
@@ -249,11 +254,6 @@ bool PacketInterface::sendPacket(const unsigned char *data, unsigned int len_pac
     }
 
     int len_tot = len_packet;
-
-    // Only allow firmware commands in limited mode
-    if (mIsLimitedMode && data[0] > COMM_WRITE_NEW_APP_DATA) {
-        return false;
-    }
 
     if (mSendCan) {
         len_tot += 2;
@@ -412,6 +412,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.l_max_erpm_fbrake_cc = utility::buffer_get_double32(data, 1000.0, &ind);
         mcconf.l_min_vin = utility::buffer_get_double32(data, 1000.0, &ind);
         mcconf.l_max_vin = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_battery_cut_start = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.l_battery_cut_end = utility::buffer_get_double32(data, 1000.0, &ind);
         mcconf.l_slow_abs_current = data[ind++];
         mcconf.l_rpm_lim_neg_torque = data[ind++];
         mcconf.l_temp_fet_start = utility::buffer_get_double32(data, 1000.0, &ind);
@@ -448,6 +450,9 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.cc_ramp_step_max = utility::buffer_get_double32(data, 1000000.0, &ind);
 
         mcconf.m_fault_stop_time_ms = utility::buffer_get_int32(data, &ind);
+        mcconf.m_duty_ramp_step = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.m_duty_ramp_step_rpm_lim = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.m_current_backoff_gain = utility::buffer_get_double32(data, 1000000.0, &ind);
 
         mcconf.meta_description = "Configuration loaded from the motor controller.";
 
@@ -698,6 +703,16 @@ QString PacketInterface::getFirmwareUploadStatus()
     return mFirmwareUploadStatus;
 }
 
+void PacketInterface::cancelFirmwareUpload()
+{
+    if (mFirmwareIsUploading) {
+        mFirmwareIsUploading = false;
+        mFimwarePtr = 0;
+        mFirmwareState = 0;
+        mFirmwareUploadStatus = "Cancelled";
+    }
+}
+
 bool PacketInterface::getValues()
 {
     QByteArray buffer;
@@ -802,6 +817,8 @@ bool PacketInterface::setMcconf(const mc_configuration &mcconf)
     utility::buffer_append_double32(mSendBuffer,mcconf.l_max_erpm_fbrake_cc, 1000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.l_min_vin, 1000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.l_max_vin, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_battery_cut_start, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.l_battery_cut_end, 1000, &send_index);
     mSendBuffer[send_index++] = mcconf.l_slow_abs_current;
     mSendBuffer[send_index++] = mcconf.l_rpm_lim_neg_torque;
     utility::buffer_append_double32(mSendBuffer,mcconf.l_temp_fet_start, 1000, &send_index);
@@ -838,6 +855,9 @@ bool PacketInterface::setMcconf(const mc_configuration &mcconf)
     utility::buffer_append_double32(mSendBuffer,mcconf.cc_ramp_step_max, 1000000, &send_index);
 
     utility::buffer_append_int32(mSendBuffer, mcconf.m_fault_stop_time_ms, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.m_duty_ramp_step, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.m_duty_ramp_step_rpm_lim, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.m_current_backoff_gain, 1000000, &send_index);
 
     return sendPacket(mSendBuffer, send_index);
 }

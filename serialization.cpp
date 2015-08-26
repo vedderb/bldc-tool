@@ -61,6 +61,8 @@ bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *pare
     xmlwriter.writeTextElement("l_max_erpm_fbrake_cc", QString::number(mcconf.l_max_erpm_fbrake_cc));
     xmlwriter.writeTextElement("l_min_vin", QString::number(mcconf.l_min_vin));
     xmlwriter.writeTextElement("l_max_vin", QString::number(mcconf.l_max_vin));
+    xmlwriter.writeTextElement("l_battery_cut_start", QString::number(mcconf.l_battery_cut_start));
+    xmlwriter.writeTextElement("l_battery_cut_end", QString::number(mcconf.l_battery_cut_end));
     xmlwriter.writeTextElement("l_slow_abs_current", QString::number(mcconf.l_slow_abs_current));
     xmlwriter.writeTextElement("l_rpm_lim_neg_torque", QString::number(mcconf.l_rpm_lim_neg_torque));
     xmlwriter.writeTextElement("l_temp_fet_start", QString::number(mcconf.l_temp_fet_start));
@@ -97,6 +99,9 @@ bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *pare
     xmlwriter.writeTextElement("cc_gain", QString::number(mcconf.cc_gain));
     xmlwriter.writeTextElement("cc_ramp_step_max", QString::number(mcconf.cc_ramp_step_max));
     xmlwriter.writeTextElement("m_fault_stop_time_ms", QString::number(mcconf.m_fault_stop_time_ms));
+    xmlwriter.writeTextElement("m_duty_ramp_step", QString::number(mcconf.m_duty_ramp_step));
+    xmlwriter.writeTextElement("m_duty_ramp_step_rpm_lim", QString::number(mcconf.m_duty_ramp_step_rpm_lim));
+    xmlwriter.writeTextElement("m_current_backoff_gain", QString::number(mcconf.m_current_backoff_gain));
     xmlwriter.writeTextElement("meta_description", mcconf.meta_description);
 
     xmlwriter.writeEndElement();
@@ -147,6 +152,8 @@ bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
                     else if (xmlreader.name() == "l_max_erpm_fbrake_cc") {mcconf.l_max_erpm_fbrake_cc = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_min_vin") {mcconf.l_min_vin = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_max_vin") {mcconf.l_max_vin = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "l_battery_cut_start") {mcconf.l_battery_cut_start = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "l_battery_cut_end") {mcconf.l_battery_cut_end = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "l_slow_abs_current") {mcconf.l_slow_abs_current = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "l_rpm_lim_neg_torque") {mcconf.l_rpm_lim_neg_torque = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "l_temp_fet_start") {mcconf.l_temp_fet_start = xmlreader.readElementText().toDouble();}
@@ -183,6 +190,9 @@ bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
                     else if (xmlreader.name() == "cc_gain") {mcconf.cc_gain = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "cc_ramp_step_max") {mcconf.cc_ramp_step_max = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "m_fault_stop_time_ms") {mcconf.m_fault_stop_time_ms = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "m_duty_ramp_step") {mcconf.m_duty_ramp_step = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "m_duty_ramp_step_rpm_lim") {mcconf.m_duty_ramp_step_rpm_lim = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "m_current_backoff_gain") {mcconf.m_current_backoff_gain = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "meta_description") {mcconf.meta_description = xmlreader.readElementText();}
                     else {
                         if (xmlreader.name().size() > 0) {

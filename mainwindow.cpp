@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(1, 11));
+    mCompatibleFws.append(qMakePair(1, 12));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -287,6 +287,8 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.l_rpm_lim_neg_torque = ui->mcconfLimErpmLimitNegTorqueBox->isChecked();
     mcconf.l_min_vin = ui->mcconfLimMinVinBox->value();
     mcconf.l_max_vin = ui->mcconfLimMaxVinBox->value();
+    mcconf.l_battery_cut_start = ui->mcconfLimBatteryCutStartBox->value();
+    mcconf.l_battery_cut_end = ui->mcconfLimBatteryCutEndBox->value();
     mcconf.l_temp_fet_start = ui->mcconfLimTempFetStartBox->value();
     mcconf.l_temp_fet_end = ui->mcconfLimTempFetEndBox->value();
     mcconf.l_temp_motor_start = ui->mcconfLimTempMotorStartBox->value();
@@ -327,6 +329,9 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.cc_ramp_step_max = ui->mcconfCcMaxRampStepBox->value();
 
     mcconf.m_fault_stop_time_ms = ui->mcconfMFaultStopTimeBox->value();
+    mcconf.m_duty_ramp_step = ui->mcconfMDutyRampStepBox->value();
+    mcconf.m_duty_ramp_step_rpm_lim = ui->mcconfMDutyRampStepSpeedLimBox->value();
+    mcconf.m_current_backoff_gain = ui->mcconfMCurrentBackoffGainBox->value();
 
     mcconf.meta_description = ui->mcconfDescEdit->toHtml();
 
@@ -409,6 +414,8 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfLimErpmLimitNegTorqueBox->setChecked(mcconf.l_rpm_lim_neg_torque);
     ui->mcconfLimMinVinBox->setValue(mcconf.l_min_vin);
     ui->mcconfLimMaxVinBox->setValue(mcconf.l_max_vin);
+    ui->mcconfLimBatteryCutStartBox->setValue(mcconf.l_battery_cut_start);
+    ui->mcconfLimBatteryCutEndBox->setValue(mcconf.l_battery_cut_end);
     ui->mcconfLimTempFetStartBox->setValue(mcconf.l_temp_fet_start);
     ui->mcconfLimTempFetEndBox->setValue(mcconf.l_temp_fet_end);
     ui->mcconfLimTempMotorStartBox->setValue(mcconf.l_temp_motor_start);
@@ -449,6 +456,9 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfCcMaxRampStepBox->setValue(mcconf.cc_ramp_step_max);
 
     ui->mcconfMFaultStopTimeBox->setValue(mcconf.m_fault_stop_time_ms);
+    ui->mcconfMDutyRampStepBox->setValue(mcconf.m_duty_ramp_step);
+    ui->mcconfMDutyRampStepSpeedLimBox->setValue(mcconf.m_duty_ramp_step_rpm_lim);
+    ui->mcconfMCurrentBackoffGainBox->setValue(mcconf.m_current_backoff_gain);
 
     ui->mcconfDescEdit->document()->setHtml(mcconf.meta_description);
 
@@ -567,6 +577,7 @@ void MainWindow::timerSlot()
     if (fw_prog > -0.1) {
         ui->firmwareBar->setValue(fw_prog * 1000);
         ui->firmwareUploadButton->setEnabled(false);
+        ui->firmwareCancelButton->setEnabled(true);
     } else {
         // If the firmware upload just finished or failed
         if (!ui->firmwareUploadButton->isEnabled()) {
@@ -579,11 +590,12 @@ void MainWindow::timerSlot()
             }
         }
         ui->firmwareUploadButton->setEnabled(true);
+        ui->firmwareCancelButton->setEnabled(false);
+
+        // Send alive command (only while not uploading firmware)
+        mPacketInterface->sendAlive();
     }
     ui->firmwareUploadStatusLabel->setText(mPacketInterface->getFirmwareUploadStatus());
-
-    // Send alive command
-    mPacketInterface->sendAlive();
 
     // Update MC readings
     if (ui->realtimeActivateBox->isChecked()) {
@@ -1642,6 +1654,7 @@ void MainWindow::appconfReceived(app_configuration appconf)
     if (appconf.app_ppm_conf.rpm_lim_end >= 200000.0) {
         ui->appconfPpmRpmLimBox->setChecked(false);
     } else {
+        ui->appconfPpmRpmLimBox->setChecked(true);
         ui->appconfPpmRpmLimStartBox->setValue(appconf.app_ppm_conf.rpm_lim_start);
         ui->appconfPpmRpmLimEndBox->setValue(appconf.app_ppm_conf.rpm_lim_end);
     }
@@ -1705,6 +1718,7 @@ void MainWindow::appconfReceived(app_configuration appconf)
     if (appconf.app_adc_conf.rpm_lim_end >= 200000.0) {
         ui->appconfAdcRpmLimBox->setChecked(false);
     } else {
+        ui->appconfAdcRpmLimBox->setChecked(false);
         ui->appconfAdcRpmLimStartBox->setValue(appconf.app_adc_conf.rpm_lim_start);
         ui->appconfAdcRpmLimEndBox->setValue(appconf.app_adc_conf.rpm_lim_end);
     }
@@ -2271,6 +2285,11 @@ void MainWindow::on_firmwareVersionReadButton_clicked()
     mFwVersionReceived = false;
     mFwRetries = 0;
     mPacketInterface->getFwVersion();
+}
+
+void MainWindow::on_firmwareCancelButton_clicked()
+{
+    mPacketInterface->cancelFirmwareUpload();
 }
 
 void MainWindow::on_servoOutputSlider_valueChanged(int value)

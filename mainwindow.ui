@@ -151,7 +151,7 @@
                      <item row="4" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfLimCurrentAbsMaxBox">
                        <property name="maximum">
-                        <double>200.000000000000000</double>
+                        <double>240.000000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -400,11 +400,18 @@
                 <item row="1" column="1">
                  <widget class="QGroupBox" name="groupBox_10">
                   <property name="title">
-                   <string>Other Limits</string>
+                   <string>Voltage Limits</string>
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_20">
                    <item>
                     <layout class="QGridLayout" name="gridLayout_11">
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_86">
+                       <property name="text">
+                        <string>Battery cutoff start</string>
+                       </property>
+                      </widget>
+                     </item>
                      <item row="1" column="0">
                       <widget class="QLabel" name="label_25">
                        <property name="text">
@@ -439,54 +446,18 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="2" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfLimMinDutyBox">
-                       <property name="decimals">
-                        <number>3</number>
-                       </property>
-                       <property name="minimum">
-                        <double>0.005000000000000</double>
-                       </property>
-                       <property name="maximum">
-                        <double>0.500000000000000</double>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.005000000000000</double>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="label_87">
+                       <property name="text">
+                        <string>Battery cutoff end</string>
                        </property>
                       </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QDoubleSpinBox" name="mcconfLimBatteryCutStartBox"/>
                      </item>
                      <item row="3" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfLimMaxDutyBox">
-                       <property name="decimals">
-                        <number>3</number>
-                       </property>
-                       <property name="minimum">
-                        <double>0.010000000000000</double>
-                       </property>
-                       <property name="maximum">
-                        <double>0.950000000000000</double>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.010000000000000</double>
-                       </property>
-                       <property name="value">
-                        <double>0.950000000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QLabel" name="label_83">
-                       <property name="text">
-                        <string>Minimum duty cycle</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="0">
-                      <widget class="QLabel" name="label_84">
-                       <property name="text">
-                        <string>Maximum duty cycle</string>
-                       </property>
-                      </widget>
+                      <widget class="QDoubleSpinBox" name="mcconfLimBatteryCutEndBox"/>
                      </item>
                     </layout>
                    </item>
@@ -494,6 +465,64 @@
                  </widget>
                 </item>
                </layout>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_38">
+                <property name="title">
+                 <string>Other Limits</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_36">
+                 <item row="0" column="0" rowspan="2" colspan="2">
+                  <widget class="QLabel" name="label_83">
+                   <property name="text">
+                    <string>Minimum duty cycle</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2" rowspan="2">
+                  <widget class="QLabel" name="label_84">
+                   <property name="text">
+                    <string>Maximum duty cycle</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3" rowspan="2">
+                  <widget class="QDoubleSpinBox" name="mcconfLimMaxDutyBox">
+                   <property name="decimals">
+                    <number>3</number>
+                   </property>
+                   <property name="minimum">
+                    <double>0.010000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>0.950000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.010000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.950000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="mcconfLimMinDutyBox">
+                   <property name="decimals">
+                    <number>3</number>
+                   </property>
+                   <property name="minimum">
+                    <double>0.005000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>0.500000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.005000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
               </item>
               <item>
                <spacer name="verticalSpacer_4">
@@ -1045,15 +1074,15 @@ p, li { white-space: pre-wrap; }
             </widget>
             <widget class="QWidget" name="tab_14">
              <attribute name="title">
-              <string>Misc</string>
+              <string>Advanced</string>
              </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_29">
+             <layout class="QVBoxLayout" name="verticalLayout_28">
               <item>
                <widget class="QGroupBox" name="groupBox_13">
                 <property name="title">
                  <string>PWM mode</string>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_28">
+                <layout class="QHBoxLayout" name="horizontalLayout_44">
                  <item>
                   <widget class="QRadioButton" name="mcconfPwmModeSyncButton">
                    <property name="text">
@@ -1078,16 +1107,35 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
+                 <item>
+                  <spacer name="horizontalSpacer_21">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
                 </layout>
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBox_14">
-                <property name="title">
-                 <string>Current control</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_23">
-                 <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_23">
+                <item>
+                 <widget class="QGroupBox" name="groupBox_14">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="title">
+                   <string>Current control</string>
+                  </property>
                   <layout class="QGridLayout" name="gridLayout_14">
                    <item row="0" column="0">
                     <widget class="QLabel" name="label_34">
@@ -1145,7 +1193,7 @@ p, li { white-space: pre-wrap; }
                    <item row="3" column="0">
                     <widget class="QLabel" name="label_69">
                      <property name="text">
-                      <string>Maximum ramp step (at 1000 Hz)</string>
+                      <string>Max ramp step (at 1 kHz)</string>
                      </property>
                     </widget>
                    </item>
@@ -1157,12 +1205,97 @@ p, li { white-space: pre-wrap; }
                      <property name="maximum">
                       <double>50.000000000000000</double>
                      </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
                     </widget>
                    </item>
                   </layout>
-                 </item>
-                </layout>
-               </widget>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_37">
+                  <property name="title">
+                   <string>Backoff and ramping</string>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_37">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_3">
+                     <property name="text">
+                      <string>Duty ramp step (at 1 kHz)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfMDutyRampStepBox">
+                     <property name="decimals">
+                      <number>4</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_33">
+                     <property name="text">
+                      <string>Speed limit ramp step</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfMDutyRampStepSpeedLimBox">
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_85">
+                     <property name="text">
+                      <string>Current backoff gain</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfMCurrentBackoffGainBox">
+                     <property name="decimals">
+                      <number>4</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <spacer name="verticalSpacer_16">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Preferred</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_39">
@@ -1177,78 +1310,74 @@ p, li { white-space: pre-wrap; }
                   <property name="title">
                    <string>Speed control</string>
                   </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_24">
-                   <item>
-                    <layout class="QGridLayout" name="gridLayout_15">
-                     <item row="1" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfSpidKiBox">
-                       <property name="decimals">
-                        <number>5</number>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.000100000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfSpidMinRpmBox">
-                       <property name="maximum">
-                        <double>200000.000000000000000</double>
-                       </property>
-                       <property name="singleStep">
-                        <double>100.000000000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfSpidKdBox">
-                       <property name="decimals">
-                        <number>5</number>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.000100000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_37">
-                       <property name="text">
-                        <string>KP</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="0">
-                      <widget class="QLabel" name="label_40">
-                       <property name="text">
-                        <string>MIN ERPM</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfSpidKpBox">
-                       <property name="decimals">
-                        <number>5</number>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.000100000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="label_38">
-                       <property name="text">
-                        <string>KI</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QLabel" name="label_39">
-                       <property name="text">
-                        <string>KD</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
+                  <layout class="QGridLayout" name="gridLayout_15">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_37">
+                     <property name="text">
+                      <string>KP</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSpidKpBox">
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_38">
+                     <property name="text">
+                      <string>KI</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSpidKiBox">
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_39">
+                     <property name="text">
+                      <string>KD</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSpidKdBox">
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_40">
+                     <property name="text">
+                      <string>MIN ERPM</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSpidMinRpmBox">
+                     <property name="maximum">
+                      <double>200000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>100.000000000000000</double>
+                     </property>
+                    </widget>
                    </item>
                   </layout>
                  </widget>
@@ -1256,7 +1385,7 @@ p, li { white-space: pre-wrap; }
                 <item>
                  <widget class="QGroupBox" name="groupBox_30">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1264,74 +1393,73 @@ p, li { white-space: pre-wrap; }
                   <property name="title">
                    <string>Position control</string>
                   </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_38">
-                   <item>
-                    <layout class="QGridLayout" name="gridLayout_26">
-                     <item row="1" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfPpidKiBox">
-                       <property name="decimals">
-                        <number>5</number>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.000100000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="label_70">
-                       <property name="text">
-                        <string>KI</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfPpidKpBox">
-                       <property name="decimals">
-                        <number>5</number>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.000100000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_68">
-                       <property name="text">
-                        <string>KP</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QLabel" name="label_71">
-                       <property name="text">
-                        <string>KD</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfPpidKdBox">
-                       <property name="decimals">
-                        <number>5</number>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.000100000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="0">
-                      <spacer name="verticalSpacer_13">
-                       <property name="orientation">
-                        <enum>Qt::Vertical</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>20</width>
-                         <height>40</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                    </layout>
+                  <layout class="QGridLayout" name="gridLayout_26">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_68">
+                     <property name="text">
+                      <string>KP</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfPpidKiBox">
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_70">
+                     <property name="text">
+                      <string>KI</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfPpidKdBox">
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_71">
+                     <property name="text">
+                      <string>KD</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfPpidKpBox">
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <spacer name="verticalSpacer_13">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Preferred</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                   </layout>
                  </widget>
@@ -1341,7 +1469,7 @@ p, li { white-space: pre-wrap; }
               <item>
                <widget class="QGroupBox" name="groupBox_17">
                 <property name="title">
-                 <string>Timeouts</string>
+                 <string>Misc</string>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_26">
                  <item>
@@ -1363,6 +1491,19 @@ p, li { white-space: pre-wrap; }
                     <number>500</number>
                    </property>
                   </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_22">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
                  </item>
                 </layout>
                </widget>
@@ -3513,14 +3654,7 @@ p, li { white-space: pre-wrap; }
                </property>
               </widget>
              </item>
-             <item row="0" column="2">
-              <widget class="QPushButton" name="firmwareChooseButton">
-               <property name="text">
-                <string>Choose...</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
+             <item row="1" column="3">
               <widget class="QPushButton" name="firmwareUploadButton">
                <property name="text">
                 <string>Upload</string>
@@ -3546,6 +3680,20 @@ p, li { white-space: pre-wrap; }
              </item>
              <item row="0" column="1">
               <widget class="QLineEdit" name="firmwareEdit"/>
+             </item>
+             <item row="1" column="2">
+              <widget class="QPushButton" name="firmwareCancelButton">
+               <property name="text">
+                <string>Cancel</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2" colspan="2">
+              <widget class="QPushButton" name="firmwareChooseButton">
+               <property name="text">
+                <string>Choose...</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -4241,16 +4389,37 @@ p, li { white-space: pre-wrap; }
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>sampleFreqBox</tabstop>
-  <tabstop>currentFilterFreqBox</tabstop>
-  <tabstop>currentFilterTapBox</tabstop>
-  <tabstop>serialDeviceEdit</tabstop>
-  <tabstop>serialConnectButton</tabstop>
-  <tabstop>disconnectButton</tabstop>
-  <tabstop>dutyBox</tabstop>
-  <tabstop>dutyButton</tabstop>
-  <tabstop>rpmBox</tabstop>
-  <tabstop>rpmButton</tabstop>
+  <tabstop>mcconfLimCurrentMaxBox</tabstop>
+  <tabstop>mcconfLimCurrentMinBox</tabstop>
+  <tabstop>mcconfLimCurrentInMaxBox</tabstop>
+  <tabstop>mcconfLimCurrentInMinBox</tabstop>
+  <tabstop>mcconfLimCurrentAbsMaxBox</tabstop>
+  <tabstop>mcconfLimMinErpmBox</tabstop>
+  <tabstop>mcconfLimMaxErpmBox</tabstop>
+  <tabstop>mcconfLimMaxErpmFbrakeBox</tabstop>
+  <tabstop>mcconfLimMaxErpmFbrakeCcBox</tabstop>
+  <tabstop>mcconfLimTempFetStartBox</tabstop>
+  <tabstop>mcconfLimTempFetEndBox</tabstop>
+  <tabstop>mcconfLimTempMotorStartBox</tabstop>
+  <tabstop>mcconfLimTempMotorEndBox</tabstop>
+  <tabstop>mcconfLimMinVinBox</tabstop>
+  <tabstop>mcconfLimMaxVinBox</tabstop>
+  <tabstop>mcconfSlMinErpmBox</tabstop>
+  <tabstop>mcconfSlMinErpmIlBox</tabstop>
+  <tabstop>mcconfSlMaxFbCurrBox</tabstop>
+  <tabstop>mcconfSlIntLimBox</tabstop>
+  <tabstop>mcconfSlIntLimScaleBrBox</tabstop>
+  <tabstop>mcconfSlBrErpmBox</tabstop>
+  <tabstop>mcconfSlBemfKBox</tabstop>
+  <tabstop>mcconfHallTab0Box</tabstop>
+  <tabstop>mcconfHallTab1Box</tabstop>
+  <tabstop>mcconfHallTab2Box</tabstop>
+  <tabstop>mcconfHallTab3Box</tabstop>
+  <tabstop>mcconfHallTab4Box</tabstop>
+  <tabstop>mcconfHallTab5Box</tabstop>
+  <tabstop>mcconfHallTab6Box</tabstop>
+  <tabstop>mcconfHallTab7Box</tabstop>
+  <tabstop>mcconfHallSlErpmBox</tabstop>
   <tabstop>sampleNumBox</tabstop>
   <tabstop>sampleIntBox</tabstop>
   <tabstop>horizontalZoomBox</tabstop>
@@ -4258,6 +4427,200 @@ p, li { white-space: pre-wrap; }
   <tabstop>rescaleButton</tabstop>
   <tabstop>replotButton</tabstop>
   <tabstop>filterLogScaleBox</tabstop>
+  <tabstop>mcconfSensorModeSensorlessButton</tabstop>
+  <tabstop>mcconfSensorModeSensoredButton</tabstop>
+  <tabstop>mcconfSensorModeHybridButton</tabstop>
+  <tabstop>mcconfCommIntButton</tabstop>
+  <tabstop>mcconfCommDelayButton</tabstop>
+  <tabstop>disconnectButton</tabstop>
+  <tabstop>sampleFreqBox</tabstop>
+  <tabstop>mcconfTypeDcButton</tabstop>
+  <tabstop>tabWidget_4</tabstop>
+  <tabstop>currentFilterTapBox</tabstop>
+  <tabstop>serialConnectButton</tabstop>
+  <tabstop>mcconfTypeBldcButton</tabstop>
+  <tabstop>dutyBox</tabstop>
+  <tabstop>currentFilterFreqBox</tabstop>
+  <tabstop>mcconfLimCurrentSlowAbsMaxBox</tabstop>
+  <tabstop>dutyButton</tabstop>
+  <tabstop>serialDeviceEdit</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>mcconfLimErpmLimitNegTorqueBox</tabstop>
+  <tabstop>rpmBox</tabstop>
+  <tabstop>rpmButton</tabstop>
+  <tabstop>mcconfDetectMotorParamButton</tabstop>
+  <tabstop>mcconfDetectCurrentBox</tabstop>
+  <tabstop>mcconfDetectErpmBox</tabstop>
+  <tabstop>mcconfDetectLowDutyBox</tabstop>
+  <tabstop>mcconfDetectBrowser</tabstop>
+  <tabstop>mcconfDetectResultBrowser</tabstop>
+  <tabstop>mcconfPwmModeSyncButton</tabstop>
+  <tabstop>mcconfPwmModeBipolarButton</tabstop>
+  <tabstop>mcconfPwmModeNonsyncHiswButton</tabstop>
+  <tabstop>mcconfCcBoostBox</tabstop>
+  <tabstop>mcconfCcMinBox</tabstop>
+  <tabstop>mcconfCcGainBox</tabstop>
+  <tabstop>mcconfCcMaxRampStepBox</tabstop>
+  <tabstop>mcconfSpidKiBox</tabstop>
+  <tabstop>mcconfSpidMinRpmBox</tabstop>
+  <tabstop>mcconfSpidKdBox</tabstop>
+  <tabstop>mcconfSpidKpBox</tabstop>
+  <tabstop>mcconfPpidKiBox</tabstop>
+  <tabstop>mcconfPpidKpBox</tabstop>
+  <tabstop>mcconfPpidKdBox</tabstop>
+  <tabstop>mcconfMFaultStopTimeBox</tabstop>
+  <tabstop>mcconfReadButton</tabstop>
+  <tabstop>mcconfWriteButton</tabstop>
+  <tabstop>mcconfLoadXmlButton</tabstop>
+  <tabstop>mcconfSaveXmlButton</tabstop>
+  <tabstop>tabWidget_3</tabstop>
+  <tabstop>appconfControllerIdBox</tabstop>
+  <tabstop>appconfSendCanStatusBox</tabstop>
+  <tabstop>appconfSendCanStatusRateBox</tabstop>
+  <tabstop>appconfUseUartButton</tabstop>
+  <tabstop>appconfUsePpmUartButton</tabstop>
+  <tabstop>appconfUseCustomButton</tabstop>
+  <tabstop>appconfUseNoAppButton</tabstop>
+  <tabstop>appconfUseNrfButton</tabstop>
+  <tabstop>appconfUseNunchukButton</tabstop>
+  <tabstop>appconfUsePpmButton</tabstop>
+  <tabstop>appconfUseAdcButton</tabstop>
+  <tabstop>appconfUseAdcUartButton</tabstop>
+  <tabstop>appconfTimeoutBox</tabstop>
+  <tabstop>appconfTimeoutBrakeCurrentBox</tabstop>
+  <tabstop>appconfPpmDutyNorevButton</tabstop>
+  <tabstop>appconfPpmDutyButton</tabstop>
+  <tabstop>appconfPpmDisabledButton</tabstop>
+  <tabstop>appconfPpmPidNorevButton</tabstop>
+  <tabstop>appconfPpmCurrentNorevBrakeButton</tabstop>
+  <tabstop>appconfPpmCurrentButton</tabstop>
+  <tabstop>appconfPpmCurrentNorevButton</tabstop>
+  <tabstop>appconfPpmPidButton</tabstop>
+  <tabstop>appconfPpmMedianFilterBox</tabstop>
+  <tabstop>appconfPpmPidMaxErpmBox</tabstop>
+  <tabstop>appconfPpmPulseStartBox</tabstop>
+  <tabstop>appconfPpmPulseWidthBox</tabstop>
+  <tabstop>appconfPpmHystBox</tabstop>
+  <tabstop>appconfPpmSafeStartBox</tabstop>
+  <tabstop>appconfPpmRpmLimBox</tabstop>
+  <tabstop>appconfPpmRpmLimStartBox</tabstop>
+  <tabstop>appconfPpmRpmLimEndBox</tabstop>
+  <tabstop>appconfPpmMultiGroup</tabstop>
+  <tabstop>appconfPpmTcBox</tabstop>
+  <tabstop>appconfPpmTcErpmBox</tabstop>
+  <tabstop>appconfUpdatePpmBox</tabstop>
+  <tabstop>appconfAdcCurrentButtonButton</tabstop>
+  <tabstop>appconfAdcDisabledButton</tabstop>
+  <tabstop>appconfAdcCurrentNorevCenterButton</tabstop>
+  <tabstop>appconfAdcCurrentNorevButtonButton</tabstop>
+  <tabstop>appconfAdcCurrentButton</tabstop>
+  <tabstop>appconfAdcDutyCycleButton</tabstop>
+  <tabstop>appconfAdcDutyCycleCenterButton</tabstop>
+  <tabstop>appconfAdcDutyCycleButtonButton</tabstop>
+  <tabstop>appconfAdcCurrentCenterButton</tabstop>
+  <tabstop>appconfAdcUpdateRateBox</tabstop>
+  <tabstop>appconfAdcVoltageEndBox</tabstop>
+  <tabstop>appconfAdcHystBox</tabstop>
+  <tabstop>appconfAdcInvertRevButtonBox</tabstop>
+  <tabstop>appconfAdcSafeStartBox</tabstop>
+  <tabstop>appconfAdcVoltageStartBox</tabstop>
+  <tabstop>appconfAdcInvertVoltageBox</tabstop>
+  <tabstop>appconfAdcFilterBox</tabstop>
+  <tabstop>appconfAdcRpmLimBox</tabstop>
+  <tabstop>appconfAdcRpmLimStartBox</tabstop>
+  <tabstop>appconfAdcRpmLimEndBox</tabstop>
+  <tabstop>appconfAdcMultiGroup</tabstop>
+  <tabstop>appconfAdcTcBox</tabstop>
+  <tabstop>appconfAdcTcErpmBox</tabstop>
+  <tabstop>appconfAdcUpdateBox</tabstop>
+  <tabstop>appconfUartBaudBox</tabstop>
+  <tabstop>appconfChukDisabledButton</tabstop>
+  <tabstop>appconfChukCurrentNorevButton</tabstop>
+  <tabstop>appconfChukCurrentButton</tabstop>
+  <tabstop>appconfChukHystBox</tabstop>
+  <tabstop>appconfChukRampTimePosBox</tabstop>
+  <tabstop>appconfChukRpmLimStartBox</tabstop>
+  <tabstop>appconfChukRampTimeNegBox</tabstop>
+  <tabstop>appconfChukRpmLimEndBox</tabstop>
+  <tabstop>appconfChukMultiGroup</tabstop>
+  <tabstop>appconfChukTcBox</tabstop>
+  <tabstop>appconfChukTcErpmBox</tabstop>
+  <tabstop>appconfUpdateChukBox</tabstop>
+  <tabstop>textBrowser</tabstop>
+  <tabstop>appconfReadButton</tabstop>
+  <tabstop>appconfWriteButton</tabstop>
+  <tabstop>appconfRebootButton</tabstop>
+  <tabstop>tabWidget_5</tabstop>
+  <tabstop>realtimeAutoScaleBox</tabstop>
+  <tabstop>realtimeActivateBox</tabstop>
+  <tabstop>showPh1Box</tabstop>
+  <tabstop>showPh2Box</tabstop>
+  <tabstop>showPh3Box</tabstop>
+  <tabstop>showVirtualGndBox</tabstop>
+  <tabstop>showPosVoltageBox</tabstop>
+  <tabstop>truncateBox</tabstop>
+  <tabstop>tabWidget_2</tabstop>
+  <tabstop>showCurrent1Box</tabstop>
+  <tabstop>showCurrent2Box</tabstop>
+  <tabstop>showCurrent3Box</tabstop>
+  <tabstop>showTotalCurrentBox</tabstop>
+  <tabstop>showMcTotalCurrentBox</tabstop>
+  <tabstop>showPosCurrentBox</tabstop>
+  <tabstop>currentTimeButton</tabstop>
+  <tabstop>currentSpectrumButton</tabstop>
+  <tabstop>filterScatterBox</tabstop>
+  <tabstop>filterLogScaleBox2</tabstop>
+  <tabstop>filterScatterBox2</tabstop>
+  <tabstop>currentFilterActiveBox</tabstop>
+  <tabstop>firRadioButton</tabstop>
+  <tabstop>meanRadioButton</tabstop>
+  <tabstop>compDelayBox</tabstop>
+  <tabstop>hammingBox</tabstop>
+  <tabstop>currentFilterActiveBox2</tabstop>
+  <tabstop>firRadioButton2</tabstop>
+  <tabstop>meanRadioButton2</tabstop>
+  <tabstop>currentFilterFreqBox2</tabstop>
+  <tabstop>currentFilterTapBox2</tabstop>
+  <tabstop>hammingBox2</tabstop>
+  <tabstop>decimationSpinBox</tabstop>
+  <tabstop>terminalBrowser</tabstop>
+  <tabstop>terminalEdit</tabstop>
+  <tabstop>sendTerminalButton</tabstop>
+  <tabstop>clearTerminalButton</tabstop>
+  <tabstop>firmwareChooseButton</tabstop>
+  <tabstop>firmwareUploadButton</tabstop>
+  <tabstop>firmwareEdit</tabstop>
+  <tabstop>firmwareVersionReadButton</tabstop>
+  <tabstop>detectButton</tabstop>
+  <tabstop>stopDetectButton</tabstop>
+  <tabstop>experimentClearSamplesButton</tabstop>
+  <tabstop>experimentSaveSamplesButton</tabstop>
+  <tabstop>experimentBrowser</tabstop>
+  <tabstop>experimentPathEdit</tabstop>
+  <tabstop>experimentAutosaveBox</tabstop>
+  <tabstop>experimentAutosaveIntervalBox</tabstop>
+  <tabstop>servoOutputSlider</tabstop>
+  <tabstop>udpIpEdit</tabstop>
+  <tabstop>udpConnectButton</tabstop>
+  <tabstop>canFwdBox</tabstop>
+  <tabstop>canIdBox</tabstop>
+  <tabstop>currentBox</tabstop>
+  <tabstop>currentButton</tabstop>
+  <tabstop>currentBrakeBox</tabstop>
+  <tabstop>currentBrakeButton</tabstop>
+  <tabstop>posCtrlBox</tabstop>
+  <tabstop>posCtrlButton</tabstop>
+  <tabstop>overrideKbBox</tabstop>
+  <tabstop>arrowCurrentBox</tabstop>
+  <tabstop>offButton</tabstop>
+  <tabstop>offBrakeButton</tabstop>
+  <tabstop>getDataButton</tabstop>
+  <tabstop>getDataStartButton</tabstop>
+  <tabstop>appconfAdcInvertCcButtonBox</tabstop>
+  <tabstop>textBrowser_2</tabstop>
+  <tabstop>mcconfMDutyRampStepBox</tabstop>
+  <tabstop>mcconfMDutyRampStepSpeedLimBox</tabstop>
+  <tabstop>mcconfMCurrentBackoffGainBox</tabstop>
  </tabstops>
  <resources/>
  <connections>
