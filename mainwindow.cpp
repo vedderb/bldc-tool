@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(1, 12));
+    mCompatibleFws.append(qMakePair(1, 13));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -317,7 +317,7 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.s_pid_kp = ui->mcconfSpidKpBox->value();
     mcconf.s_pid_ki = ui->mcconfSpidKiBox->value();
     mcconf.s_pid_kd = ui->mcconfSpidKdBox->value();
-    mcconf.s_pid_min_rpm = ui->mcconfSpidMinRpmBox->value();
+    mcconf.s_pid_min_erpm = ui->mcconfSpidMinRpmBox->value();
 
     mcconf.p_pid_kp = ui->mcconfPpidKpBox->value();
     mcconf.p_pid_ki = ui->mcconfPpidKiBox->value();
@@ -444,7 +444,7 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfSpidKpBox->setValue(mcconf.s_pid_kp);
     ui->mcconfSpidKiBox->setValue(mcconf.s_pid_ki);
     ui->mcconfSpidKdBox->setValue(mcconf.s_pid_kd);
-    ui->mcconfSpidMinRpmBox->setValue(mcconf.s_pid_min_rpm);
+    ui->mcconfSpidMinRpmBox->setValue(mcconf.s_pid_min_erpm);
 
     ui->mcconfPpidKpBox->setValue(mcconf.p_pid_kp);
     ui->mcconfPpidKiBox->setValue(mcconf.p_pid_ki);
@@ -1753,6 +1753,7 @@ void MainWindow::appconfReceived(app_configuration appconf)
     ui->appconfChukRpmLimEndBox->setValue(appconf.app_chuk_conf.rpm_lim_end);
     ui->appconfChukRampTimePosBox->setValue(appconf.app_chuk_conf.ramp_time_pos);
     ui->appconfChukRampTimeNegBox->setValue(appconf.app_chuk_conf.ramp_time_neg);
+    ui->appconfChukErpmPerSBox->setValue(appconf.app_chuk_conf.stick_erpm_per_s_in_cc);
 
     ui->appconfChukMultiGroup->setChecked(appconf.app_chuk_conf.multi_esc);
     ui->appconfChukTcBox->setChecked(appconf.app_chuk_conf.tc);
@@ -2221,6 +2222,7 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.app_chuk_conf.rpm_lim_end = ui->appconfChukRpmLimEndBox->value();
     appconf.app_chuk_conf.ramp_time_pos = ui->appconfChukRampTimePosBox->value();
     appconf.app_chuk_conf.ramp_time_neg = ui->appconfChukRampTimeNegBox->value();
+    appconf.app_chuk_conf.stick_erpm_per_s_in_cc = ui->appconfChukErpmPerSBox->value();
 
     appconf.app_chuk_conf.multi_esc = ui->appconfChukMultiGroup->isChecked();
     appconf.app_chuk_conf.tc = ui->appconfChukTcBox->isChecked();

@@ -130,7 +130,7 @@ void PacketInterface::processData(QByteArray &data)
 
         case 2:
             mPayloadLength |= (unsigned int)rx_data;
-            if (mPayloadLength <= mMaxBufferLen) {
+            if (mPayloadLength <= mMaxBufferLen && mPayloadLength > 0) {
                 mRxState++;
                 mRxTimer = rx_timeout;
             } else {
@@ -438,7 +438,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.s_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.s_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.s_pid_kd = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.s_pid_min_rpm = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.s_pid_min_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
 
         mcconf.p_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.p_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
@@ -506,6 +506,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         appconf.app_chuk_conf.rpm_lim_end = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_chuk_conf.ramp_time_pos = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_chuk_conf.ramp_time_neg = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_chuk_conf.stick_erpm_per_s_in_cc = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_chuk_conf.multi_esc = data[ind++];
         appconf.app_chuk_conf.tc = data[ind++];
         appconf.app_chuk_conf.tc_max_diff = utility::buffer_get_double32(data, 1000.0, &ind);
@@ -843,7 +844,7 @@ bool PacketInterface::setMcconf(const mc_configuration &mcconf)
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kp, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_ki, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kd, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_min_rpm, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_min_erpm, 1000, &send_index);
 
     utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_kp, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_ki, 1000000, &send_index);
@@ -929,6 +930,7 @@ bool PacketInterface::setAppConf(const app_configuration &appconf)
     utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.rpm_lim_end, 1000.0, &send_index);
     utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.ramp_time_pos, 1000.0, &send_index);
     utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.ramp_time_neg, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.stick_erpm_per_s_in_cc, 1000.0, &send_index);
     mSendBuffer[send_index++] = appconf.app_chuk_conf.multi_esc;
     mSendBuffer[send_index++] = appconf.app_chuk_conf.tc;
     utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.tc_max_diff, 1000.0, &send_index);
