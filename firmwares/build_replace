@@ -89,3 +89,38 @@ make -j4 build_args="-DSERVO_OUT_ENABLE=1 -DHW_VERSION_48"
 cd $DIR
 cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_48/VESC_servoout.bin
 
+#################### HW_49 ########################
+
+rm hw_49/VESC_default.bin
+rm hw_49/VESC_0005ohm.bin
+rm hw_49/VESC_ws2811.bin
+rm hw_49/VESC_servoout.bin
+
+# default
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DHW_VERSION_49"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_49/VESC_default.bin
+
+# 0005ohm
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DCURRENT_SHUNT_RES=0.0005 -DHW_VERSION_49"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_49/VESC_0005ohm.bin
+
+# ws2811
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DWS2811_ENABLE=1 -DHW_VERSION_49"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_49/VESC_ws2811.bin
+
+# servoout
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DSERVO_OUT_ENABLE=1 -DHW_VERSION_49"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_49/VESC_servoout.bin
+
