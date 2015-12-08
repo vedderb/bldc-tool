@@ -57,6 +57,8 @@ private slots:
     void experimentSamplesReceived(QVector<double> samples);
     void mcconfReceived(mc_configuration mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
+    void motorRLReceived(double r, double l);
+    void motorLinkageReceived(double flux_linkage);
     void appconfReceived(app_configuration appconf);
     void decodedPpmReceived(double ppm_value, double ppm_last_len);
     void decodedAdcReceived(double adc_value, double adc_voltage);
@@ -85,6 +87,7 @@ private slots:
     void on_experimentClearSamplesButton_clicked();
     void on_experimentSaveSamplesButton_clicked();
     void on_mcconfReadButton_clicked();
+    void on_mcconfReadDefaultButton_clicked();
     void on_mcconfWriteButton_clicked();
     void on_currentBrakeButton_clicked();
     void on_mcconfLoadXmlButton_clicked();
@@ -93,12 +96,19 @@ private slots:
     void on_appconfReadButton_clicked();
     void on_appconfWriteButton_clicked();
     void on_appconfRebootButton_clicked();
+    void on_appconfReadDefaultButton_clicked();
     void on_posCtrlButton_clicked();
     void on_firmwareChooseButton_clicked();
     void on_firmwareUploadButton_clicked();
     void on_firmwareVersionReadButton_clicked();
     void on_firmwareCancelButton_clicked();
     void on_servoOutputSlider_valueChanged(int value);
+    void on_mcconfFocObserverGainCalcButton_clicked();
+    void on_mcconfFocMeasureRLButton_clicked();
+    void on_mcconfFocMeasureLinkageButton_clicked();
+    void on_mcconfFocCalcCCButton_clicked();
+    void on_mcconfFocApplyRLLambdaButton_clicked();
+    void on_mcconfFocCalcCCApplyButton_clicked();
 
 private:
     Ui::MainWindow *ui;

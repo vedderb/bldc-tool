@@ -395,6 +395,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         break;
 
     case COMM_GET_MCCONF:
+    case COMM_GET_MCCONF_DEFAULT:
         ind = 0;
         mcconf.pwm_mode = (mc_pwm_mode)data[ind++];
         mcconf.comm_mode = (mc_comm_mode)data[ind++];
@@ -435,6 +436,28 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         ind += 8;
         mcconf.hall_sl_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
 
+        mcconf.foc_current_kp = utility::buffer_get_double32(data, 1e5, &ind);
+        mcconf.foc_current_ki = utility::buffer_get_double32(data, 1e5, &ind);
+        mcconf.foc_f_sw = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_dt_us = utility::buffer_get_double32(data, 1e6, &ind);
+        mcconf.foc_encoder_inverted = data[ind++];
+        mcconf.foc_encoder_offset = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_encoder_ratio = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_sensor_mode = (mc_foc_sensor_mode)data[ind++];
+        mcconf.foc_pll_kp = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_pll_ki = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_motor_l = utility::buffer_get_double32(data, 1e8, &ind);
+        mcconf.foc_motor_r = utility::buffer_get_double32(data, 1e5, &ind);
+        mcconf.foc_motor_flux_linkage = utility::buffer_get_double32(data, 1e5, &ind);
+        mcconf.foc_observer_gain = utility::buffer_get_double32(data, 1e0, &ind);
+        mcconf.foc_duty_dowmramp_kp = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_duty_dowmramp_ki = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_openloop_rpm = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_sl_openloop_hyst = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_sl_openloop_time = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_sl_d_current_duty = utility::buffer_get_double32(data, 1e3, &ind);
+        mcconf.foc_sl_d_current_factor = utility::buffer_get_double32(data, 1e3, &ind);
+
         mcconf.s_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.s_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.s_pid_kd = utility::buffer_get_double32(data, 1000000.0, &ind);
@@ -453,6 +476,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.m_duty_ramp_step = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.m_duty_ramp_step_rpm_lim = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.m_current_backoff_gain = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.m_encoder_counts = utility::buffer_get_uint32(data, &ind);
 
         mcconf.meta_description = "Configuration loaded from the motor controller.";
 
@@ -460,6 +484,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         break;
 
     case COMM_GET_APPCONF:
+    case COMM_GET_APPCONF_DEFAULT:
         ind = 0;
         appconf.controller_id = data[ind++];
         appconf.timeout_msec = utility::buffer_get_uint32(data, &ind);
@@ -522,6 +547,22 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         }
         detect_hall_res = (const signed char)(data[ind++]);
         emit motorParamReceived(detect_cycle_int_limit, detect_coupling_k, detect_hall_table, detect_hall_res);
+        break;
+
+    case COMM_DETECT_MOTOR_R_L: {
+        ind = 0;
+        double r = utility::buffer_get_double32(data, 1e6, &ind);
+        double l = utility::buffer_get_double32(data, 1e3, &ind);
+        emit motorRLReceived(r, l);
+
+    }
+        break;
+
+    case COMM_DETECT_MOTOR_FLUX_LINKAGE: {
+        ind = 0;
+        double linkage = utility::buffer_get_double32(data, 1e7, &ind);
+        emit motorLinkageReceived(linkage);
+    }
         break;
 
     case COMM_GET_DECODED_PPM:
@@ -797,6 +838,14 @@ bool PacketInterface::getMcconf()
     return sendPacket(buffer);
 }
 
+bool PacketInterface::getMcconfDefault()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_GET_MCCONF_DEFAULT);
+    return sendPacket(buffer);
+}
+
 bool PacketInterface::setMcconf(const mc_configuration &mcconf)
 {
     qint32 send_index = 0;
@@ -841,6 +890,28 @@ bool PacketInterface::setMcconf(const mc_configuration &mcconf)
     send_index += 8;
     utility::buffer_append_double32(mSendBuffer,mcconf.hall_sl_erpm, 1000, &send_index);
 
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_current_kp, 1e5, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_current_ki, 1e5, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_f_sw, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_dt_us, 1e6, &send_index);
+    mSendBuffer[send_index++] = mcconf.foc_encoder_inverted;
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_encoder_offset, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_encoder_ratio, 1e3, &send_index);
+    mSendBuffer[send_index++] = mcconf.foc_sensor_mode;
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_pll_kp, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_pll_ki, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_motor_l, 1e8, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_motor_r, 1e5, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_motor_flux_linkage, 1e5, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_observer_gain, 1e0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_duty_dowmramp_kp, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_duty_dowmramp_ki, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_openloop_rpm, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_openloop_hyst, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_openloop_time, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_d_current_duty, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_d_current_factor, 1e3, &send_index);
+
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kp, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_ki, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kd, 1000000, &send_index);
@@ -859,6 +930,7 @@ bool PacketInterface::setMcconf(const mc_configuration &mcconf)
     utility::buffer_append_double32(mSendBuffer,mcconf.m_duty_ramp_step, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.m_duty_ramp_step_rpm_lim, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.m_current_backoff_gain, 1000000, &send_index);
+    utility::buffer_append_uint32(mSendBuffer, mcconf.m_encoder_counts, &send_index);
 
     return sendPacket(mSendBuffer, send_index);
 }
@@ -878,6 +950,14 @@ bool PacketInterface::getAppConf()
     QByteArray buffer;
     buffer.clear();
     buffer.append((char)COMM_GET_APPCONF);
+    return sendPacket(buffer);
+}
+
+bool PacketInterface::getAppConfDefault()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_GET_APPCONF_DEFAULT);
     return sendPacket(buffer);
 }
 
@@ -983,6 +1063,25 @@ bool PacketInterface::setServoPos(double pos)
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_SERVO_POS;
     utility::buffer_append_double16(mSendBuffer, pos, 1000.0, &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::measureRL()
+{
+    QByteArray buffer;
+    buffer.clear();
+    buffer.append((char)COMM_DETECT_MOTOR_R_L);
+    return sendPacket(buffer);
+}
+
+bool PacketInterface::measureLinkage(double current, double min_rpm, double low_duty, double resistance)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_DETECT_MOTOR_FLUX_LINKAGE;
+    utility::buffer_append_double32(mSendBuffer, current, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, min_rpm, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, low_duty, 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, resistance, 1e6, &send_index);
     return sendPacket(mSendBuffer, send_index);
 }
 

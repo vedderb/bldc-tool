@@ -62,8 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(1, 13));
-    mCompatibleFws.append(qMakePair(1, 14));
+    mCompatibleFws.append(qMakePair(2, 3));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -123,6 +122,10 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(mcconfReceived(mc_configuration)));
     connect(mPacketInterface, SIGNAL(motorParamReceived(double,double,QVector<int>,int)),
             this, SLOT(motorParamReceived(double,double,QVector<int>,int)));
+    connect(mPacketInterface, SIGNAL(motorRLReceived(double,double)),
+            this, SLOT(motorRLReceived(double,double)));
+    connect(mPacketInterface, SIGNAL(motorLinkageReceived(double)),
+            this, SLOT(motorLinkageReceived(double)));
     connect(mPacketInterface, SIGNAL(appconfReceived(app_configuration)),
             this, SLOT(appconfReceived(app_configuration)));
     connect(mPacketInterface, SIGNAL(decodedPpmReceived(double,double)),
@@ -265,6 +268,8 @@ mc_configuration MainWindow::getMcconfGui()
         mcconf.motor_type = MOTOR_TYPE_BLDC;
     } else if (ui->mcconfTypeDcButton->isChecked()) {
         mcconf.motor_type = MOTOR_TYPE_DC;
+    } else if (ui->mcconfTypeFocButton->isChecked()) {
+        mcconf.motor_type = MOTOR_TYPE_FOC;
     }
 
     if (ui->mcconfSensorModeSensorlessButton->isChecked()) {
@@ -305,6 +310,34 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.sl_cycle_int_rpm_br = ui->mcconfSlBrErpmBox->value();
     mcconf.sl_bemf_coupling_k = ui->mcconfSlBemfKBox->value();
 
+    mcconf.foc_current_kp = ui->mcconfFocCurrKpBox->value();
+    mcconf.foc_current_ki = ui->mcconfFocCurrKiBox->value();
+    mcconf.foc_f_sw = ui->mcconfFocFSwBox->value();
+    mcconf.foc_dt_us = ui->mcconfFocDtCompBox->value();
+    mcconf.foc_encoder_inverted = ui->mcconfFocEncoderInvertedBox->isChecked();
+    mcconf.foc_encoder_offset = ui->mcconfFocEncoderOffsetBox->value();
+    mcconf.foc_encoder_ratio = ui->mcconfFocEncoderRatioBox->value();
+    mcconf.foc_duty_dowmramp_kp = ui->mcconfFocDutyDownrampKpBox->value();
+    mcconf.foc_duty_dowmramp_ki = ui->mcconfFocDutyDownrampKiBox->value();
+    mcconf.foc_openloop_rpm = ui->mcconfFocOpenloopRpmBox->value();
+    mcconf.foc_sl_openloop_hyst = ui->mcconfFocSlOpenloopHystBox->value();
+    mcconf.foc_sl_openloop_time = ui->mcconfFocSlOpenloopTimeBox->value();
+    mcconf.foc_sl_d_current_duty = ui->mcconfFocDCurrentDutyBox->value();
+    mcconf.foc_sl_d_current_factor = ui->mcconfFocDCurrentFactorBox->value();
+
+    if (ui->mcconfFocModeEncoderButton->isChecked()) {
+        mcconf.foc_sensor_mode = FOC_SENSOR_MODE_ENCODER;
+    } else if (ui->mcconfFocModeSensorlessButton->isChecked()) {
+        mcconf.foc_sensor_mode = FOC_SENSOR_MODE_SENSORLESS;
+    }
+
+    mcconf.foc_pll_kp = ui->mcconfFocPllKpBox->value();
+    mcconf.foc_pll_ki = ui->mcconfFocPllKiBox->value();
+    mcconf.foc_motor_l = ui->mcconfFocMotorLBox->value() / 1000000.0;
+    mcconf.foc_motor_r = ui->mcconfFocMotorRBox->value();
+    mcconf.foc_motor_flux_linkage = ui->mcconfFocMotorLinkageBox->value();
+    mcconf.foc_observer_gain = ui->mcconfFocObserverGainBox->value() * 1000000.0;
+
     mcconf.hall_table[0] = ui->mcconfHallTab0Box->value();
     mcconf.hall_table[1] = ui->mcconfHallTab1Box->value();
     mcconf.hall_table[2] = ui->mcconfHallTab2Box->value();
@@ -333,6 +366,7 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.m_duty_ramp_step = ui->mcconfMDutyRampStepBox->value();
     mcconf.m_duty_ramp_step_rpm_lim = ui->mcconfMDutyRampStepSpeedLimBox->value();
     mcconf.m_current_backoff_gain = ui->mcconfMCurrentBackoffGainBox->value();
+    mcconf.m_encoder_counts = ui->mcconfMEncoderCountBox->value();
 
     mcconf.meta_description = ui->mcconfDescEdit->toHtml();
 
@@ -379,6 +413,10 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
 
     case MOTOR_TYPE_DC:
         ui->mcconfTypeDcButton->setChecked(true);
+        break;
+
+    case MOTOR_TYPE_FOC:
+        ui->mcconfTypeFocButton->setChecked(true);
         break;
 
     default:
@@ -432,6 +470,39 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfSlBrErpmBox->setValue(mcconf.sl_cycle_int_rpm_br);
     ui->mcconfSlBemfKBox->setValue(mcconf.sl_bemf_coupling_k);
 
+    ui->mcconfFocCurrKpBox->setValue(mcconf.foc_current_kp);
+    ui->mcconfFocCurrKiBox->setValue(mcconf.foc_current_ki);
+    ui->mcconfFocFSwBox->setValue(mcconf.foc_f_sw);
+    ui->mcconfFocDtCompBox->setValue(mcconf.foc_dt_us);
+    ui->mcconfFocEncoderInvertedBox->setChecked(mcconf.foc_encoder_inverted);
+    ui->mcconfFocEncoderOffsetBox->setValue(mcconf.foc_encoder_offset);
+    ui->mcconfFocEncoderRatioBox->setValue(mcconf.foc_encoder_ratio);
+
+    switch (mcconf.foc_sensor_mode) {
+    case FOC_SENSOR_MODE_ENCODER:
+        ui->mcconfFocModeEncoderButton->setChecked(true);
+        break;
+    case FOC_SENSOR_MODE_SENSORLESS:
+        ui->mcconfFocModeSensorlessButton->setChecked(true);
+        break;
+    default:
+        break;
+    }
+
+    ui->mcconfFocPllKpBox->setValue(mcconf.foc_pll_kp);
+    ui->mcconfFocPllKiBox->setValue(mcconf.foc_pll_ki);
+    ui->mcconfFocMotorLBox->setValue(mcconf.foc_motor_l * 1000000.0);
+    ui->mcconfFocMotorRBox->setValue(mcconf.foc_motor_r);
+    ui->mcconfFocMotorLinkageBox->setValue(mcconf.foc_motor_flux_linkage);
+    ui->mcconfFocObserverGainBox->setValue(mcconf.foc_observer_gain / 1000000.0);
+    ui->mcconfFocDutyDownrampKpBox->setValue(mcconf.foc_duty_dowmramp_kp);
+    ui->mcconfFocDutyDownrampKiBox->setValue(mcconf.foc_duty_dowmramp_ki);
+    ui->mcconfFocOpenloopRpmBox->setValue(mcconf.foc_openloop_rpm);
+    ui->mcconfFocSlOpenloopHystBox->setValue(mcconf.foc_sl_openloop_hyst);
+    ui->mcconfFocSlOpenloopTimeBox->setValue(mcconf.foc_sl_openloop_time);
+    ui->mcconfFocDCurrentDutyBox->setValue(mcconf.foc_sl_d_current_duty);
+    ui->mcconfFocDCurrentFactorBox->setValue(mcconf.foc_sl_d_current_factor);
+
     ui->mcconfHallTab0Box->setValue(mcconf.hall_table[0]);
     ui->mcconfHallTab1Box->setValue(mcconf.hall_table[1]);
     ui->mcconfHallTab2Box->setValue(mcconf.hall_table[2]);
@@ -460,6 +531,7 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfMDutyRampStepBox->setValue(mcconf.m_duty_ramp_step);
     ui->mcconfMDutyRampStepSpeedLimBox->setValue(mcconf.m_duty_ramp_step_rpm_lim);
     ui->mcconfMCurrentBackoffGainBox->setValue(mcconf.m_current_backoff_gain);
+    ui->mcconfMEncoderCountBox->setValue(mcconf.m_encoder_counts);
 
     ui->mcconfDescEdit->document()->setHtml(mcconf.meta_description);
 
@@ -1558,6 +1630,27 @@ void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling
     }
 }
 
+void MainWindow::motorRLReceived(double r, double l)
+{
+    if (r < 1e-9 && l < 1e-9) {
+        showStatusInfo("Bad Detection Result Received", false);
+    } else {
+        showStatusInfo("Detection Result Received", true);
+        ui->mcconfFocDetectRBox->setValue(r);
+        ui->mcconfFocDetectLBox->setValue(l);
+    }
+}
+
+void MainWindow::motorLinkageReceived(double flux_linkage)
+{
+    if (flux_linkage < 1e-9) {
+        showStatusInfo("Bad Detection Result Received", false);
+    } else {
+        showStatusInfo("Detection Result Received", true);
+        ui->mcconfFocDetectLinkageBox->setValue(flux_linkage);
+    }
+}
+
 void MainWindow::appconfReceived(app_configuration appconf)
 {
     ui->appconfControllerIdBox->setValue(appconf.controller_id);
@@ -1794,13 +1887,13 @@ void MainWindow::on_serialConnectButton_clicked()
         return;
     }
 
-    mPacketInterface->stopUdpConnection();
-
     mSerialPort->setBaudRate(QSerialPort::Baud115200);
     mSerialPort->setDataBits(QSerialPort::Data8);   //8 bits
     mSerialPort->setParity(QSerialPort::NoParity);   //no parity
     mSerialPort->setStopBits(QSerialPort::OneStop);   //1 stop bit
     mSerialPort->setFlowControl(QSerialPort::NoFlowControl);  //no flow control
+
+    mPacketInterface->stopUdpConnection();
 }
 
 void MainWindow::on_udpConnectButton_clicked()
@@ -2045,6 +2138,11 @@ void MainWindow::on_mcconfReadButton_clicked()
     mPacketInterface->getMcconf();
 }
 
+void MainWindow::on_mcconfReadDefaultButton_clicked()
+{
+    mPacketInterface->getMcconfDefault();
+}
+
 void MainWindow::on_mcconfWriteButton_clicked()
 {
     if (!mMcconfLoaded) {
@@ -2087,6 +2185,11 @@ void MainWindow::on_mcconfDetectMotorParamButton_clicked()
 void MainWindow::on_appconfReadButton_clicked()
 {
     mPacketInterface->getAppConf();
+}
+
+void MainWindow::on_appconfReadDefaultButton_clicked()
+{
+    mPacketInterface->getAppConfDefault();
 }
 
 void MainWindow::on_appconfWriteButton_clicked()
@@ -2300,4 +2403,53 @@ void MainWindow::on_servoOutputSlider_valueChanged(int value)
     double pos = (double)value / 1000.0;
     ui->servoOutputNumber->display(pos);
     mPacketInterface->setServoPos(pos);
+}
+
+void MainWindow::on_mcconfFocObserverGainCalcButton_clicked()
+{
+    float L = ui->mcconfFocMotorLBox->value() / 1000000.0;
+
+    if (L > 0.0) {
+        ui->mcconfFocObserverGainBox->setValue((1000.0 / L) / 1000000.0);
+    }
+}
+
+void MainWindow::on_mcconfFocMeasureRLButton_clicked()
+{
+    mPacketInterface->measureRL();
+}
+
+void MainWindow::on_mcconfFocMeasureLinkageButton_clicked()
+{
+    mPacketInterface->measureLinkage(ui->mcconfFocDetectCurrentBox->value(),
+                                     ui->mcconfFocDetectMinRpmBox->value(),
+                                     ui->mcconfFocDetectDutyBox->value(),
+                                     ui->mcconfFocDetectRBox->value());
+}
+
+void MainWindow::on_mcconfFocCalcCCButton_clicked()
+{
+    double r = ui->mcconfFocDetectRBox->value();
+    double l = ui->mcconfFocDetectLBox->value() / 1e6;
+    double tc = ui->mcconfFocCalcCCTcBox->value();
+    double bw = 1.0 / (tc * 1e-6);
+    double kp = l * bw;
+    double ki = kp * (r / l);
+
+    ui->mcconfFocCalcKpBox->setValue(kp);
+    ui->mcconfFocCalcKiBox->setValue(ki);
+}
+
+void MainWindow::on_mcconfFocApplyRLLambdaButton_clicked()
+{
+    ui->mcconfFocMotorRBox->setValue(ui->mcconfFocDetectRBox->value());
+    ui->mcconfFocMotorLBox->setValue(ui->mcconfFocDetectLBox->value());
+    ui->mcconfFocMotorLinkageBox->setValue(ui->mcconfFocDetectLinkageBox->value());
+    on_mcconfFocObserverGainCalcButton_clicked();
+}
+
+void MainWindow::on_mcconfFocCalcCCApplyButton_clicked()
+{
+    ui->mcconfFocCurrKpBox->setValue(ui->mcconfFocCalcKpBox->value());
+    ui->mcconfFocCurrKiBox->setValue(ui->mcconfFocCalcKiBox->value());
 }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1359</width>
-    <height>797</height>
+    <width>1324</width>
+    <height>771</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -79,6 +79,13 @@
                   </widget>
                  </item>
                  <item>
+                  <widget class="QRadioButton" name="mcconfTypeFocButton">
+                   <property name="text">
+                    <string>FOC</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
                   <spacer name="horizontalSpacer_15">
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
@@ -126,6 +133,9 @@
                      </item>
                      <item row="3" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMinBox">
+                       <property name="suffix">
+                        <string> A</string>
+                       </property>
                        <property name="minimum">
                         <double>-200.000000000000000</double>
                        </property>
@@ -150,6 +160,9 @@
                      </item>
                      <item row="4" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfLimCurrentAbsMaxBox">
+                       <property name="suffix">
+                        <string> A</string>
+                       </property>
                        <property name="maximum">
                         <double>240.000000000000000</double>
                        </property>
@@ -157,6 +170,9 @@
                      </item>
                      <item row="1" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfLimCurrentMinBox">
+                       <property name="suffix">
+                        <string> A</string>
+                       </property>
                        <property name="minimum">
                         <double>-200.000000000000000</double>
                        </property>
@@ -167,6 +183,9 @@
                      </item>
                      <item row="2" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfLimCurrentInMaxBox">
+                       <property name="suffix">
+                        <string> A</string>
+                       </property>
                        <property name="maximum">
                         <double>200.000000000000000</double>
                        </property>
@@ -181,6 +200,9 @@
                      </item>
                      <item row="0" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfLimCurrentMaxBox">
+                       <property name="suffix">
+                        <string> A</string>
+                       </property>
                        <property name="maximum">
                         <double>200.000000000000000</double>
                        </property>
@@ -207,7 +229,7 @@
                    </sizepolicy>
                   </property>
                   <property name="title">
-                   <string>RPM Limits</string>
+                   <string>RPM Limits (BLDC Only)</string>
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_19">
                    <item>
@@ -323,6 +345,9 @@
                    </item>
                    <item row="0" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfLimTempFetStartBox">
+                     <property name="suffix">
+                      <string> °C</string>
+                     </property>
                      <property name="minimum">
                       <double>-100.000000000000000</double>
                      </property>
@@ -343,6 +368,9 @@
                    </item>
                    <item row="1" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfLimTempFetEndBox">
+                     <property name="suffix">
+                      <string> °C</string>
+                     </property>
                      <property name="minimum">
                       <double>-100.000000000000000</double>
                      </property>
@@ -363,6 +391,9 @@
                    </item>
                    <item row="2" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfLimTempMotorStartBox">
+                     <property name="suffix">
+                      <string> °C</string>
+                     </property>
                      <property name="minimum">
                       <double>-100.000000000000000</double>
                      </property>
@@ -383,6 +414,9 @@
                    </item>
                    <item row="3" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfLimTempMotorEndBox">
+                     <property name="suffix">
+                      <string> °C</string>
+                     </property>
                      <property name="minimum">
                       <double>-100.000000000000000</double>
                      </property>
@@ -428,6 +462,9 @@
                      </item>
                      <item row="0" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfLimMinVinBox">
+                       <property name="suffix">
+                        <string> V</string>
+                       </property>
                        <property name="minimum">
                         <double>6.000000000000000</double>
                        </property>
@@ -438,6 +475,9 @@
                      </item>
                      <item row="1" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfLimMaxVinBox">
+                       <property name="suffix">
+                        <string> V</string>
+                       </property>
                        <property name="minimum">
                         <double>6.000000000000000</double>
                        </property>
@@ -454,10 +494,18 @@
                       </widget>
                      </item>
                      <item row="2" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfLimBatteryCutStartBox"/>
+                      <widget class="QDoubleSpinBox" name="mcconfLimBatteryCutStartBox">
+                       <property name="suffix">
+                        <string> V</string>
+                       </property>
+                      </widget>
                      </item>
                      <item row="3" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfLimBatteryCutEndBox"/>
+                      <widget class="QDoubleSpinBox" name="mcconfLimBatteryCutEndBox">
+                       <property name="suffix">
+                        <string> V</string>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -541,7 +589,7 @@
             </widget>
             <widget class="QWidget" name="tab_13">
              <attribute name="title">
-              <string>Sensor(less)</string>
+              <string>BLDC</string>
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_27">
               <item>
@@ -937,7 +985,7 @@
                  </sizepolicy>
                 </property>
                 <property name="title">
-                 <string>Detect parameters</string>
+                 <string>Detect Parameters</string>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_25">
                  <item>
@@ -960,6 +1008,9 @@
                      </item>
                      <item row="0" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfDetectCurrentBox">
+                       <property name="suffix">
+                        <string> A</string>
+                       </property>
                        <property name="value">
                         <double>6.000000000000000</double>
                        </property>
@@ -974,6 +1025,9 @@
                      </item>
                      <item row="1" column="1">
                       <widget class="QDoubleSpinBox" name="mcconfDetectErpmBox">
+                       <property name="decimals">
+                        <number>1</number>
+                       </property>
                        <property name="minimum">
                         <double>10.000000000000000</double>
                        </property>
@@ -1034,12 +1088,12 @@
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Try to detect the integrator limit and the BEMF coupling. Also try to detect how the hall sensors are connected and spaced to generate a table for them.&lt;/span&gt;&lt;/p&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Try to detect the integrator limit and the BEMF coupling. Also try to detect how the hall sensors are connected and spaced to generate a table for them.&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Current is the current that should be used to spin up the motor and min ERPM is the ERPM below which auto-commutation should happen. Adjust them until the motor is able to spin up when clicking start detection.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Low duty is the duty cycle at which the BEMF coupling is measured. It should be kept as low as possible as long as the motor is able to run smoothly at it.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Current is the current that should be used to spin up the motor and min ERPM is the ERPM below which auto-commutation should happen. Adjust them until the motor is able to spin up when clicking start detection.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Low duty is the duty cycle at which the BEMF coupling is measured. It should be kept as low as possible as long as the motor is able to run smoothly at it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                   </widget>
                  </item>
@@ -1049,8 +1103,8 @@ p, li { white-space: pre-wrap; }
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Detection results will be printed here.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Detection results will be printed here.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                   </widget>
                  </item>
@@ -1066,6 +1120,684 @@ p, li { white-space: pre-wrap; }
                  <size>
                   <width>20</width>
                   <height>209</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_24">
+             <attribute name="title">
+              <string>FOC</string>
+             </attribute>
+             <layout class="QVBoxLayout" name="verticalLayout_29">
+              <item>
+               <layout class="QGridLayout" name="gridLayout_43">
+                <item row="1" column="0">
+                 <widget class="QGroupBox" name="groupBox_40">
+                  <property name="title">
+                   <string>Motor Parameters (for Sensorless Operation)</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_41">
+                   <item row="4" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocObserverGainBox">
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_98">
+                     <property name="text">
+                      <string>Observer Gain (x1M)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QPushButton" name="mcconfFocObserverGainCalcButton">
+                     <property name="text">
+                      <string>Calculate</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QDoubleSpinBox" name="mcconfFocMotorRBox">
+                     <property name="prefix">
+                      <string>R: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> Ω</string>
+                     </property>
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.001000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocMotorLBox">
+                     <property name="prefix">
+                      <string>L: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> µH</string>
+                     </property>
+                     <property name="decimals">
+                      <number>2</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1000000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocMotorLinkageBox">
+                     <property name="prefix">
+                      <string>λ: </string>
+                     </property>
+                     <property name="decimals">
+                      <number>6</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QGroupBox" name="groupBox_43">
+                  <property name="title">
+                   <string>Sensorless Startup and Low Speed</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_44">
+                   <item row="1" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDCurrentFactorBox">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The maximum factor between the D axis and Q axis current.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="prefix">
+                      <string>Factor: </string>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocSlOpenloopHystBox">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If the filtered RPM has been below openloop RPM for this amount of time, the motor will rotate in open loop with openloop RPM.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="prefix">
+                      <string>Hyst: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> s</string>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
+                     <property name="maximum">
+                      <double>200.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_105">
+                     <property name="text">
+                      <string>Open Loop</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_107">
+                     <property name="text">
+                      <string>D Current Injection</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDCurrentDutyBox">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inject D axis current below this duty cycle.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="prefix">
+                      <string>Duty: </string>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocSlOpenloopTimeBox">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Time to remain in open loop before entering closed loop.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="prefix">
+                      <string>Time: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> s</string>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
+                     <property name="maximum">
+                      <double>200.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QGroupBox" name="groupBox_41">
+                  <property name="title">
+                   <string>General (cont)</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_40">
+                   <item row="7" column="0">
+                    <widget class="QLabel" name="label_104">
+                     <property name="text">
+                      <string>Openloop RPM</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocPllKpBox">
+                     <property name="prefix">
+                      <string>Kp: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDutyDownrampKiBox">
+                     <property name="prefix">
+                      <string>Ki: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="0">
+                    <widget class="QLabel" name="label_103">
+                     <property name="text">
+                      <string>Duty Downramp</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocPllKiBox">
+                     <property name="prefix">
+                      <string>Ki: </string>
+                     </property>
+                     <property name="decimals">
+                      <number>2</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1000000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>1000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QLabel" name="label_90">
+                     <property name="text">
+                      <string>PLL</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="1" colspan="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocOpenloopRpmBox">
+                     <property name="keyboardTracking">
+                      <bool>false</bool>
+                     </property>
+                     <property name="prefix">
+                      <string/>
+                     </property>
+                     <property name="suffix">
+                      <string> RPM</string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDutyDownrampKpBox">
+                     <property name="prefix">
+                      <string>Kp: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDtCompBox">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dead time compensation. Getting this value right is important for the low speed performance of the sensorless observer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="prefix">
+                      <string>DTc: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> µS</string>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QSpinBox" name="mcconfFocFSwBox">
+                     <property name="toolTip">
+                      <string>Switching Frequency</string>
+                     </property>
+                     <property name="suffix">
+                      <string> Hz</string>
+                     </property>
+                     <property name="prefix">
+                      <string>F_SW: </string>
+                     </property>
+                     <property name="maximum">
+                      <number>100000</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>100</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_94">
+                     <property name="text">
+                      <string>F_SW and DTc</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QGroupBox" name="groupBox_39">
+                  <property name="title">
+                   <string>General</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_39">
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_89">
+                     <property name="text">
+                      <string>Current Control</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocCurrKpBox">
+                     <property name="prefix">
+                      <string>Kp: </string>
+                     </property>
+                     <property name="decimals">
+                      <number>4</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocCurrKiBox">
+                     <property name="prefix">
+                      <string>Ki: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_92">
+                     <property name="text">
+                      <string>Encoder</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocEncoderOffsetBox">
+                     <property name="prefix">
+                      <string>Ofs: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>360.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QRadioButton" name="mcconfFocModeSensorlessButton">
+                     <property name="text">
+                      <string>Sensorless</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_101">
+                     <property name="text">
+                      <string>Sensor Mode</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QRadioButton" name="mcconfFocModeEncoderButton">
+                     <property name="text">
+                      <string>Encoder</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocEncoderRatioBox">
+                     <property name="prefix">
+                      <string>Rat: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>500.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="2">
+                    <widget class="QCheckBox" name="mcconfFocEncoderInvertedBox">
+                     <property name="text">
+                      <string>Invert Encoder</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="2" column="0" colspan="2">
+                 <widget class="QGroupBox" name="groupBox_44">
+                  <property name="title">
+                   <string>Detect and Calculate Parameters</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_45">
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocCalcCCTcBox">
+                     <property name="prefix">
+                      <string>TC: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> µS</string>
+                     </property>
+                     <property name="decimals">
+                      <number>1</number>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>500.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDetectDutyBox">
+                     <property name="toolTip">
+                      <string>For measuring flux linkage:  Duty cycle to measure flux linkage at.</string>
+                     </property>
+                     <property name="prefix">
+                      <string>Duty: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>1.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>0.500000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDetectCurrentBox">
+                     <property name="toolTip">
+                      <string>For measuring flux linkage:  The current to use.</string>
+                     </property>
+                     <property name="prefix">
+                      <string>I: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> A</string>
+                     </property>
+                     <property name="maximum">
+                      <double>150.000000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>6.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="3">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDetectMinRpmBox">
+                     <property name="toolTip">
+                      <string>For measuring flux linkage: The minimum RPM to start the motor with.</string>
+                     </property>
+                     <property name="prefix">
+                      <string>RPM: </string>
+                     </property>
+                     <property name="decimals">
+                      <number>1</number>
+                     </property>
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>700.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QPushButton" name="mcconfFocMeasureLinkageButton">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Spin up the motor using BLDC delay commutation and measure the flux linkage. The motor resistance is required to compensate for load, so it should be measured or entered first.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="text">
+                      <string>Measure λ (Req: R)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QPushButton" name="mcconfFocMeasureRLButton">
+                     <property name="toolTip">
+                      <string>Measure the motor resistance and inductance.</string>
+                     </property>
+                     <property name="text">
+                      <string>Measure R and L</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDetectRBox">
+                     <property name="prefix">
+                      <string>R: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> Ω</string>
+                     </property>
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.001000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDetectLBox">
+                     <property name="prefix">
+                      <string>L: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> µH</string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDetectLinkageBox">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                     <property name="prefix">
+                      <string>λ: </string>
+                     </property>
+                     <property name="decimals">
+                      <number>8</number>
+                     </property>
+                     <property name="maximum">
+                      <double>100.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>0.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="4">
+                    <widget class="QPushButton" name="mcconfFocApplyRLLambdaButton">
+                     <property name="text">
+                      <string>Apply</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QPushButton" name="mcconfFocCalcCCButton">
+                     <property name="text">
+                      <string>Calc CC (Req: R and L)</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="3">
+                    <widget class="QDoubleSpinBox" name="mcconfFocCalcKiBox">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                     <property name="prefix">
+                      <string>Ki: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="4">
+                    <widget class="QPushButton" name="mcconfFocCalcCCApplyButton">
+                     <property name="text">
+                      <string>Apply</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocCalcKpBox">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                     <property name="prefix">
+                      <string>Kp: </string>
+                     </property>
+                     <property name="decimals">
+                      <number>4</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="4">
+                    <widget class="QLabel" name="label_93">
+                     <property name="text">
+                      <string>← To spin up motor for λ</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_17">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Expanding</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
                  </size>
                 </property>
                </spacer>
@@ -1471,16 +2203,19 @@ p, li { white-space: pre-wrap; }
                 <property name="title">
                  <string>Misc</string>
                 </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_26">
-                 <item>
+                <layout class="QGridLayout" name="gridLayout_38">
+                 <item row="0" column="1">
                   <widget class="QLabel" name="label_4">
                    <property name="text">
-                    <string>Fault stop time (in milliseconds)</string>
+                    <string>Fault stop time</string>
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item row="0" column="2">
                   <widget class="QSpinBox" name="mcconfMFaultStopTimeBox">
+                   <property name="suffix">
+                    <string> ms</string>
+                   </property>
                    <property name="minimum">
                     <number>-1</number>
                    </property>
@@ -1492,7 +2227,7 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item row="0" column="3">
                   <spacer name="horizontalSpacer_22">
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
@@ -1504,6 +2239,23 @@ p, li { white-space: pre-wrap; }
                     </size>
                    </property>
                   </spacer>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QLabel" name="label_91">
+                   <property name="text">
+                    <string>Encoder Counts</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QSpinBox" name="mcconfMEncoderCountBox">
+                   <property name="maximum">
+                    <number>1000000</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>100</number>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </widget>
@@ -1541,6 +2293,13 @@ p, li { white-space: pre-wrap; }
              <widget class="QPushButton" name="mcconfReadButton">
               <property name="text">
                <string>Read configuration</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="mcconfReadDefaultButton">
+              <property name="text">
+               <string>Read default configuration</string>
               </property>
              </widget>
             </item>
@@ -2261,6 +3020,9 @@ p, li { white-space: pre-wrap; }
                 <layout class="QGridLayout" name="gridLayout_33">
                  <item row="0" column="1">
                   <widget class="QSpinBox" name="appconfAdcUpdateRateBox">
+                   <property name="suffix">
+                    <string> Hz</string>
+                   </property>
                    <property name="maximum">
                     <number>10000</number>
                    </property>
@@ -2272,12 +3034,15 @@ p, li { white-space: pre-wrap; }
                  <item row="2" column="0">
                   <widget class="QLabel" name="label_77">
                    <property name="text">
-                    <string>Minimum Voltage (V)</string>
+                    <string>Minimum Voltage</string>
                    </property>
                   </widget>
                  </item>
                  <item row="3" column="1">
                   <widget class="QDoubleSpinBox" name="appconfAdcVoltageEndBox">
+                   <property name="suffix">
+                    <string> V</string>
+                   </property>
                    <property name="maximum">
                     <double>20.000000000000000</double>
                    </property>
@@ -2299,14 +3064,14 @@ p, li { white-space: pre-wrap; }
                  <item row="3" column="0">
                   <widget class="QLabel" name="label_75">
                    <property name="text">
-                    <string>Maximum Voltage (V)</string>
+                    <string>Maximum Voltage</string>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="0">
                   <widget class="QLabel" name="label_78">
                    <property name="text">
-                    <string>Update Rate (Hz)</string>
+                    <string>Update Rate</string>
                    </property>
                   </widget>
                  </item>
@@ -2332,6 +3097,9 @@ p, li { white-space: pre-wrap; }
                  </item>
                  <item row="2" column="1">
                   <widget class="QDoubleSpinBox" name="appconfAdcVoltageStartBox">
+                   <property name="suffix">
+                    <string> V</string>
+                   </property>
                    <property name="maximum">
                     <double>10.000000000000000</double>
                    </property>
@@ -2419,10 +3187,10 @@ p, li { white-space: pre-wrap; }
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The cruise control button will maintain the current speed while pressed when current control is used and no throttle is given. The reverse button is used to reverse the throttle when one of the corresponding control modes is used.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;When only the ADC app is used, the TX pin is used for the cruise control button and the RX pin is used for the reverse button. When the ADC and UART apps are used at the same time, the servo input will be used as the button. In this case it will be used for the reverse button when a control mode with button is selected, otherwise it will be used for the cruise control button.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The cruise control button will maintain the current speed while pressed when current control is used and no throttle is given. The reverse button is used to reverse the throttle when one of the corresponding control modes is used.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;When only the ADC app is used, the TX pin is used for the cruise control button and the RX pin is used for the reverse button. When the ADC and UART apps are used at the same time, the servo input will be used as the button. In this case it will be used for the reverse button when a control mode with button is selected, otherwise it will be used for the cruise control button.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                   </widget>
                  </item>
@@ -2918,16 +3686,16 @@ p, li { white-space: pre-wrap; }
                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;This has been tested with the wireless Nyko Kama nunchuk. The receiver can be connected directly to the I2C port on the ESC. The y-axis on the joystick is used for acceleration/braking. The buttons have the following functions:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;C-Button:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Cruise control. If the C-button is pressed, the ESC will maintail the current speed with a PID control loop. The joystick can still be used to accelerate and brake, but as soon as it is returned to the center position the new speed will be maintained, as long as the C-button remains pressed.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Z-Button:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The Z-button is used to change the direction of the motor if reverse is activated. Without reverse, Z has no effect.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;There is also a safety function. If nothing received from the nunchuk (including the accelerometers) changes for longer than the timeout value in the &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;General&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; tab, the timeout function will be activated and either release the motor or brake with the current specified next to the timeout value.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This has been tested with the wireless Nyko Kama nunchuk. The receiver can be connected directly to the I2C port on the ESC. The y-axis on the joystick is used for acceleration/braking. The buttons have the following functions:&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;C-Button:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Cruise control. If the C-button is pressed, the ESC will maintail the current speed with a PID control loop. The joystick can still be used to accelerate and brake, but as soon as it is returned to the center position the new speed will be maintained, as long as the C-button remains pressed.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z-Button:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The Z-button is used to change the direction of the motor if reverse is activated. Without reverse, Z has no effect.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;There is also a safety function. If nothing received from the nunchuk (including the accelerometers) changes for longer than the timeout value in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab, the timeout function will be activated and either release the motor or brake with the current specified next to the timeout value.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -2945,16 +3713,16 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="appconfWriteButton">
+             <widget class="QPushButton" name="appconfReadDefaultButton">
               <property name="text">
-               <string>Write configuration</string>
+               <string>Read default configuration</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="appconfRebootButton">
+             <widget class="QPushButton" name="appconfWriteButton">
               <property name="text">
-               <string>Reboot</string>
+               <string>Write configuration</string>
               </property>
              </widget>
             </item>
@@ -4064,7 +4832,14 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="2" column="0" colspan="3">
+          <item row="2" column="0">
+           <widget class="QPushButton" name="appconfRebootButton">
+            <property name="text">
+             <string>Reboot</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2">
            <widget class="QPushButton" name="disconnectButton">
             <property name="text">
              <string>Disconnect</string>
@@ -4152,10 +4927,10 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="currentButton">
+          <item row="3" column="1">
+           <widget class="QPushButton" name="currentBrakeButton">
             <property name="text">
-             <string>Current</string>
+             <string>Brake Current</string>
             </property>
            </widget>
           </item>
@@ -4175,10 +4950,17 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
-           <widget class="QPushButton" name="currentBrakeButton">
+          <item row="2" column="1">
+           <widget class="QPushButton" name="currentButton">
             <property name="text">
-             <string>Brake Current</string>
+             <string>Current</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QPushButton" name="posCtrlButton">
+            <property name="text">
+             <string>Position</string>
             </property>
            </widget>
           </item>
@@ -4192,10 +4974,10 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="posCtrlButton">
+          <item row="6" column="0">
+           <widget class="QPushButton" name="offButton">
             <property name="text">
-             <string>Position</string>
+             <string>Release</string>
             </property>
            </widget>
           </item>
@@ -4219,13 +5001,6 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="value">
              <double>3.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QPushButton" name="offButton">
-            <property name="text">
-             <string>Release</string>
             </property>
            </widget>
           </item>
@@ -4469,7 +5244,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>mcconfLimCurrentSlowAbsMaxBox</tabstop>
   <tabstop>dutyButton</tabstop>
   <tabstop>serialDeviceEdit</tabstop>
-  <tabstop>tabWidget</tabstop>
   <tabstop>mcconfLimErpmLimitNegTorqueBox</tabstop>
   <tabstop>rpmBox</tabstop>
   <tabstop>rpmButton</tabstop>
@@ -4574,7 +5348,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>textBrowser</tabstop>
   <tabstop>appconfReadButton</tabstop>
   <tabstop>appconfWriteButton</tabstop>
-  <tabstop>appconfRebootButton</tabstop>
   <tabstop>tabWidget_5</tabstop>
   <tabstop>realtimeAutoScaleBox</tabstop>
   <tabstop>realtimeActivateBox</tabstop>

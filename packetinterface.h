@@ -51,9 +51,11 @@ public:
     bool setDetect();
     bool samplePrint(bool at_start, int sample_len, int dec);
     bool getMcconf();
+    bool getMcconfDefault();
     bool setMcconf(const mc_configuration &mcconf);
     bool detectMotorParam(double current, double min_rpm, double low_duty);
     bool getAppConf();
+    bool getAppConfDefault();
     bool setAppConf(const app_configuration &appconf);
     bool reboot();
     bool sendAlive();
@@ -61,6 +63,8 @@ public:
     bool getDecodedAdc();
     bool getDecodedChuk();
     bool setServoPos(double pos);
+    bool measureRL();
+    bool measureLinkage(double current, double min_rpm, double low_duty, double resistance);
     void setSendCan(bool mSendCan, unsigned int id);
     void startUdpConnection(QHostAddress ip, int port);
     void stopUdpConnection();
@@ -81,6 +85,8 @@ signals:
     void decodedPpmReceived(double value, double last_len);
     void decodedAdcReceived(double value, double voltage);
     void decodedChukReceived(double value);
+    void motorRLReceived(double r, double l);
+    void motorLinkageReceived(double flux_linkage);
     
 public slots:
     void timerSlot();

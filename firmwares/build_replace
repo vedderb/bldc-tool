@@ -6,6 +6,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 ################## HW46_47 #######################
 
 rm hw_46_47/VESC_default.bin
+rm hw_46_47/VESC_encoder.bin
 rm hw_46_47/VESC_33k.bin
 rm hw_46_47/VESC_0005ohm.bin
 rm hw_46_47/VESC_ws2811.bin
@@ -18,6 +19,13 @@ touch conf_general.h
 make -j4 build_args="-DHW_VERSION_46"
 cd $DIR
 cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_46_47/VESC_default.bin
+
+# encoder
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DENCODER_ENABLE=1 -DHW_VERSION_46"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_46_47/VESC_encoder.bin
 
 # 33k
 cd $FWPATH
@@ -57,6 +65,7 @@ cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_46_47/VESC_servoout.bin
 #################### HW_48 ########################
 
 rm hw_48/VESC_default.bin
+rm hw_48/VESC_encoder.bin
 rm hw_48/VESC_0005ohm.bin
 rm hw_48/VESC_ws2811.bin
 rm hw_48/VESC_servoout.bin
@@ -67,6 +76,13 @@ touch conf_general.h
 make -j4 build_args="-DHW_VERSION_48"
 cd $DIR
 cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_48/VESC_default.bin
+
+# encoder
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DENCODER_ENABLE=1 -DHW_VERSION_48"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_48/VESC_encoder.bin
 
 # 0005ohm
 cd $FWPATH
@@ -92,6 +108,7 @@ cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_48/VESC_servoout.bin
 #################### HW_410 ########################
 
 rm hw_410/VESC_default.bin
+rm hw_410/VESC_encoder.bin
 rm hw_410/VESC_0005ohm.bin
 rm hw_410/VESC_ws2811.bin
 rm hw_410/VESC_servoout.bin
@@ -102,6 +119,13 @@ touch conf_general.h
 make -j4 build_args="-DHW_VERSION_410"
 cd $DIR
 cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410/VESC_default.bin
+
+# encoder
+cd $FWPATH
+touch conf_general.h
+make -j4 build_args="-DENCODER_ENABLE=1 -DHW_VERSION_410"
+cd $DIR
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410/VESC_encoder.bin
 
 # 0005ohm
 cd $FWPATH
