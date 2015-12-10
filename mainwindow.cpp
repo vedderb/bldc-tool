@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mFwVersionReceived = false;
     mFwRetries = 0;
     mCompatibleFws.append(qMakePair(2, 3));
+    mCompatibleFws.append(qMakePair(2, 4));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -95,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mMcconfLoaded = false;
     mAppconfLoaded = false;
     mStatusInfoTime = 0;
+    mDetectRes.updated = false;
 
     connect(mSerialPort, SIGNAL(readyRead()),
             this, SLOT(serialDataAvailable()));
@@ -1597,6 +1599,12 @@ void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling
     } else {
         showStatusInfo("Detection Result Received", true);
 
+        mDetectRes.updated = true;
+        mDetectRes.cycle_int_limit = cycle_int_limit;
+        mDetectRes.bemf_coupling_k = bemf_coupling_k;
+        mDetectRes.hall_table = hall_table;
+        mDetectRes.hall_res = hall_res;
+
         QString hall_str;
         if (hall_res == 0) {
             hall_str.sprintf("Detected hall sensor table:\n"
@@ -2452,4 +2460,29 @@ void MainWindow::on_mcconfFocCalcCCApplyButton_clicked()
 {
     ui->mcconfFocCurrKpBox->setValue(ui->mcconfFocCalcKpBox->value());
     ui->mcconfFocCurrKiBox->setValue(ui->mcconfFocCalcKiBox->value());
+}
+
+void MainWindow::on_mcconfDetectApplyButton_clicked()
+{
+    if (mDetectRes.updated) {
+        double cycle_int_limit = mDetectRes.cycle_int_limit;
+        double bemf_coupling_k = mDetectRes.bemf_coupling_k;
+
+        cycle_int_limit = floor(cycle_int_limit / 5.0) * 5.0;
+        bemf_coupling_k = floor(bemf_coupling_k / 50.0) * 50.0;
+
+        ui->mcconfSlIntLimBox->setValue(cycle_int_limit);
+        ui->mcconfSlBemfKBox->setValue(bemf_coupling_k);
+
+        if (mDetectRes.hall_res == 0) {
+            ui->mcconfHallTab0Box->setValue(mDetectRes.hall_table[0]);
+            ui->mcconfHallTab1Box->setValue(mDetectRes.hall_table[1]);
+            ui->mcconfHallTab2Box->setValue(mDetectRes.hall_table[2]);
+            ui->mcconfHallTab3Box->setValue(mDetectRes.hall_table[3]);
+            ui->mcconfHallTab4Box->setValue(mDetectRes.hall_table[4]);
+            ui->mcconfHallTab5Box->setValue(mDetectRes.hall_table[5]);
+            ui->mcconfHallTab6Box->setValue(mDetectRes.hall_table[6]);
+            ui->mcconfHallTab7Box->setValue(mDetectRes.hall_table[7]);
+        }
+    }
 }

@@ -42,6 +42,14 @@ public:
     ~MainWindow();
     bool eventFilter(QObject *object, QEvent *e);
 
+    typedef struct {
+        bool updated;
+        double cycle_int_limit;
+        double bemf_coupling_k;
+        QVector<int> hall_table;
+        int hall_res;
+    } detect_res_t;
+
 private slots:
     void serialDataAvailable();
     void serialPortError(QSerialPort::SerialPortError error);
@@ -109,6 +117,7 @@ private slots:
     void on_mcconfFocCalcCCButton_clicked();
     void on_mcconfFocApplyRLLambdaButton_clicked();
     void on_mcconfFocCalcCCApplyButton_clicked();
+    void on_mcconfDetectApplyButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -164,6 +173,7 @@ private:
     bool keyRight;
     bool mMcconfLoaded;
     bool mAppconfLoaded;
+    detect_res_t mDetectRes;
 
     QVector<QVector<double> > mExperimentSamples;
 
