@@ -5,13 +5,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 ################## HW46_47 #######################
 
-rm hw_46_47/VESC_default.bin
-rm hw_46_47/VESC_encoder.bin
-rm hw_46_47/VESC_33k.bin
-rm hw_46_47/VESC_0005ohm.bin
-rm hw_46_47/VESC_ws2811.bin
-rm hw_46_47/VESC_ws2811_33k.bin
-rm hw_46_47/VESC_servoout.bin
+rm hw_46_47/*
 
 # default
 cd $FWPATH
@@ -64,11 +58,7 @@ cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_46_47/VESC_servoout.bin
 
 #################### HW_48 ########################
 
-rm hw_48/VESC_default.bin
-rm hw_48/VESC_encoder.bin
-rm hw_48/VESC_0005ohm.bin
-rm hw_48/VESC_ws2811.bin
-rm hw_48/VESC_servoout.bin
+rm hw_48/*
 
 # default
 cd $FWPATH
@@ -107,11 +97,7 @@ cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_48/VESC_servoout.bin
 
 #################### HW_410_411 ########################
 
-rm hw_410_411/VESC_default.bin
-rm hw_410_411/VESC_encoder.bin
-rm hw_410_411/VESC_0005ohm.bin
-rm hw_410_411/VESC_ws2811.bin
-rm hw_410_411/VESC_servoout.bin
+rm hw_410_411/*
 
 # default
 cd $FWPATH
