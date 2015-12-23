@@ -65,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mCompatibleFws.append(qMakePair(2, 3));
     mCompatibleFws.append(qMakePair(2, 4));
     mCompatibleFws.append(qMakePair(2, 5));
+    mCompatibleFws.append(qMakePair(2, 6));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -1647,6 +1648,7 @@ void MainWindow::motorRLReceived(double r, double l)
         showStatusInfo("Detection Result Received", true);
         ui->mcconfFocDetectRBox->setValue(r);
         ui->mcconfFocDetectLBox->setValue(l);
+        on_mcconfFocCalcCCButton_clicked();
     }
 }
 
@@ -2439,7 +2441,21 @@ void MainWindow::on_mcconfFocMeasureLinkageButton_clicked()
 void MainWindow::on_mcconfFocCalcCCButton_clicked()
 {
     double r = ui->mcconfFocDetectRBox->value();
-    double l = ui->mcconfFocDetectLBox->value() / 1e6;
+    double l = ui->mcconfFocDetectLBox->value();
+
+    if (r < 1e-10) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "R is 0. Please measure it first.");
+        return;
+    }
+
+    if (l < 1e-10) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "L is 0. Please measure it first.");
+        return;
+    }
+
+    l /= 1e6;
     double tc = ui->mcconfFocCalcCCTcBox->value();
     double bw = 1.0 / (tc * 1e-6);
     double kp = l * bw;
@@ -2451,16 +2467,47 @@ void MainWindow::on_mcconfFocCalcCCButton_clicked()
 
 void MainWindow::on_mcconfFocApplyRLLambdaButton_clicked()
 {
-    ui->mcconfFocMotorRBox->setValue(ui->mcconfFocDetectRBox->value());
-    ui->mcconfFocMotorLBox->setValue(ui->mcconfFocDetectLBox->value());
-    ui->mcconfFocMotorLinkageBox->setValue(ui->mcconfFocDetectLinkageBox->value());
+    double r = ui->mcconfFocDetectRBox->value();
+    double l = ui->mcconfFocDetectLBox->value();
+    double lambda = ui->mcconfFocDetectLinkageBox->value();
+
+    if (r < 1e-10) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "R is 0. Please measure it first.");
+        return;
+    }
+
+    if (l < 1e-10) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "L is 0. Please measure it first.");
+        return;
+    }
+
+    if (lambda < 1e-10) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "\u03BB is 0. Please measure it first.");
+        return;
+    }
+
+    ui->mcconfFocMotorRBox->setValue(r);
+    ui->mcconfFocMotorLBox->setValue(l);
+    ui->mcconfFocMotorLinkageBox->setValue(lambda);
     on_mcconfFocObserverGainCalcButton_clicked();
 }
 
 void MainWindow::on_mcconfFocCalcCCApplyButton_clicked()
 {
-    ui->mcconfFocCurrKpBox->setValue(ui->mcconfFocCalcKpBox->value());
-    ui->mcconfFocCurrKiBox->setValue(ui->mcconfFocCalcKiBox->value());
+    double kp = ui->mcconfFocCalcKpBox->value();
+    double ki = ui->mcconfFocCalcKiBox->value();
+
+    if (kp < 1e-10 || ki < 1e-10) {
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "Measure R and L, and calculate Kp and Ki first.");
+        return;
+    }
+
+    ui->mcconfFocCurrKpBox->setValue(kp);
+    ui->mcconfFocCurrKiBox->setValue(ki);
 }
 
 void MainWindow::on_mcconfDetectApplyButton_clicked()
