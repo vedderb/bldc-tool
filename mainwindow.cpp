@@ -62,10 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 3));
-    mCompatibleFws.append(qMakePair(2, 4));
-    mCompatibleFws.append(qMakePair(2, 5));
-    mCompatibleFws.append(qMakePair(2, 6));
+    mCompatibleFws.append(qMakePair(2, 7));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -130,6 +127,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(motorRLReceived(double,double)));
     connect(mPacketInterface, SIGNAL(motorLinkageReceived(double)),
             this, SLOT(motorLinkageReceived(double)));
+    connect(mPacketInterface, SIGNAL(encoderParamReceived(double,double,bool)),
+            this, SLOT(encoderParamReceived(double,double,bool)));
     connect(mPacketInterface, SIGNAL(appconfReceived(app_configuration)),
             this, SLOT(appconfReceived(app_configuration)));
     connect(mPacketInterface, SIGNAL(decodedPpmReceived(double,double)),
@@ -1662,6 +1661,21 @@ void MainWindow::motorLinkageReceived(double flux_linkage)
     }
 }
 
+void MainWindow::encoderParamReceived(double offset, double ratio, bool inverted)
+{
+    if (offset > 1000.0) {
+        showStatusInfo("Encoder not enabled in firmware", false);
+        QMessageBox messageBox;
+        messageBox.critical(this, "Error", "Encoder support is not enabled in the current firmware. Please \n"
+                                           "upload firmware with encodcer support and try again.");
+    } else {
+        showStatusInfo("Encoder Result Received", true);
+        ui->mcconfFocMeasureEncoderOffsetBox->setValue(offset);
+        ui->mcconfFocMeasureEncoderRatioBox->setValue(ratio);
+        ui->mcconfFocMeasureEncoderInvertedBox->setChecked(inverted);
+    }
+}
+
 void MainWindow::appconfReceived(app_configuration appconf)
 {
     ui->appconfControllerIdBox->setValue(appconf.controller_id);
@@ -1899,10 +1913,17 @@ void MainWindow::on_serialConnectButton_clicked()
     }
 
     mSerialPort->setBaudRate(QSerialPort::Baud115200);
-    mSerialPort->setDataBits(QSerialPort::Data8);   //8 bits
-    mSerialPort->setParity(QSerialPort::NoParity);   //no parity
-    mSerialPort->setStopBits(QSerialPort::OneStop);   //1 stop bit
-    mSerialPort->setFlowControl(QSerialPort::NoFlowControl);  //no flow control
+    mSerialPort->setDataBits(QSerialPort::Data8);
+    mSerialPort->setParity(QSerialPort::NoParity);
+    mSerialPort->setStopBits(QSerialPort::OneStop);
+    mSerialPort->setFlowControl(QSerialPort::NoFlowControl);
+
+    // For nrf
+    mSerialPort->setRequestToSend(true);
+    mSerialPort->setDataTerminalReady(true);
+    QThread::msleep(5);
+    mSerialPort->setDataTerminalReady(false);
+    QThread::msleep(100);
 
     mPacketInterface->stopUdpConnection();
 }
@@ -2097,7 +2118,7 @@ void MainWindow::on_filterLogScaleBox2_clicked(bool checked)
 
 void MainWindow::on_detectButton_clicked()
 {
-    mPacketInterface->setDetect();
+    mPacketInterface->setDetect(DISP_POS_MODE_INDUCTANCE);
 }
 
 void MainWindow::appendDoubleAndTrunc(QVector<double> *vec, double num, int maxSize)
@@ -2122,7 +2143,7 @@ void MainWindow::on_sendTerminalButton_clicked()
 
 void MainWindow::on_stopDetectButton_clicked()
 {
-    mPacketInterface->setCurrent(0.0);
+    mPacketInterface->setDetect(DISP_POS_MODE_NONE);
 }
 
 void MainWindow::on_experimentClearSamplesButton_clicked()
@@ -2533,4 +2554,36 @@ void MainWindow::on_mcconfDetectApplyButton_clicked()
             ui->mcconfHallTab7Box->setValue(mDetectRes.hall_table[7]);
         }
     }
+}
+
+void MainWindow::on_mcconfFocMeasureEncoderButton_clicked()
+{
+    mPacketInterface->measureEncoder(ui->mcconfFocMeasureEncoderCurrentBox->value());
+}
+
+void MainWindow::on_mcconfFocMeasureEncoderApplyButton_clicked()
+{
+    ui->mcconfFocEncoderOffsetBox->setValue(ui->mcconfFocMeasureEncoderOffsetBox->value());
+    ui->mcconfFocEncoderRatioBox->setValue(ui->mcconfFocMeasureEncoderRatioBox->value());
+    ui->mcconfFocEncoderInvertedBox->setChecked(ui->mcconfFocMeasureEncoderInvertedBox->isChecked());
+}
+
+void MainWindow::on_detectEncoderButton_clicked()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER);
+}
+
+void MainWindow::on_detectEncoderPosErrorButton_clicked()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER_POS_ERROR);
+}
+
+void MainWindow::on_detectEncoderObserverErrorButton_clicked()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER_OBSERVER_ERROR);
+}
+
+void MainWindow::on_detectObserverButton_clicked()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_OBSERVER);
 }

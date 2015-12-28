@@ -67,6 +67,7 @@ private slots:
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
     void motorRLReceived(double r, double l);
     void motorLinkageReceived(double flux_linkage);
+    void encoderParamReceived(double offset, double ratio, bool inverted);
     void appconfReceived(app_configuration appconf);
     void decodedPpmReceived(double ppm_value, double ppm_last_len);
     void decodedAdcReceived(double adc_value, double adc_voltage);
@@ -118,6 +119,12 @@ private slots:
     void on_mcconfFocApplyRLLambdaButton_clicked();
     void on_mcconfFocCalcCCApplyButton_clicked();
     void on_mcconfDetectApplyButton_clicked();
+    void on_mcconfFocMeasureEncoderButton_clicked();
+    void on_mcconfFocMeasureEncoderApplyButton_clicked();
+    void on_detectEncoderButton_clicked();
+    void on_detectEncoderPosErrorButton_clicked();
+    void on_detectEncoderObserverErrorButton_clicked();
+    void on_detectObserverButton_clicked();
 
 private:
     Ui::MainWindow *ui;

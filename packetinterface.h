@@ -48,7 +48,7 @@ public:
     bool setCurrentBrake(double current);
     bool setRpm(int rpm);
     bool setPos(double pos);
-    bool setDetect();
+    bool setDetect(disp_pos_mode mode);
     bool samplePrint(bool at_start, int sample_len, int dec);
     bool getMcconf();
     bool getMcconfDefault();
@@ -65,6 +65,7 @@ public:
     bool setServoPos(double pos);
     bool measureRL();
     bool measureLinkage(double current, double min_rpm, double low_duty, double resistance);
+    bool measureEncoder(double current);
     void setSendCan(bool mSendCan, unsigned int id);
     void startUdpConnection(QHostAddress ip, int port);
     void stopUdpConnection();
@@ -87,6 +88,7 @@ signals:
     void decodedChukReceived(double value);
     void motorRLReceived(double r, double l);
     void motorLinkageReceived(double flux_linkage);
+    void encoderParamReceived(double offset, double ratio, bool inverted);
     
 public slots:
     void timerSlot();

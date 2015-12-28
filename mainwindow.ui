@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1359</width>
-    <height>797</height>
+    <width>1308</width>
+    <height>771</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1143,7 +1143,250 @@ p, li { white-space: pre-wrap; }
              </attribute>
              <layout class="QVBoxLayout" name="verticalLayout_29">
               <item>
-               <layout class="QGridLayout" name="gridLayout_43">
+               <layout class="QGridLayout" name="gridLayout_42">
+                <item row="0" column="0">
+                 <widget class="QGroupBox" name="groupBox_39">
+                  <property name="title">
+                   <string>General</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_39">
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_89">
+                     <property name="text">
+                      <string>Current Control</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocCurrKpBox">
+                     <property name="prefix">
+                      <string>Kp: </string>
+                     </property>
+                     <property name="decimals">
+                      <number>4</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocCurrKiBox">
+                     <property name="prefix">
+                      <string>Ki: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_92">
+                     <property name="text">
+                      <string>Encoder</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocEncoderOffsetBox">
+                     <property name="prefix">
+                      <string>Ofs: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>360.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QRadioButton" name="mcconfFocModeSensorlessButton">
+                     <property name="text">
+                      <string>Sensorless</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_101">
+                     <property name="text">
+                      <string>Sensor Mode</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QRadioButton" name="mcconfFocModeEncoderButton">
+                     <property name="text">
+                      <string>Encoder</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocEncoderRatioBox">
+                     <property name="prefix">
+                      <string>Rat: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>500.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="2">
+                    <widget class="QCheckBox" name="mcconfFocEncoderInvertedBox">
+                     <property name="text">
+                      <string>Invert Encoder</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QGroupBox" name="groupBox_41">
+                  <property name="title">
+                   <string>General (cont)</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_40">
+                   <item row="7" column="0">
+                    <widget class="QLabel" name="label_104">
+                     <property name="text">
+                      <string>Openloop RPM</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocPllKpBox">
+                     <property name="prefix">
+                      <string>Kp: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDutyDownrampKiBox">
+                     <property name="prefix">
+                      <string>Ki: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="0">
+                    <widget class="QLabel" name="label_103">
+                     <property name="text">
+                      <string>Duty Downramp</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocPllKiBox">
+                     <property name="prefix">
+                      <string>Ki: </string>
+                     </property>
+                     <property name="decimals">
+                      <number>2</number>
+                     </property>
+                     <property name="maximum">
+                      <double>1000000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>1000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QLabel" name="label_90">
+                     <property name="text">
+                      <string>PLL</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="1" colspan="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocOpenloopRpmBox">
+                     <property name="keyboardTracking">
+                      <bool>false</bool>
+                     </property>
+                     <property name="prefix">
+                      <string/>
+                     </property>
+                     <property name="suffix">
+                      <string> RPM</string>
+                     </property>
+                     <property name="maximum">
+                      <double>100000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDutyDownrampKpBox">
+                     <property name="prefix">
+                      <string>Kp: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDtCompBox">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dead time compensation. Getting this value right is important for the low speed performance of the sensorless observer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="prefix">
+                      <string>DTc: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> µS</string>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QSpinBox" name="mcconfFocFSwBox">
+                     <property name="toolTip">
+                      <string>Switching Frequency</string>
+                     </property>
+                     <property name="suffix">
+                      <string> Hz</string>
+                     </property>
+                     <property name="prefix">
+                      <string>F_SW: </string>
+                     </property>
+                     <property name="maximum">
+                      <number>100000</number>
+                     </property>
+                     <property name="singleStep">
+                      <number>100</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_94">
+                     <property name="text">
+                      <string>F_SW and DTc</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
                 <item row="1" column="0">
                  <widget class="QGroupBox" name="groupBox_40">
                   <property name="title">
@@ -1327,249 +1570,6 @@ p, li { white-space: pre-wrap; }
                   </layout>
                  </widget>
                 </item>
-                <item row="0" column="1">
-                 <widget class="QGroupBox" name="groupBox_41">
-                  <property name="title">
-                   <string>General (cont)</string>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_40">
-                   <item row="7" column="0">
-                    <widget class="QLabel" name="label_104">
-                     <property name="text">
-                      <string>Openloop RPM</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfFocPllKpBox">
-                     <property name="prefix">
-                      <string>Kp: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDutyDownrampKiBox">
-                     <property name="prefix">
-                      <string>Ki: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="0">
-                    <widget class="QLabel" name="label_103">
-                     <property name="text">
-                      <string>Duty Downramp</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocPllKiBox">
-                     <property name="prefix">
-                      <string>Ki: </string>
-                     </property>
-                     <property name="decimals">
-                      <number>2</number>
-                     </property>
-                     <property name="maximum">
-                      <double>1000000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>1000.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="0">
-                    <widget class="QLabel" name="label_90">
-                     <property name="text">
-                      <string>PLL</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="7" column="1" colspan="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocOpenloopRpmBox">
-                     <property name="keyboardTracking">
-                      <bool>false</bool>
-                     </property>
-                     <property name="prefix">
-                      <string/>
-                     </property>
-                     <property name="suffix">
-                      <string> RPM</string>
-                     </property>
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>10.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDutyDownrampKpBox">
-                     <property name="prefix">
-                      <string>Kp: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>10000.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDtCompBox">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dead time compensation. Getting this value right is important for the low speed performance of the sensorless observer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="prefix">
-                      <string>DTc: </string>
-                     </property>
-                     <property name="suffix">
-                      <string> µS</string>
-                     </property>
-                     <property name="decimals">
-                      <number>3</number>
-                     </property>
-                     <property name="maximum">
-                      <double>10000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.010000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1">
-                    <widget class="QSpinBox" name="mcconfFocFSwBox">
-                     <property name="toolTip">
-                      <string>Switching Frequency</string>
-                     </property>
-                     <property name="suffix">
-                      <string> Hz</string>
-                     </property>
-                     <property name="prefix">
-                      <string>F_SW: </string>
-                     </property>
-                     <property name="maximum">
-                      <number>100000</number>
-                     </property>
-                     <property name="singleStep">
-                      <number>100</number>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_94">
-                     <property name="text">
-                      <string>F_SW and DTc</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QGroupBox" name="groupBox_39">
-                  <property name="title">
-                   <string>General</string>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_39">
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_89">
-                     <property name="text">
-                      <string>Current Control</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfFocCurrKpBox">
-                     <property name="prefix">
-                      <string>Kp: </string>
-                     </property>
-                     <property name="decimals">
-                      <number>4</number>
-                     </property>
-                     <property name="maximum">
-                      <double>1000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.010000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocCurrKiBox">
-                     <property name="prefix">
-                      <string>Ki: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_92">
-                     <property name="text">
-                      <string>Encoder</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfFocEncoderOffsetBox">
-                     <property name="prefix">
-                      <string>Ofs: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>360.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <widget class="QRadioButton" name="mcconfFocModeSensorlessButton">
-                     <property name="text">
-                      <string>Sensorless</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_101">
-                     <property name="text">
-                      <string>Sensor Mode</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QRadioButton" name="mcconfFocModeEncoderButton">
-                     <property name="text">
-                      <string>Encoder</string>
-                     </property>
-                     <property name="checked">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocEncoderRatioBox">
-                     <property name="prefix">
-                      <string>Rat: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>500.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="2">
-                    <widget class="QCheckBox" name="mcconfFocEncoderInvertedBox">
-                     <property name="text">
-                      <string>Invert Encoder</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
                 <item row="2" column="0" colspan="2">
                  <widget class="QGroupBox" name="groupBox_44">
                   <property name="title">
@@ -1710,6 +1710,16 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
+                   <item row="3" column="0">
+                    <widget class="QPushButton" name="mcconfFocCalcCCButton">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate Kp and Ki for the current control loop based on the motor resistance and inductance, and a desired time constant (TC) of the system.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="text">
+                      <string>Calc CC (Req: R and L)</string>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="0" column="3">
                     <widget class="QDoubleSpinBox" name="mcconfFocDetectLinkageBox">
                      <property name="readOnly">
@@ -1739,10 +1749,10 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="0">
-                    <widget class="QPushButton" name="mcconfFocCalcCCButton">
+                   <item row="3" column="4">
+                    <widget class="QPushButton" name="mcconfFocCalcCCApplyButton">
                      <property name="text">
-                      <string>Calc CC (Req: R and L)</string>
+                      <string>Apply</string>
                      </property>
                     </widget>
                    </item>
@@ -1759,10 +1769,10 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="4">
-                    <widget class="QPushButton" name="mcconfFocCalcCCApplyButton">
+                   <item row="2" column="4">
+                    <widget class="QLabel" name="label_93">
                      <property name="text">
-                      <string>Apply</string>
+                      <string>← To spin up motor for λ</string>
                      </property>
                     </widget>
                    </item>
@@ -1785,10 +1795,75 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="4">
-                    <widget class="QLabel" name="label_93">
+                  </layout>
+                 </widget>
+                </item>
+                <item row="3" column="0" colspan="2">
+                 <widget class="QGroupBox" name="groupBox_42">
+                  <property name="title">
+                   <string>Detect Encoder</string>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_25">
+                   <item>
+                    <widget class="QPushButton" name="mcconfFocMeasureEncoderButton">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run the motor slowly in open loop using the selected current and try to figure out the encoder offset and ratio, and whether the encoder is inverted.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
                      <property name="text">
-                      <string>← To spin up motor for λ</string>
+                      <string>Measure Encoder</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="mcconfFocMeasureEncoderCurrentBox">
+                     <property name="prefix">
+                      <string>I: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> A</string>
+                     </property>
+                     <property name="value">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="mcconfFocMeasureEncoderOffsetBox">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                     <property name="prefix">
+                      <string>Ofs: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>360.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="mcconfFocMeasureEncoderRatioBox">
+                     <property name="readOnly">
+                      <bool>true</bool>
+                     </property>
+                     <property name="prefix">
+                      <string>Rat: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>500.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="mcconfFocMeasureEncoderInvertedBox">
+                     <property name="text">
+                      <string>Invert Encoder</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="mcconfFocMeasureEncoderApplyButton">
+                     <property name="text">
+                      <string>Apply</string>
                      </property>
                     </widget>
                    </item>
@@ -4583,41 +4658,69 @@ p, li { white-space: pre-wrap; }
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <layout class="QGridLayout" name="gridLayout_8">
-            <item row="0" column="3">
-             <widget class="QProgressBar" name="rotorPosBar">
-              <property name="maximum">
-               <number>359</number>
-              </property>
-              <property name="value">
-               <number>120</number>
-              </property>
-              <property name="format">
-               <string>%v Degrees</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="1">
              <widget class="QPushButton" name="detectButton">
               <property name="text">
-               <string>Detect</string>
+               <string>Inductance</string>
               </property>
              </widget>
             </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_11">
               <property name="text">
-               <string>Rotor Position</string>
+               <string>Display Position</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="2">
+            <item row="0" column="6">
              <widget class="QPushButton" name="stopDetectButton">
               <property name="text">
                <string>Stop</string>
               </property>
              </widget>
             </item>
+            <item row="0" column="4">
+             <widget class="QPushButton" name="detectEncoderPosErrorButton">
+              <property name="text">
+               <string>Encoder Pos Error</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="detectEncoderButton">
+              <property name="text">
+               <string>Encoder</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="5">
+             <widget class="QPushButton" name="detectEncoderObserverErrorButton">
+              <property name="text">
+               <string>Encoder Observer Error</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="detectObserverButton">
+              <property name="text">
+               <string>Observer</string>
+              </property>
+             </widget>
+            </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="rotorPosBar">
+            <property name="maximum">
+             <number>359</number>
+            </property>
+            <property name="value">
+             <number>120</number>
+            </property>
+            <property name="format">
+             <string>%v Degrees</string>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QCustomPlot" name="realtimePlotPosition" native="true">

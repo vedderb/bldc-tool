@@ -81,6 +81,7 @@ typedef enum {
     COMM_DETECT_MOTOR_PARAM,
     COMM_DETECT_MOTOR_R_L,
     COMM_DETECT_MOTOR_FLUX_LINKAGE,
+    COMM_DETECT_ENCODER,
     COMM_REBOOT,
     COMM_ALIVE,
     COMM_GET_DECODED_PPM,
@@ -116,6 +117,15 @@ typedef enum {
     PWM_MODE_SYNCHRONOUS, // The recommended and most tested mode
     PWM_MODE_BIPOLAR // Some glitches occasionally, can kill MOSFETs
 } mc_pwm_mode;
+
+typedef enum {
+    DISP_POS_MODE_NONE = 0,
+    DISP_POS_MODE_INDUCTANCE,
+    DISP_POS_MODE_OBSERVER,
+    DISP_POS_MODE_ENCODER,
+    DISP_POS_MODE_ENCODER_POS_ERROR,
+    DISP_POS_MODE_ENCODER_OBSERVER_ERROR
+} disp_pos_mode;
 
 typedef struct {
     // Switching and drive

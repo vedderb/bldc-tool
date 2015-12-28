@@ -565,6 +565,15 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     }
         break;
 
+    case COMM_DETECT_ENCODER: {
+        ind = 0;
+        double offset = utility::buffer_get_double32(data, 1e6, &ind);
+        double ratio = utility::buffer_get_double32(data, 1e6, &ind);
+        bool inverted = data[ind++];
+        emit encoderParamReceived(offset, ratio, inverted);
+    }
+        break;
+
     case COMM_GET_DECODED_PPM:
         ind = 0;
         dec_ppm = utility::buffer_get_double32(data, 1000000.0, &ind);
@@ -812,11 +821,12 @@ bool PacketInterface::setPos(double pos)
     return sendPacket(mSendBuffer, send_index);
 }
 
-bool PacketInterface::setDetect()
+bool PacketInterface::setDetect(disp_pos_mode mode)
 {
     QByteArray buffer;
     buffer.clear();
     buffer.append((char)COMM_SET_DETECT);
+    buffer.append((char)mode);
     return sendPacket(buffer);
 }
 
@@ -1082,6 +1092,14 @@ bool PacketInterface::measureLinkage(double current, double min_rpm, double low_
     utility::buffer_append_double32(mSendBuffer, min_rpm, 1e3, &send_index);
     utility::buffer_append_double32(mSendBuffer, low_duty, 1e3, &send_index);
     utility::buffer_append_double32(mSendBuffer, resistance, 1e6, &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::measureEncoder(double current)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_DETECT_ENCODER;
+    utility::buffer_append_double32(mSendBuffer, current, 1e3, &send_index);
     return sendPacket(mSendBuffer, send_index);
 }
 
