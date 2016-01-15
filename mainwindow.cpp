@@ -600,7 +600,7 @@ void MainWindow::serialPortError(QSerialPort::SerialPortError error)
         }
     }
 
-    if(mIsFirstTry) {
+    if(mIsFirstTry && error == QSerialPort::DeviceNotFoundError) {
         mIsFirstTry = false;
         openPort(ui->serialDeviceOptEdit->text().trimmed());
     }
