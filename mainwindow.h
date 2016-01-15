@@ -181,6 +181,7 @@ private:
     bool mMcconfLoaded;
     bool mAppconfLoaded;
     detect_res_t mDetectRes;
+    bool mIsFirstTry;
 
     QVector<QVector<double> > mExperimentSamples;
 
@@ -190,7 +191,7 @@ private:
     void appendDoubleAndTrunc(QVector<double> *vec, double num, int maxSize);
     void clearBuffers();
     void saveExperimentSamplesToFile(QString path);
-
+    void openPort(QString portName);
 };
 
 #endif // MAINWINDOW_H

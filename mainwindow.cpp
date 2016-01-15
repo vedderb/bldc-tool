@@ -51,10 +51,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 #ifdef Q_OS_WIN
     ui->serialDeviceEdit->setText("COM3");
+    ui->serialDeviceOptEdit->setText("COM3");
 #elif defined(Q_OS_MAC)
     ui->serialDeviceEdit->setText("/dev/tty.usbmodem261");
+    ui->serialDeviceOptEdit->setText("/dev/tty.usbmodem301");
 #else
     ui->serialDeviceEdit->setText("/dev/ttyACM0");
+    ui->serialDeviceOptEdit->setText("/dev/tty.usbmodem261");
 #endif
 
     ui->udpIpEdit->setText("192.168.1.118");
@@ -97,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mAppconfLoaded = false;
     mStatusInfoTime = 0;
     mDetectRes.updated = false;
+    mIsFirstTry = true;
 
     connect(mSerialPort, SIGNAL(readyRead()),
             this, SLOT(serialDataAvailable()));
@@ -594,6 +598,11 @@ void MainWindow::serialPortError(QSerialPort::SerialPortError error)
         if(mSerialPort->isOpen()) {
             mSerialPort->close();
         }
+    }
+
+    if(mIsFirstTry) {
+        mIsFirstTry = false;
+        openPort(ui->serialDeviceOptEdit->text().trimmed());
     }
 }
 
@@ -1900,33 +1909,11 @@ void MainWindow::decodedChukReceived(double chuk_value)
     ui->appconfDecodedChukBar->setValue((chuk_value + 1.0) * 500.0);
 }
 
+
 void MainWindow::on_serialConnectButton_clicked()
 {
-    if(mSerialPort->isOpen()) {
-        return;
-    }
-
-    mSerialPort->setPortName(ui->serialDeviceEdit->text().trimmed());
-    mSerialPort->open(QIODevice::ReadWrite);
-
-    if(!mSerialPort->isOpen()) {
-        return;
-    }
-
-    mSerialPort->setBaudRate(QSerialPort::Baud115200);
-    mSerialPort->setDataBits(QSerialPort::Data8);
-    mSerialPort->setParity(QSerialPort::NoParity);
-    mSerialPort->setStopBits(QSerialPort::OneStop);
-    mSerialPort->setFlowControl(QSerialPort::NoFlowControl);
-
-    // For nrf
-    mSerialPort->setRequestToSend(true);
-    mSerialPort->setDataTerminalReady(true);
-    QThread::msleep(5);
-    mSerialPort->setDataTerminalReady(false);
-    QThread::msleep(100);
-
-    mPacketInterface->stopUdpConnection();
+    mIsFirstTry = true;
+    openPort(ui->serialDeviceEdit->text().trimmed());
 }
 
 void MainWindow::on_udpConnectButton_clicked()
@@ -2036,6 +2023,35 @@ void MainWindow::saveExperimentSamplesToFile(QString path)
     }
 
     file.close();
+}
+
+void MainWindow::openPort(QString portName)
+{
+    if(mSerialPort->isOpen()) {
+        return;
+    }
+
+    mSerialPort->setPortName(portName);
+    mSerialPort->open(QIODevice::ReadWrite);
+
+    if(!mSerialPort->isOpen()) {
+        return;
+    }
+
+    mSerialPort->setBaudRate(QSerialPort::Baud115200);
+    mSerialPort->setDataBits(QSerialPort::Data8);
+    mSerialPort->setParity(QSerialPort::NoParity);
+    mSerialPort->setStopBits(QSerialPort::OneStop);
+    mSerialPort->setFlowControl(QSerialPort::NoFlowControl);
+
+    // For nrf
+    mSerialPort->setRequestToSend(true);
+    mSerialPort->setDataTerminalReady(true);
+    QThread::msleep(5);
+    mSerialPort->setDataTerminalReady(false);
+    QThread::msleep(100);
+
+    mPacketInterface->stopUdpConnection();
 }
 
 void MainWindow::on_replotButton_clicked()
