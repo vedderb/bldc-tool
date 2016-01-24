@@ -372,6 +372,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         break;
 
     case COMM_SAMPLE_PRINT:
+        bytes.clear();
         for (int i = 0;i < len;i++) {
             bytes.append(data[i]);
         }
@@ -600,6 +601,14 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
 
     case COMM_SET_APPCONF:
         emit ackReceived("APPCONF Write OK");
+        break;
+
+    case COMM_CUSTOM_APP_DATA:
+        bytes.clear();
+        for (int i = 0;i < len;i++) {
+            bytes.append(data[i]);
+        }
+        emit customAppDataReceived(bytes);
         break;
 
     default:
@@ -1127,4 +1136,32 @@ void PacketInterface::stopUdpConnection()
 bool PacketInterface::isUdpConnected()
 {
     return QString::compare(mHostAddress.toString(), "0.0.0.0") != 0;
+}
+
+bool PacketInterface::sendCustomAppData(QByteArray data)
+{
+    return sendCustomAppData((unsigned char*)data.data(), data.size());
+}
+
+bool PacketInterface::sendCustomAppData(unsigned char *data, unsigned int len)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_CUSTOM_APP_DATA;
+    memcpy(mSendBuffer, data, len);
+    send_index += len;
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::setChukData(chuck_data &data)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SET_CHUCK_DATA;
+    mSendBuffer[send_index++] = data.js_x;
+    mSendBuffer[send_index++] = data.js_y;
+    mSendBuffer[send_index++] = data.bt_c;
+    mSendBuffer[send_index++] = data.bt_z;
+    utility::buffer_append_int16(mSendBuffer, data.acc_x, &send_index);
+    utility::buffer_append_int16(mSendBuffer, data.acc_y, &send_index);
+    utility::buffer_append_int16(mSendBuffer, data.acc_z, &send_index);
+    return sendPacket(mSendBuffer, send_index);
 }

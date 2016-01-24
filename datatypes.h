@@ -87,7 +87,9 @@ typedef enum {
     COMM_GET_DECODED_PPM,
     COMM_GET_DECODED_ADC,
     COMM_GET_DECODED_CHUK,
-    COMM_FORWARD_CAN
+    COMM_FORWARD_CAN,
+    COMM_SET_CHUCK_DATA,
+    COMM_CUSTOM_APP_DATA
 } COMM_PACKET_ID;
 
 typedef enum {
@@ -326,5 +328,15 @@ typedef struct {
     // Nunchuk application settings
     chuk_config app_chuk_conf;
 } app_configuration;
+
+typedef struct {
+    int js_x;
+    int js_y;
+    int acc_x;
+    int acc_y;
+    int acc_z;
+    bool bt_c;
+    bool bt_z;
+} chuck_data;
 
 #endif // DATATYPES_H

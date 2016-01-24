@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mFwRetries = 0;
     mCompatibleFws.append(qMakePair(2, 7));
     mCompatibleFws.append(qMakePair(2, 8));
+    mCompatibleFws.append(qMakePair(2, 9));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -597,7 +598,6 @@ void MainWindow::serialPortError(QSerialPort::SerialPortError error)
     }
 }
 
-
 void MainWindow::timerSlot()
 {
     // Update CAN fwd function
@@ -669,8 +669,13 @@ void MainWindow::timerSlot()
         ui->firmwareUploadButton->setEnabled(true);
         ui->firmwareCancelButton->setEnabled(false);
 
-        // Send alive command (only while not uploading firmware)
-        mPacketInterface->sendAlive();
+        // Send alive command once every 10 iterations (only while not uploading firmware)
+        static int alive_cnt = 0;
+        alive_cnt++;
+        if (alive_cnt >= 10) {
+            alive_cnt = 0;
+            mPacketInterface->sendAlive();
+        }
     }
     ui->firmwareUploadStatusLabel->setText(mPacketInterface->getFirmwareUploadStatus());
 
@@ -915,349 +920,351 @@ void MainWindow::timerSlot()
 
     if (mDoReplot) {
         const double f_samp = (ui->sampleFreqBox->value() / ui->sampleIntBox->value());
-
         int size = curr1Array.size();
 
-        QVector<double> curr1(size/2);
-        for (int i=0; i<(size); i+=2) {
-            curr1[i/2] = (double)((qint16)(((unsigned char)curr1Array[i] << 8) | (unsigned char)curr1Array[i + 1]));
-        }
+        if(size > 0) {
+            QVector<double> curr1(size/2);
+            for (int i=0; i<(size); i+=2) {
+                curr1[i/2] = (double)((qint16)(((unsigned char)curr1Array[i] << 8) | (unsigned char)curr1Array[i + 1]));
+            }
 
-        QVector<double> curr2(size/2);
-        for (int i=0; i<(size); i+=2) {
-            curr2[i/2] = (double)((qint16)(((unsigned char)curr2Array[i] << 8) | (unsigned char)curr2Array[i + 1]));
-        }
+            QVector<double> curr2(size/2);
+            for (int i=0; i<(size); i+=2) {
+                curr2[i/2] = (double)((qint16)(((unsigned char)curr2Array[i] << 8) | (unsigned char)curr2Array[i + 1]));
+            }
 
-        QVector<double> ph1(size/2);
-        for (int i=0; i<(size); i+=2) {
-            ph1[i/2] = (double)((qint16)(((unsigned char)ph1Array[i] << 8) | (unsigned char)ph1Array[i + 1]));
-        }
+            QVector<double> ph1(size/2);
+            for (int i=0; i<(size); i+=2) {
+                ph1[i/2] = (double)((qint16)(((unsigned char)ph1Array[i] << 8) | (unsigned char)ph1Array[i + 1]));
+            }
 
-        QVector<double> ph2(size/2);
-        for (int i=0; i<(size); i+=2) {
-            ph2[i/2] = (double)((qint16)(((unsigned char)ph2Array[i] << 8) | (unsigned char)ph2Array[i + 1]));
-        }
+            QVector<double> ph2(size/2);
+            for (int i=0; i<(size); i+=2) {
+                ph2[i/2] = (double)((qint16)(((unsigned char)ph2Array[i] << 8) | (unsigned char)ph2Array[i + 1]));
+            }
 
-        QVector<double> ph3(size/2);
-        for (int i=0; i<(size); i+=2) {
-            ph3[i/2] = (double)((qint16)(((unsigned char)ph3Array[i] << 8) | (unsigned char)ph3Array[i + 1]));
-        }
+            QVector<double> ph3(size/2);
+            for (int i=0; i<(size); i+=2) {
+                ph3[i/2] = (double)((qint16)(((unsigned char)ph3Array[i] << 8) | (unsigned char)ph3Array[i + 1]));
+            }
 
-        QVector<double> vZero(size/2);
-        for (int i=0; i<(size); i+=2) {
-            vZero[i/2] = (double)((qint16)(((unsigned char)vZeroArray[i] << 8) | (unsigned char)vZeroArray[i + 1]));
-        }
+            QVector<double> vZero(size/2);
+            for (int i=0; i<(size); i+=2) {
+                vZero[i/2] = (double)((qint16)(((unsigned char)vZeroArray[i] << 8) | (unsigned char)vZeroArray[i + 1]));
+            }
 
-        QVector<double> position(size/2);
-        for (int i=0;i < (size / 2);i++) {
-            position[i] = (double)((quint8)statusArray.at(i) & 7);
-        }
+            QVector<double> position(size/2);
+            for (int i=0;i < (size / 2);i++) {
+                position[i] = (double)((quint8)statusArray.at(i) & 7);
+            }
 
-        QVector<double> position_hall(size/2);
-        for (int i=0;i < (size / 2);i++) {
-            position_hall[i] = (double)((quint8)(statusArray.at(i) >> 3) & 7) / 1.0;
-        }
+            QVector<double> position_hall(size/2);
+            for (int i=0;i < (size / 2);i++) {
+                position_hall[i] = (double)((quint8)(statusArray.at(i) >> 3) & 7) / 1.0;
+            }
 
-        QVector<double> totCurrentMc(size/2);
-        for (int i=0; i<(size); i+=2) {
-            totCurrentMc[i/2] = (double)((qint16)(((unsigned char)currTotArray[i] << 8) | (unsigned char)currTotArray[i + 1]));
-            totCurrentMc[i/2] /= 100;
-        }
+            QVector<double> totCurrentMc(size/2);
+            for (int i=0; i<(size); i+=2) {
+                totCurrentMc[i/2] = (double)((qint16)(((unsigned char)currTotArray[i] << 8) | (unsigned char)currTotArray[i + 1]));
+                totCurrentMc[i/2] /= 100;
+            }
 
-        QVector<double> fSw(size/2);
-        for (int i=0; i<(size); i+=2) {
-            fSw[i/2] = (double)((qint16)(((unsigned char)fSwArray[i] << 8) | (unsigned char)fSwArray[i + 1]));
-            fSw[i/2] *= 10.0;
-            fSw[i/2] /= (double)ui->sampleIntBox->value();
-        }
+            QVector<double> fSw(size/2);
+            for (int i=0; i<(size); i+=2) {
+                fSw[i/2] = (double)((qint16)(((unsigned char)fSwArray[i] << 8) | (unsigned char)fSwArray[i + 1]));
+                fSw[i/2] *= 10.0;
+                fSw[i/2] /= (double)ui->sampleIntBox->value();
+            }
 
-        // Calculate current on phases and voltages
-        QVector<double> curr3(curr2.size());
-        QVector<double> totCurrent(curr2.size());
+            // Calculate current on phases and voltages
+            QVector<double> curr3(curr2.size());
+            QVector<double> totCurrent(curr2.size());
 
-        for (int i=0;i < curr2.size(); i++) {
-            curr1[i] *= (3.3 / 4095.0) / (0.001 * 10.0);
-            curr2[i] *= (3.3 / 4095.0) / (0.001 * 10.0);
-            curr3[i] = -(curr1[i] + curr2[i]);
+            for (int i=0;i < curr2.size(); i++) {
+                curr1[i] *= (3.3 / 4095.0) / (0.001 * 10.0);
+                curr2[i] *= (3.3 / 4095.0) / (0.001 * 10.0);
+                curr3[i] = -(curr1[i] + curr2[i]);
 
-            const double v_fact = (3.3 / 4095.0) * ((33000.0 + 2200.0) / 2200.0);
-            ph1[i] *= v_fact;
-            ph2[i] *= v_fact;
-            ph3[i] *= v_fact;
-            vZero[i] *= v_fact;
+                const double v_fact = (3.3 / 4095.0) * ((33000.0 + 2200.0) / 2200.0);
+                ph1[i] *= v_fact;
+                ph2[i] *= v_fact;
+                ph3[i] *= v_fact;
+                vZero[i] *= v_fact;
 
-            if (ui->truncateBox->isChecked()) {
-                if (!(position[i] == 1 || position[i] == 4)) {
-                    ph1[i] = 0;
+                if (ui->truncateBox->isChecked()) {
+                    if (!(position[i] == 1 || position[i] == 4)) {
+                        ph1[i] = 0;
+                    }
+
+                    if (!(position[i] == 2 || position[i] == 5)) {
+                        ph2[i] = 0;
+                    }
+
+                    if (!(position[i] == 3 || position[i] == 6)) {
+                        ph3[i] = 0;
+                    }
                 }
 
-                if (!(position[i] == 2 || position[i] == 5)) {
-                    ph2[i] = 0;
-                }
+                int direction = 1;
+                switch ((int)position[i]) {
+                case 1:
+                case 6:
+                    if (direction) {
+                        totCurrent[i] = curr3[i];
+                    } else {
+                        totCurrent[i] = curr2[i];
+                    }
+                    break;
 
-                if (!(position[i] == 3 || position[i] == 6)) {
-                    ph3[i] = 0;
+                case 2:
+                case 3:
+                    totCurrent[i] = curr1[i];
+                    break;
+
+                case 4:
+                case 5:
+                    if (direction) {
+                        totCurrent[i] = curr2[i];
+                    } else {
+                        totCurrent[i] = curr3[i];
+                    }
+                    break;
                 }
             }
 
-            int direction = 1;
-            switch ((int)position[i]) {
-            case 1:
-            case 6:
-                if (direction) {
-                    totCurrent[i] = curr3[i];
-                } else {
-                    totCurrent[i] = curr2[i];
+            // Filter currents
+            if (ui->currentFilterActiveBox->isChecked()) {
+                curr1 = f.filterSignal(curr1, filter, ui->compDelayBox->isChecked());
+                curr2 = f.filterSignal(curr2, filter, ui->compDelayBox->isChecked());
+                curr3 = f.filterSignal(curr3, filter, ui->compDelayBox->isChecked());
+                totCurrent = f.filterSignal(totCurrent, filter, ui->compDelayBox->isChecked());
+            }
+
+            // Apply second filter
+            int decimation = 1;
+            if (ui->currentFilterActiveBox2->isChecked()) {
+                decimation = ui->decimationSpinBox->value();
+
+                QVector<double> currDec1, currDec2, currDec3, totCurrentDec;
+                for (int i = 0;i < curr1.size();i++) {
+                    if (i % decimation == 0) {
+                        currDec1.append(curr1[i]);
+                        currDec2.append(curr2[i]);
+                        currDec3.append(curr3[i]);
+                        totCurrentDec.append(totCurrent[i]);
+                    }
                 }
-                break;
 
-            case 2:
-            case 3:
-                totCurrent[i] = curr1[i];
-                break;
+                curr1 = f.filterSignal(currDec1, filter2, ui->compDelayBox->isChecked());
+                curr2 = f.filterSignal(currDec2, filter2, ui->compDelayBox->isChecked());
+                curr3 = f.filterSignal(currDec3, filter2, ui->compDelayBox->isChecked());
+                totCurrent = f.filterSignal(totCurrentDec, filter2, ui->compDelayBox->isChecked());
+            }
 
-            case 4:
-            case 5:
-                if (direction) {
-                    totCurrent[i] = curr2[i];
-                } else {
-                    totCurrent[i] = curr3[i];
+            static bool lastSpectrum = false;
+            bool spectrumChanged = ui->currentSpectrumButton->isChecked() != lastSpectrum;
+            lastSpectrum = ui->currentSpectrumButton->isChecked();
+
+            // Filtered x-axis vector for currents
+            QVector<double> xAxisCurrDec;
+            QVector<double> xAxisCurr;
+
+            // Use DFT
+            // TODO: The transform only makes sense with a constant sampling frequency right now. Some
+            // weird scaling should be implemented.
+            if (ui->currentSpectrumButton->isChecked()) {
+                int fftBits = 16;
+
+                curr1 = f.fftWithShift(curr1, fftBits, true);
+                curr2 = f.fftWithShift(curr2, fftBits, true);
+                curr3 = f.fftWithShift(curr3, fftBits, true);
+                totCurrent = f.fftWithShift(totCurrent, fftBits, true);
+                totCurrentMc = f.fftWithShift(totCurrentMc, fftBits, true);
+
+                curr1.resize(curr1.size() / 2);
+                curr2.resize(curr2.size() / 2);
+                curr3.resize(curr3.size() / 2);
+                totCurrent.resize(totCurrent.size() / 2);
+                totCurrentMc.resize(totCurrentMc.size() / 2);
+
+                // Resize x-axis
+                xAxisCurrDec.resize(curr1.size());
+                xAxisCurr.resize(totCurrentMc.size());
+
+                // Generate Filtered X-axis
+                for (int i = 0;i < xAxisCurrDec.size();i++) {
+                    xAxisCurrDec[i] = ((double)i / (double)xAxisCurrDec.size()) * (f_samp / (2 * decimation));
                 }
-                break;
-            }
-        }
 
-        // Filter currents
-        if (ui->currentFilterActiveBox->isChecked()) {
-            curr1 = f.filterSignal(curr1, filter, ui->compDelayBox->isChecked());
-            curr2 = f.filterSignal(curr2, filter, ui->compDelayBox->isChecked());
-            curr3 = f.filterSignal(curr3, filter, ui->compDelayBox->isChecked());
-            totCurrent = f.filterSignal(totCurrent, filter, ui->compDelayBox->isChecked());
-        }
+                for (int i = 0;i < xAxisCurr.size();i++) {
+                    xAxisCurr[i] = ((double)i / (double)xAxisCurr.size()) * (f_samp / 2);
+                }
+            } else {
+                // Resize x-axis
+                xAxisCurrDec.resize(curr1.size());
+                xAxisCurr.resize(totCurrentMc.size());
 
-        // Apply second filter
-        int decimation = 1;
-        if (ui->currentFilterActiveBox2->isChecked()) {
-            decimation = ui->decimationSpinBox->value();
+                // Generate X axis
+                double prev_x = 0.0;
+                double rat = (double)fSw.size() / (double)xAxisCurrDec.size();
+                for (int i = 0;i < xAxisCurrDec.size();i++) {
+                    xAxisCurrDec[i] = prev_x;
+                    prev_x += (double)decimation / fSw[(int)((double)i * rat)];
+                }
 
-            QVector<double> currDec1, currDec2, currDec3, totCurrentDec;
-            for (int i = 0;i < curr1.size();i++) {
-                if (i % decimation == 0) {
-                    currDec1.append(curr1[i]);
-                    currDec2.append(curr2[i]);
-                    currDec3.append(curr3[i]);
-                    totCurrentDec.append(totCurrent[i]);
+                prev_x = 0.0;
+                rat = (double)fSw.size() / (double)xAxisCurr.size();
+                for (int i = 0;i < xAxisCurr.size();i++) {
+                    xAxisCurr[i] = prev_x;
+                    prev_x += 1.0 / fSw[(int)((double)i * rat)];
                 }
             }
 
-            curr1 = f.filterSignal(currDec1, filter2, ui->compDelayBox->isChecked());
-            curr2 = f.filterSignal(currDec2, filter2, ui->compDelayBox->isChecked());
-            curr3 = f.filterSignal(currDec3, filter2, ui->compDelayBox->isChecked());
-            totCurrent = f.filterSignal(totCurrentDec, filter2, ui->compDelayBox->isChecked());
-        }
-
-        static bool lastSpectrum = false;
-        bool spectrumChanged = ui->currentSpectrumButton->isChecked() != lastSpectrum;
-        lastSpectrum = ui->currentSpectrumButton->isChecked();
-
-        // Filtered x-axis vector for currents
-        QVector<double> xAxisCurrDec;
-        QVector<double> xAxisCurr;
-
-        // Use DFT
-        // TODO: The transform only makes sense with a constant sampling frequency right now. Some
-        // weird scaling should be implemented.
-        if (ui->currentSpectrumButton->isChecked()) {
-            int fftBits = 16;
-
-            curr1 = f.fftWithShift(curr1, fftBits, true);
-            curr2 = f.fftWithShift(curr2, fftBits, true);
-            curr3 = f.fftWithShift(curr3, fftBits, true);
-            totCurrent = f.fftWithShift(totCurrent, fftBits, true);
-            totCurrentMc = f.fftWithShift(totCurrentMc, fftBits, true);
-
-            curr1.resize(curr1.size() / 2);
-            curr2.resize(curr2.size() / 2);
-            curr3.resize(curr3.size() / 2);
-            totCurrent.resize(totCurrent.size() / 2);
-            totCurrentMc.resize(totCurrentMc.size() / 2);
-
-            // Resize x-axis
-            xAxisCurrDec.resize(curr1.size());
-            xAxisCurr.resize(totCurrentMc.size());
-
-            // Generate Filtered X-axis
-            for (int i = 0;i < xAxisCurrDec.size();i++) {
-                xAxisCurrDec[i] = ((double)i / (double)xAxisCurrDec.size()) * (f_samp / (2 * decimation));
-            }
-
-            for (int i = 0;i < xAxisCurr.size();i++) {
-                xAxisCurr[i] = ((double)i / (double)xAxisCurr.size()) * (f_samp / 2);
-            }
-        } else {
-            // Resize x-axis
-            xAxisCurrDec.resize(curr1.size());
-            xAxisCurr.resize(totCurrentMc.size());
-
-            // Generate X axis
+            QVector<double> xAxisVolt(ph1.size());
             double prev_x = 0.0;
-            double rat = (double)fSw.size() / (double)xAxisCurrDec.size();
-            for (int i = 0;i < xAxisCurrDec.size();i++) {
-                xAxisCurrDec[i] = prev_x;
-                prev_x += (double)decimation / fSw[(int)((double)i * rat)];
+            for (int i = 0;i < xAxisVolt.size();i++) {
+                xAxisVolt[i] = prev_x;
+                prev_x += 1.0 / fSw[i];
             }
 
-            prev_x = 0.0;
-            rat = (double)fSw.size() / (double)xAxisCurr.size();
-            for (int i = 0;i < xAxisCurr.size();i++) {
-                xAxisCurr[i] = prev_x;
-                prev_x += 1.0 / fSw[(int)((double)i * rat)];
+            ui->currentPlot->clearGraphs();
+            ui->voltagePlot->clearGraphs();
+
+            QPen phasePen;
+            phasePen.setStyle(Qt::DotLine);
+            phasePen.setColor(Qt::blue);
+
+            QPen phasePen2;
+            phasePen2.setStyle(Qt::DotLine);
+            phasePen2.setColor(Qt::red);
+
+            int graphIndex = 0;
+
+            if (ui->showCurrent1Box->isChecked()) {
+                ui->currentPlot->addGraph();
+                ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::magenta));
+                ui->currentPlot->graph(graphIndex)->setData(xAxisCurrDec, curr1);
+                ui->currentPlot->graph(graphIndex)->setName("Phase 1 Current");
+                graphIndex++;
             }
+
+            if (ui->showCurrent2Box->isChecked()) {
+                ui->currentPlot->addGraph();
+                ui->currentPlot->graph(graphIndex)->setData(xAxisCurrDec, curr2);
+                ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::red));
+                ui->currentPlot->graph(graphIndex)->setName("Phase 2 Current");
+                graphIndex++;
+            }
+
+            if (ui->showCurrent3Box->isChecked()) {
+                ui->currentPlot->addGraph();
+                ui->currentPlot->graph(graphIndex)->setData(xAxisCurrDec, curr3);
+                ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::green));
+                ui->currentPlot->graph(graphIndex)->setName("Phase 3 Current");
+                graphIndex++;
+            }
+
+            if (ui->showTotalCurrentBox->isChecked()) {
+                ui->currentPlot->addGraph();
+                ui->currentPlot->graph(graphIndex)->setData(xAxisCurrDec, totCurrent);
+                ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::darkCyan));
+                ui->currentPlot->graph(graphIndex)->setName("Total current");
+                graphIndex++;
+            }
+
+            if (ui->showMcTotalCurrentBox->isChecked()) {
+                ui->currentPlot->addGraph();
+                ui->currentPlot->graph(graphIndex)->setData(xAxisCurr, totCurrentMc);
+                ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::blue));
+                ui->currentPlot->graph(graphIndex)->setName("Total current filtered by MC");
+                graphIndex++;
+            }
+
+            if (ui->showPosCurrentBox->isChecked() && !ui->currentSpectrumButton->isChecked()) {
+                ui->currentPlot->addGraph();
+                ui->currentPlot->graph(graphIndex)->setData(xAxisCurr, position);
+                ui->currentPlot->graph(graphIndex)->setPen(phasePen);
+                ui->currentPlot->graph(graphIndex)->setName("Current position");
+                graphIndex++;
+            }
+
+            graphIndex = 0;
+
+            if (ui->showPh1Box->isChecked()) {
+                ui->voltagePlot->addGraph();
+                ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, ph1);
+                ui->voltagePlot->graph(graphIndex)->setPen(QPen(Qt::blue));
+                ui->voltagePlot->graph(graphIndex)->setName("Phase 1 voltage");
+                graphIndex++;
+            }
+
+            if (ui->showPh2Box->isChecked()) {
+                ui->voltagePlot->addGraph();
+                ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, ph2);
+                ui->voltagePlot->graph(graphIndex)->setPen(QPen(Qt::red));
+                ui->voltagePlot->graph(graphIndex)->setName("Phase 2 voltage");
+                graphIndex++;
+            }
+
+            if (ui->showPh3Box->isChecked()) {
+                ui->voltagePlot->addGraph();
+                ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, ph3);
+                ui->voltagePlot->graph(graphIndex)->setPen(QPen(Qt::green));
+                ui->voltagePlot->graph(graphIndex)->setName("Phase 3 voltage");
+                graphIndex++;
+            }
+
+            if (ui->showVirtualGndBox->isChecked()) {
+                ui->voltagePlot->addGraph();
+                ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, vZero);
+                ui->voltagePlot->graph(graphIndex)->setPen(QPen(Qt::magenta));
+                ui->voltagePlot->graph(graphIndex)->setName("Virtual ground");
+                graphIndex++;
+            }
+
+            if (ui->showPosVoltageBox->isChecked()) {
+                ui->voltagePlot->addGraph();
+                ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, position);
+                ui->voltagePlot->graph(graphIndex)->setPen(phasePen);
+                ui->voltagePlot->graph(graphIndex)->setName("Current position");
+                graphIndex++;
+
+                ui->voltagePlot->addGraph();
+                ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, position_hall);
+                ui->voltagePlot->graph(graphIndex)->setPen(phasePen2);
+                ui->voltagePlot->graph(graphIndex)->setName("Hall position");
+                graphIndex++;
+            }
+
+            // Plot settings
+            ui->currentPlot->legend->setVisible(true);
+            ui->currentPlot->legend->setFont(legendFont);
+            ui->currentPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
+            ui->currentPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
+            if (ui->currentSpectrumButton->isChecked()) {
+                ui->currentPlot->xAxis->setLabel("Frequency (Hz)");
+                ui->currentPlot->yAxis->setLabel("Amplitude");
+            } else {
+                ui->currentPlot->xAxis->setLabel("Seconds (s)");
+                ui->currentPlot->yAxis->setLabel("Amperes (A)");
+            }
+
+            ui->voltagePlot->legend->setVisible(true);
+            ui->voltagePlot->legend->setFont(legendFont);
+            ui->voltagePlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
+            ui->voltagePlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
+            ui->voltagePlot->xAxis->setLabel("Seconds (s)");
+            ui->voltagePlot->yAxis->setLabel("Volts (V)");
+
+            if (mDoRescale || spectrumChanged) {
+                ui->currentPlot->rescaleAxes();
+                ui->voltagePlot->rescaleAxes();
+            }
+
+            ui->currentPlot->replot();
+            ui->voltagePlot->replot();
+
         }
-
-        QVector<double> xAxisVolt(ph1.size());
-        double prev_x = 0.0;
-        for (int i = 0;i < xAxisVolt.size();i++) {
-            xAxisVolt[i] = prev_x;
-            prev_x += 1.0 / fSw[i];
-        }
-
-        ui->currentPlot->clearGraphs();
-        ui->voltagePlot->clearGraphs();
-
-        QPen phasePen;
-        phasePen.setStyle(Qt::DotLine);
-        phasePen.setColor(Qt::blue);
-
-        QPen phasePen2;
-        phasePen2.setStyle(Qt::DotLine);
-        phasePen2.setColor(Qt::red);
-
-        int graphIndex = 0;
-
-        if (ui->showCurrent1Box->isChecked()) {
-            ui->currentPlot->addGraph();
-            ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::magenta));
-            ui->currentPlot->graph(graphIndex)->setData(xAxisCurrDec, curr1);
-            ui->currentPlot->graph(graphIndex)->setName("Phase 1 Current");
-            graphIndex++;
-        }
-
-        if (ui->showCurrent2Box->isChecked()) {
-            ui->currentPlot->addGraph();
-            ui->currentPlot->graph(graphIndex)->setData(xAxisCurrDec, curr2);
-            ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::red));
-            ui->currentPlot->graph(graphIndex)->setName("Phase 2 Current");
-            graphIndex++;
-        }
-
-        if (ui->showCurrent3Box->isChecked()) {
-            ui->currentPlot->addGraph();
-            ui->currentPlot->graph(graphIndex)->setData(xAxisCurrDec, curr3);
-            ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::green));
-            ui->currentPlot->graph(graphIndex)->setName("Phase 3 Current");
-            graphIndex++;
-        }
-
-        if (ui->showTotalCurrentBox->isChecked()) {
-            ui->currentPlot->addGraph();
-            ui->currentPlot->graph(graphIndex)->setData(xAxisCurrDec, totCurrent);
-            ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::darkCyan));
-            ui->currentPlot->graph(graphIndex)->setName("Total current");
-            graphIndex++;
-        }
-
-        if (ui->showMcTotalCurrentBox->isChecked()) {
-            ui->currentPlot->addGraph();
-            ui->currentPlot->graph(graphIndex)->setData(xAxisCurr, totCurrentMc);
-            ui->currentPlot->graph(graphIndex)->setPen(QPen(Qt::blue));
-            ui->currentPlot->graph(graphIndex)->setName("Total current filtered by MC");
-            graphIndex++;
-        }
-
-        if (ui->showPosCurrentBox->isChecked() && !ui->currentSpectrumButton->isChecked()) {
-            ui->currentPlot->addGraph();
-            ui->currentPlot->graph(graphIndex)->setData(xAxisCurr, position);
-            ui->currentPlot->graph(graphIndex)->setPen(phasePen);
-            ui->currentPlot->graph(graphIndex)->setName("Current position");
-            graphIndex++;
-        }
-
-        graphIndex = 0;
-
-        if (ui->showPh1Box->isChecked()) {
-            ui->voltagePlot->addGraph();
-            ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, ph1);
-            ui->voltagePlot->graph(graphIndex)->setPen(QPen(Qt::blue));
-            ui->voltagePlot->graph(graphIndex)->setName("Phase 1 voltage");
-            graphIndex++;
-        }
-
-        if (ui->showPh2Box->isChecked()) {
-            ui->voltagePlot->addGraph();
-            ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, ph2);
-            ui->voltagePlot->graph(graphIndex)->setPen(QPen(Qt::red));
-            ui->voltagePlot->graph(graphIndex)->setName("Phase 2 voltage");
-            graphIndex++;
-        }
-
-        if (ui->showPh3Box->isChecked()) {
-            ui->voltagePlot->addGraph();
-            ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, ph3);
-            ui->voltagePlot->graph(graphIndex)->setPen(QPen(Qt::green));
-            ui->voltagePlot->graph(graphIndex)->setName("Phase 3 voltage");
-            graphIndex++;
-        }
-
-        if (ui->showVirtualGndBox->isChecked()) {
-            ui->voltagePlot->addGraph();
-            ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, vZero);
-            ui->voltagePlot->graph(graphIndex)->setPen(QPen(Qt::magenta));
-            ui->voltagePlot->graph(graphIndex)->setName("Virtual ground");
-            graphIndex++;
-        }
-
-        if (ui->showPosVoltageBox->isChecked()) {
-            ui->voltagePlot->addGraph();
-            ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, position);
-            ui->voltagePlot->graph(graphIndex)->setPen(phasePen);
-            ui->voltagePlot->graph(graphIndex)->setName("Current position");
-            graphIndex++;
-
-            ui->voltagePlot->addGraph();
-            ui->voltagePlot->graph(graphIndex)->setData(xAxisVolt, position_hall);
-            ui->voltagePlot->graph(graphIndex)->setPen(phasePen2);
-            ui->voltagePlot->graph(graphIndex)->setName("Hall position");
-            graphIndex++;
-        }
-
-        // Plot settings
-        ui->currentPlot->legend->setVisible(true);
-        ui->currentPlot->legend->setFont(legendFont);
-        ui->currentPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
-        ui->currentPlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
-        if (ui->currentSpectrumButton->isChecked()) {
-            ui->currentPlot->xAxis->setLabel("Frequency (Hz)");
-            ui->currentPlot->yAxis->setLabel("Amplitude");
-        } else {
-            ui->currentPlot->xAxis->setLabel("Seconds (s)");
-            ui->currentPlot->yAxis->setLabel("Amperes (A)");
-        }
-
-        ui->voltagePlot->legend->setVisible(true);
-        ui->voltagePlot->legend->setFont(legendFont);
-        ui->voltagePlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
-        ui->voltagePlot->legend->setBrush(QBrush(QColor(255,255,255,230)));
-        ui->voltagePlot->xAxis->setLabel("Seconds (s)");
-        ui->voltagePlot->yAxis->setLabel("Volts (V)");
-
-        if (mDoRescale || spectrumChanged) {
-            ui->currentPlot->rescaleAxes();
-            ui->voltagePlot->rescaleAxes();
-        }
-
-        ui->currentPlot->replot();
-        ui->voltagePlot->replot();
 
         mDoReplot = false;
         mDoRescale = false;
@@ -1919,7 +1926,7 @@ void MainWindow::on_serialConnectButton_clicked()
     mSerialPort->setStopBits(QSerialPort::OneStop);
     mSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
-    // For nrf
+    // For nunchuk bootloader
     mSerialPort->setRequestToSend(true);
     mSerialPort->setDataTerminalReady(true);
     QThread::msleep(5);

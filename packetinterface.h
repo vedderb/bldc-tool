@@ -70,6 +70,9 @@ public:
     void startUdpConnection(QHostAddress ip, int port);
     void stopUdpConnection();
     bool isUdpConnected();
+    bool sendCustomAppData(QByteArray data);
+    bool sendCustomAppData(unsigned char *data, unsigned int len);
+    bool setChukData(chuck_data &data);
 
 signals:
     void dataToSend(QByteArray &data);
@@ -89,6 +92,7 @@ signals:
     void motorRLReceived(double r, double l);
     void motorLinkageReceived(double flux_linkage);
     void encoderParamReceived(double offset, double ratio, bool inverted);
+    void customAppDataReceived(QByteArray data);
     
 public slots:
     void timerSlot();
