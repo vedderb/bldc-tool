@@ -66,6 +66,7 @@ public:
     bool measureRL();
     bool measureLinkage(double current, double min_rpm, double low_duty, double resistance);
     bool measureEncoder(double current);
+    bool measureHallFoc(double current);
     void setSendCan(bool mSendCan, unsigned int id);
     void startUdpConnection(QHostAddress ip, int port);
     void stopUdpConnection();
@@ -93,6 +94,7 @@ signals:
     void motorLinkageReceived(double flux_linkage);
     void encoderParamReceived(double offset, double ratio, bool inverted);
     void customAppDataReceived(QByteArray data);
+    void focHallTableReceived(QVector<int> hall_table, int res);
     
 public slots:
     void timerSlot();

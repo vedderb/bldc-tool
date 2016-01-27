@@ -68,6 +68,7 @@ private slots:
     void motorRLReceived(double r, double l);
     void motorLinkageReceived(double flux_linkage);
     void encoderParamReceived(double offset, double ratio, bool inverted);
+    void focHallTableReceived(QVector<int> hall_table, int res);
     void appconfReceived(app_configuration appconf);
     void decodedPpmReceived(double ppm_value, double ppm_last_len);
     void decodedAdcReceived(double adc_value, double adc_voltage);
@@ -125,6 +126,8 @@ private slots:
     void on_detectEncoderPosErrorButton_clicked();
     void on_detectEncoderObserverErrorButton_clicked();
     void on_detectObserverButton_clicked();
+    void on_mcconfFocMeasureHallButton_clicked();
+    void on_mcconfFocMeasureHallApplyButton_clicked();
 
 private:
     Ui::MainWindow *ui;

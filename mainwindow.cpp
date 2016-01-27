@@ -62,9 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 7));
-    mCompatibleFws.append(qMakePair(2, 8));
-    mCompatibleFws.append(qMakePair(2, 9));
+    mCompatibleFws.append(qMakePair(2, 10));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -131,6 +129,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(motorLinkageReceived(double)));
     connect(mPacketInterface, SIGNAL(encoderParamReceived(double,double,bool)),
             this, SLOT(encoderParamReceived(double,double,bool)));
+    connect(mPacketInterface, SIGNAL(focHallTableReceived(QVector<int>,int)),
+            this, SLOT(focHallTableReceived(QVector<int>,int)));
     connect(mPacketInterface, SIGNAL(appconfReceived(app_configuration)),
             this, SLOT(appconfReceived(app_configuration)));
     connect(mPacketInterface, SIGNAL(decodedPpmReceived(double,double)),
@@ -315,6 +315,16 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.sl_cycle_int_rpm_br = ui->mcconfSlBrErpmBox->value();
     mcconf.sl_bemf_coupling_k = ui->mcconfSlBemfKBox->value();
 
+    mcconf.hall_table[0] = ui->mcconfHallTab0Box->value();
+    mcconf.hall_table[1] = ui->mcconfHallTab1Box->value();
+    mcconf.hall_table[2] = ui->mcconfHallTab2Box->value();
+    mcconf.hall_table[3] = ui->mcconfHallTab3Box->value();
+    mcconf.hall_table[4] = ui->mcconfHallTab4Box->value();
+    mcconf.hall_table[5] = ui->mcconfHallTab5Box->value();
+    mcconf.hall_table[6] = ui->mcconfHallTab6Box->value();
+    mcconf.hall_table[7] = ui->mcconfHallTab7Box->value();
+    mcconf.hall_sl_erpm = ui->mcconfHallSlErpmBox->value();
+
     mcconf.foc_current_kp = ui->mcconfFocCurrKpBox->value();
     mcconf.foc_current_ki = ui->mcconfFocCurrKiBox->value();
     mcconf.foc_f_sw = ui->mcconfFocFSwBox->value();
@@ -332,6 +342,8 @@ mc_configuration MainWindow::getMcconfGui()
 
     if (ui->mcconfFocModeEncoderButton->isChecked()) {
         mcconf.foc_sensor_mode = FOC_SENSOR_MODE_ENCODER;
+    } else if (ui->mcconfFocModeHallButton->isChecked()) {
+        mcconf.foc_sensor_mode = FOC_SENSOR_MODE_HALL;
     } else if (ui->mcconfFocModeSensorlessButton->isChecked()) {
         mcconf.foc_sensor_mode = FOC_SENSOR_MODE_SENSORLESS;
     }
@@ -343,15 +355,15 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.foc_motor_flux_linkage = ui->mcconfFocMotorLinkageBox->value();
     mcconf.foc_observer_gain = ui->mcconfFocObserverGainBox->value() * 1000000.0;
 
-    mcconf.hall_table[0] = ui->mcconfHallTab0Box->value();
-    mcconf.hall_table[1] = ui->mcconfHallTab1Box->value();
-    mcconf.hall_table[2] = ui->mcconfHallTab2Box->value();
-    mcconf.hall_table[3] = ui->mcconfHallTab3Box->value();
-    mcconf.hall_table[4] = ui->mcconfHallTab4Box->value();
-    mcconf.hall_table[5] = ui->mcconfHallTab5Box->value();
-    mcconf.hall_table[6] = ui->mcconfHallTab6Box->value();
-    mcconf.hall_table[7] = ui->mcconfHallTab7Box->value();
-    mcconf.hall_sl_erpm = ui->mcconfHallSlErpmBox->value();
+    mcconf.foc_hall_table[0] = ui->mcconfFocHallTab0Box->value();
+    mcconf.foc_hall_table[1] = ui->mcconfFocHallTab1Box->value();
+    mcconf.foc_hall_table[2] = ui->mcconfFocHallTab2Box->value();
+    mcconf.foc_hall_table[3] = ui->mcconfFocHallTab3Box->value();
+    mcconf.foc_hall_table[4] = ui->mcconfFocHallTab4Box->value();
+    mcconf.foc_hall_table[5] = ui->mcconfFocHallTab5Box->value();
+    mcconf.foc_hall_table[6] = ui->mcconfFocHallTab6Box->value();
+    mcconf.foc_hall_table[7] = ui->mcconfFocHallTab7Box->value();
+    mcconf.foc_hall_sl_erpm = ui->mcconfFocHallErpmBox->value();
 
     mcconf.s_pid_kp = ui->mcconfSpidKpBox->value();
     mcconf.s_pid_ki = ui->mcconfSpidKiBox->value();
@@ -475,6 +487,16 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfSlBrErpmBox->setValue(mcconf.sl_cycle_int_rpm_br);
     ui->mcconfSlBemfKBox->setValue(mcconf.sl_bemf_coupling_k);
 
+    ui->mcconfHallTab0Box->setValue(mcconf.hall_table[0]);
+    ui->mcconfHallTab1Box->setValue(mcconf.hall_table[1]);
+    ui->mcconfHallTab2Box->setValue(mcconf.hall_table[2]);
+    ui->mcconfHallTab3Box->setValue(mcconf.hall_table[3]);
+    ui->mcconfHallTab4Box->setValue(mcconf.hall_table[4]);
+    ui->mcconfHallTab5Box->setValue(mcconf.hall_table[5]);
+    ui->mcconfHallTab6Box->setValue(mcconf.hall_table[6]);
+    ui->mcconfHallTab7Box->setValue(mcconf.hall_table[7]);
+    ui->mcconfHallSlErpmBox->setValue(mcconf.hall_sl_erpm);
+
     ui->mcconfFocCurrKpBox->setValue(mcconf.foc_current_kp);
     ui->mcconfFocCurrKiBox->setValue(mcconf.foc_current_ki);
     ui->mcconfFocFSwBox->setValue(mcconf.foc_f_sw);
@@ -486,6 +508,9 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     switch (mcconf.foc_sensor_mode) {
     case FOC_SENSOR_MODE_ENCODER:
         ui->mcconfFocModeEncoderButton->setChecked(true);
+        break;
+    case FOC_SENSOR_MODE_HALL:
+        ui->mcconfFocModeHallButton->setChecked(true);
         break;
     case FOC_SENSOR_MODE_SENSORLESS:
         ui->mcconfFocModeSensorlessButton->setChecked(true);
@@ -507,16 +532,15 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfFocSlOpenloopTimeBox->setValue(mcconf.foc_sl_openloop_time);
     ui->mcconfFocDCurrentDutyBox->setValue(mcconf.foc_sl_d_current_duty);
     ui->mcconfFocDCurrentFactorBox->setValue(mcconf.foc_sl_d_current_factor);
-
-    ui->mcconfHallTab0Box->setValue(mcconf.hall_table[0]);
-    ui->mcconfHallTab1Box->setValue(mcconf.hall_table[1]);
-    ui->mcconfHallTab2Box->setValue(mcconf.hall_table[2]);
-    ui->mcconfHallTab3Box->setValue(mcconf.hall_table[3]);
-    ui->mcconfHallTab4Box->setValue(mcconf.hall_table[4]);
-    ui->mcconfHallTab5Box->setValue(mcconf.hall_table[5]);
-    ui->mcconfHallTab6Box->setValue(mcconf.hall_table[6]);
-    ui->mcconfHallTab7Box->setValue(mcconf.hall_table[7]);
-    ui->mcconfHallSlErpmBox->setValue(mcconf.hall_sl_erpm);
+    ui->mcconfFocHallTab0Box->setValue(mcconf.foc_hall_table[0]);
+    ui->mcconfFocHallTab1Box->setValue(mcconf.foc_hall_table[1]);
+    ui->mcconfFocHallTab2Box->setValue(mcconf.foc_hall_table[2]);
+    ui->mcconfFocHallTab3Box->setValue(mcconf.foc_hall_table[3]);
+    ui->mcconfFocHallTab4Box->setValue(mcconf.foc_hall_table[4]);
+    ui->mcconfFocHallTab5Box->setValue(mcconf.foc_hall_table[5]);
+    ui->mcconfFocHallTab6Box->setValue(mcconf.foc_hall_table[6]);
+    ui->mcconfFocHallTab7Box->setValue(mcconf.foc_hall_table[7]);
+    ui->mcconfFocHallErpmBox->setValue(mcconf.foc_hall_sl_erpm);
 
     ui->mcconfSpidKpBox->setValue(mcconf.s_pid_kp);
     ui->mcconfSpidKiBox->setValue(mcconf.s_pid_ki);
@@ -1684,6 +1708,23 @@ void MainWindow::encoderParamReceived(double offset, double ratio, bool inverted
     }
 }
 
+void MainWindow::focHallTableReceived(QVector<int> hall_table, int res)
+{
+    if (res != 0) {
+        showStatusInfo("Bad Detection Result Received", false);
+    } else {
+        showStatusInfo("Hall Result Received", true);
+        ui->mcconfFocMeasureHallTab0Box->setValue(hall_table.at(0));
+        ui->mcconfFocMeasureHallTab1Box->setValue(hall_table.at(1));
+        ui->mcconfFocMeasureHallTab2Box->setValue(hall_table.at(2));
+        ui->mcconfFocMeasureHallTab3Box->setValue(hall_table.at(3));
+        ui->mcconfFocMeasureHallTab4Box->setValue(hall_table.at(4));
+        ui->mcconfFocMeasureHallTab5Box->setValue(hall_table.at(5));
+        ui->mcconfFocMeasureHallTab6Box->setValue(hall_table.at(6));
+        ui->mcconfFocMeasureHallTab7Box->setValue(hall_table.at(7));
+    }
+}
+
 void MainWindow::appconfReceived(app_configuration appconf)
 {
     ui->appconfControllerIdBox->setValue(appconf.controller_id);
@@ -2594,4 +2635,21 @@ void MainWindow::on_detectEncoderObserverErrorButton_clicked()
 void MainWindow::on_detectObserverButton_clicked()
 {
     mPacketInterface->setDetect(DISP_POS_MODE_OBSERVER);
+}
+
+void MainWindow::on_mcconfFocMeasureHallButton_clicked()
+{
+    mPacketInterface->measureHallFoc(ui->mcconfFocMeasureHallCurrentBox->value());
+}
+
+void MainWindow::on_mcconfFocMeasureHallApplyButton_clicked()
+{
+    ui->mcconfFocHallTab0Box->setValue(ui->mcconfFocMeasureHallTab0Box->value());
+    ui->mcconfFocHallTab1Box->setValue(ui->mcconfFocMeasureHallTab1Box->value());
+    ui->mcconfFocHallTab2Box->setValue(ui->mcconfFocMeasureHallTab2Box->value());
+    ui->mcconfFocHallTab3Box->setValue(ui->mcconfFocMeasureHallTab3Box->value());
+    ui->mcconfFocHallTab4Box->setValue(ui->mcconfFocMeasureHallTab4Box->value());
+    ui->mcconfFocHallTab5Box->setValue(ui->mcconfFocMeasureHallTab5Box->value());
+    ui->mcconfFocHallTab6Box->setValue(ui->mcconfFocMeasureHallTab6Box->value());
+    ui->mcconfFocHallTab7Box->setValue(ui->mcconfFocMeasureHallTab7Box->value());
 }

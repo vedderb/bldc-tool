@@ -661,7 +661,7 @@
                    <item>
                     <widget class="QGroupBox" name="groupBox_16">
                      <property name="title">
-                      <string>Commutation mode</string>
+                      <string>Commutation Mode</string>
                      </property>
                      <property name="checkable">
                       <bool>false</bool>
@@ -846,7 +846,7 @@
               <item>
                <widget class="QGroupBox" name="groupBox_12">
                 <property name="title">
-                 <string>Hall sensors</string>
+                 <string>Hall Sensors</string>
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_20">
                  <item>
@@ -1150,6 +1150,16 @@ p, li { white-space: pre-wrap; }
                    <string>General</string>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_39">
+                   <item row="4" column="3">
+                    <widget class="QDoubleSpinBox" name="mcconfFocEncoderRatioBox">
+                     <property name="prefix">
+                      <string>Rat: </string>
+                     </property>
+                     <property name="maximum">
+                      <double>500.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="2" column="0">
                     <widget class="QLabel" name="label_89">
                      <property name="text">
@@ -1157,7 +1167,7 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
+                   <item row="2" column="2">
                     <widget class="QDoubleSpinBox" name="mcconfFocCurrKpBox">
                      <property name="prefix">
                       <string>Kp: </string>
@@ -1173,7 +1183,7 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="2">
+                   <item row="2" column="3">
                     <widget class="QDoubleSpinBox" name="mcconfFocCurrKiBox">
                      <property name="prefix">
                       <string>Ki: </string>
@@ -1190,20 +1200,13 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="4" column="1">
+                   <item row="4" column="2">
                     <widget class="QDoubleSpinBox" name="mcconfFocEncoderOffsetBox">
                      <property name="prefix">
                       <string>Ofs: </string>
                      </property>
                      <property name="maximum">
                       <double>360.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <widget class="QRadioButton" name="mcconfFocModeSensorlessButton">
-                     <property name="text">
-                      <string>Sensorless</string>
                      </property>
                     </widget>
                    </item>
@@ -1214,32 +1217,40 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
-                    <widget class="QRadioButton" name="mcconfFocModeEncoderButton">
-                     <property name="text">
-                      <string>Encoder</string>
-                     </property>
-                     <property name="checked">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocEncoderRatioBox">
-                     <property name="prefix">
-                      <string>Rat: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>500.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="2">
+                   <item row="5" column="3">
                     <widget class="QCheckBox" name="mcconfFocEncoderInvertedBox">
                      <property name="text">
                       <string>Invert Encoder</string>
                      </property>
                     </widget>
+                   </item>
+                   <item row="0" column="2" colspan="2">
+                    <layout class="QHBoxLayout" name="horizontalLayout_26">
+                     <item>
+                      <widget class="QRadioButton" name="mcconfFocModeEncoderButton">
+                       <property name="text">
+                        <string>Encoder</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QRadioButton" name="mcconfFocModeHallButton">
+                       <property name="text">
+                        <string>Hall</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QRadioButton" name="mcconfFocModeSensorlessButton">
+                       <property name="text">
+                        <string>Sensorless</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </item>
                   </layout>
                  </widget>
@@ -1303,7 +1314,7 @@ p, li { white-space: pre-wrap; }
                    <item row="5" column="0">
                     <widget class="QLabel" name="label_90">
                      <property name="text">
-                      <string>PLL</string>
+                      <string>Speed Tracker</string>
                      </property>
                     </widget>
                    </item>
@@ -1390,7 +1401,7 @@ p, li { white-space: pre-wrap; }
                 <item row="1" column="0">
                  <widget class="QGroupBox" name="groupBox_40">
                   <property name="title">
-                   <string>Motor Parameters (for Sensorless Operation)</string>
+                   <string>Motor Parameters (for Sensorless and Hall Operation)</string>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_41">
                    <item row="4" column="1">
@@ -1570,307 +1581,112 @@ p, li { white-space: pre-wrap; }
                   </layout>
                  </widget>
                 </item>
-                <item row="2" column="0" colspan="2">
-                 <widget class="QGroupBox" name="groupBox_44">
-                  <property name="title">
-                   <string>Detect and Calculate Parameters</string>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_45">
-                   <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfFocCalcCCTcBox">
-                     <property name="prefix">
-                      <string>TC: </string>
-                     </property>
-                     <property name="suffix">
-                      <string> µS</string>
-                     </property>
-                     <property name="decimals">
-                      <number>1</number>
-                     </property>
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>10.000000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>1000.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDetectDutyBox">
-                     <property name="toolTip">
-                      <string>For measuring flux linkage:  Duty cycle to measure flux linkage at.</string>
-                     </property>
-                     <property name="prefix">
-                      <string>Duty: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>1.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.010000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>0.500000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDetectCurrentBox">
-                     <property name="toolTip">
-                      <string>For measuring flux linkage:  The current to use.</string>
-                     </property>
-                     <property name="prefix">
-                      <string>I: </string>
-                     </property>
-                     <property name="suffix">
-                      <string> A</string>
-                     </property>
-                     <property name="maximum">
-                      <double>150.000000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>6.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="3">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDetectMinRpmBox">
-                     <property name="toolTip">
-                      <string>For measuring flux linkage: The minimum RPM to start the motor with.</string>
-                     </property>
-                     <property name="prefix">
-                      <string>RPM: </string>
-                     </property>
-                     <property name="decimals">
-                      <number>1</number>
-                     </property>
-                     <property name="maximum">
-                      <double>10000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>10.000000000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>700.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QPushButton" name="mcconfFocMeasureLinkageButton">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Spin up the motor using BLDC delay commutation and measure the flux linkage. The motor resistance is required to compensate for load, so it should be measured or entered first.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="text">
-                      <string>Measure λ (Req: R)</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QPushButton" name="mcconfFocMeasureRLButton">
-                     <property name="toolTip">
-                      <string>Measure the motor resistance and inductance.</string>
-                     </property>
-                     <property name="text">
-                      <string>Measure R and L</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDetectRBox">
-                     <property name="prefix">
-                      <string>R: </string>
-                     </property>
-                     <property name="suffix">
-                      <string> Ω</string>
-                     </property>
-                     <property name="decimals">
-                      <number>5</number>
-                     </property>
-                     <property name="maximum">
-                      <double>1000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.001000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDetectLBox">
-                     <property name="prefix">
-                      <string>L: </string>
-                     </property>
-                     <property name="suffix">
-                      <string> µH</string>
-                     </property>
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QPushButton" name="mcconfFocCalcCCButton">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate Kp and Ki for the current control loop based on the motor resistance and inductance, and a desired time constant (TC) of the system.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="text">
-                      <string>Calc CC (Req: R and L)</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="3">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDetectLinkageBox">
-                     <property name="readOnly">
-                      <bool>true</bool>
-                     </property>
-                     <property name="prefix">
-                      <string>λ: </string>
-                     </property>
-                     <property name="decimals">
-                      <number>8</number>
-                     </property>
-                     <property name="maximum">
-                      <double>100.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.000100000000000</double>
-                     </property>
-                     <property name="value">
-                      <double>0.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="4">
-                    <widget class="QPushButton" name="mcconfFocApplyRLLambdaButton">
-                     <property name="text">
-                      <string>Apply</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="4">
-                    <widget class="QPushButton" name="mcconfFocCalcCCApplyButton">
-                     <property name="text">
-                      <string>Apply</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="3">
-                    <widget class="QDoubleSpinBox" name="mcconfFocCalcKiBox">
-                     <property name="readOnly">
-                      <bool>true</bool>
-                     </property>
-                     <property name="prefix">
-                      <string>Ki: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>100000.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="4">
-                    <widget class="QLabel" name="label_93">
-                     <property name="text">
-                      <string>← To spin up motor for λ</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocCalcKpBox">
-                     <property name="readOnly">
-                      <bool>true</bool>
-                     </property>
-                     <property name="prefix">
-                      <string>Kp: </string>
-                     </property>
-                     <property name="decimals">
-                      <number>4</number>
-                     </property>
-                     <property name="maximum">
-                      <double>1000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.010000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="3" column="0" colspan="2">
-                 <widget class="QGroupBox" name="groupBox_42">
-                  <property name="title">
-                   <string>Detect Encoder</string>
-                  </property>
-                  <layout class="QHBoxLayout" name="horizontalLayout_25">
-                   <item>
-                    <widget class="QPushButton" name="mcconfFocMeasureEncoderButton">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run the motor slowly in open loop using the selected current and try to figure out the encoder offset and ratio, and whether the encoder is inverted.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="text">
-                      <string>Measure Encoder</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QDoubleSpinBox" name="mcconfFocMeasureEncoderCurrentBox">
-                     <property name="prefix">
-                      <string>I: </string>
-                     </property>
-                     <property name="suffix">
-                      <string> A</string>
-                     </property>
-                     <property name="value">
-                      <double>10.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QDoubleSpinBox" name="mcconfFocMeasureEncoderOffsetBox">
-                     <property name="readOnly">
-                      <bool>true</bool>
-                     </property>
-                     <property name="prefix">
-                      <string>Ofs: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>360.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QDoubleSpinBox" name="mcconfFocMeasureEncoderRatioBox">
-                     <property name="readOnly">
-                      <bool>true</bool>
-                     </property>
-                     <property name="prefix">
-                      <string>Rat: </string>
-                     </property>
-                     <property name="maximum">
-                      <double>500.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QCheckBox" name="mcconfFocMeasureEncoderInvertedBox">
-                     <property name="text">
-                      <string>Invert Encoder</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
-                    <widget class="QPushButton" name="mcconfFocMeasureEncoderApplyButton">
-                     <property name="text">
-                      <string>Apply</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
                </layout>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_46">
+                <property name="title">
+                 <string>Hall Sensors</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_45">
+                 <item>
+                  <widget class="QLabel" name="label_95">
+                   <property name="text">
+                    <string>Table</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocHallTab0Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocHallTab1Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocHallTab2Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocHallTab3Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocHallTab4Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocHallTab5Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocHallTab6Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocHallTab7Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_96">
+                   <property name="text">
+                    <string>Sensorless ERPM</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="mcconfFocHallErpmBox">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ERPM above which the hall sensors will be ignored and only the observer is used.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="maximum">
+                    <double>200000.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_23">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
               </item>
               <item>
                <spacer name="verticalSpacer_17">
@@ -1887,6 +1703,463 @@ p, li { white-space: pre-wrap; }
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_44">
+                <property name="title">
+                 <string>Detect and Calculate Parameters</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_45">
+                 <item row="0" column="4">
+                  <spacer name="horizontalSpacer_29">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QDoubleSpinBox" name="mcconfFocCalcCCTcBox">
+                   <property name="prefix">
+                    <string>TC: </string>
+                   </property>
+                   <property name="suffix">
+                    <string> µS</string>
+                   </property>
+                   <property name="decimals">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <double>100000.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>10.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>1000.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QPushButton" name="mcconfFocMeasureLinkageButton">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Spin up the motor using BLDC delay commutation and measure the flux linkage. The motor resistance is required to compensate for load, so it should be measured or entered first.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Measure λ (Req: R)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QPushButton" name="mcconfFocMeasureRLButton">
+                   <property name="toolTip">
+                    <string>Measure the motor resistance and inductance.</string>
+                   </property>
+                   <property name="text">
+                    <string>Measure R and L</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="mcconfFocDetectRBox">
+                   <property name="prefix">
+                    <string>R: </string>
+                   </property>
+                   <property name="suffix">
+                    <string> Ω</string>
+                   </property>
+                   <property name="decimals">
+                    <number>5</number>
+                   </property>
+                   <property name="maximum">
+                    <double>1000.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.001000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QDoubleSpinBox" name="mcconfFocDetectLBox">
+                   <property name="prefix">
+                    <string>L: </string>
+                   </property>
+                   <property name="suffix">
+                    <string> µH</string>
+                   </property>
+                   <property name="maximum">
+                    <double>100000.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="5">
+                  <widget class="QPushButton" name="mcconfFocApplyRLLambdaButton">
+                   <property name="text">
+                    <string>Apply</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QPushButton" name="mcconfFocCalcCCButton">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculate Kp and Ki for the current control loop based on the motor resistance and inductance, and a desired time constant (TC) of the system.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Calc CC (Req: R and L)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="5">
+                  <widget class="QPushButton" name="mcconfFocCalcCCApplyButton">
+                   <property name="text">
+                    <string>Apply</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QDoubleSpinBox" name="mcconfFocDetectLinkageBox">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                   <property name="prefix">
+                    <string>λ: </string>
+                   </property>
+                   <property name="decimals">
+                    <number>8</number>
+                   </property>
+                   <property name="maximum">
+                    <double>100.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.000100000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="3">
+                  <widget class="QDoubleSpinBox" name="mcconfFocCalcKiBox">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                   <property name="prefix">
+                    <string>Ki: </string>
+                   </property>
+                   <property name="maximum">
+                    <double>100000.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="2">
+                  <widget class="QDoubleSpinBox" name="mcconfFocCalcKpBox">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                   <property name="prefix">
+                    <string>Kp: </string>
+                   </property>
+                   <property name="decimals">
+                    <number>4</number>
+                   </property>
+                   <property name="maximum">
+                    <double>1000.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.010000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="mcconfFocDetectCurrentBox">
+                   <property name="toolTip">
+                    <string>For measuring flux linkage:  The current to use.</string>
+                   </property>
+                   <property name="prefix">
+                    <string>I: </string>
+                   </property>
+                   <property name="suffix">
+                    <string> A</string>
+                   </property>
+                   <property name="maximum">
+                    <double>150.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>6.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="4">
+                  <widget class="QLabel" name="label_93">
+                   <property name="text">
+                    <string>← To spin up for λ</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QDoubleSpinBox" name="mcconfFocDetectDutyBox">
+                   <property name="toolTip">
+                    <string>For measuring flux linkage:  Duty cycle to measure flux linkage at.</string>
+                   </property>
+                   <property name="prefix">
+                    <string>Duty: </string>
+                   </property>
+                   <property name="maximum">
+                    <double>1.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.010000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.500000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="QDoubleSpinBox" name="mcconfFocDetectMinRpmBox">
+                   <property name="toolTip">
+                    <string>For measuring flux linkage: The minimum RPM to start the motor with.</string>
+                   </property>
+                   <property name="prefix">
+                    <string>RPM: </string>
+                   </property>
+                   <property name="decimals">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <double>10000.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>10.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>700.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_42">
+                <property name="title">
+                 <string>Detect Encoder</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_25">
+                 <item>
+                  <widget class="QPushButton" name="mcconfFocMeasureEncoderButton">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run the motor slowly in open loop using the selected current and try to figure out the encoder offset and ratio, and whether the encoder is inverted.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Measure</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="mcconfFocMeasureEncoderCurrentBox">
+                   <property name="prefix">
+                    <string>I: </string>
+                   </property>
+                   <property name="suffix">
+                    <string> A</string>
+                   </property>
+                   <property name="value">
+                    <double>15.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_26">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="mcconfFocMeasureEncoderOffsetBox">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                   <property name="prefix">
+                    <string>Ofs: </string>
+                   </property>
+                   <property name="maximum">
+                    <double>360.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="mcconfFocMeasureEncoderRatioBox">
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                   <property name="prefix">
+                    <string>Rat: </string>
+                   </property>
+                   <property name="maximum">
+                    <double>500.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="mcconfFocMeasureEncoderInvertedBox">
+                   <property name="text">
+                    <string>Invert Encoder</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_27">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="mcconfFocMeasureEncoderApplyButton">
+                   <property name="text">
+                    <string>Apply</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox_45">
+                <property name="title">
+                 <string>Detect Hall Sensors</string>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_38">
+                 <item>
+                  <widget class="QPushButton" name="mcconfFocMeasureHallButton">
+                   <property name="text">
+                    <string>Measure</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="mcconfFocMeasureHallCurrentBox">
+                   <property name="prefix">
+                    <string>I: </string>
+                   </property>
+                   <property name="suffix">
+                    <string> A</string>
+                   </property>
+                   <property name="value">
+                    <double>15.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_25">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocMeasureHallTab0Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocMeasureHallTab1Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocMeasureHallTab2Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocMeasureHallTab3Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocMeasureHallTab4Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocMeasureHallTab5Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocMeasureHallTab6Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSpinBox" name="mcconfFocMeasureHallTab7Box">
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="horizontalSpacer_24">
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>40</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="mcconfFocMeasureHallApplyButton">
+                   <property name="text">
+                    <string>Apply</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -1958,7 +2231,7 @@ p, li { white-space: pre-wrap; }
                    <item row="0" column="0">
                     <widget class="QLabel" name="label_34">
                      <property name="text">
-                      <string>Startup boost</string>
+                      <string>Startup boost (BLDC only)</string>
                      </property>
                     </widget>
                    </item>
@@ -2008,25 +2281,21 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_69">
-                     <property name="text">
-                      <string>Max ramp step (at 1 kHz)</string>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfCcMaxRampStepBox">
-                     <property name="decimals">
-                      <number>4</number>
+                    <spacer name="verticalSpacer_16">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
                      </property>
-                     <property name="maximum">
-                      <double>50.000000000000000</double>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Preferred</enum>
                      </property>
-                     <property name="singleStep">
-                      <double>0.010000000000000</double>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>25</height>
+                      </size>
                      </property>
-                    </widget>
+                    </spacer>
                    </item>
                   </layout>
                  </widget>
@@ -2034,7 +2303,7 @@ p, li { white-space: pre-wrap; }
                 <item>
                  <widget class="QGroupBox" name="groupBox_37">
                   <property name="title">
-                   <string>Backoff and ramping</string>
+                   <string>Backoff and ramping (DC and BLDC only)</string>
                   </property>
                   <property name="flat">
                    <bool>false</bool>
@@ -2094,21 +2363,25 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfCcMaxRampStepBox">
+                     <property name="decimals">
+                      <number>4</number>
+                     </property>
+                     <property name="maximum">
+                      <double>50.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="3" column="0">
-                    <spacer name="verticalSpacer_16">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
+                    <widget class="QLabel" name="label_69">
+                     <property name="text">
+                      <string>Max current ramp step (at 1 kHz)</string>
                      </property>
-                     <property name="sizeType">
-                      <enum>QSizePolicy::Preferred</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>25</height>
-                      </size>
-                     </property>
-                    </spacer>
+                    </widget>
                    </item>
                   </layout>
                  </widget>
@@ -5373,7 +5646,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>mcconfCcBoostBox</tabstop>
   <tabstop>mcconfCcMinBox</tabstop>
   <tabstop>mcconfCcGainBox</tabstop>
-  <tabstop>mcconfCcMaxRampStepBox</tabstop>
   <tabstop>mcconfSpidKiBox</tabstop>
   <tabstop>mcconfSpidMinRpmBox</tabstop>
   <tabstop>mcconfSpidKdBox</tabstop>
