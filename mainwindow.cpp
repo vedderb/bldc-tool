@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mFwVersionReceived = false;
     mFwRetries = 0;
     mCompatibleFws.append(qMakePair(2, 10));
+    mCompatibleFws.append(qMakePair(2, 11));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
