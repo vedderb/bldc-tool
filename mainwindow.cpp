@@ -62,9 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 10));
-    mCompatibleFws.append(qMakePair(2, 11));
-    mCompatibleFws.append(qMakePair(2, 12));
+    mCompatibleFws.append(qMakePair(2, 13));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
