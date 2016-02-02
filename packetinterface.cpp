@@ -314,6 +314,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     double ppm_last_len;
     double dec_adc;
     double dec_adc_voltage;
+    double dec_adc2;
+    double dec_adc_voltage2;
     int fw_major;
     int fw_minor;
 
@@ -599,7 +601,9 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         ind = 0;
         dec_adc = utility::buffer_get_double32(data, 1000000.0, &ind);
         dec_adc_voltage = utility::buffer_get_double32(data, 1000000.0, &ind);
-        emit decodedAdcReceived(dec_adc, dec_adc_voltage);
+        dec_adc2 = utility::buffer_get_double32(data, 1000000.0, &ind);
+        dec_adc_voltage2 = utility::buffer_get_double32(data, 1000000.0, &ind);
+        emit decodedAdcReceived(dec_adc, dec_adc_voltage, dec_adc2, dec_adc_voltage2);
         break;
 
     case COMM_GET_DECODED_CHUK:

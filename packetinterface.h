@@ -88,7 +88,7 @@ signals:
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
     void appconfReceived(app_configuration appconf);
     void decodedPpmReceived(double value, double last_len);
-    void decodedAdcReceived(double value, double voltage);
+    void decodedAdcReceived(double value, double voltage, double value2, double voltage2);
     void decodedChukReceived(double value);
     void motorRLReceived(double r, double l);
     void motorLinkageReceived(double flux_linkage);
