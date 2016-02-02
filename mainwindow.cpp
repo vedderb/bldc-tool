@@ -137,8 +137,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(appconfReceived(app_configuration)));
     connect(mPacketInterface, SIGNAL(decodedPpmReceived(double,double)),
             this, SLOT(decodedPpmReceived(double,double)));
-    connect(mPacketInterface, SIGNAL(decodedAdcReceived(double,double)),
-            this, SLOT(decodedAdcReceived(double,double)));
+    connect(mPacketInterface, SIGNAL(decodedAdcReceived(double,double,double,double)),
+            this, SLOT(decodedAdcReceived(double,double,double,double)));
     connect(mPacketInterface, SIGNAL(decodedChukReceived(double)),
             this, SLOT(decodedChukReceived(double)));
 
@@ -1858,7 +1858,9 @@ void MainWindow::appconfReceived(app_configuration appconf)
     case ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_BUTTON:
         ui->appconfAdcCurrentNorevButtonButton->setChecked(true);
         break;
-
+    case ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_ADC:
+    	ui->appconfAdcCurrentNorevAdcButton->setChecked(true);
+    	break;
     case ADC_CTRL_TYPE_DUTY:
         ui->appconfAdcDutyCycleButton->setChecked(true);
         break;
@@ -1939,10 +1941,13 @@ void MainWindow::decodedPpmReceived(double ppm_value, double ppm_last_len)
     ui->appconfPpmPulsewidthNumber->display(ppm_last_len);
 }
 
-void MainWindow::decodedAdcReceived(double adc_value, double adc_voltage)
+void MainWindow::decodedAdcReceived(double adc_value, double adc_voltage, double adc_value2, double adc_voltage2)
 {
     ui->appconfAdcDecodedBar->setValue(adc_value * 1000.0);
     ui->appconfAdcVoltageNumber->display(adc_voltage);
+
+    ui->appconfAdcDecodedBar2->setValue(adc_value2 * 1000.0);
+    ui->appconfAdcVoltageNumber2->display(adc_voltage2);
 }
 
 void MainWindow::decodedChukReceived(double chuk_value)
@@ -2362,6 +2367,8 @@ void MainWindow::on_appconfWriteButton_clicked()
         appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_CENTER;
     } else if (ui->appconfAdcCurrentNorevButtonButton->isChecked()) {
         appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_BUTTON;
+    } else if (ui->appconfAdcCurrentNorevAdcButton->isChecked()) {
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_ADC;
     } else if (ui->appconfAdcDutyCycleButton->isChecked()) {
         appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_DUTY;
     } else if (ui->appconfAdcDutyCycleCenterButton->isChecked()) {
