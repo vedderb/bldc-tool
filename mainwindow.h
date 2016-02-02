@@ -71,7 +71,7 @@ private slots:
     void focHallTableReceived(QVector<int> hall_table, int res);
     void appconfReceived(app_configuration appconf);
     void decodedPpmReceived(double ppm_value, double ppm_last_len);
-    void decodedAdcReceived(double adc_value, double adc_voltage);
+    void decodedAdcReceived(double adc_value, double adc_voltage, double adc_value2, double adc_voltage2);
     void decodedChukReceived(double chuk_value);
 
     void on_serialConnectButton_clicked();
