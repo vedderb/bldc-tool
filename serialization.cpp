@@ -108,6 +108,15 @@ bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *pare
     xmlwriter.writeTextElement("foc_sl_openloop_time", QString::number(mcconf.foc_sl_openloop_time));
     xmlwriter.writeTextElement("foc_sl_d_current_duty", QString::number(mcconf.foc_sl_d_current_duty));
     xmlwriter.writeTextElement("foc_sl_d_current_factor", QString::number(mcconf.foc_sl_d_current_factor));
+    xmlwriter.writeTextElement("foc_hall_table_0", QString::number(mcconf.foc_hall_table[0]));
+    xmlwriter.writeTextElement("foc_hall_table_1", QString::number(mcconf.foc_hall_table[1]));
+    xmlwriter.writeTextElement("foc_hall_table_2", QString::number(mcconf.foc_hall_table[2]));
+    xmlwriter.writeTextElement("foc_hall_table_3", QString::number(mcconf.foc_hall_table[3]));
+    xmlwriter.writeTextElement("foc_hall_table_4", QString::number(mcconf.foc_hall_table[4]));
+    xmlwriter.writeTextElement("foc_hall_table_5", QString::number(mcconf.foc_hall_table[5]));
+    xmlwriter.writeTextElement("foc_hall_table_6", QString::number(mcconf.foc_hall_table[6]));
+    xmlwriter.writeTextElement("foc_hall_table_7", QString::number(mcconf.foc_hall_table[7]));
+    xmlwriter.writeTextElement("foc_hall_sl_erpm", QString::number(mcconf.foc_hall_sl_erpm));
     xmlwriter.writeTextElement("s_pid_kp", QString::number(mcconf.s_pid_kp));
     xmlwriter.writeTextElement("s_pid_ki", QString::number(mcconf.s_pid_ki));
     xmlwriter.writeTextElement("s_pid_kd", QString::number(mcconf.s_pid_kd));
@@ -221,6 +230,15 @@ bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
                     else if (xmlreader.name() == "foc_sl_openloop_time") {mcconf.foc_sl_openloop_time = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "foc_sl_d_current_duty") {mcconf.foc_sl_d_current_duty = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "foc_sl_d_current_factor") {mcconf.foc_sl_d_current_factor = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "foc_hall_table_0") {mcconf.foc_hall_table[0] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "foc_hall_table_1") {mcconf.foc_hall_table[1] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "foc_hall_table_2") {mcconf.foc_hall_table[2] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "foc_hall_table_3") {mcconf.foc_hall_table[3] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "foc_hall_table_4") {mcconf.foc_hall_table[4] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "foc_hall_table_5") {mcconf.foc_hall_table[5] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "foc_hall_table_6") {mcconf.foc_hall_table[6] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "foc_hall_table_7") {mcconf.foc_hall_table[7] = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "foc_hall_sl_erpm") {mcconf.foc_hall_sl_erpm = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "s_pid_kp") {mcconf.s_pid_kp = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "s_pid_ki") {mcconf.s_pid_ki = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "s_pid_kd") {mcconf.s_pid_kd = xmlreader.readElementText().toDouble();}
