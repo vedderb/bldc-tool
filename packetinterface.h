@@ -66,10 +66,14 @@ public:
     bool measureRL();
     bool measureLinkage(double current, double min_rpm, double low_duty, double resistance);
     bool measureEncoder(double current);
+    bool measureHallFoc(double current);
     void setSendCan(bool mSendCan, unsigned int id);
     void startUdpConnection(QHostAddress ip, int port);
     void stopUdpConnection();
     bool isUdpConnected();
+    bool sendCustomAppData(QByteArray data);
+    bool sendCustomAppData(unsigned char *data, unsigned int len);
+    bool setChukData(chuck_data &data);
 
 signals:
     void dataToSend(QByteArray &data);
@@ -84,11 +88,13 @@ signals:
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
     void appconfReceived(app_configuration appconf);
     void decodedPpmReceived(double value, double last_len);
-    void decodedAdcReceived(double value, double voltage);
+    void decodedAdcReceived(double value, double voltage, double value2, double voltage2);
     void decodedChukReceived(double value);
     void motorRLReceived(double r, double l);
     void motorLinkageReceived(double flux_linkage);
     void encoderParamReceived(double offset, double ratio, bool inverted);
+    void customAppDataReceived(QByteArray data);
+    void focHallTableReceived(QVector<int> hall_table, int res);
     
 public slots:
     void timerSlot();

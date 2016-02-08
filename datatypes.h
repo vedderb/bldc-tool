@@ -82,12 +82,15 @@ typedef enum {
     COMM_DETECT_MOTOR_R_L,
     COMM_DETECT_MOTOR_FLUX_LINKAGE,
     COMM_DETECT_ENCODER,
+    COMM_DETECT_HALL_FOC,
     COMM_REBOOT,
     COMM_ALIVE,
     COMM_GET_DECODED_PPM,
     COMM_GET_DECODED_ADC,
     COMM_GET_DECODED_CHUK,
-    COMM_FORWARD_CAN
+    COMM_FORWARD_CAN,
+    COMM_SET_CHUCK_DATA,
+    COMM_CUSTOM_APP_DATA
 } COMM_PACKET_ID;
 
 typedef enum {
@@ -103,7 +106,8 @@ typedef enum {
 
 typedef enum {
     FOC_SENSOR_MODE_SENSORLESS = 0,
-    FOC_SENSOR_MODE_ENCODER
+    FOC_SENSOR_MODE_ENCODER,
+    FOC_SENSOR_MODE_HALL
 } mc_foc_sensor_mode;
 
 typedef enum {
@@ -188,6 +192,8 @@ typedef struct {
     float foc_sl_d_current_duty;
     float foc_sl_d_current_factor;
     mc_foc_sensor_mode foc_sensor_mode;
+    uint8_t foc_hall_table[8];
+    float foc_hall_sl_erpm;
     // Speed PID
     float s_pid_kp;
     float s_pid_ki;
@@ -260,6 +266,7 @@ typedef enum {
     ADC_CTRL_TYPE_CURRENT_REV_BUTTON,
     ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_CENTER,
     ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_BUTTON,
+	ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_ADC,
     ADC_CTRL_TYPE_DUTY,
     ADC_CTRL_TYPE_DUTY_REV_CENTER,
     ADC_CTRL_TYPE_DUTY_REV_BUTTON
@@ -326,5 +333,15 @@ typedef struct {
     // Nunchuk application settings
     chuk_config app_chuk_conf;
 } app_configuration;
+
+typedef struct {
+    int js_x;
+    int js_y;
+    int acc_x;
+    int acc_y;
+    int acc_z;
+    bool bt_c;
+    bool bt_z;
+} chuck_data;
 
 #endif // DATATYPES_H

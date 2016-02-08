@@ -314,6 +314,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     double ppm_last_len;
     double dec_adc;
     double dec_adc_voltage;
+    double dec_adc2;
+    double dec_adc_voltage2;
     int fw_major;
     int fw_minor;
 
@@ -372,6 +374,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         break;
 
     case COMM_SAMPLE_PRINT:
+        bytes.clear();
         for (int i = 0;i < len;i++) {
             bytes.append(data[i]);
         }
@@ -457,6 +460,9 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.foc_sl_openloop_time = utility::buffer_get_double32(data, 1e3, &ind);
         mcconf.foc_sl_d_current_duty = utility::buffer_get_double32(data, 1e3, &ind);
         mcconf.foc_sl_d_current_factor = utility::buffer_get_double32(data, 1e3, &ind);
+        memcpy(mcconf.foc_hall_table, data + ind, 8);
+        ind += 8;
+        mcconf.foc_hall_sl_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
 
         mcconf.s_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.s_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
@@ -574,6 +580,16 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     }
         break;
 
+    case COMM_DETECT_HALL_FOC: {
+        ind = 0;
+        for (int i = 0;i < 8;i++) {
+            detect_hall_table.append((const unsigned char)(data[ind++]));
+        }
+        int res = (const unsigned char)(data[ind++]);
+        emit focHallTableReceived(detect_hall_table, res);
+    }
+        break;
+
     case COMM_GET_DECODED_PPM:
         ind = 0;
         dec_ppm = utility::buffer_get_double32(data, 1000000.0, &ind);
@@ -585,7 +601,9 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         ind = 0;
         dec_adc = utility::buffer_get_double32(data, 1000000.0, &ind);
         dec_adc_voltage = utility::buffer_get_double32(data, 1000000.0, &ind);
-        emit decodedAdcReceived(dec_adc, dec_adc_voltage);
+        dec_adc2 = utility::buffer_get_double32(data, 1000000.0, &ind);
+        dec_adc_voltage2 = utility::buffer_get_double32(data, 1000000.0, &ind);
+        emit decodedAdcReceived(dec_adc, dec_adc_voltage, dec_adc2, dec_adc_voltage2);
         break;
 
     case COMM_GET_DECODED_CHUK:
@@ -600,6 +618,14 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
 
     case COMM_SET_APPCONF:
         emit ackReceived("APPCONF Write OK");
+        break;
+
+    case COMM_CUSTOM_APP_DATA:
+        bytes.clear();
+        for (int i = 0;i < len;i++) {
+            bytes.append(data[i]);
+        }
+        emit customAppDataReceived(bytes);
         break;
 
     default:
@@ -921,6 +947,9 @@ bool PacketInterface::setMcconf(const mc_configuration &mcconf)
     utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_openloop_time, 1e3, &send_index);
     utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_d_current_duty, 1e3, &send_index);
     utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_d_current_factor, 1e3, &send_index);
+    memcpy(mSendBuffer + send_index, mcconf.foc_hall_table, 8);
+    send_index += 8;
+    utility::buffer_append_double32(mSendBuffer,mcconf.foc_hall_sl_erpm, 1000, &send_index);
 
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kp, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_ki, 1000000, &send_index);
@@ -1103,6 +1132,14 @@ bool PacketInterface::measureEncoder(double current)
     return sendPacket(mSendBuffer, send_index);
 }
 
+bool PacketInterface::measureHallFoc(double current)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_DETECT_HALL_FOC;
+    utility::buffer_append_double32(mSendBuffer, current, 1e3, &send_index);
+    return sendPacket(mSendBuffer, send_index);
+}
+
 void PacketInterface::setSendCan(bool sendCan, unsigned int id)
 {
     mSendCan = sendCan;
@@ -1127,4 +1164,32 @@ void PacketInterface::stopUdpConnection()
 bool PacketInterface::isUdpConnected()
 {
     return QString::compare(mHostAddress.toString(), "0.0.0.0") != 0;
+}
+
+bool PacketInterface::sendCustomAppData(QByteArray data)
+{
+    return sendCustomAppData((unsigned char*)data.data(), data.size());
+}
+
+bool PacketInterface::sendCustomAppData(unsigned char *data, unsigned int len)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_CUSTOM_APP_DATA;
+    memcpy(mSendBuffer, data, len);
+    send_index += len;
+    return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::setChukData(chuck_data &data)
+{
+    qint32 send_index = 0;
+    mSendBuffer[send_index++] = COMM_SET_CHUCK_DATA;
+    mSendBuffer[send_index++] = data.js_x;
+    mSendBuffer[send_index++] = data.js_y;
+    mSendBuffer[send_index++] = data.bt_c;
+    mSendBuffer[send_index++] = data.bt_z;
+    utility::buffer_append_int16(mSendBuffer, data.acc_x, &send_index);
+    utility::buffer_append_int16(mSendBuffer, data.acc_y, &send_index);
+    utility::buffer_append_int16(mSendBuffer, data.acc_z, &send_index);
+    return sendPacket(mSendBuffer, send_index);
 }
