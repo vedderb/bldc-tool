@@ -2096,7 +2096,10 @@ void MainWindow::refreshSerialDevices()
         message += "Description: " + port.description() + "\n";
         message += "manufacturer: " + port.manufacturer() + "\n";
         message += "vendorIdentifier: " + QString::number(port.vendorIdentifier()) + "\n";
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
         message += "serialNumber: " + port.serialNumber() + "\n";
+#endif
         message += "productIdentifier: " + QString::number(port.productIdentifier()) + "\n";
         message += "systemLocation: " + port.systemLocation() + "\n";
         QString isBusy = port.isBusy() ? "true" : "false";
