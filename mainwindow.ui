@@ -1088,7 +1088,7 @@
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.14286pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Try to detect the integrator limit and the BEMF coupling. Also try to detect how the hall sensors are connected and spaced to generate a table for them.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Current is the current that should be used to spin up the motor and min ERPM is the ERPM below which auto-commutation should happen. Adjust them until the motor is able to spin up when clicking start detection.&lt;/span&gt;&lt;/p&gt;
@@ -1105,7 +1105,7 @@ p, li { white-space: pre-wrap; }
                       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.14286pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Detection results will be printed here.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
@@ -3273,7 +3273,7 @@ p, li { white-space: pre-wrap; }
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.14286pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;The cruise control button will maintain the current speed while pressed when current control is used and no throttle is given. The reverse button is used to reverse the throttle when one of the corresponding control modes is used.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;When only the ADC app is used, the TX pin is used for the cruise control button and the RX pin is used for the reverse button. When the ADC and UART apps are used at the same time, the servo input will be used as the button. In this case it will be used for the reverse button when a control mode with button is selected, otherwise it will be used for the cruise control button.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -3772,7 +3772,7 @@ p, li { white-space: pre-wrap; }
                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.14286pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;This has been tested with the wireless Nyko Kama nunchuk. The receiver can be connected directly to the I2C port on the ESC. The y-axis on the joystick is used for acceleration/braking. The buttons have the following functions:&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:600;&quot;&gt;C-Button:&lt;/span&gt;&lt;/p&gt;
@@ -4926,12 +4926,6 @@ p, li { white-space: pre-wrap; }
           <string>Connection (Serial or UDP)</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_28">
-          <item row="2" column="0" colspan="2">
-           <widget class="QLineEdit" name="udpIpEdit"/>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QLineEdit" name="serialDeviceEdit"/>
-          </item>
           <item row="0" column="2">
            <widget class="QPushButton" name="serialConnectButton">
             <property name="text">
@@ -4946,17 +4940,13 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QLineEdit" name="udpIpEdit"/>
+          </item>
           <item row="3" column="0">
            <widget class="QPushButton" name="appconfRebootButton">
             <property name="text">
              <string>Reboot</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1" colspan="2">
-           <widget class="QPushButton" name="disconnectButton">
-            <property name="text">
-             <string>Disconnect</string>
             </property>
            </widget>
           </item>
@@ -4967,11 +4957,18 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
+          <item row="3" column="1" colspan="2">
+           <widget class="QPushButton" name="disconnectButton">
+            <property name="text">
+             <string>Disconnect</string>
+            </property>
+           </widget>
+          </item>
           <item row="4" column="1" colspan="2">
            <widget class="QSpinBox" name="canIdBox"/>
           </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QLineEdit" name="serialDeviceOptEdit"/>
+          <item row="0" column="0" colspan="2">
+           <widget class="QComboBox" name="serialCombobox"/>
           </item>
          </layout>
         </widget>
@@ -5360,7 +5357,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>currentFilterFreqBox</tabstop>
   <tabstop>mcconfLimCurrentSlowAbsMaxBox</tabstop>
   <tabstop>dutyButton</tabstop>
-  <tabstop>serialDeviceEdit</tabstop>
   <tabstop>mcconfLimErpmLimitNegTorqueBox</tabstop>
   <tabstop>rpmBox</tabstop>
   <tabstop>rpmButton</tabstop>
