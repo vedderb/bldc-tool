@@ -1953,7 +1953,7 @@ void MainWindow::on_serialConnectButton_clicked()
         return;
     }
 
-    mSerialPort->setPortName(ui->serialCombobox->currentText());
+    mSerialPort->setPortName(ui->serialCombobox->currentData().toString());
     mSerialPort->open(QIODevice::ReadWrite);
 
     if(!mSerialPort->isOpen()) {
@@ -2107,7 +2107,11 @@ void MainWindow::refreshSerialDevices()
         message += "isNull: " + isNull + "\n";
         message += "\n";
 
-        ui->serialCombobox->addItem(port.systemLocation());
+        QString name = port.portName();
+        if(port.manufacturer() == "STMicroelectronics") {
+            name.insert(0, "VESC - ");
+        }
+        ui->serialCombobox->addItem(name, port.systemLocation());
     }
 
     QMessageBox::information(this, tr("Found devices"), message);
