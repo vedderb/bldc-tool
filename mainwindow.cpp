@@ -2091,7 +2091,7 @@ void MainWindow::refreshSerialDevices()
 
     QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
     QString message;
-    for(const QSerialPortInfo &port : ports) {
+    foreach(const QSerialPortInfo &port, ports) {
         message += "PortName: " + port.portName() + "\n";
         message += "Description: " + port.description() + "\n";
         message += "manufacturer: " + port.manufacturer() + "\n";
