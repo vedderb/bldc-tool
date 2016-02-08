@@ -23,7 +23,6 @@
 #include <QTimer>
 #include <QByteArray>
 #include <QSerialPort>
-#include <QSerialPortInfo>
 
 #include "qcustomplot.h"
 #include "packetinterface.h"

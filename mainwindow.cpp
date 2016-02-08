@@ -23,6 +23,7 @@
 #include <string.h>
 #include <cmath>
 #include <QMessageBox>
+#include <QSerialPortInfo>
 #include "digitalfiltering.h"
 
 namespace {
@@ -2090,37 +2091,16 @@ void MainWindow::refreshSerialDevices()
     ui->serialCombobox->clear();
 
     QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
-    QString message;
     foreach(const QSerialPortInfo &port, ports) {
-        message += "PortName: " + port.portName() + "\n";
-        message += "Description: " + port.description() + "\n";
-        message += "manufacturer: " + port.manufacturer() + "\n";
-        message += "vendorIdentifier: " + QString::number(port.vendorIdentifier()) + "\n";
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
-        message += "serialNumber: " + port.serialNumber() + "\n";
-#endif
-        message += "productIdentifier: " + QString::number(port.productIdentifier()) + "\n";
-        message += "systemLocation: " + port.systemLocation() + "\n";
-        QString isBusy = port.isBusy() ? "true" : "false";
-        message += "isBusy: " + isBusy + "\n";
-        QString isValid = port.isValid() ? "true" : "false";
-        message += "isValid: " + isValid + "\n";
-        QString isNull = port.isNull() ? "true" : "false";
-        message += "isNull: " + isNull + "\n";
-        message += "\n";
-
         QString name = port.portName();
         int index = ui->serialCombobox->count();
+        // put STMicroelectronics device first in list and add prefix
         if(port.manufacturer() == "STMicroelectronics") {
             name.insert(0, "VESC - ");
-            // put STMicroelectronics first in list
             index = 0;
         }
         ui->serialCombobox->insertItem(index, name, port.systemLocation());
     }
-
-    QMessageBox::information(this, tr("Found devices"), message);
 }
 
 void MainWindow::on_replotButton_clicked()
