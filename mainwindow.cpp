@@ -49,28 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
-    QString message;
-    for(const QSerialPortInfo &port : ports) {
-        ui->serialCombobox->addItem(port.portName());
-        message += "PortName: " + port.portName() + "\n";
-        message += "Description: " + port.description() + "\n";
-        message += "manufacturer: " + port.manufacturer() + "\n";
-        message += "vendorIdentifier: " + QString::number(port.vendorIdentifier()) + "\n";
-        message += "serialNumber: " + port.serialNumber() + "\n";
-        message += "productIdentifier: " + QString::number(port.productIdentifier()) + "\n";
-        message += "systemLocation: " + port.systemLocation() + "\n";
-        QString isBusy = port.isBusy() ? "true" : "false";
-        message += "isBusy: " + isBusy + "\n";
-        QString isValid = port.isValid() ? "true" : "false";
-        message += "isValid: " + isValid + "\n";
-        QString isNull = port.isNull() ? "true" : "false";
-        message += "isNull: " + isNull + "\n";
-        message += "\n";
-    }
-
-    QMessageBox::information(this, tr("Found devices"), message);
-
+    refreshSerialDevices();
     ui->udpIpEdit->setText("192.168.1.118");
 
     // Compatible firmwares
@@ -2106,6 +2085,35 @@ void MainWindow::saveExperimentSamplesToFile(QString path)
     file.close();
 }
 
+void MainWindow::refreshSerialDevices()
+{
+    ui->serialCombobox->clear();
+
+    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+    QString message;
+    for(const QSerialPortInfo &port : ports) {
+        message += "PortName: " + port.portName() + "\n";
+        message += "Description: " + port.description() + "\n";
+        message += "manufacturer: " + port.manufacturer() + "\n";
+        message += "vendorIdentifier: " + QString::number(port.vendorIdentifier()) + "\n";
+        message += "serialNumber: " + port.serialNumber() + "\n";
+        message += "productIdentifier: " + QString::number(port.productIdentifier()) + "\n";
+        message += "systemLocation: " + port.systemLocation() + "\n";
+        QString isBusy = port.isBusy() ? "true" : "false";
+        message += "isBusy: " + isBusy + "\n";
+        QString isValid = port.isValid() ? "true" : "false";
+        message += "isValid: " + isValid + "\n";
+        QString isNull = port.isNull() ? "true" : "false";
+        message += "isNull: " + isNull + "\n";
+        message += "\n";
+        if(port.manufacturer() == "STMicroelectronics") {
+            ui->serialCombobox->addItem(port.systemLocation());
+        }
+    }
+
+    QMessageBox::information(this, tr("Found devices"), message);
+}
+
 void MainWindow::on_replotButton_clicked()
 {
     mDoReplot = true;
@@ -2674,4 +2682,9 @@ void MainWindow::on_mcconfFocMeasureHallApplyButton_clicked()
     ui->mcconfFocHallTab5Box->setValue(ui->mcconfFocMeasureHallTab5Box->value());
     ui->mcconfFocHallTab6Box->setValue(ui->mcconfFocMeasureHallTab6Box->value());
     ui->mcconfFocHallTab7Box->setValue(ui->mcconfFocMeasureHallTab7Box->value());
+}
+
+void MainWindow::on_refreshButton_clicked()
+{
+    refreshSerialDevices();
 }

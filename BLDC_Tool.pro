@@ -42,4 +42,5 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui \
     mrichtextedit.ui
 
-RESOURCES +=
+RESOURCES += \
+    resources.qrc
