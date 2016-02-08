@@ -2108,10 +2108,13 @@ void MainWindow::refreshSerialDevices()
         message += "\n";
 
         QString name = port.portName();
+        int index = ui->serialCombobox->count();
         if(port.manufacturer() == "STMicroelectronics") {
             name.insert(0, "VESC - ");
+            // put STMicroelectronics first in list
+            index = 0;
         }
-        ui->serialCombobox->addItem(name, port.systemLocation());
+        ui->serialCombobox->insertItem(index, name, port.systemLocation());
     }
 
     QMessageBox::information(this, tr("Found devices"), message);
