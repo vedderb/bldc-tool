@@ -2106,9 +2106,8 @@ void MainWindow::refreshSerialDevices()
         QString isNull = port.isNull() ? "true" : "false";
         message += "isNull: " + isNull + "\n";
         message += "\n";
-        if(port.manufacturer() == "STMicroelectronics") {
-            ui->serialCombobox->addItem(port.systemLocation());
-        }
+
+        ui->serialCombobox->addItem(port.systemLocation());
     }
 
     QMessageBox::information(this, tr("Found devices"), message);
