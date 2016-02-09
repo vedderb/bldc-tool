@@ -95,42 +95,47 @@ make -j4 build_args="-DSERVO_OUT_ENABLE=1 -DHW_VERSION_48"
 cd $DIR
 cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_48/VESC_servoout.bin
 
-#################### HW_410_411 ########################
+#################### HW_410_411_412 ########################
 
-rm hw_410_411/*
+rm hw_410_411_412/*
 
 # default
 cd $FWPATH
 touch conf_general.h
 make -j4 build_args="-DHW_VERSION_410"
 cd $DIR
-cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411/VESC_default.bin
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411_412/VESC_default.bin
 
 # encoder
 cd $FWPATH
 touch conf_general.h
 make -j4 build_args="-DENCODER_ENABLE=1 -DHW_VERSION_410"
 cd $DIR
-cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411/VESC_encoder.bin
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411_412/VESC_encoder.bin
 
 # 0005ohm
 cd $FWPATH
 touch conf_general.h
 make -j4 build_args="-DCURRENT_SHUNT_RES=0.0005 -DHW_VERSION_410"
 cd $DIR
-cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411/VESC_0005ohm.bin
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411_412/VESC_0005ohm.bin
 
 # ws2811
 cd $FWPATH
 touch conf_general.h
 make -j4 build_args="-DWS2811_ENABLE=1 -DHW_VERSION_410"
 cd $DIR
-cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411/VESC_ws2811.bin
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411_412/VESC_ws2811.bin
 
 # servoout
 cd $FWPATH
 touch conf_general.h
 make -j4 build_args="-DSERVO_OUT_ENABLE=1 -DHW_VERSION_410"
 cd $DIR
-cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411/VESC_servoout.bin
+cp $FWPATH/build/BLDC_4_ChibiOS.bin hw_410_411_412/VESC_servoout.bin
+
+# Clean
+cd $FWPATH
+make clean
+cd $DIR
 

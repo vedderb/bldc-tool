@@ -541,6 +541,17 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         appconf.app_chuk_conf.multi_esc = data[ind++];
         appconf.app_chuk_conf.tc = data[ind++];
         appconf.app_chuk_conf.tc_max_diff = utility::buffer_get_double32(data, 1000.0, &ind);
+
+        appconf.app_nrf_conf.speed = (NRF_SPEED)data[ind++];
+        appconf.app_nrf_conf.power = (NRF_POWER)data[ind++];
+        appconf.app_nrf_conf.crc_type = (NRF_CRC)data[ind++];
+        appconf.app_nrf_conf.retry_delay = (NRF_RETR_DELAY)data[ind++];
+        appconf.app_nrf_conf.retries = data[ind++];
+        appconf.app_nrf_conf.channel = data[ind++];
+        memcpy(appconf.app_nrf_conf.address, data + ind, 3);
+        ind += 3;
+        appconf.app_nrf_conf.send_crc_ack = data[ind++];
+
         emit appconfReceived(appconf);
         break;
 
@@ -1053,6 +1064,16 @@ bool PacketInterface::setAppConf(const app_configuration &appconf)
     mSendBuffer[send_index++] = appconf.app_chuk_conf.multi_esc;
     mSendBuffer[send_index++] = appconf.app_chuk_conf.tc;
     utility::buffer_append_double32(mSendBuffer, appconf.app_chuk_conf.tc_max_diff, 1000.0, &send_index);
+
+    mSendBuffer[send_index++] = appconf.app_nrf_conf.speed;
+    mSendBuffer[send_index++] = appconf.app_nrf_conf.power;
+    mSendBuffer[send_index++] = appconf.app_nrf_conf.crc_type;
+    mSendBuffer[send_index++] = appconf.app_nrf_conf.retry_delay;
+    mSendBuffer[send_index++] = appconf.app_nrf_conf.retries;
+    mSendBuffer[send_index++] = appconf.app_nrf_conf.channel;
+    memcpy(mSendBuffer + send_index, appconf.app_nrf_conf.address, 3);
+    send_index += 3;
+    mSendBuffer[send_index++] = appconf.app_nrf_conf.send_crc_ack;
 
     return sendPacket(mSendBuffer, send_index);
 }

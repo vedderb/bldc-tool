@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 13));
+    mCompatibleFws.append(qMakePair(2, 15));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -1924,10 +1924,69 @@ void MainWindow::appconfReceived(app_configuration appconf)
     ui->appconfChukRampTimePosBox->setValue(appconf.app_chuk_conf.ramp_time_pos);
     ui->appconfChukRampTimeNegBox->setValue(appconf.app_chuk_conf.ramp_time_neg);
     ui->appconfChukErpmPerSBox->setValue(appconf.app_chuk_conf.stick_erpm_per_s_in_cc);
-
     ui->appconfChukMultiGroup->setChecked(appconf.app_chuk_conf.multi_esc);
     ui->appconfChukTcBox->setChecked(appconf.app_chuk_conf.tc);
     ui->appconfChukTcErpmBox->setValue(appconf.app_chuk_conf.tc_max_diff);
+
+    // NRF
+    switch (appconf.app_nrf_conf.speed) {
+    case NRF_SPEED_250K:
+        ui->appconfNrfSpeed250kButton->setChecked(true);
+        break;
+
+    case NRF_SPEED_1M:
+        ui->appconfNrfSpeed1mButton->setChecked(true);
+        break;
+
+    case NRF_SPEED_2M:
+        ui->appconfNrfSpeed2mButton->setChecked(true);
+        break;
+
+    default:
+        break;
+    }
+
+    switch (appconf.app_nrf_conf.power) {
+    case NRF_POWER_M18DBM:
+        ui->appconfNrfPowerM18Button->setChecked(true);
+        break;
+
+    case NRF_POWER_M12DBM:
+        ui->appconfNrfPowerM12Button->setChecked(true);
+        break;
+
+    case NRF_POWER_M6DBM:
+        ui->appconfNrfPowerM6Button->setChecked(true);
+        break;
+
+    case NRF_POWER_0DBM:
+        ui->appconfNrfPower0Button->setChecked(true);
+        break;
+
+    default:
+        break;
+    }
+
+    switch (appconf.app_nrf_conf.crc_type) {
+    case NRF_CRC_1B:
+        ui->appconfNrfCrc1BButton->setChecked(true);
+        break;
+
+    case NRF_CRC_2B:
+        ui->appconfNrfCrc2BButton->setChecked(true);
+        break;
+
+    default:
+        break;
+    }
+
+    ui->appconfNrfRetrDelayBox->setCurrentIndex((unsigned int)appconf.app_nrf_conf.retry_delay);
+    ui->appconfNrfRetrBox->setValue(appconf.app_nrf_conf.retries);
+    ui->appconfNrfChannelBox->setValue(appconf.app_nrf_conf.channel);
+    ui->appconfNrfAddrB0Box->setValue(appconf.app_nrf_conf.address[0]);
+    ui->appconfNrfAddrB1Box->setValue(appconf.app_nrf_conf.address[1]);
+    ui->appconfNrfAddrB2Box->setValue(appconf.app_nrf_conf.address[2]);
+    ui->appconfNrfUseAckBox->setChecked(appconf.app_nrf_conf.send_crc_ack);
 
     mAppconfLoaded = true;
     showStatusInfo("APPCONF Received", true);
@@ -2415,10 +2474,42 @@ void MainWindow::on_appconfWriteButton_clicked()
     appconf.app_chuk_conf.ramp_time_pos = ui->appconfChukRampTimePosBox->value();
     appconf.app_chuk_conf.ramp_time_neg = ui->appconfChukRampTimeNegBox->value();
     appconf.app_chuk_conf.stick_erpm_per_s_in_cc = ui->appconfChukErpmPerSBox->value();
-
     appconf.app_chuk_conf.multi_esc = ui->appconfChukMultiGroup->isChecked();
     appconf.app_chuk_conf.tc = ui->appconfChukTcBox->isChecked();
     appconf.app_chuk_conf.tc_max_diff = ui->appconfChukTcErpmBox->value();
+
+    // NRF
+    if (ui->appconfNrfSpeed250kButton->isChecked()) {
+        appconf.app_nrf_conf.speed = NRF_SPEED_250K;
+    } else if (ui->appconfNrfSpeed1mButton->isChecked()) {
+        appconf.app_nrf_conf.speed = NRF_SPEED_1M;
+    } else if (ui->appconfNrfSpeed2mButton->isChecked()) {
+        appconf.app_nrf_conf.speed = NRF_SPEED_2M;
+    }
+
+    if (ui->appconfNrfPowerM18Button->isChecked()) {
+        appconf.app_nrf_conf.power = NRF_POWER_M18DBM;
+    } else if (ui->appconfNrfPowerM6Button->isChecked()) {
+        appconf.app_nrf_conf.power = NRF_POWER_M6DBM;
+    } else if (ui->appconfNrfPowerM6Button->isChecked()) {
+        appconf.app_nrf_conf.power = NRF_POWER_M6DBM;
+    } else if (ui->appconfNrfPower0Button->isChecked()) {
+        appconf.app_nrf_conf.power = NRF_POWER_0DBM;
+    }
+
+    if (ui->appconfNrfCrc1BButton->isChecked()) {
+        appconf.app_nrf_conf.crc_type = NRF_CRC_1B;
+    } else if (ui->appconfNrfCrc2BButton->isChecked()) {
+        appconf.app_nrf_conf.crc_type = NRF_CRC_2B;
+    }
+
+    appconf.app_nrf_conf.retry_delay = (NRF_RETR_DELAY)ui->appconfNrfRetrDelayBox->currentIndex();
+    appconf.app_nrf_conf.retries = ui->appconfNrfRetrBox->value();
+    appconf.app_nrf_conf.channel = ui->appconfNrfChannelBox->value();
+    appconf.app_nrf_conf.send_crc_ack = ui->appconfNrfUseAckBox->isChecked();
+    appconf.app_nrf_conf.address[0] = ui->appconfNrfAddrB0Box->value();
+    appconf.app_nrf_conf.address[1] = ui->appconfNrfAddrB1Box->value();
+    appconf.app_nrf_conf.address[2] = ui->appconfNrfAddrB2Box->value();
 
     mPacketInterface->setAppConf(appconf);
 }
@@ -2435,6 +2526,11 @@ void MainWindow::on_posCtrlButton_clicked()
 
 void MainWindow::on_firmwareChooseButton_clicked()
 {
+    QMessageBox messageBox;
+    messageBox.warning(this, "Warning", "WARNING: Uploading firmware for the wrong hardware version "
+                                        "WILL damage the VESC for sure. Make sure that you choose the "
+                                        "correct hardware version.");
+
     QString filename = QFileDialog::getOpenFileName(this,
                                                     tr("Choose Firmware File"), ".",
                                                     tr("Binary files (*.bin)"));
