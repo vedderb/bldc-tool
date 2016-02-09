@@ -184,6 +184,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
         case Qt::Key_Left:
         case Qt::Key_Right:
         case Qt::Key_PageDown:
+        case Qt::Key_Escape:
             break;
 
         default:
@@ -233,6 +234,10 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
             } else {
                 mPacketInterface->setCurrentBrake(0.0);
             }
+            break;
+
+        case Qt::Key_Escape:
+            on_offButton_clicked();
             break;
 
         default:
