@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1308</width>
+    <width>1278</width>
     <height>765</height>
    </rect>
   </property>
@@ -591,7 +591,7 @@
              <attribute name="title">
               <string>BLDC</string>
              </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_27">
+             <layout class="QVBoxLayout" name="verticalLayout_23">
               <item>
                <widget class="QGroupBox" name="groupBox_34">
                 <property name="title">
@@ -639,78 +639,32 @@
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="mcconfSlBox">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="title">
-                 <string>Sensorless</string>
-                </property>
-                <property name="checkable">
-                 <bool>false</bool>
-                </property>
-                <property name="checked">
-                 <bool>false</bool>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_21">
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_23">
-                   <item>
-                    <widget class="QGroupBox" name="groupBox_16">
-                     <property name="title">
-                      <string>Commutation Mode</string>
-                     </property>
-                     <property name="checkable">
-                      <bool>false</bool>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_30">
-                      <item>
-                       <widget class="QRadioButton" name="mcconfCommIntButton">
-                        <property name="text">
-                         <string>Integrate</string>
-                        </property>
-                        <property name="checked">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QRadioButton" name="mcconfCommDelayButton">
-                        <property name="text">
-                         <string>Delay</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                   </item>
-                   <item>
-                    <spacer name="verticalSpacer_9">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                  </layout>
-                 </item>
-                 <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_21">
+                <item>
+                 <widget class="QGroupBox" name="mcconfSlBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="title">
+                   <string>Sensorless</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
                   <layout class="QGridLayout" name="gridLayout_12">
-                   <item row="5" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlBrErpmBox">
-                     <property name="maximum">
-                      <double>200000.000000000000000</double>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_26">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important for startup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
-                     <property name="singleStep">
-                      <double>100.000000000000000</double>
+                     <property name="text">
+                      <string>Min ERPM</string>
                      </property>
                     </widget>
                    </item>
@@ -724,97 +678,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_26">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important for startup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="text">
-                      <string>Minimum ERPM</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="0">
-                    <widget class="QLabel" name="label_41">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important. The detection function below can be used to determine this parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="text">
-                      <string>BEMF Coupling</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_28">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important. The detection function below can be used to determine this parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="text">
-                      <string>Integrator limit</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimBox">
-                     <property name="maximum">
-                      <double>2000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>1.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlMinErpmIlBox">
-                     <property name="maximum">
-                      <double>10000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>10.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="1" column="0">
-                    <widget class="QLabel" name="label_27">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important for startup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="text">
-                      <string>Minimum ERPM for integrator limit</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_29">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For phase advance, not so important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="text">
-                      <string>Phase advance at BR ERPM</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlBemfKBox">
-                     <property name="maximum">
-                      <double>5000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>10.000000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimScaleBrBox">
-                     <property name="maximum">
-                      <double>1.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.100000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="0">
                     <widget class="QLabel" name="label_30">
                      <property name="toolTip">
                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For phase advance, not so important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -824,14 +688,44 @@
                      </property>
                     </widget>
                    </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSlBrErpmBox">
+                     <property name="maximum">
+                      <double>200000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>100.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
                    <item row="2" column="0">
-                    <widget class="QLabel" name="label_61">
+                    <widget class="QLabel" name="label_29">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;For phase advance, not so important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
                      <property name="text">
-                      <string>Maximum full brake current during direction change</string>
+                      <string>Phase advance at BR ERPM</string>
                      </property>
                     </widget>
                    </item>
                    <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimScaleBrBox">
+                     <property name="maximum">
+                      <double>1.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.100000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_61">
+                     <property name="text">
+                      <string>Max brake current at dir change</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
                     <widget class="QDoubleSpinBox" name="mcconfSlMaxFbCurrBox">
                      <property name="maximum">
                       <double>300.000000000000000</double>
@@ -839,9 +733,102 @@
                     </widget>
                    </item>
                   </layout>
-                 </item>
-                </layout>
-               </widget>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_16">
+                  <property name="title">
+                   <string>Sensorless - Commutation Mode</string>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_46">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_100">
+                     <property name="text">
+                      <string>Comm Mode</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QRadioButton" name="mcconfCommIntButton">
+                     <property name="text">
+                      <string>Integrate</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QRadioButton" name="mcconfCommDelayButton">
+                     <property name="text">
+                      <string>Delay</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_28">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important. The detection function below can be used to determine this parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="text">
+                      <string>Integrator Limit</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1" colspan="2">
+                    <widget class="QDoubleSpinBox" name="mcconfSlIntLimBox">
+                     <property name="maximum">
+                      <double>2000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>1.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_27">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important for startup&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="text">
+                      <string>Int Limit Min ERPM</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1" colspan="2">
+                    <widget class="QDoubleSpinBox" name="mcconfSlMinErpmIlBox">
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_41">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Important. The detection function below can be used to determine this parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="text">
+                      <string>BEMF Coupling</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1" colspan="2">
+                    <widget class="QDoubleSpinBox" name="mcconfSlBemfKBox">
+                     <property name="maximum">
+                      <double>5000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
               </item>
               <item>
                <widget class="QGroupBox" name="groupBox_12">
@@ -977,6 +964,19 @@
                </widget>
               </item>
               <item>
+               <spacer name="verticalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>209</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QGroupBox" name="groupBox_11">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -989,128 +989,31 @@
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_24">
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_26">
-                   <item>
+                  <layout class="QGridLayout" name="gridLayout_47">
+                   <item row="0" column="0">
                     <widget class="QPushButton" name="mcconfDetectMotorParamButton">
                      <property name="text">
                       <string>Start detection</string>
                      </property>
                     </widget>
                    </item>
-                   <item>
-                    <layout class="QGridLayout" name="gridLayout_7">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_43">
-                       <property name="text">
-                        <string>Current</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfDetectCurrentBox">
-                       <property name="suffix">
-                        <string> A</string>
-                       </property>
-                       <property name="value">
-                        <double>6.000000000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="label_44">
-                       <property name="text">
-                        <string>Min ERPM</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfDetectErpmBox">
-                       <property name="decimals">
-                        <number>1</number>
-                       </property>
-                       <property name="minimum">
-                        <double>10.000000000000000</double>
-                       </property>
-                       <property name="maximum">
-                        <double>10000.000000000000000</double>
-                       </property>
-                       <property name="singleStep">
-                        <double>10.000000000000000</double>
-                       </property>
-                       <property name="value">
-                        <double>600.000000000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QLabel" name="label_42">
-                       <property name="toolTip">
-                        <string>The duty cycle at which the BEMF coupling is measured. A value between 0.03 and 0.15 usually works.</string>
-                       </property>
-                       <property name="text">
-                        <string>Low duty</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="1">
-                      <widget class="QDoubleSpinBox" name="mcconfDetectLowDutyBox">
-                       <property name="maximum">
-                        <double>0.400000000000000</double>
-                       </property>
-                       <property name="singleStep">
-                        <double>0.010000000000000</double>
-                       </property>
-                       <property name="value">
-                        <double>0.050000000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
+                   <item row="1" column="0">
                     <spacer name="verticalSpacer_5">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
                      </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Preferred</enum>
+                     </property>
                      <property name="sizeHint" stdset="0">
                       <size>
                        <width>20</width>
-                       <height>40</height>
+                       <height>13</height>
                       </size>
                      </property>
                     </spacer>
                    </item>
-                  </layout>
-                 </item>
-                 <item>
-                  <widget class="QTextBrowser" name="mcconfDetectBrowser">
-                   <property name="html">
-                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Try to detect the integrator limit and the BEMF coupling. Also try to detect how the hall sensors are connected and spaced to generate a table for them.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans Serif'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Current is the current that should be used to spin up the motor and min ERPM is the ERPM below which auto-commutation should happen. Adjust them until the motor is able to spin up when clicking start detection.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Low duty is the duty cycle at which the BEMF coupling is measured. It should be kept as low as possible as long as the motor is able to run smoothly at it.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_34">
-                   <item>
-                    <widget class="QTextBrowser" name="mcconfDetectResultBrowser">
-                     <property name="html">
-                      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Detection results will be printed here.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item>
+                   <item row="2" column="0">
                     <widget class="QPushButton" name="mcconfDetectApplyButton">
                      <property name="text">
                       <string>Apply</string>
@@ -1119,21 +1022,95 @@ p, li { white-space: pre-wrap; }
                    </item>
                   </layout>
                  </item>
+                 <item>
+                  <layout class="QGridLayout" name="gridLayout_7">
+                   <item row="0" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfDetectCurrentBox">
+                     <property name="suffix">
+                      <string> A</string>
+                     </property>
+                     <property name="value">
+                      <double>6.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_44">
+                     <property name="text">
+                      <string>Min ERPM</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfDetectErpmBox">
+                     <property name="decimals">
+                      <number>1</number>
+                     </property>
+                     <property name="minimum">
+                      <double>10.000000000000000</double>
+                     </property>
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>10.000000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>600.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_42">
+                     <property name="toolTip">
+                      <string>The duty cycle at which the BEMF coupling is measured. A value between 0.03 and 0.15 usually works.</string>
+                     </property>
+                     <property name="text">
+                      <string>Low duty</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfDetectLowDutyBox">
+                     <property name="maximum">
+                      <double>0.400000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>0.050000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_43">
+                     <property name="text">
+                      <string>Current</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QTextBrowser" name="mcconfDetectResultBrowser">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="html">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Detection results will be printed here.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
                 </layout>
                </widget>
-              </item>
-              <item>
-               <spacer name="verticalSpacer_7">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>209</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </widget>
@@ -1347,28 +1324,6 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="4" column="2">
-                    <widget class="QDoubleSpinBox" name="mcconfFocDtCompBox">
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dead time compensation. Getting this value right is important for the low speed performance of the sensorless observer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="prefix">
-                      <string>DTc: </string>
-                     </property>
-                     <property name="suffix">
-                      <string> µS</string>
-                     </property>
-                     <property name="decimals">
-                      <number>3</number>
-                     </property>
-                     <property name="maximum">
-                      <double>10000.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.010000000000000</double>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="4" column="1">
                     <widget class="QSpinBox" name="mcconfFocFSwBox">
                      <property name="toolTip">
@@ -1392,6 +1347,28 @@ p, li { white-space: pre-wrap; }
                     <widget class="QLabel" name="label_94">
                      <property name="text">
                       <string>F_SW and DTc</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QDoubleSpinBox" name="mcconfFocDtCompBox">
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dead time compensation. Getting this value right is important for the low speed performance of the sensorless observer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="prefix">
+                      <string>DTc: </string>
+                     </property>
+                     <property name="suffix">
+                      <string> µS</string>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -1424,7 +1401,7 @@ p, li { white-space: pre-wrap; }
                    <item row="4" column="2">
                     <widget class="QPushButton" name="mcconfFocObserverGainCalcButton">
                      <property name="text">
-                      <string>Calculate (Req: L)</string>
+                      <string>Cal (Req: L)</string>
                      </property>
                     </widget>
                    </item>
@@ -1894,13 +1871,6 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="4">
-                  <widget class="QLabel" name="label_93">
-                   <property name="text">
-                    <string>← To spin up for λ</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="2" column="2">
                   <widget class="QDoubleSpinBox" name="mcconfFocDetectDutyBox">
                    <property name="toolTip">
@@ -1939,6 +1909,13 @@ p, li { white-space: pre-wrap; }
                    </property>
                    <property name="value">
                     <double>700.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="4" colspan="2">
+                  <widget class="QLabel" name="label_93">
+                   <property name="text">
+                    <string>← To spin up for λ</string>
                    </property>
                   </widget>
                  </item>
@@ -2171,7 +2148,7 @@ p, li { white-space: pre-wrap; }
               <item>
                <widget class="QGroupBox" name="groupBox_13">
                 <property name="title">
-                 <string>PWM mode</string>
+                 <string>PWM mode (DC and BLDC only)</string>
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_44">
                  <item>
@@ -2330,19 +2307,22 @@ p, li { white-space: pre-wrap; }
                     </widget>
                    </item>
                    <item row="1" column="0">
-                    <widget class="QLabel" name="label_33">
+                    <widget class="QLabel" name="label_69">
                      <property name="text">
-                      <string>Speed limit ramp step</string>
+                      <string>Max current ramp step (at 1 kHz)</string>
                      </property>
                     </widget>
                    </item>
                    <item row="1" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfMDutyRampStepSpeedLimBox">
+                    <widget class="QDoubleSpinBox" name="mcconfCcMaxRampStepBox">
                      <property name="decimals">
-                      <number>5</number>
+                      <number>4</number>
+                     </property>
+                     <property name="maximum">
+                      <double>50.000000000000000</double>
                      </property>
                      <property name="singleStep">
-                      <double>0.000100000000000</double>
+                      <double>0.010000000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -2363,23 +2343,20 @@ p, li { white-space: pre-wrap; }
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="1">
-                    <widget class="QDoubleSpinBox" name="mcconfCcMaxRampStepBox">
-                     <property name="decimals">
-                      <number>4</number>
-                     </property>
-                     <property name="maximum">
-                      <double>50.000000000000000</double>
-                     </property>
-                     <property name="singleStep">
-                      <double>0.010000000000000</double>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_33">
+                     <property name="text">
+                      <string>Speed limit ramp step</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_69">
-                     <property name="text">
-                      <string>Max current ramp step (at 1 kHz)</string>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfMDutyRampStepSpeedLimBox">
+                     <property name="decimals">
+                      <number>5</number>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.000100000000000</double>
                      </property>
                     </widget>
                    </item>
@@ -3553,10 +3530,10 @@ p, li { white-space: pre-wrap; }
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;The cruise control button will maintain the current speed while pressed when current control is used and no throttle is given. The reverse button is used to reverse the throttle when one of the corresponding control modes is used.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;When only the ADC app is used, the TX pin is used for the cruise control button and the RX pin is used for the reverse button. When the ADC and UART apps are used at the same time, the servo input will be used as the button. In this case it will be used for the reverse button when a control mode with button is selected, otherwise it will be used for the cruise control button.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The cruise control button will maintain the current speed while pressed when current control is used and no throttle is given. The reverse button is used to reverse the throttle when one of the corresponding control modes is used.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;When only the ADC app is used, the TX pin is used for the cruise control button and the RX pin is used for the reverse button. When the ADC and UART apps are used at the same time, the servo input will be used as the button. In this case it will be used for the reverse button when a control mode with button is selected, otherwise it will be used for the cruise control button.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                   </widget>
                  </item>
@@ -4085,16 +4062,16 @@ p, li { white-space: pre-wrap; }
                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;This has been tested with the wireless Nyko Kama nunchuk. The receiver can be connected directly to the I2C port on the ESC. The y-axis on the joystick is used for acceleration/braking. The buttons have the following functions:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:600;&quot;&gt;C-Button:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Cruise control. If the C-button is pressed, the ESC will maintail the current speed with a PID control loop. The joystick can still be used to accelerate and brake, but as soon as it is returned to the center position the new speed will be maintained, as long as the C-button remains pressed.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:600;&quot;&gt;Z-Button:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;The Z-button is used to change the direction of the motor if reverse is activated. Without reverse, Z has no effect.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;There is also a safety function. If nothing received from the nunchuk (including the accelerometers) changes for longer than the timeout value in the &lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; font-style:italic;&quot;&gt;General&lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt; tab, the timeout function will be activated and either release the motor or brake with the current specified next to the timeout value.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This has been tested with the wireless Nyko Kama nunchuk. The receiver can be connected directly to the I2C port on the ESC. The y-axis on the joystick is used for acceleration/braking. The buttons have the following functions:&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;C-Button:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Cruise control. If the C-button is pressed, the ESC will maintail the current speed with a PID control loop. The joystick can still be used to accelerate and brake, but as soon as it is returned to the center position the new speed will be maintained, as long as the C-button remains pressed.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z-Button:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The Z-button is used to change the direction of the motor if reverse is activated. Without reverse, Z has no effect.&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;There is also a safety function. If nothing received from the nunchuk (including the accelerometers) changes for longer than the timeout value in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab, the timeout function will be activated and either release the motor or brake with the current specified next to the timeout value.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -4909,13 +4886,13 @@ p, li { white-space: pre-wrap; }
             <item>
              <widget class="QGroupBox" name="groupBox_4">
               <property name="title">
-               <string>Current FIR filter</string>
+               <string>Filter 1</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_4">
                <item row="0" column="0">
                 <widget class="QCheckBox" name="currentFilterActiveBox">
                  <property name="text">
-                  <string>Activate filter</string>
+                  <string>Activate</string>
                  </property>
                 </widget>
                </item>
@@ -4924,7 +4901,7 @@ p, li { white-space: pre-wrap; }
                  <item>
                   <widget class="QRadioButton" name="firRadioButton">
                    <property name="text">
-                    <string>FIR filter</string>
+                    <string>FIR</string>
                    </property>
                    <property name="checked">
                     <bool>true</bool>
@@ -4934,7 +4911,7 @@ p, li { white-space: pre-wrap; }
                  <item>
                   <widget class="QRadioButton" name="meanRadioButton">
                    <property name="text">
-                    <string>Mean value filter</string>
+                    <string>Mean value</string>
                    </property>
                   </widget>
                  </item>
@@ -4943,7 +4920,7 @@ p, li { white-space: pre-wrap; }
                <item row="1" column="0">
                 <widget class="QCheckBox" name="compDelayBox">
                  <property name="text">
-                  <string>Compensate Delay</string>
+                  <string>Delay Comp</string>
                  </property>
                 </widget>
                </item>
@@ -4952,7 +4929,7 @@ p, li { white-space: pre-wrap; }
                  <item row="0" column="0">
                   <widget class="QLabel" name="label_6">
                    <property name="text">
-                    <string>Normalized Stop Frequency</string>
+                    <string>Stop Frequency</string>
                    </property>
                   </widget>
                  </item>
@@ -4975,7 +4952,7 @@ p, li { white-space: pre-wrap; }
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_7">
                    <property name="text">
-                    <string>Filter Taps (power of two)</string>
+                    <string>Filter Taps (2^)</string>
                    </property>
                   </widget>
                  </item>
@@ -4997,7 +4974,7 @@ p, li { white-space: pre-wrap; }
                <item row="2" column="0">
                 <widget class="QCheckBox" name="hammingBox">
                  <property name="text">
-                  <string>Use Hamming Window</string>
+                  <string>Hammnig</string>
                  </property>
                 </widget>
                </item>
@@ -5007,13 +4984,13 @@ p, li { white-space: pre-wrap; }
             <item>
              <widget class="QGroupBox" name="groupBox_7">
               <property name="title">
-               <string>Second current FIR filter</string>
+               <string>Filter 2</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
                <item row="0" column="0">
                 <widget class="QCheckBox" name="currentFilterActiveBox2">
                  <property name="text">
-                  <string>Activate second filter</string>
+                  <string>Activate</string>
                  </property>
                 </widget>
                </item>
@@ -5022,7 +4999,7 @@ p, li { white-space: pre-wrap; }
                  <item>
                   <widget class="QRadioButton" name="firRadioButton2">
                    <property name="text">
-                    <string>FIR filter</string>
+                    <string>FIR</string>
                    </property>
                    <property name="checked">
                     <bool>true</bool>
@@ -5032,7 +5009,7 @@ p, li { white-space: pre-wrap; }
                  <item>
                   <widget class="QRadioButton" name="meanRadioButton2">
                    <property name="text">
-                    <string>Mean value filter</string>
+                    <string>Mean value</string>
                    </property>
                   </widget>
                  </item>
@@ -5043,7 +5020,7 @@ p, li { white-space: pre-wrap; }
                  <item row="0" column="0">
                   <widget class="QLabel" name="label_8">
                    <property name="text">
-                    <string>Normalized Stop Frequency</string>
+                    <string>Stop Frequency</string>
                    </property>
                   </widget>
                  </item>
@@ -5066,7 +5043,7 @@ p, li { white-space: pre-wrap; }
                  <item row="1" column="0">
                   <widget class="QLabel" name="label_9">
                    <property name="text">
-                    <string>Filter Taps (power of two)</string>
+                    <string>Filter Taps (2^)</string>
                    </property>
                   </widget>
                  </item>
@@ -5088,7 +5065,7 @@ p, li { white-space: pre-wrap; }
                <item row="2" column="0">
                 <widget class="QCheckBox" name="hammingBox2">
                  <property name="text">
-                  <string>Use Hamming Window</string>
+                  <string>Hamming</string>
                  </property>
                 </widget>
                </item>
@@ -5338,17 +5315,10 @@ p, li { white-space: pre-wrap; }
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
            <layout class="QGridLayout" name="gridLayout_8">
-            <item row="0" column="1">
+            <item row="0" column="0">
              <widget class="QPushButton" name="detectButton">
               <property name="text">
                <string>Inductance</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_11">
-              <property name="text">
-               <string>Display Position</string>
               </property>
              </widget>
             </item>
@@ -5359,33 +5329,46 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="0" column="4">
+            <item row="0" column="3">
              <widget class="QPushButton" name="detectEncoderPosErrorButton">
               <property name="text">
                <string>Encoder Pos Error</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="3">
+            <item row="0" column="2">
              <widget class="QPushButton" name="detectEncoderButton">
               <property name="text">
                <string>Encoder</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="5">
+            <item row="0" column="1">
+             <widget class="QPushButton" name="detectObserverButton">
+              <property name="text">
+               <string>Observer</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
              <widget class="QPushButton" name="detectEncoderObserverErrorButton">
               <property name="text">
                <string>Encoder Observer Error</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="2">
-             <widget class="QPushButton" name="detectObserverButton">
-              <property name="text">
-               <string>Observer</string>
+            <item row="0" column="5">
+             <spacer name="horizontalSpacer_36">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
-             </widget>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </item>
@@ -5593,364 +5576,119 @@ p, li { white-space: pre-wrap; }
     </item>
     <item>
      <widget class="QWidget" name="widget2" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_26">
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
-         <property name="title">
-          <string>Connection (Serial or UDP)</string>
+        <widget class="QToolBox" name="toolBox">
+         <property name="currentIndex">
+          <number>0</number>
          </property>
-         <layout class="QGridLayout" name="gridLayout_28">
-          <item row="3" column="0">
-           <widget class="QPushButton" name="appconfRebootButton">
-            <property name="text">
-             <string>Reboot</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="canFwdBox">
-            <property name="text">
-             <string>CAN Fwd</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QPushButton" name="serialConnectButton">
-            <property name="text">
-             <string>Connect</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1" colspan="3">
-           <widget class="QPushButton" name="disconnectButton">
-            <property name="text">
-             <string>Disconnect</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3">
-           <widget class="QPushButton" name="udpConnectButton">
-            <property name="text">
-             <string>Connect</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1" colspan="3">
-           <widget class="QSpinBox" name="canIdBox"/>
-          </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QLineEdit" name="udpIpEdit"/>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QComboBox" name="serialCombobox"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="refreshButton">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="resources.qrc">
-              <normaloff>:/res/refresh.png</normaloff>:/res/refresh.png</iconset>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QWidget" name="page">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>235</width>
+            <height>78</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>Serial Connection</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_49">
+           <item row="0" column="0" colspan="2">
+            <widget class="QComboBox" name="serialCombobox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="refreshButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="resources.qrc">
+               <normaloff>:/res/refresh.png</normaloff>:/res/refresh.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="serialConnectButton">
+             <property name="text">
+              <string>Connect</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="page_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>235</width>
+            <height>78</height>
+           </rect>
+          </property>
+          <attribute name="label">
+           <string>UDP Connection</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_50">
+           <item row="0" column="0">
+            <widget class="QLineEdit" name="udpIpEdit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="udpConnectButton">
+             <property name="text">
+              <string>Connect</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+          <zorder>udpIpEdit</zorder>
+          <zorder>udpConnectButton</zorder>
+          <zorder>udpIpEdit</zorder>
+          <zorder>udpConnectButton</zorder>
+         </widget>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
-         <property name="title">
-          <string>Control</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="0">
-           <widget class="QDoubleSpinBox" name="dutyBox">
-            <property name="minimum">
-             <double>-1.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>1.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.010000000000000</double>
-            </property>
-            <property name="value">
-             <double>0.200000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="dutyButton">
-            <property name="text">
-             <string>Duty Cycle</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QSpinBox" name="rpmBox">
-            <property name="minimum">
-             <number>-100000</number>
-            </property>
-            <property name="maximum">
-             <number>100000</number>
-            </property>
-            <property name="singleStep">
-             <number>1000</number>
-            </property>
-            <property name="value">
-             <number>15000</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="rpmButton">
-            <property name="text">
-             <string>RPM</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QDoubleSpinBox" name="currentBox">
-            <property name="minimum">
-             <double>-200.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>200.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.500000000000000</double>
-            </property>
-            <property name="value">
-             <double>3.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QPushButton" name="currentBrakeButton">
-            <property name="text">
-             <string>Brake Current</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QDoubleSpinBox" name="currentBrakeBox">
-            <property name="minimum">
-             <double>0.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>200.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.500000000000000</double>
-            </property>
-            <property name="value">
-             <double>3.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="currentButton">
-            <property name="text">
-             <string>Current</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="posCtrlButton">
-            <property name="text">
-             <string>Position</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QDoubleSpinBox" name="posCtrlBox">
-            <property name="decimals">
-             <number>3</number>
-            </property>
-            <property name="maximum">
-             <double>360.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QPushButton" name="offButton">
-            <property name="text">
-             <string>Release</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="overrideKbBox">
-            <property name="text">
-             <string>KB Ctrl</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QDoubleSpinBox" name="arrowCurrentBox">
-            <property name="maximum">
-             <double>200.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.500000000000000</double>
-            </property>
-            <property name="value">
-             <double>3.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QPushButton" name="offBrakeButton">
-            <property name="text">
-             <string>Full Brake</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox">
-         <property name="title">
-          <string>BEMF and Current Sampling</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <layout class="QGridLayout" name="gridLayout">
-            <item row="1" column="0">
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>Samples</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Decimation</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="sampleNumBox">
-              <property name="minimum">
-               <number>10</number>
-              </property>
-              <property name="maximum">
-               <number>2000</number>
-              </property>
-              <property name="singleStep">
-               <number>100</number>
-              </property>
-              <property name="value">
-               <number>1000</number>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QSpinBox" name="sampleFreqBox">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <number>200000</number>
-              </property>
-              <property name="singleStep">
-               <number>1000</number>
-              </property>
-              <property name="value">
-               <number>40000</number>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QSpinBox" name="sampleIntBox">
-              <property name="minimum">
-               <number>1</number>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_5">
-              <property name="text">
-               <string>Fs for FFT</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QPushButton" name="getDataButton">
-              <property name="text">
-               <string>Now</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="getDataStartButton">
-              <property name="text">
-               <string>At start</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_5">
-         <property name="title">
-          <string>Plot Control</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_27">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="horizontalZoomBox">
-            <property name="text">
-             <string>HZoom</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="verticalZoomBox">
-            <property name="text">
-             <string>VZoom</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QPushButton" name="rescaleButton">
-            <property name="text">
-             <string>Rescale</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="replotButton">
-            <property name="text">
-             <string>Replot</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
+        <layout class="QGridLayout" name="gridLayout_28">
+         <item row="0" column="0" colspan="2">
+          <widget class="QPushButton" name="disconnectButton">
+           <property name="text">
+            <string>Disconnect</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="appconfRebootButton">
+           <property name="text">
+            <string>Reboot</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QSpinBox" name="canIdBox"/>
+         </item>
+         <item row="1" column="1" colspan="2">
+          <widget class="QCheckBox" name="canFwdBox">
+           <property name="text">
+            <string>CAN Fwd</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
         <spacer name="verticalSpacer">
@@ -5964,6 +5702,353 @@ p, li { white-space: pre-wrap; }
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QTabWidget" name="tabWidget_6">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="tab_26">
+          <attribute name="title">
+           <string>Control</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="title">
+              <string>Control</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_2">
+              <item row="0" column="0">
+               <widget class="QDoubleSpinBox" name="dutyBox">
+                <property name="minimum">
+                 <double>-1.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>1.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="value">
+                 <double>0.200000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QPushButton" name="dutyButton">
+                <property name="text">
+                 <string>Duty</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QSpinBox" name="rpmBox">
+                <property name="minimum">
+                 <number>-100000</number>
+                </property>
+                <property name="maximum">
+                 <number>100000</number>
+                </property>
+                <property name="singleStep">
+                 <number>1000</number>
+                </property>
+                <property name="value">
+                 <number>15000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QPushButton" name="rpmButton">
+                <property name="text">
+                 <string>RPM</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QDoubleSpinBox" name="currentBox">
+                <property name="suffix">
+                 <string> A</string>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
+                <property name="minimum">
+                 <double>-200.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>200.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.500000000000000</double>
+                </property>
+                <property name="value">
+                 <double>3.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QPushButton" name="currentButton">
+                <property name="text">
+                 <string>Current</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QPushButton" name="currentBrakeButton">
+                <property name="text">
+                 <string>Brake</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QPushButton" name="posCtrlButton">
+                <property name="text">
+                 <string>Position</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QDoubleSpinBox" name="currentBrakeBox">
+                <property name="suffix">
+                 <string> A</string>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
+                <property name="minimum">
+                 <double>0.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>200.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.500000000000000</double>
+                </property>
+                <property name="value">
+                 <double>3.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QDoubleSpinBox" name="posCtrlBox">
+                <property name="decimals">
+                 <number>3</number>
+                </property>
+                <property name="maximum">
+                 <double>360.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QCheckBox" name="overrideKbBox">
+                <property name="text">
+                 <string>KB Ctrl</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QDoubleSpinBox" name="arrowCurrentBox">
+                <property name="maximum">
+                 <double>200.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.500000000000000</double>
+                </property>
+                <property name="value">
+                 <double>3.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0" colspan="2">
+               <widget class="QPushButton" name="offBrakeButton">
+                <property name="text">
+                 <string>Full Brake</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_27">
+          <attribute name="title">
+           <string>Plot and Sample</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_38">
+           <item>
+            <widget class="QGroupBox" name="groupBox">
+             <property name="title">
+              <string>BEMF and Current Sampling</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <item>
+               <layout class="QGridLayout" name="gridLayout">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label">
+                  <property name="text">
+                   <string>Samples</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_2">
+                  <property name="text">
+                   <string>Decimation</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QSpinBox" name="sampleNumBox">
+                  <property name="minimum">
+                   <number>10</number>
+                  </property>
+                  <property name="maximum">
+                   <number>2000</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>100</number>
+                  </property>
+                  <property name="value">
+                   <number>1000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QSpinBox" name="sampleFreqBox">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <number>200000</number>
+                  </property>
+                  <property name="singleStep">
+                   <number>1000</number>
+                  </property>
+                  <property name="value">
+                   <number>40000</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QSpinBox" name="sampleIntBox">
+                  <property name="minimum">
+                   <number>1</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="label_5">
+                  <property name="text">
+                   <string>Fs for FFT</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QPushButton" name="getDataButton">
+                  <property name="text">
+                   <string>Now</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QPushButton" name="getDataStartButton">
+                  <property name="text">
+                   <string>At start</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_5">
+             <property name="title">
+              <string>Plot Control</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_27">
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="horizontalZoomBox">
+                <property name="text">
+                 <string>HZoom</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="verticalZoomBox">
+                <property name="text">
+                 <string>VZoom</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QPushButton" name="rescaleButton">
+                <property name="text">
+                 <string>Rescale</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QPushButton" name="replotButton">
+                <property name="text">
+                 <string>Replot</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <spacer name="verticalSpacer_19">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="offButton">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>15</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Release Motor</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -6037,12 +6122,10 @@ p, li { white-space: pre-wrap; }
   <tabstop>mcconfSensorModeHybridButton</tabstop>
   <tabstop>mcconfCommIntButton</tabstop>
   <tabstop>mcconfCommDelayButton</tabstop>
-  <tabstop>disconnectButton</tabstop>
   <tabstop>sampleFreqBox</tabstop>
   <tabstop>mcconfTypeDcButton</tabstop>
   <tabstop>tabWidget_4</tabstop>
   <tabstop>currentFilterTapBox</tabstop>
-  <tabstop>serialConnectButton</tabstop>
   <tabstop>mcconfTypeBldcButton</tabstop>
   <tabstop>dutyBox</tabstop>
   <tabstop>currentFilterFreqBox</tabstop>
@@ -6055,8 +6138,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>mcconfDetectCurrentBox</tabstop>
   <tabstop>mcconfDetectErpmBox</tabstop>
   <tabstop>mcconfDetectLowDutyBox</tabstop>
-  <tabstop>mcconfDetectBrowser</tabstop>
-  <tabstop>mcconfDetectResultBrowser</tabstop>
   <tabstop>mcconfPwmModeSyncButton</tabstop>
   <tabstop>mcconfPwmModeBipolarButton</tabstop>
   <tabstop>mcconfPwmModeNonsyncHiswButton</tabstop>
@@ -6194,10 +6275,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>experimentAutosaveBox</tabstop>
   <tabstop>experimentAutosaveIntervalBox</tabstop>
   <tabstop>servoOutputSlider</tabstop>
-  <tabstop>udpIpEdit</tabstop>
-  <tabstop>udpConnectButton</tabstop>
-  <tabstop>canFwdBox</tabstop>
-  <tabstop>canIdBox</tabstop>
   <tabstop>currentBox</tabstop>
   <tabstop>currentButton</tabstop>
   <tabstop>currentBrakeBox</tabstop>
@@ -6206,15 +6283,12 @@ p, li { white-space: pre-wrap; }
   <tabstop>posCtrlButton</tabstop>
   <tabstop>overrideKbBox</tabstop>
   <tabstop>arrowCurrentBox</tabstop>
-  <tabstop>offButton</tabstop>
   <tabstop>offBrakeButton</tabstop>
   <tabstop>getDataButton</tabstop>
   <tabstop>getDataStartButton</tabstop>
   <tabstop>appconfAdcInvertCcButtonBox</tabstop>
   <tabstop>textBrowser_2</tabstop>
-  <tabstop>mcconfMDutyRampStepBox</tabstop>
   <tabstop>mcconfMDutyRampStepSpeedLimBox</tabstop>
-  <tabstop>mcconfMCurrentBackoffGainBox</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>
@@ -6231,8 +6305,8 @@ p, li { white-space: pre-wrap; }
      <y>638</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6247,8 +6321,8 @@ p, li { white-space: pre-wrap; }
      <y>718</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6263,8 +6337,8 @@ p, li { white-space: pre-wrap; }
      <y>673</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6275,12 +6349,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1314</x>
-     <y>573</y>
+     <x>1268</x>
+     <y>482</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6295,8 +6369,8 @@ p, li { white-space: pre-wrap; }
      <y>705</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6311,8 +6385,8 @@ p, li { white-space: pre-wrap; }
      <y>671</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6327,8 +6401,8 @@ p, li { white-space: pre-wrap; }
      <y>706</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6343,8 +6417,8 @@ p, li { white-space: pre-wrap; }
      <y>638</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6359,8 +6433,8 @@ p, li { white-space: pre-wrap; }
      <y>71</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6375,8 +6449,8 @@ p, li { white-space: pre-wrap; }
      <y>638</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6391,8 +6465,8 @@ p, li { white-space: pre-wrap; }
      <y>638</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6407,8 +6481,8 @@ p, li { white-space: pre-wrap; }
      <y>675</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6423,8 +6497,8 @@ p, li { white-space: pre-wrap; }
      <y>707</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6439,8 +6513,8 @@ p, li { white-space: pre-wrap; }
      <y>706</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6455,8 +6529,8 @@ p, li { white-space: pre-wrap; }
      <y>673</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6471,8 +6545,8 @@ p, li { white-space: pre-wrap; }
      <y>71</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6487,8 +6561,8 @@ p, li { white-space: pre-wrap; }
      <y>571</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6503,8 +6577,8 @@ p, li { white-space: pre-wrap; }
      <y>571</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6519,8 +6593,8 @@ p, li { white-space: pre-wrap; }
      <y>571</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6535,8 +6609,8 @@ p, li { white-space: pre-wrap; }
      <y>571</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6551,8 +6625,8 @@ p, li { white-space: pre-wrap; }
      <y>571</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6567,8 +6641,8 @@ p, li { white-space: pre-wrap; }
      <y>571</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6583,8 +6657,8 @@ p, li { white-space: pre-wrap; }
      <y>718</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6599,8 +6673,8 @@ p, li { white-space: pre-wrap; }
      <y>718</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6615,8 +6689,8 @@ p, li { white-space: pre-wrap; }
      <y>718</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6631,8 +6705,8 @@ p, li { white-space: pre-wrap; }
      <y>718</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6647,8 +6721,8 @@ p, li { white-space: pre-wrap; }
      <y>718</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6659,12 +6733,12 @@ p, li { white-space: pre-wrap; }
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>947</x>
-     <y>571</y>
+     <x>885</x>
+     <y>573</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1253</x>
-     <y>666</y>
+     <x>1269</x>
+     <y>580</y>
     </hint>
    </hints>
   </connection>
@@ -6679,8 +6753,8 @@ p, li { white-space: pre-wrap; }
      <y>709</y>
     </hint>
     <hint type="destinationlabel">
-     <x>937</x>
-     <y>709</y>
+     <x>898</x>
+     <y>711</y>
     </hint>
    </hints>
   </connection>

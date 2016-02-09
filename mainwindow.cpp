@@ -2160,6 +2160,8 @@ void MainWindow::refreshSerialDevices()
         }
         ui->serialCombobox->insertItem(index, name, port.systemLocation());
     }
+
+    ui->serialCombobox->setCurrentIndex(0);
 }
 
 void MainWindow::on_replotButton_clicked()
