@@ -128,6 +128,7 @@ private slots:
     void on_detectObserverButton_clicked();
     void on_mcconfFocMeasureHallButton_clicked();
     void on_mcconfFocMeasureHallApplyButton_clicked();
+    void on_refreshButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -193,7 +194,7 @@ private:
     void appendDoubleAndTrunc(QVector<double> *vec, double num, int maxSize);
     void clearBuffers();
     void saveExperimentSamplesToFile(QString path);
-
+    void refreshSerialDevices();
 };
 
 #endif // MAINWINDOW_H

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/refresh.png</file>
+    </qresource>
+</RCC>

@@ -23,6 +23,7 @@
 #include <string.h>
 #include <cmath>
 #include <QMessageBox>
+#include <QSerialPortInfo>
 #include "digitalfiltering.h"
 
 namespace {
@@ -49,14 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-#ifdef Q_OS_WIN
-    ui->serialDeviceEdit->setText("COM3");
-#elif defined(Q_OS_MAC)
-    ui->serialDeviceEdit->setText("/dev/tty.usbmodem261");
-#else
-    ui->serialDeviceEdit->setText("/dev/ttyACM0");
-#endif
-
+    refreshSerialDevices();
     ui->udpIpEdit->setText("192.168.1.118");
 
     // Compatible firmwares
@@ -2012,13 +2006,14 @@ void MainWindow::decodedChukReceived(double chuk_value)
     ui->appconfDecodedChukBar->setValue((chuk_value + 1.0) * 500.0);
 }
 
+
 void MainWindow::on_serialConnectButton_clicked()
 {
     if(mSerialPort->isOpen()) {
         return;
     }
 
-    mSerialPort->setPortName(ui->serialDeviceEdit->text().trimmed());
+    mSerialPort->setPortName(ui->serialCombobox->currentData().toString());
     mSerialPort->open(QIODevice::ReadWrite);
 
     if(!mSerialPort->isOpen()) {
@@ -2031,7 +2026,7 @@ void MainWindow::on_serialConnectButton_clicked()
     mSerialPort->setStopBits(QSerialPort::OneStop);
     mSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
-    // For nunchuk bootloader
+    // For nrf
     mSerialPort->setRequestToSend(true);
     mSerialPort->setDataTerminalReady(true);
     QThread::msleep(5);
@@ -2148,6 +2143,23 @@ void MainWindow::saveExperimentSamplesToFile(QString path)
     }
 
     file.close();
+}
+
+void MainWindow::refreshSerialDevices()
+{
+    ui->serialCombobox->clear();
+
+    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+    foreach(const QSerialPortInfo &port, ports) {
+        QString name = port.portName();
+        int index = ui->serialCombobox->count();
+        // put STMicroelectronics device first in list and add prefix
+        if(port.manufacturer() == "STMicroelectronics") {
+            name.insert(0, "VESC - ");
+            index = 0;
+        }
+        ui->serialCombobox->insertItem(index, name, port.systemLocation());
+    }
 }
 
 void MainWindow::on_replotButton_clicked()
@@ -2755,4 +2767,9 @@ void MainWindow::on_mcconfFocMeasureHallApplyButton_clicked()
     ui->mcconfFocHallTab5Box->setValue(ui->mcconfFocMeasureHallTab5Box->value());
     ui->mcconfFocHallTab6Box->setValue(ui->mcconfFocMeasureHallTab6Box->value());
     ui->mcconfFocHallTab7Box->setValue(ui->mcconfFocMeasureHallTab7Box->value());
+}
+
+void MainWindow::on_refreshButton_clicked()
+{
+    refreshSerialDevices();
 }
