@@ -7,3 +7,7 @@ Quick build instructions for Ubuntu:
 2. qmake
 
 3. make
+
+Windows and OS X builds available :
+
+https://bldc-tool.support
