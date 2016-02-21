@@ -25,6 +25,7 @@
 #include <QMessageBox>
 #include <QSerialPortInfo>
 #include "digitalfiltering.h"
+#include "mc_configuration.h"
 
 namespace {
 void stepTowards(double &value, double goal, double step) {
@@ -113,8 +114,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(rotorPosReceived(double)));
     connect(mPacketInterface, SIGNAL(experimentSamplesReceived(QVector<double>)),
             this, SLOT(experimentSamplesReceived(QVector<double>)));
-    connect(mPacketInterface, SIGNAL(mcconfReceived(mc_configuration)),
-            this, SLOT(mcconfReceived(mc_configuration)));
+    connect(mPacketInterface, SIGNAL(mcconfReceived(MC_Configuration)),
+            this, SLOT(mcconfReceived(MC_Configuration)));
     connect(mPacketInterface, SIGNAL(motorParamReceived(double,double,QVector<int>,int)),
             this, SLOT(motorParamReceived(double,double,QVector<int>,int)));
     connect(mPacketInterface, SIGNAL(motorRLReceived(double,double)),
@@ -250,148 +251,152 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
     return false;
 }
 
-mc_configuration MainWindow::getMcconfGui()
+MC_Configuration& MainWindow::getMcconfGui()
 {
-    mc_configuration mcconf;
+    static MC_Configuration mcconf;
 
     if (ui->mcconfPwmModeSyncButton->isChecked()) {
-        mcconf.pwm_mode = PWM_MODE_SYNCHRONOUS;
+        mcconf.set_pwm_mode(PWM_MODE_SYNCHRONOUS);
     } else if (ui->mcconfPwmModeBipolarButton->isChecked()) {
-        mcconf.pwm_mode = PWM_MODE_BIPOLAR;
+        mcconf.set_pwm_mode(PWM_MODE_BIPOLAR);
     } else if (ui->mcconfPwmModeNonsyncHiswButton->isChecked()) {
-        mcconf.pwm_mode = PWM_MODE_NONSYNCHRONOUS_HISW;
+        mcconf.set_pwm_mode(PWM_MODE_NONSYNCHRONOUS_HISW);
     }
 
     if (ui->mcconfCommIntButton->isChecked()) {
-        mcconf.comm_mode = COMM_MODE_INTEGRATE;
+        mcconf.set_comm_mode(COMM_MODE_INTEGRATE);
     } else if (ui->mcconfCommDelayButton->isChecked()) {
-        mcconf.comm_mode = COMM_MODE_DELAY;
+        mcconf.set_comm_mode(COMM_MODE_DELAY);
     }
 
     if (ui->mcconfTypeBldcButton->isChecked()) {
-        mcconf.motor_type = MOTOR_TYPE_BLDC;
+        mcconf.set_motor_type(MOTOR_TYPE_BLDC);
     } else if (ui->mcconfTypeDcButton->isChecked()) {
-        mcconf.motor_type = MOTOR_TYPE_DC;
+        mcconf.set_motor_type(MOTOR_TYPE_DC);
     } else if (ui->mcconfTypeFocButton->isChecked()) {
-        mcconf.motor_type = MOTOR_TYPE_FOC;
+        mcconf.set_motor_type(MOTOR_TYPE_FOC);
     }
 
     if (ui->mcconfSensorModeSensorlessButton->isChecked()) {
-        mcconf.sensor_mode = SENSOR_MODE_SENSORLESS;
+        mcconf.set_sensor_mode(SENSOR_MODE_SENSORLESS);
     } else if (ui->mcconfSensorModeSensoredButton->isChecked()) {
-        mcconf.sensor_mode = SENSOR_MODE_SENSORED;
+        mcconf.set_sensor_mode(SENSOR_MODE_SENSORED);
     } else if (ui->mcconfSensorModeHybridButton->isChecked()) {
-        mcconf.sensor_mode = SENSOR_MODE_HYBRID;
+        mcconf.set_sensor_mode(SENSOR_MODE_HYBRID);
     }
 
-    mcconf.l_current_max = ui->mcconfLimCurrentMaxBox->value();
-    mcconf.l_current_min = ui->mcconfLimCurrentMinBox->value();
-    mcconf.l_in_current_max = ui->mcconfLimCurrentInMaxBox->value();
-    mcconf.l_in_current_min = ui->mcconfLimCurrentInMinBox->value();
-    mcconf.l_abs_current_max = ui->mcconfLimCurrentAbsMaxBox->value();
-    mcconf.l_slow_abs_current = ui->mcconfLimCurrentSlowAbsMaxBox->isChecked();
-    mcconf.l_max_erpm = ui->mcconfLimMaxErpmBox->value();
-    mcconf.l_min_erpm = ui->mcconfLimMinErpmBox->value();
-    mcconf.l_max_erpm_fbrake = ui->mcconfLimMaxErpmFbrakeBox->value();
-    mcconf.l_max_erpm_fbrake_cc = ui->mcconfLimMaxErpmFbrakeCcBox->value();
-    mcconf.l_rpm_lim_neg_torque = ui->mcconfLimErpmLimitNegTorqueBox->isChecked();
-    mcconf.l_min_vin = ui->mcconfLimMinVinBox->value();
-    mcconf.l_max_vin = ui->mcconfLimMaxVinBox->value();
-    mcconf.l_battery_cut_start = ui->mcconfLimBatteryCutStartBox->value();
-    mcconf.l_battery_cut_end = ui->mcconfLimBatteryCutEndBox->value();
-    mcconf.l_temp_fet_start = ui->mcconfLimTempFetStartBox->value();
-    mcconf.l_temp_fet_end = ui->mcconfLimTempFetEndBox->value();
-    mcconf.l_temp_motor_start = ui->mcconfLimTempMotorStartBox->value();
-    mcconf.l_temp_motor_end = ui->mcconfLimTempMotorEndBox->value();
-    mcconf.l_min_duty = ui->mcconfLimMinDutyBox->value();
-    mcconf.l_max_duty = ui->mcconfLimMaxDutyBox->value();
+    mcconf.set_l_current_max(ui->mcconfLimCurrentMaxBox->value());
+    mcconf.set_l_current_min(ui->mcconfLimCurrentMinBox->value());
+    mcconf.set_l_in_current_max(ui->mcconfLimCurrentInMaxBox->value());
+    mcconf.set_l_in_current_min(ui->mcconfLimCurrentInMinBox->value());
+    mcconf.set_l_abs_current_max(ui->mcconfLimCurrentAbsMaxBox->value());
+    mcconf.set_l_slow_abs_current(ui->mcconfLimCurrentSlowAbsMaxBox->isChecked());
+    mcconf.set_l_max_erpm(ui->mcconfLimMaxErpmBox->value());
+    mcconf.set_l_min_erpm(ui->mcconfLimMinErpmBox->value());
+    mcconf.set_l_max_erpm_fbrake(ui->mcconfLimMaxErpmFbrakeBox->value());
+    mcconf.set_l_max_erpm_fbrake_cc(ui->mcconfLimMaxErpmFbrakeCcBox->value());
+    mcconf.set_l_rpm_lim_neg_torque(ui->mcconfLimErpmLimitNegTorqueBox->isChecked());
+    mcconf.set_l_min_vin(ui->mcconfLimMinVinBox->value());
+    mcconf.set_l_max_vin(ui->mcconfLimMaxVinBox->value());
+    mcconf.set_l_battery_cut_start(ui->mcconfLimBatteryCutStartBox->value());
+    mcconf.set_l_battery_cut_end(ui->mcconfLimBatteryCutEndBox->value());
+    mcconf.set_l_temp_fet_start(ui->mcconfLimTempFetStartBox->value());
+    mcconf.set_l_temp_fet_end(ui->mcconfLimTempFetEndBox->value());
+    mcconf.set_l_temp_motor_start(ui->mcconfLimTempMotorStartBox->value());
+    mcconf.set_l_temp_motor_end(ui->mcconfLimTempMotorEndBox->value());
+    mcconf.set_l_min_duty(ui->mcconfLimMinDutyBox->value());
+    mcconf.set_l_max_duty(ui->mcconfLimMaxDutyBox->value());
 
-    mcconf.sl_min_erpm = ui->mcconfSlMinErpmBox->value();
-    mcconf.sl_max_fullbreak_current_dir_change = ui->mcconfSlMaxFbCurrBox->value();
-    mcconf.sl_min_erpm_cycle_int_limit = ui->mcconfSlMinErpmIlBox->value();
-    mcconf.sl_cycle_int_limit = ui->mcconfSlIntLimBox->value();
-    mcconf.sl_phase_advance_at_br = ui->mcconfSlIntLimScaleBrBox->value();
-    mcconf.sl_cycle_int_rpm_br = ui->mcconfSlBrErpmBox->value();
-    mcconf.sl_bemf_coupling_k = ui->mcconfSlBemfKBox->value();
+    mcconf.set_sl_min_erpm(ui->mcconfSlMinErpmBox->value());
+    mcconf.set_sl_max_fullbreak_current_dir_change(ui->mcconfSlMaxFbCurrBox->value());
+    mcconf.set_sl_min_erpm_cycle_int_limit(ui->mcconfSlMinErpmIlBox->value());
+    mcconf.set_sl_cycle_int_limit(ui->mcconfSlIntLimBox->value());
+    mcconf.set_sl_phase_advance_at_br(ui->mcconfSlIntLimScaleBrBox->value());
+    mcconf.set_sl_cycle_int_rpm_br(ui->mcconfSlBrErpmBox->value());
+    mcconf.set_sl_bemf_coupling_k(ui->mcconfSlBemfKBox->value());
 
-    mcconf.hall_table[0] = ui->mcconfHallTab0Box->value();
-    mcconf.hall_table[1] = ui->mcconfHallTab1Box->value();
-    mcconf.hall_table[2] = ui->mcconfHallTab2Box->value();
-    mcconf.hall_table[3] = ui->mcconfHallTab3Box->value();
-    mcconf.hall_table[4] = ui->mcconfHallTab4Box->value();
-    mcconf.hall_table[5] = ui->mcconfHallTab5Box->value();
-    mcconf.hall_table[6] = ui->mcconfHallTab6Box->value();
-    mcconf.hall_table[7] = ui->mcconfHallTab7Box->value();
-    mcconf.hall_sl_erpm = ui->mcconfHallSlErpmBox->value();
+    QByteArray hall_table;
+    hall_table.append(ui->mcconfHallTab0Box->value());
+    hall_table.append(ui->mcconfHallTab1Box->value());
+    hall_table.append(ui->mcconfHallTab2Box->value());
+    hall_table.append(ui->mcconfHallTab3Box->value());
+    hall_table.append(ui->mcconfHallTab4Box->value());
+    hall_table.append(ui->mcconfHallTab5Box->value());
+    hall_table.append(ui->mcconfHallTab6Box->value());
+    hall_table.append(ui->mcconfHallTab7Box->value());
+    mcconf.set_hall_table(hall_table);
+    mcconf.set_hall_sl_erpm(ui->mcconfHallSlErpmBox->value());
 
-    mcconf.foc_current_kp = ui->mcconfFocCurrKpBox->value();
-    mcconf.foc_current_ki = ui->mcconfFocCurrKiBox->value();
-    mcconf.foc_f_sw = ui->mcconfFocFSwBox->value();
-    mcconf.foc_dt_us = ui->mcconfFocDtCompBox->value();
-    mcconf.foc_encoder_inverted = ui->mcconfFocEncoderInvertedBox->isChecked();
-    mcconf.foc_encoder_offset = ui->mcconfFocEncoderOffsetBox->value();
-    mcconf.foc_encoder_ratio = ui->mcconfFocEncoderRatioBox->value();
-    mcconf.foc_duty_dowmramp_kp = ui->mcconfFocDutyDownrampKpBox->value();
-    mcconf.foc_duty_dowmramp_ki = ui->mcconfFocDutyDownrampKiBox->value();
-    mcconf.foc_openloop_rpm = ui->mcconfFocOpenloopRpmBox->value();
-    mcconf.foc_sl_openloop_hyst = ui->mcconfFocSlOpenloopHystBox->value();
-    mcconf.foc_sl_openloop_time = ui->mcconfFocSlOpenloopTimeBox->value();
-    mcconf.foc_sl_d_current_duty = ui->mcconfFocDCurrentDutyBox->value();
-    mcconf.foc_sl_d_current_factor = ui->mcconfFocDCurrentFactorBox->value();
+    mcconf.set_foc_current_kp(ui->mcconfFocCurrKpBox->value());
+    mcconf.set_foc_current_ki(ui->mcconfFocCurrKiBox->value());
+    mcconf.set_foc_f_sw(ui->mcconfFocFSwBox->value());
+    mcconf.set_foc_dt_us(ui->mcconfFocDtCompBox->value());
+    mcconf.set_foc_encoder_inverted(ui->mcconfFocEncoderInvertedBox->isChecked());
+    mcconf.set_foc_encoder_offset(ui->mcconfFocEncoderOffsetBox->value());
+    mcconf.set_foc_encoder_ratio(ui->mcconfFocEncoderRatioBox->value());
+    mcconf.set_foc_duty_dowmramp_kp(ui->mcconfFocDutyDownrampKpBox->value());
+    mcconf.set_foc_duty_dowmramp_ki(ui->mcconfFocDutyDownrampKiBox->value());
+    mcconf.set_foc_openloop_rpm(ui->mcconfFocOpenloopRpmBox->value());
+    mcconf.set_foc_sl_openloop_hyst(ui->mcconfFocSlOpenloopHystBox->value());
+    mcconf.set_foc_sl_openloop_time(ui->mcconfFocSlOpenloopTimeBox->value());
+    mcconf.set_foc_sl_d_current_duty(ui->mcconfFocDCurrentDutyBox->value());
+    mcconf.set_foc_sl_d_current_factor(ui->mcconfFocDCurrentFactorBox->value());
 
     if (ui->mcconfFocModeEncoderButton->isChecked()) {
-        mcconf.foc_sensor_mode = FOC_SENSOR_MODE_ENCODER;
+        mcconf.set_foc_sensor_mode(FOC_SENSOR_MODE_ENCODER);
     } else if (ui->mcconfFocModeHallButton->isChecked()) {
-        mcconf.foc_sensor_mode = FOC_SENSOR_MODE_HALL;
+        mcconf.set_foc_sensor_mode(FOC_SENSOR_MODE_HALL);
     } else if (ui->mcconfFocModeSensorlessButton->isChecked()) {
-        mcconf.foc_sensor_mode = FOC_SENSOR_MODE_SENSORLESS;
+        mcconf.set_foc_sensor_mode(FOC_SENSOR_MODE_SENSORLESS);
     }
 
-    mcconf.foc_pll_kp = ui->mcconfFocPllKpBox->value();
-    mcconf.foc_pll_ki = ui->mcconfFocPllKiBox->value();
-    mcconf.foc_motor_l = ui->mcconfFocMotorLBox->value() / 1000000.0;
-    mcconf.foc_motor_r = ui->mcconfFocMotorRBox->value();
-    mcconf.foc_motor_flux_linkage = ui->mcconfFocMotorLinkageBox->value();
-    mcconf.foc_observer_gain = ui->mcconfFocObserverGainBox->value() * 1000000.0;
+    mcconf.set_foc_pll_kp(ui->mcconfFocPllKpBox->value());
+    mcconf.set_foc_pll_ki(ui->mcconfFocPllKiBox->value());
+    mcconf.set_foc_motor_l(ui->mcconfFocMotorLBox->value() / 1000000.0);
+    mcconf.set_foc_motor_r(ui->mcconfFocMotorRBox->value());
+    mcconf.set_foc_motor_flux_linkage(ui->mcconfFocMotorLinkageBox->value());
+    mcconf.set_foc_observer_gain(ui->mcconfFocObserverGainBox->value() * 1000000.0);
 
-    mcconf.foc_hall_table[0] = ui->mcconfFocHallTab0Box->value();
-    mcconf.foc_hall_table[1] = ui->mcconfFocHallTab1Box->value();
-    mcconf.foc_hall_table[2] = ui->mcconfFocHallTab2Box->value();
-    mcconf.foc_hall_table[3] = ui->mcconfFocHallTab3Box->value();
-    mcconf.foc_hall_table[4] = ui->mcconfFocHallTab4Box->value();
-    mcconf.foc_hall_table[5] = ui->mcconfFocHallTab5Box->value();
-    mcconf.foc_hall_table[6] = ui->mcconfFocHallTab6Box->value();
-    mcconf.foc_hall_table[7] = ui->mcconfFocHallTab7Box->value();
-    mcconf.foc_hall_sl_erpm = ui->mcconfFocHallErpmBox->value();
+    QByteArray foc_hall_table;
+    foc_hall_table.append(ui->mcconfFocHallTab0Box->value());
+    foc_hall_table.append(ui->mcconfFocHallTab1Box->value());
+    foc_hall_table.append(ui->mcconfFocHallTab2Box->value());
+    foc_hall_table.append(ui->mcconfFocHallTab3Box->value());
+    foc_hall_table.append(ui->mcconfFocHallTab4Box->value());
+    foc_hall_table.append(ui->mcconfFocHallTab5Box->value());
+    foc_hall_table.append(ui->mcconfFocHallTab6Box->value());
+    foc_hall_table.append(ui->mcconfFocHallTab7Box->value());
+    mcconf.set_foc_hall_table(foc_hall_table);
+    mcconf.set_foc_hall_sl_erpm(ui->mcconfFocHallErpmBox->value());
 
-    mcconf.s_pid_kp = ui->mcconfSpidKpBox->value();
-    mcconf.s_pid_ki = ui->mcconfSpidKiBox->value();
-    mcconf.s_pid_kd = ui->mcconfSpidKdBox->value();
-    mcconf.s_pid_min_erpm = ui->mcconfSpidMinRpmBox->value();
+    mcconf.set_s_pid_kp(ui->mcconfSpidKpBox->value());
+    mcconf.set_s_pid_ki(ui->mcconfSpidKiBox->value());
+    mcconf.set_s_pid_kd(ui->mcconfSpidKdBox->value());
+    mcconf.set_s_pid_min_erpm(ui->mcconfSpidMinRpmBox->value());
 
-    mcconf.p_pid_kp = ui->mcconfPpidKpBox->value();
-    mcconf.p_pid_ki = ui->mcconfPpidKiBox->value();
-    mcconf.p_pid_kd = ui->mcconfPpidKdBox->value();
+    mcconf.set_p_pid_kp(ui->mcconfPpidKpBox->value());
+    mcconf.set_p_pid_ki(ui->mcconfPpidKiBox->value());
+    mcconf.set_p_pid_kd(ui->mcconfPpidKdBox->value());
 
-    mcconf.cc_startup_boost_duty = ui->mcconfCcBoostBox->value();
-    mcconf.cc_min_current = ui->mcconfCcMinBox->value();
-    mcconf.cc_gain = ui->mcconfCcGainBox->value();
-    mcconf.cc_ramp_step_max = ui->mcconfCcMaxRampStepBox->value();
+    mcconf.set_cc_startup_boost_duty(ui->mcconfCcBoostBox->value());
+    mcconf.set_cc_min_current(ui->mcconfCcMinBox->value());
+    mcconf.set_cc_gain(ui->mcconfCcGainBox->value());
+    mcconf.set_cc_ramp_step_max(ui->mcconfCcMaxRampStepBox->value());
 
-    mcconf.m_fault_stop_time_ms = ui->mcconfMFaultStopTimeBox->value();
-    mcconf.m_duty_ramp_step = ui->mcconfMDutyRampStepBox->value();
-    mcconf.m_duty_ramp_step_rpm_lim = ui->mcconfMDutyRampStepSpeedLimBox->value();
-    mcconf.m_current_backoff_gain = ui->mcconfMCurrentBackoffGainBox->value();
-    mcconf.m_encoder_counts = ui->mcconfMEncoderCountBox->value();
+    mcconf.set_m_fault_stop_time_ms(ui->mcconfMFaultStopTimeBox->value());
+    mcconf.set_m_duty_ramp_step(ui->mcconfMDutyRampStepBox->value());
+    mcconf.set_m_duty_ramp_step_rpm_lim(ui->mcconfMDutyRampStepSpeedLimBox->value());
+    mcconf.set_m_current_backoff_gain(ui->mcconfMCurrentBackoffGainBox->value());
+    mcconf.set_m_encoder_counts(ui->mcconfMEncoderCountBox->value());
 
-    mcconf.meta_description = ui->mcconfDescEdit->toHtml();
+    mcconf.set_meta_description(ui->mcconfDescEdit->toHtml());
 
     return mcconf;
 }
 
-void MainWindow::setMcconfGui(const mc_configuration &mcconf)
+void MainWindow::setMcconfGui(const MC_Configuration &mcconf)
 {
-    switch (mcconf.pwm_mode) {
+    switch (mcconf.get_pwm_mode()) {
     case PWM_MODE_SYNCHRONOUS:
         ui->mcconfPwmModeSyncButton->setChecked(true);
         break;
@@ -408,7 +413,7 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
         break;
     }
 
-    switch (mcconf.comm_mode) {
+    switch (mcconf.get_comm_mode()) {
     case COMM_MODE_INTEGRATE:
         ui->mcconfCommIntButton->setChecked(true);
         break;
@@ -422,7 +427,7 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
 
     }
 
-    switch (mcconf.motor_type) {
+    switch (mcconf.get_motor_type()) {
     case MOTOR_TYPE_BLDC:
         ui->mcconfTypeBldcButton->setChecked(true);
         break;
@@ -439,7 +444,7 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
         break;
     }
 
-    switch (mcconf.sensor_mode) {
+    switch (mcconf.get_sensor_mode()) {
     case SENSOR_MODE_SENSORLESS:
         ui->mcconfSensorModeSensorlessButton->setChecked(true);
         break;
@@ -456,55 +461,56 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
         break;
     }
 
-    ui->mcconfLimCurrentMaxBox->setValue(mcconf.l_current_max);
-    ui->mcconfLimCurrentMinBox->setValue(mcconf.l_current_min);
-    ui->mcconfLimCurrentInMaxBox->setValue(mcconf.l_in_current_max);
-    ui->mcconfLimCurrentInMinBox->setValue(mcconf.l_in_current_min);
-    ui->mcconfLimCurrentAbsMaxBox->setValue(mcconf.l_abs_current_max);
-    ui->mcconfLimCurrentSlowAbsMaxBox->setChecked(mcconf.l_slow_abs_current);
-    ui->mcconfLimMaxErpmBox->setValue(mcconf.l_max_erpm);
-    ui->mcconfLimMinErpmBox->setValue(mcconf.l_min_erpm);
-    ui->mcconfLimMaxErpmFbrakeBox->setValue(mcconf.l_max_erpm_fbrake);
-    ui->mcconfLimMaxErpmFbrakeCcBox->setValue(mcconf.l_max_erpm_fbrake_cc);
-    ui->mcconfLimErpmLimitNegTorqueBox->setChecked(mcconf.l_rpm_lim_neg_torque);
-    ui->mcconfLimMinVinBox->setValue(mcconf.l_min_vin);
-    ui->mcconfLimMaxVinBox->setValue(mcconf.l_max_vin);
-    ui->mcconfLimBatteryCutStartBox->setValue(mcconf.l_battery_cut_start);
-    ui->mcconfLimBatteryCutEndBox->setValue(mcconf.l_battery_cut_end);
-    ui->mcconfLimTempFetStartBox->setValue(mcconf.l_temp_fet_start);
-    ui->mcconfLimTempFetEndBox->setValue(mcconf.l_temp_fet_end);
-    ui->mcconfLimTempMotorStartBox->setValue(mcconf.l_temp_motor_start);
-    ui->mcconfLimTempMotorEndBox->setValue(mcconf.l_temp_motor_end);
-    ui->mcconfLimMinDutyBox->setValue(mcconf.l_min_duty);
-    ui->mcconfLimMaxDutyBox->setValue(mcconf.l_max_duty);
+    ui->mcconfLimCurrentMaxBox->setValue(mcconf.get_l_current_max());
+    ui->mcconfLimCurrentMinBox->setValue(mcconf.get_l_current_min());
+    ui->mcconfLimCurrentInMaxBox->setValue(mcconf.get_l_in_current_max());
+    ui->mcconfLimCurrentInMinBox->setValue(mcconf.get_l_in_current_min());
+    ui->mcconfLimCurrentAbsMaxBox->setValue(mcconf.get_l_abs_current_max());
+    ui->mcconfLimCurrentSlowAbsMaxBox->setChecked(mcconf.get_l_slow_abs_current());
+    ui->mcconfLimMaxErpmBox->setValue(mcconf.get_l_max_erpm());
+    ui->mcconfLimMinErpmBox->setValue(mcconf.get_l_min_erpm());
+    ui->mcconfLimMaxErpmFbrakeBox->setValue(mcconf.get_l_max_erpm_fbrake());
+    ui->mcconfLimMaxErpmFbrakeCcBox->setValue(mcconf.get_l_max_erpm_fbrake_cc());
+    ui->mcconfLimErpmLimitNegTorqueBox->setChecked(mcconf.get_l_rpm_lim_neg_torque());
+    ui->mcconfLimMinVinBox->setValue(mcconf.get_l_min_vin());
+    ui->mcconfLimMaxVinBox->setValue(mcconf.get_l_max_vin());
+    ui->mcconfLimBatteryCutStartBox->setValue(mcconf.get_l_battery_cut_start());
+    ui->mcconfLimBatteryCutEndBox->setValue(mcconf.get_l_battery_cut_end());
+    ui->mcconfLimTempFetStartBox->setValue(mcconf.get_l_temp_fet_start());
+    ui->mcconfLimTempFetEndBox->setValue(mcconf.get_l_temp_fet_end());
+    ui->mcconfLimTempMotorStartBox->setValue(mcconf.get_l_temp_motor_start());
+    ui->mcconfLimTempMotorEndBox->setValue(mcconf.get_l_temp_motor_end());
+    ui->mcconfLimMinDutyBox->setValue(mcconf.get_l_min_duty());
+    ui->mcconfLimMaxDutyBox->setValue(mcconf.get_l_max_duty());
 
-    ui->mcconfSlMinErpmBox->setValue(mcconf.sl_min_erpm);
-    ui->mcconfSlMaxFbCurrBox->setValue(mcconf.sl_max_fullbreak_current_dir_change);
-    ui->mcconfSlMinErpmIlBox->setValue(mcconf.sl_min_erpm_cycle_int_limit);
-    ui->mcconfSlIntLimBox->setValue(mcconf.sl_cycle_int_limit);
-    ui->mcconfSlIntLimScaleBrBox->setValue(mcconf.sl_phase_advance_at_br);
-    ui->mcconfSlBrErpmBox->setValue(mcconf.sl_cycle_int_rpm_br);
-    ui->mcconfSlBemfKBox->setValue(mcconf.sl_bemf_coupling_k);
+    ui->mcconfSlMinErpmBox->setValue(mcconf.get_sl_min_erpm());
+    ui->mcconfSlMaxFbCurrBox->setValue(mcconf.get_sl_max_fullbreak_current_dir_change());
+    ui->mcconfSlMinErpmIlBox->setValue(mcconf.get_sl_min_erpm_cycle_int_limit());
+    ui->mcconfSlIntLimBox->setValue(mcconf.get_sl_cycle_int_limit());
+    ui->mcconfSlIntLimScaleBrBox->setValue(mcconf.get_sl_phase_advance_at_br());
+    ui->mcconfSlBrErpmBox->setValue(mcconf.get_sl_cycle_int_rpm_br());
+    ui->mcconfSlBemfKBox->setValue(mcconf.get_sl_bemf_coupling_k());
 
-    ui->mcconfHallTab0Box->setValue(mcconf.hall_table[0]);
-    ui->mcconfHallTab1Box->setValue(mcconf.hall_table[1]);
-    ui->mcconfHallTab2Box->setValue(mcconf.hall_table[2]);
-    ui->mcconfHallTab3Box->setValue(mcconf.hall_table[3]);
-    ui->mcconfHallTab4Box->setValue(mcconf.hall_table[4]);
-    ui->mcconfHallTab5Box->setValue(mcconf.hall_table[5]);
-    ui->mcconfHallTab6Box->setValue(mcconf.hall_table[6]);
-    ui->mcconfHallTab7Box->setValue(mcconf.hall_table[7]);
-    ui->mcconfHallSlErpmBox->setValue(mcconf.hall_sl_erpm);
+    const QByteArray &hall_table = mcconf.get_hall_table();
+    ui->mcconfHallTab0Box->setValue(hall_table[0]);
+    ui->mcconfHallTab1Box->setValue(hall_table[1]);
+    ui->mcconfHallTab2Box->setValue(hall_table[2]);
+    ui->mcconfHallTab3Box->setValue(hall_table[3]);
+    ui->mcconfHallTab4Box->setValue(hall_table[4]);
+    ui->mcconfHallTab5Box->setValue(hall_table[5]);
+    ui->mcconfHallTab6Box->setValue(hall_table[6]);
+    ui->mcconfHallTab7Box->setValue(hall_table[7]);
+    ui->mcconfHallSlErpmBox->setValue(mcconf.get_hall_sl_erpm());
 
-    ui->mcconfFocCurrKpBox->setValue(mcconf.foc_current_kp);
-    ui->mcconfFocCurrKiBox->setValue(mcconf.foc_current_ki);
-    ui->mcconfFocFSwBox->setValue(mcconf.foc_f_sw);
-    ui->mcconfFocDtCompBox->setValue(mcconf.foc_dt_us);
-    ui->mcconfFocEncoderInvertedBox->setChecked(mcconf.foc_encoder_inverted);
-    ui->mcconfFocEncoderOffsetBox->setValue(mcconf.foc_encoder_offset);
-    ui->mcconfFocEncoderRatioBox->setValue(mcconf.foc_encoder_ratio);
+    ui->mcconfFocCurrKpBox->setValue(mcconf.get_foc_current_kp());
+    ui->mcconfFocCurrKiBox->setValue(mcconf.get_foc_current_ki());
+    ui->mcconfFocFSwBox->setValue(mcconf.get_foc_f_sw());
+    ui->mcconfFocDtCompBox->setValue(mcconf.get_foc_dt_us());
+    ui->mcconfFocEncoderInvertedBox->setChecked(mcconf.get_foc_encoder_inverted());
+    ui->mcconfFocEncoderOffsetBox->setValue(mcconf.get_foc_encoder_offset());
+    ui->mcconfFocEncoderRatioBox->setValue(mcconf.get_foc_encoder_ratio());
 
-    switch (mcconf.foc_sensor_mode) {
+    switch (mcconf.get_foc_sensor_mode()) {
     case FOC_SENSOR_MODE_ENCODER:
         ui->mcconfFocModeEncoderButton->setChecked(true);
         break;
@@ -518,50 +524,50 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
         break;
     }
 
-    ui->mcconfFocPllKpBox->setValue(mcconf.foc_pll_kp);
-    ui->mcconfFocPllKiBox->setValue(mcconf.foc_pll_ki);
-    ui->mcconfFocMotorLBox->setValue(mcconf.foc_motor_l * 1000000.0);
-    ui->mcconfFocMotorRBox->setValue(mcconf.foc_motor_r);
-    ui->mcconfFocMotorLinkageBox->setValue(mcconf.foc_motor_flux_linkage);
-    ui->mcconfFocObserverGainBox->setValue(mcconf.foc_observer_gain / 1000000.0);
-    ui->mcconfFocDutyDownrampKpBox->setValue(mcconf.foc_duty_dowmramp_kp);
-    ui->mcconfFocDutyDownrampKiBox->setValue(mcconf.foc_duty_dowmramp_ki);
-    ui->mcconfFocOpenloopRpmBox->setValue(mcconf.foc_openloop_rpm);
-    ui->mcconfFocSlOpenloopHystBox->setValue(mcconf.foc_sl_openloop_hyst);
-    ui->mcconfFocSlOpenloopTimeBox->setValue(mcconf.foc_sl_openloop_time);
-    ui->mcconfFocDCurrentDutyBox->setValue(mcconf.foc_sl_d_current_duty);
-    ui->mcconfFocDCurrentFactorBox->setValue(mcconf.foc_sl_d_current_factor);
-    ui->mcconfFocHallTab0Box->setValue(mcconf.foc_hall_table[0]);
-    ui->mcconfFocHallTab1Box->setValue(mcconf.foc_hall_table[1]);
-    ui->mcconfFocHallTab2Box->setValue(mcconf.foc_hall_table[2]);
-    ui->mcconfFocHallTab3Box->setValue(mcconf.foc_hall_table[3]);
-    ui->mcconfFocHallTab4Box->setValue(mcconf.foc_hall_table[4]);
-    ui->mcconfFocHallTab5Box->setValue(mcconf.foc_hall_table[5]);
-    ui->mcconfFocHallTab6Box->setValue(mcconf.foc_hall_table[6]);
-    ui->mcconfFocHallTab7Box->setValue(mcconf.foc_hall_table[7]);
-    ui->mcconfFocHallErpmBox->setValue(mcconf.foc_hall_sl_erpm);
+    ui->mcconfFocPllKpBox->setValue(mcconf.get_foc_pll_kp());
+    ui->mcconfFocPllKiBox->setValue(mcconf.get_foc_pll_ki());
+    ui->mcconfFocMotorLBox->setValue(mcconf.get_foc_motor_l() * 1000000.0);
+    ui->mcconfFocMotorRBox->setValue(mcconf.get_foc_motor_r());
+    ui->mcconfFocMotorLinkageBox->setValue(mcconf.get_foc_motor_flux_linkage());
+    ui->mcconfFocObserverGainBox->setValue(mcconf.get_foc_observer_gain() / 1000000.0);
+    ui->mcconfFocDutyDownrampKpBox->setValue(mcconf.get_foc_duty_dowmramp_kp());
+    ui->mcconfFocDutyDownrampKiBox->setValue(mcconf.get_foc_duty_dowmramp_ki());
+    ui->mcconfFocOpenloopRpmBox->setValue(mcconf.get_foc_openloop_rpm());
+    ui->mcconfFocSlOpenloopHystBox->setValue(mcconf.get_foc_sl_openloop_hyst());
+    ui->mcconfFocSlOpenloopTimeBox->setValue(mcconf.get_foc_sl_openloop_time());
+    ui->mcconfFocDCurrentDutyBox->setValue(mcconf.get_foc_sl_d_current_duty());
+    ui->mcconfFocDCurrentFactorBox->setValue(mcconf.get_foc_sl_d_current_factor());
+    ui->mcconfFocHallTab0Box->setValue(mcconf.get_foc_hall_table()[0]);
+    ui->mcconfFocHallTab1Box->setValue(mcconf.get_foc_hall_table()[1]);
+    ui->mcconfFocHallTab2Box->setValue(mcconf.get_foc_hall_table()[2]);
+    ui->mcconfFocHallTab3Box->setValue(mcconf.get_foc_hall_table()[3]);
+    ui->mcconfFocHallTab4Box->setValue(mcconf.get_foc_hall_table()[4]);
+    ui->mcconfFocHallTab5Box->setValue(mcconf.get_foc_hall_table()[5]);
+    ui->mcconfFocHallTab6Box->setValue(mcconf.get_foc_hall_table()[6]);
+    ui->mcconfFocHallTab7Box->setValue(mcconf.get_foc_hall_table()[7]);
+    ui->mcconfFocHallErpmBox->setValue(mcconf.get_foc_hall_sl_erpm());
 
-    ui->mcconfSpidKpBox->setValue(mcconf.s_pid_kp);
-    ui->mcconfSpidKiBox->setValue(mcconf.s_pid_ki);
-    ui->mcconfSpidKdBox->setValue(mcconf.s_pid_kd);
-    ui->mcconfSpidMinRpmBox->setValue(mcconf.s_pid_min_erpm);
+    ui->mcconfSpidKpBox->setValue(mcconf.get_s_pid_kp());
+    ui->mcconfSpidKiBox->setValue(mcconf.get_s_pid_ki());
+    ui->mcconfSpidKdBox->setValue(mcconf.get_s_pid_kd());
+    ui->mcconfSpidMinRpmBox->setValue(mcconf.get_s_pid_min_erpm());
 
-    ui->mcconfPpidKpBox->setValue(mcconf.p_pid_kp);
-    ui->mcconfPpidKiBox->setValue(mcconf.p_pid_ki);
-    ui->mcconfPpidKdBox->setValue(mcconf.p_pid_kd);
+    ui->mcconfPpidKpBox->setValue(mcconf.get_p_pid_kp());
+    ui->mcconfPpidKiBox->setValue(mcconf.get_p_pid_ki());
+    ui->mcconfPpidKdBox->setValue(mcconf.get_p_pid_kd());
 
-    ui->mcconfCcBoostBox->setValue(mcconf.cc_startup_boost_duty);
-    ui->mcconfCcMinBox->setValue(mcconf.cc_min_current);
-    ui->mcconfCcGainBox->setValue(mcconf.cc_gain);
-    ui->mcconfCcMaxRampStepBox->setValue(mcconf.cc_ramp_step_max);
+    ui->mcconfCcBoostBox->setValue(mcconf.get_cc_startup_boost_duty());
+    ui->mcconfCcMinBox->setValue(mcconf.get_cc_min_current());
+    ui->mcconfCcGainBox->setValue(mcconf.get_cc_gain());
+    ui->mcconfCcMaxRampStepBox->setValue(mcconf.get_cc_ramp_step_max());
 
-    ui->mcconfMFaultStopTimeBox->setValue(mcconf.m_fault_stop_time_ms);
-    ui->mcconfMDutyRampStepBox->setValue(mcconf.m_duty_ramp_step);
-    ui->mcconfMDutyRampStepSpeedLimBox->setValue(mcconf.m_duty_ramp_step_rpm_lim);
-    ui->mcconfMCurrentBackoffGainBox->setValue(mcconf.m_current_backoff_gain);
-    ui->mcconfMEncoderCountBox->setValue(mcconf.m_encoder_counts);
+    ui->mcconfMFaultStopTimeBox->setValue(mcconf.get_m_fault_stop_time_ms());
+    ui->mcconfMDutyRampStepBox->setValue(mcconf.get_m_duty_ramp_step());
+    ui->mcconfMDutyRampStepSpeedLimBox->setValue(mcconf.get_m_duty_ramp_step_rpm_lim());
+    ui->mcconfMCurrentBackoffGainBox->setValue(mcconf.get_m_current_backoff_gain());
+    ui->mcconfMEncoderCountBox->setValue(mcconf.get_m_encoder_counts());
 
-    ui->mcconfDescEdit->document()->setHtml(mcconf.meta_description);
+    ui->mcconfDescEdit->document()->setHtml(mcconf.get_meta_description());
 
     mMcconfLoaded = true;
 }
@@ -1617,7 +1623,7 @@ void MainWindow::experimentSamplesReceived(QVector<double> samples)
     }
 }
 
-void MainWindow::mcconfReceived(mc_configuration mcconf)
+void MainWindow::mcconfReceived(const MC_Configuration &mcconf)
 {
     setMcconfGui(mcconf);
     showStatusInfo("MCCONF Received", true);
@@ -1856,8 +1862,8 @@ void MainWindow::appconfReceived(app_configuration appconf)
         ui->appconfAdcCurrentNorevButtonButton->setChecked(true);
         break;
     case ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_ADC:
-    	ui->appconfAdcCurrentNorevAdcButton->setChecked(true);
-    	break;
+        ui->appconfAdcCurrentNorevAdcButton->setChecked(true);
+        break;
     case ADC_CTRL_TYPE_DUTY:
         ui->appconfAdcDutyCycleButton->setChecked(true);
         break;
@@ -2325,7 +2331,7 @@ void MainWindow::on_currentBrakeButton_clicked()
 
 void MainWindow::on_mcconfLoadXmlButton_clicked()
 {
-    mc_configuration mcconf = getMcconfGui();
+    MC_Configuration &mcconf = getMcconfGui();
     if (mSerialization->readMcconfXml(mcconf, this)) {
         setMcconfGui(mcconf);
     } else {
@@ -2335,7 +2341,7 @@ void MainWindow::on_mcconfLoadXmlButton_clicked()
 
 void MainWindow::on_mcconfSaveXmlButton_clicked()
 {
-    mc_configuration mcconf = getMcconfGui();
+    MC_Configuration &mcconf = getMcconfGui();
     mSerialization->writeMcconfXml(mcconf, this);
 }
 

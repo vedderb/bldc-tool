@@ -19,6 +19,7 @@
 #include "utility.h"
 #include <QDebug>
 #include <math.h>
+#include <qbytearray.h>
 
 namespace {
 // CRC Table
@@ -304,7 +305,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     QByteArray bytes;
     QByteArray tmpArray;
     QVector<double> samples;
-    mc_configuration mcconf;
+    MC_Configuration mcconf;
     app_configuration appconf;
     double detect_cycle_int_limit;
     double detect_coupling_k;
@@ -400,91 +401,92 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
     case COMM_GET_MCCONF:
     case COMM_GET_MCCONF_DEFAULT:
         ind = 0;
-        mcconf.pwm_mode = (mc_pwm_mode)data[ind++];
-        mcconf.comm_mode = (mc_comm_mode)data[ind++];
-        mcconf.motor_type = (mc_motor_type)data[ind++];
-        mcconf.sensor_mode = (mc_sensor_mode)data[ind++];
+        mcconf.set_pwm_mode((mc_pwm_mode)data[ind++]);
+        mcconf.set_comm_mode((mc_comm_mode)data[ind++]);
+        mcconf.set_motor_type((mc_motor_type)data[ind++]);
+        mcconf.set_sensor_mode((mc_sensor_mode)data[ind++]);
 
-        mcconf.l_current_max = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_current_min = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_in_current_max = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_in_current_min = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_abs_current_max = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_min_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_max_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_max_erpm_fbrake = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_max_erpm_fbrake_cc = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_min_vin = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_max_vin = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_battery_cut_start = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_battery_cut_end = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_slow_abs_current = data[ind++];
-        mcconf.l_rpm_lim_neg_torque = data[ind++];
-        mcconf.l_temp_fet_start = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_temp_fet_end = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_temp_motor_start = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_temp_motor_end = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.l_min_duty = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.l_max_duty = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.set_l_current_max(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_current_min(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_in_current_max(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_in_current_min(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_abs_current_max(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_min_erpm(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_max_erpm(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_max_erpm_fbrake(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_max_erpm_fbrake_cc(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_min_vin(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_max_vin(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_battery_cut_start(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_battery_cut_end(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_slow_abs_current(data[ind++]);
+        mcconf.set_l_rpm_lim_neg_torque(data[ind++]);
+        mcconf.set_l_temp_fet_start(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_temp_fet_end(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_temp_motor_start(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_temp_motor_end(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_l_min_duty(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_l_max_duty(utility::buffer_get_double32(data, 1000000.0, &ind));
 
-        mcconf.sl_min_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.sl_min_erpm_cycle_int_limit = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.sl_max_fullbreak_current_dir_change = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.sl_cycle_int_limit = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.sl_phase_advance_at_br = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.sl_cycle_int_rpm_br = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.sl_bemf_coupling_k = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.set_sl_min_erpm(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_sl_min_erpm_cycle_int_limit(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_sl_max_fullbreak_current_dir_change(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_sl_cycle_int_limit(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_sl_phase_advance_at_br(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_sl_cycle_int_rpm_br(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_sl_bemf_coupling_k(utility::buffer_get_double32(data, 1000.0, &ind));
 
-        memcpy(mcconf.hall_table, data + ind, 8);
+
+        mcconf.set_hall_table(QByteArray((const char*)data+ind, 8));
         ind += 8;
-        mcconf.hall_sl_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.set_hall_sl_erpm(utility::buffer_get_double32(data, 1000.0, &ind));
 
-        mcconf.foc_current_kp = utility::buffer_get_double32(data, 1e5, &ind);
-        mcconf.foc_current_ki = utility::buffer_get_double32(data, 1e5, &ind);
-        mcconf.foc_f_sw = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_dt_us = utility::buffer_get_double32(data, 1e6, &ind);
-        mcconf.foc_encoder_inverted = data[ind++];
-        mcconf.foc_encoder_offset = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_encoder_ratio = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_sensor_mode = (mc_foc_sensor_mode)data[ind++];
-        mcconf.foc_pll_kp = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_pll_ki = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_motor_l = utility::buffer_get_double32(data, 1e8, &ind);
-        mcconf.foc_motor_r = utility::buffer_get_double32(data, 1e5, &ind);
-        mcconf.foc_motor_flux_linkage = utility::buffer_get_double32(data, 1e5, &ind);
-        mcconf.foc_observer_gain = utility::buffer_get_double32(data, 1e0, &ind);
-        mcconf.foc_duty_dowmramp_kp = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_duty_dowmramp_ki = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_openloop_rpm = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_sl_openloop_hyst = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_sl_openloop_time = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_sl_d_current_duty = utility::buffer_get_double32(data, 1e3, &ind);
-        mcconf.foc_sl_d_current_factor = utility::buffer_get_double32(data, 1e3, &ind);
-        memcpy(mcconf.foc_hall_table, data + ind, 8);
+        mcconf.set_foc_current_kp(utility::buffer_get_double32(data, 1e5, &ind));
+        mcconf.set_foc_current_ki(utility::buffer_get_double32(data, 1e5, &ind));
+        mcconf.set_foc_f_sw(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_dt_us(utility::buffer_get_double32(data, 1e6, &ind));
+        mcconf.set_foc_encoder_inverted(data[ind++]);
+        mcconf.set_foc_encoder_offset(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_encoder_ratio(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_sensor_mode((mc_foc_sensor_mode)data[ind++]);
+        mcconf.set_foc_pll_kp(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_pll_ki(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_motor_l(utility::buffer_get_double32(data, 1e8, &ind));
+        mcconf.set_foc_motor_r(utility::buffer_get_double32(data, 1e5, &ind));
+        mcconf.set_foc_motor_flux_linkage(utility::buffer_get_double32(data, 1e5, &ind));
+        mcconf.set_foc_observer_gain(utility::buffer_get_double32(data, 1e0, &ind));
+        mcconf.set_foc_duty_dowmramp_kp(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_duty_dowmramp_ki(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_openloop_rpm(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_sl_openloop_hyst(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_sl_openloop_time(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_sl_d_current_duty(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_sl_d_current_factor(utility::buffer_get_double32(data, 1e3, &ind));
+        mcconf.set_foc_hall_table(QByteArray ((const char*)data + ind, 8));
         ind += 8;
-        mcconf.foc_hall_sl_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.set_foc_hall_sl_erpm(utility::buffer_get_double32(data, 1000.0, &ind));
 
-        mcconf.s_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.s_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.s_pid_kd = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.s_pid_min_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.set_s_pid_kp(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_s_pid_ki(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_s_pid_kd(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_s_pid_min_erpm(utility::buffer_get_double32(data, 1000.0, &ind));
 
-        mcconf.p_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.p_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.p_pid_kd = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.set_p_pid_kp(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_p_pid_ki(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_p_pid_kd(utility::buffer_get_double32(data, 1000000.0, &ind));
 
-        mcconf.cc_startup_boost_duty = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.cc_min_current = utility::buffer_get_double32(data, 1000.0, &ind);
-        mcconf.cc_gain = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.cc_ramp_step_max = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.set_cc_startup_boost_duty(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_cc_min_current(utility::buffer_get_double32(data, 1000.0, &ind));
+        mcconf.set_cc_gain(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_cc_ramp_step_max(utility::buffer_get_double32(data, 1000000.0, &ind));
 
-        mcconf.m_fault_stop_time_ms = utility::buffer_get_int32(data, &ind);
-        mcconf.m_duty_ramp_step = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.m_duty_ramp_step_rpm_lim = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.m_current_backoff_gain = utility::buffer_get_double32(data, 1000000.0, &ind);
-        mcconf.m_encoder_counts = utility::buffer_get_uint32(data, &ind);
+        mcconf.set_m_fault_stop_time_ms(utility::buffer_get_int32(data, &ind));
+        mcconf.set_m_duty_ramp_step(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_m_duty_ramp_step_rpm_lim(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_m_current_backoff_gain(utility::buffer_get_double32(data, 1000000.0, &ind));
+        mcconf.set_m_encoder_counts(utility::buffer_get_uint32(data, &ind));
 
-        mcconf.meta_description = "Configuration loaded from the motor controller.";
+        mcconf.set_meta_description("Configuration loaded from the motor controller.");
 
         emit mcconfReceived(mcconf);
         break;
@@ -893,94 +895,94 @@ bool PacketInterface::getMcconfDefault()
     return sendPacket(buffer);
 }
 
-bool PacketInterface::setMcconf(const mc_configuration &mcconf)
+bool PacketInterface::setMcconf(const MC_Configuration &mcconf)
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_MCCONF;
 
-    mSendBuffer[send_index++] = mcconf.pwm_mode;
-    mSendBuffer[send_index++] = mcconf.comm_mode;
-    mSendBuffer[send_index++] = mcconf.motor_type;
-    mSendBuffer[send_index++] = mcconf.sensor_mode;
+    mSendBuffer[send_index++] = mcconf.get_pwm_mode();
+    mSendBuffer[send_index++] = mcconf.get_comm_mode();
+    mSendBuffer[send_index++] = mcconf.get_motor_type();
+    mSendBuffer[send_index++] = mcconf.get_sensor_mode();
 
-    utility::buffer_append_double32(mSendBuffer, mcconf.l_current_max, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_current_min, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_in_current_max, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_in_current_min, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_abs_current_max, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_min_erpm, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_erpm, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_erpm_fbrake, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_erpm_fbrake_cc, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_min_vin, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_vin, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_battery_cut_start, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_battery_cut_end, 1000, &send_index);
-    mSendBuffer[send_index++] = mcconf.l_slow_abs_current;
-    mSendBuffer[send_index++] = mcconf.l_rpm_lim_neg_torque;
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_temp_fet_start, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_temp_fet_end, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_temp_motor_start, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_temp_motor_end, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_min_duty, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.l_max_duty, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_l_current_max(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_current_min(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_in_current_max(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_in_current_min(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_abs_current_max(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_min_erpm(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_max_erpm(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_max_erpm_fbrake(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_max_erpm_fbrake_cc(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_min_vin(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_max_vin(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_battery_cut_start(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_battery_cut_end(), 1000, &send_index);
+    mSendBuffer[send_index++] = mcconf.get_l_slow_abs_current();
+    mSendBuffer[send_index++] = mcconf.get_l_rpm_lim_neg_torque();
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_temp_fet_start(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_temp_fet_end(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_temp_motor_start(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_temp_motor_end(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_min_duty(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_l_max_duty(), 1000000, &send_index);
 
-    utility::buffer_append_double32(mSendBuffer,mcconf.sl_min_erpm, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.sl_min_erpm_cycle_int_limit, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.sl_max_fullbreak_current_dir_change, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.sl_cycle_int_limit, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.sl_phase_advance_at_br, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.sl_cycle_int_rpm_br, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.sl_bemf_coupling_k, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_sl_min_erpm(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_sl_min_erpm_cycle_int_limit(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_sl_max_fullbreak_current_dir_change(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_sl_cycle_int_limit(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_sl_phase_advance_at_br(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_sl_cycle_int_rpm_br(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_sl_bemf_coupling_k(), 1000, &send_index);
 
-    memcpy(mSendBuffer + send_index, mcconf.hall_table, 8);
+    memcpy(mSendBuffer + send_index, mcconf.get_hall_table().data(), 8);
     send_index += 8;
-    utility::buffer_append_double32(mSendBuffer,mcconf.hall_sl_erpm, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_hall_sl_erpm(), 1000, &send_index);
 
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_current_kp, 1e5, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_current_ki, 1e5, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_f_sw, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_dt_us, 1e6, &send_index);
-    mSendBuffer[send_index++] = mcconf.foc_encoder_inverted;
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_encoder_offset, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_encoder_ratio, 1e3, &send_index);
-    mSendBuffer[send_index++] = mcconf.foc_sensor_mode;
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_pll_kp, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_pll_ki, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_motor_l, 1e8, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_motor_r, 1e5, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_motor_flux_linkage, 1e5, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_observer_gain, 1e0, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_duty_dowmramp_kp, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_duty_dowmramp_ki, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_openloop_rpm, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_openloop_hyst, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_openloop_time, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_d_current_duty, 1e3, &send_index);
-    utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_d_current_factor, 1e3, &send_index);
-    memcpy(mSendBuffer + send_index, mcconf.foc_hall_table, 8);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_current_kp(), 1e5, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_current_ki(), 1e5, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_f_sw(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_dt_us(), 1e6, &send_index);
+    mSendBuffer[send_index++] = mcconf.get_foc_encoder_inverted();
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_encoder_offset(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_encoder_ratio(), 1e3, &send_index);
+    mSendBuffer[send_index++] = mcconf.get_foc_sensor_mode();
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_pll_kp(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_pll_ki(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_motor_l(), 1e8, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_motor_r(), 1e5, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_motor_flux_linkage(), 1e5, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_observer_gain(), 1e0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_duty_dowmramp_kp(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_duty_dowmramp_ki(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_openloop_rpm(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_sl_openloop_hyst(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_sl_openloop_time(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_sl_d_current_duty(), 1e3, &send_index);
+    utility::buffer_append_double32(mSendBuffer, mcconf.get_foc_sl_d_current_factor(), 1e3, &send_index);
+    memcpy(mSendBuffer + send_index, mcconf.get_foc_hall_table(), 8);
     send_index += 8;
-    utility::buffer_append_double32(mSendBuffer,mcconf.foc_hall_sl_erpm, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_foc_hall_sl_erpm(), 1000, &send_index);
 
-    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kp, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_ki, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kd, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_min_erpm, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_s_pid_kp(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_s_pid_ki(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_s_pid_kd(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_s_pid_min_erpm(), 1000, &send_index);
 
-    utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_kp, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_ki, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_kd, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_p_pid_kp(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_p_pid_ki(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_p_pid_kd(), 1000000, &send_index);
 
-    utility::buffer_append_double32(mSendBuffer,mcconf.cc_startup_boost_duty, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.cc_min_current, 1000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.cc_gain, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.cc_ramp_step_max, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_cc_startup_boost_duty(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_cc_min_current(), 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_cc_gain(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_cc_ramp_step_max(), 1000000, &send_index);
 
-    utility::buffer_append_int32(mSendBuffer, mcconf.m_fault_stop_time_ms, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.m_duty_ramp_step, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.m_duty_ramp_step_rpm_lim, 1000000, &send_index);
-    utility::buffer_append_double32(mSendBuffer,mcconf.m_current_backoff_gain, 1000000, &send_index);
-    utility::buffer_append_uint32(mSendBuffer, mcconf.m_encoder_counts, &send_index);
+    utility::buffer_append_int32(mSendBuffer, mcconf.get_m_fault_stop_time_ms(), &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_m_duty_ramp_step(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_m_duty_ramp_step_rpm_lim(), 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.get_m_current_backoff_gain(), 1000000, &send_index);
+    utility::buffer_append_uint32(mSendBuffer, mcconf.get_m_encoder_counts(), &send_index);
 
     return sendPacket(mSendBuffer, send_index);
 }

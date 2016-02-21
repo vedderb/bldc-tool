@@ -63,7 +63,7 @@ private slots:
     void samplesReceived(QByteArray data);
     void rotorPosReceived(double pos);
     void experimentSamplesReceived(QVector<double> samples);
-    void mcconfReceived(mc_configuration mcconf);
+    void mcconfReceived(const MC_Configuration &mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
     void motorRLReceived(double r, double l);
     void motorLinkageReceived(double flux_linkage);
@@ -188,8 +188,8 @@ private:
 
     QVector<QVector<double> > mExperimentSamples;
 
-    mc_configuration getMcconfGui();
-    void setMcconfGui(const mc_configuration &mcconf);
+    MC_Configuration &getMcconfGui();
+    void setMcconfGui(const MC_Configuration &mcconf);
     void showStatusInfo(QString info, bool isGood);
     void appendDoubleAndTrunc(QVector<double> *vec, double num, int maxSize);
     void clearBuffers();

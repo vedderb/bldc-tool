@@ -24,6 +24,9 @@
 #include <QUdpSocket>
 #include "datatypes.h"
 
+#include "mc_configuration.h"
+
+
 class PacketInterface : public QObject
 {
     Q_OBJECT
@@ -52,7 +55,7 @@ public:
     bool samplePrint(bool at_start, int sample_len, int dec);
     bool getMcconf();
     bool getMcconfDefault();
-    bool setMcconf(const mc_configuration &mcconf);
+    bool setMcconf(const MC_Configuration &mcconf);
     bool detectMotorParam(double current, double min_rpm, double low_duty);
     bool getAppConf();
     bool getAppConfDefault();
@@ -84,7 +87,7 @@ signals:
     void samplesReceived(QByteArray bytes);
     void rotorPosReceived(double pos);
     void experimentSamplesReceived(QVector<double> samples);
-    void mcconfReceived(mc_configuration mcconf);
+    void mcconfReceived(MC_Configuration& mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
     void appconfReceived(app_configuration appconf);
     void decodedPpmReceived(double value, double last_len);

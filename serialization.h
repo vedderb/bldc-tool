@@ -21,13 +21,15 @@
 #include <QObject>
 #include "datatypes.h"
 
+#include "mc_configuration.h"
+
 class Serialization : public QObject
 {
     Q_OBJECT
 public:
     explicit Serialization(QObject *parent = 0);
-    bool writeMcconfXml(const mc_configuration &mcconf, QWidget *parent = 0);
-    bool readMcconfXml(mc_configuration &mcconf, QWidget *parent = 0);
+    bool writeMcconfXml(const MC_Configuration &mcconf, QWidget *parent = 0);
+    bool readMcconfXml(MC_Configuration &mcconf, QWidget *parent = 0);
 
 signals:
 
