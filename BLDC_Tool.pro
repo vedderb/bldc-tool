@@ -1,48 +1,11 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-11-18T21:19:27
-#
-#-------------------------------------------------
 
-QT       += core gui
-QT       += printsupport
-QT       += serialport
-QT       += network
+#DEFINES += QML # for test
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-TARGET = BLDC_Tool
-TEMPLATE = app
+android | ios : DEFINES += QML
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    qcustomplot.cpp \
-    digitalfiltering.cpp \
-    packetinterface.cpp \
-    utility.cpp \
-    serialization.cpp \
-    mrichtextedit.cpp \
-    mtextedit.cpp \
-    rtdatawidget.cpp \
-    lib-qt-qml-tricks/src/qqmlhelpers.cpp \
-    datawrappers.cpp
-
-HEADERS  += mainwindow.h \
-    qcustomplot.h \
-    digitalfiltering.h \
-    packetinterface.h \
-    utility.h \
-    serialization.h \
-    mrichtextedit.h \
-    mtextedit.h \
-    rtdatawidget.h \
-    datatypes.h \
-    lib-qt-qml-tricks/src/qqmlhelpers.h \
-    datawrappers.h
-
-FORMS    += mainwindow.ui \
-    mrichtextedit.ui
-
-RESOURCES += \
-    resources.qrc
+contains(DEFINES,QML){
+    include(QML.pri)
+} else {
+    include(Widgets.pri)
+}

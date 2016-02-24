@@ -16,6 +16,21 @@
     */
 
 #include <QApplication>
+
+#ifdef QML
+
+#include <QQmlApplicationEngine>
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    QQmlApplicationEngine engine;
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    return app.exec();
+}
+
+#else
+
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
@@ -23,6 +38,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-    
     return a.exec();
 }
+
+#endif
