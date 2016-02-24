@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1278</width>
+    <width>1282</width>
     <height>765</height>
    </rect>
   </property>
@@ -2514,20 +2514,21 @@ p, li { white-space: pre-wrap; }
                     </widget>
                    </item>
                    <item row="3" column="0">
-                    <spacer name="verticalSpacer_13">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
+                    <widget class="QLabel" name="label_11">
+                     <property name="text">
+                      <string>Angle division</string>
                      </property>
-                     <property name="sizeType">
-                      <enum>QSizePolicy::Preferred</enum>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QDoubleSpinBox" name="mcconfPpidAngDivBox">
+                     <property name="minimum">
+                      <double>0.010000000000000</double>
                      </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>25</height>
-                      </size>
+                     <property name="maximum">
+                      <double>10000.000000000000000</double>
                      </property>
-                    </spacer>
+                    </widget>
                    </item>
                   </layout>
                  </widget>
@@ -4523,6 +4524,16 @@ p, li { white-space: pre-wrap; }
               </item>
              </layout>
             </widget>
+            <widget class="QWidget" name="tab_28">
+             <attribute name="title">
+              <string>RPM</string>
+             </attribute>
+             <layout class="QHBoxLayout" name="horizontalLayout_52">
+              <item>
+               <widget class="QCustomPlot" name="realtimePlotRpm" native="true"/>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
           <item>
@@ -5322,17 +5333,17 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="0" column="6">
+            <item row="0" column="7">
              <widget class="QPushButton" name="stopDetectButton">
               <property name="text">
                <string>Stop</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="3">
-             <widget class="QPushButton" name="detectEncoderPosErrorButton">
+            <item row="0" column="4">
+             <widget class="QPushButton" name="detectPidPosErrorButton">
               <property name="text">
-               <string>Encoder Pos Error</string>
+               <string>PID Pos Error</string>
               </property>
              </widget>
             </item>
@@ -5350,14 +5361,14 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="0" column="4">
+            <item row="0" column="5">
              <widget class="QPushButton" name="detectEncoderObserverErrorButton">
               <property name="text">
                <string>Encoder Observer Error</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="5">
+            <item row="0" column="6">
              <spacer name="horizontalSpacer_36">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -5369,6 +5380,13 @@ p, li { white-space: pre-wrap; }
                </size>
               </property>
              </spacer>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="detectPidPosButton">
+              <property name="text">
+               <string>PID Pos</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -5394,19 +5412,6 @@ p, li { white-space: pre-wrap; }
              </sizepolicy>
             </property>
            </widget>
-          </item>
-          <item>
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </widget>
@@ -5593,7 +5598,7 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>235</width>
+            <width>239</width>
             <height>78</height>
            </rect>
           </property>
@@ -5642,7 +5647,7 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>235</width>
+            <width>103</width>
             <height>78</height>
            </rect>
           </property>
@@ -5661,10 +5666,6 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
           </layout>
-          <zorder>udpIpEdit</zorder>
-          <zorder>udpConnectButton</zorder>
-          <zorder>udpIpEdit</zorder>
-          <zorder>udpConnectButton</zorder>
          </widget>
         </widget>
        </item>
@@ -5712,7 +5713,7 @@ p, li { white-space: pre-wrap; }
        <item>
         <widget class="QTabWidget" name="tabWidget_6">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab_26">
           <attribute name="title">
@@ -5858,6 +5859,15 @@ p, li { white-space: pre-wrap; }
               </item>
               <item row="5" column="1">
                <widget class="QDoubleSpinBox" name="arrowCurrentBox">
+                <property name="prefix">
+                 <string>I: </string>
+                </property>
+                <property name="suffix">
+                 <string> A</string>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
                 <property name="maximum">
                  <double>200.000000000000000</double>
                 </property>

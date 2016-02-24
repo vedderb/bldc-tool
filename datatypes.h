@@ -127,7 +127,8 @@ typedef enum {
     DISP_POS_MODE_INDUCTANCE,
     DISP_POS_MODE_OBSERVER,
     DISP_POS_MODE_ENCODER,
-    DISP_POS_MODE_ENCODER_POS_ERROR,
+    DISP_POS_MODE_PID_POS,
+    DISP_POS_MODE_PID_POS_ERROR,
     DISP_POS_MODE_ENCODER_OBSERVER_ERROR
 } disp_pos_mode;
 
@@ -203,6 +204,7 @@ typedef struct {
     float p_pid_kp;
     float p_pid_ki;
     float p_pid_kd;
+    float p_pid_ang_div;
     // Current controller
     float cc_startup_boost_duty;
     float cc_min_current;
