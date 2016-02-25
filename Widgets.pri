@@ -24,9 +24,7 @@ SOURCES += main.cpp\
     serialization.cpp \
     mrichtextedit.cpp \
     mtextedit.cpp \
-    rtdatawidget.cpp \
-    lib-qt-qml-tricks/src/qqmlhelpers.cpp \
-    datawrappers.cpp
+    rtdatawidget.cpp
 
 HEADERS  += mainwindow.h \
     qcustomplot.h \
@@ -37,9 +35,7 @@ HEADERS  += mainwindow.h \
     mrichtextedit.h \
     mtextedit.h \
     rtdatawidget.h \
-    datatypes.h \
-    lib-qt-qml-tricks/src/qqmlhelpers.h \
-    datawrappers.h
+    datatypes.h
 
 FORMS    += mainwindow.ui \
     mrichtextedit.ui

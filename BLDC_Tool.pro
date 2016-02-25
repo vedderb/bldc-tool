@@ -1,5 +1,5 @@
 
-#DEFINES += QML # for test
+DEFINES += QML # for test
 
 android | ios : DEFINES += QML
 

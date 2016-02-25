@@ -34,6 +34,7 @@
         type get_##name () const { \
             return m_##name ; \
         } \
+    protected: \
         bool update_##name (type name) { \
             bool ret = false; \
             if ((ret = m_##name != name)) { \
@@ -99,19 +100,31 @@
         Q_PROPERTY (type name READ get_##name WRITE set_##name NOTIFY name##Changed) \
     public: \
         type get_##name () const { \
-            return data.name ; \
+            return data ; \
         } \
     public Q_SLOTS: \
         bool set_##name (type name) { \
             bool ret = false; \
-            if ((ret = data.name != name)) { \
-                data.name = name; \
-                emit name##Changed (data.name); \
+            if ((ret = data != name)) { \
+                data = name; \
+                emit name##Changed (data); \
             } \
             return ret; \
         } \
     Q_SIGNALS: \
         void name##Changed (type name); \
+    private:
+
+
+#define QML_WRITEONLY_PROPERTY(type, name) \
+    protected: \
+        Q_PROPERTY (type name WRITE set_##name) \
+    private: \
+        type m_##name; \
+    public Q_SLOTS: \
+        void set_##name (type name) { \
+                m_##name = name; \
+        } \
     private:
 
 class QmlProperty : public QObject { Q_OBJECT }; // NOTE : to avoid "no suitable class found" MOC note

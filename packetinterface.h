@@ -50,9 +50,9 @@ public:
     bool setPos(double pos);
     bool setDetect(disp_pos_mode mode);
     bool samplePrint(bool at_start, int sample_len, int dec);
-    bool getMcconf();
+    Q_INVOKABLE bool getMcconf();
     bool getMcconfDefault();
-    bool setMcconf(const mc_configuration &mcconf);
+    Q_INVOKABLE bool setMcconf(const mc_configuration &mcconf);
     bool detectMotorParam(double current, double min_rpm, double low_duty);
     bool getAppConf();
     bool getAppConfDefault();
