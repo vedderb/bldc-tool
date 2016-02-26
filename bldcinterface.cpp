@@ -1,4 +1,5 @@
 #include "bldcinterface.h"
+#include <math.h>
 
 namespace {
 void stepTowards(double &value, double goal, double step) {
@@ -149,8 +150,165 @@ void BLDCInterface::serialPortError(QSerialPort::SerialPortError error)
 
 void BLDCInterface::timerSlot()
 {
-//@@ToDo: implement
+    // Update CAN fwd function
+    mPacketInterface->setSendCan(m_canFwd, m_canId);
+
+    // Read FW version if needed
+    static bool sendCanBefore = false;
+    static int canIdBefore = 0;
+    if (mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) {
+        if (sendCanBefore != m_canFwd ||
+                canIdBefore != m_canId) {
+            mFwVersionReceived = false;
+            mFwRetries = 0;
+        }
+
+        if (!mFwVersionReceived) {
+            mPacketInterface->getFwVersion();
+            mFwRetries++;
+
+            // Timeout if the firmware cannot be read
+            if (mFwRetries >= 100) {
+                emit statusInfoChanged("No firmware read response", false);
+                disconnect();
+            }
+        }
+
+    } else {
+        mFwVersionReceived = false;
+        mFwRetries = 0;
+    }
+    sendCanBefore = m_canFwd;
+    canIdBefore = m_canId;
+
+    // Update status label
+    {
+        if (mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) {
+            if (mPacketInterface->isLimitedMode()) {
+                update_status("Connected, limited");
+            } else {
+                update_status("Connected");
+            }
+        } else {
+            update_status("Not connected");
+        }
+    }
+
+    // Update fw upload bar and label
+    double fw_prog = mPacketInterface->getFirmwareUploadProgress();
+    if (fw_prog > -0.1) {
+        update_firmwareProgress( fw_prog );
+        update_firmwareUploadEnabled(false);
+        update_firmwareCancelEnabled(true);
+    } else {
+        // If the firmware upload just finished or failed
+        if (!m_firmwareUploadEnabled) {
+            mFwVersionReceived = false;
+            mFwRetries = 0;
+            if (mPacketInterface->getFirmwareUploadStatus().compare("FW Upload Done") == 0) {
+                update_firmwareProgress(1.0);
+            } else {
+                update_firmwareProgress(0.0);
+            }
+        }
+        update_firmwareUploadEnabled(true);
+        update_firmwareCancelEnabled(false);
+
+        // Send alive command once every 10 iterations (only while not uploading firmware)
+        static int alive_cnt = 0;
+        alive_cnt++;
+        if (alive_cnt >= 10) {
+            alive_cnt = 0;
+            mPacketInterface->sendAlive();
+        }
+    }
+    update_firmwareUploadStatus(mPacketInterface->getFirmwareUploadStatus());
+
+    // Update MC readings
+    if (m_realtimeActivate) {
+        mPacketInterface->getValues();
+    }
+
+    // Update decoded servo value
+    if (m_appconfUpdatePpm) {
+        mPacketInterface->getDecodedPpm();
+    }
+
+    // Update decoded adc value
+    if (m_appconfAdcUpdate) {
+        mPacketInterface->getDecodedAdc();
+    }
+
+    // Update decoded nunchuk value
+    if (m_appconfUpdateChuk) {
+        mPacketInterface->getDecodedChuk();
+    }
+
+    // Enable/disable fields in the configuration page
+    static int isSlIntBefore = true;
+    if (m_mcconfCommInt != isSlIntBefore) {
+        if (m_mcconfCommInt) {
+            m_mcconf->set_sl_min_erpm                           (true);
+            m_mcconf->set_sl_max_fullbreak_current_dir_change	(true);
+            m_mcconf->set_sl_bemf_coupling_k            		(true);
+            m_mcconf->set_sl_cycle_int_rpm_br           		(true);
+            m_mcconf->set_sl_cycle_int_limit            		(true);
+            m_mcconf->set_sl_phase_advance_at_br        		(true);
+            m_mcconf->set_sl_min_erpm_cycle_int_limit   		(true);
+        } else {
+            m_mcconf->set_sl_min_erpm                           (true);
+            m_mcconf->set_sl_max_fullbreak_current_dir_change	(true);
+            m_mcconf->set_sl_bemf_coupling_k            		(false);
+            m_mcconf->set_sl_cycle_int_rpm_br           		(true);
+            m_mcconf->set_sl_cycle_int_limit            		(false);
+            m_mcconf->set_sl_phase_advance_at_br        		(true);
+            m_mcconf->set_sl_min_erpm_cycle_int_limit   		(false);
+        }
+    }
+    isSlIntBefore = m_mcconfCommInt;
+
+    // Handle key events
+    static double keyPower = 0.0;
+    static double lastKeyPower = 0.0;
+    const double lowPower = 0.18;
+    const double lowPowerRev = 0.1;
+    const double highPower = 0.9;
+    const double highPowerRev = 0.3;
+    const double lowStep = 0.02;
+    const double highStep = 0.01;
+
+    if (m_keyRight && m_keyLeft) {
+        if (keyPower >= lowPower) {
+            stepTowards(keyPower, highPower, highStep);
+        } else if (keyPower <= -lowPower) {
+            stepTowards(keyPower, -highPowerRev, highStep);
+        } else if (keyPower >= 0) {
+            stepTowards(keyPower, highPower, lowStep);
+        } else {
+            stepTowards(keyPower, -highPowerRev, lowStep);
+        }
+    } else if (m_keyRight) {
+        if (fabs(keyPower) > lowPower) {
+            stepTowards(keyPower, lowPower, highStep);
+        } else {
+            stepTowards(keyPower, lowPower, lowStep);
+        }
+    } else if (m_keyLeft) {
+        if (fabs(keyPower) > lowPower) {
+            stepTowards(keyPower, -lowPowerRev, highStep);
+        } else {
+            stepTowards(keyPower, -lowPowerRev, lowStep);
+        }
+    } else {
+        stepTowards(keyPower, 0.0, lowStep * 3);
+    }
+
+    if (keyPower != lastKeyPower) {
+        lastKeyPower = keyPower;
+        mPacketInterface->setDutyCycle(keyPower);
+    }
 }
+
 
 void BLDCInterface::packetDataToSend(QByteArray &data)
 {
@@ -384,22 +542,22 @@ void BLDCInterface::appconfReceived(app_configuration appconf){
 
 void BLDCInterface::decodedPpmReceived(double ppm_value, double ppm_last_len)
 {
-    update_appconfDecodedPpm((ppm_value + 1.0) * 500.0);
+    update_appconfDecodedPpm((ppm_value + 1.0) * 5.0);
     update_appconfPpmPulsewidth(ppm_last_len);
 }
 
 void BLDCInterface::decodedAdcReceived(double adc_value, double adc_voltage, double adc_value2, double adc_voltage2)
 {
-    update_appconfAdcDecoded(adc_value * 1000.0);
+    update_appconfAdcDecoded(adc_value);
     update_appconfAdcVoltage(adc_voltage);
 
-    update_appconfAdcDecoded2(adc_value2 * 1000.0);
+    update_appconfAdcDecoded2(adc_value2);
     update_appconfAdcVoltage2(adc_voltage2);
 }
 
 void BLDCInterface::decodedChukReceived(double chuk_value)
 {
-    update_appconfDecodedChuk((chuk_value + 1.0) * 500.0);
+    update_appconfDecodedChuk((chuk_value + 1.0) * 0.5);
 }
 
 

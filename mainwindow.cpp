@@ -785,6 +785,10 @@ void MainWindow::timerSlot()
         lastKeyPower = keyPower;
         mPacketInterface->setDutyCycle(keyPower);
     }
+    UpdatePlots();
+}
+
+void MainWindow::UpdatePlots(){
 
     // Update plots
     static QVector<double> filter;
@@ -1306,6 +1310,7 @@ void MainWindow::timerSlot()
 
         mDoReplotPos = false;
     }
+
 }
 
 void MainWindow::packetDataToSend(QByteArray &data)

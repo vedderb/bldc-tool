@@ -44,10 +44,27 @@ class BLDCInterface : public QObject
     Q_PROPERTY(McConfiguration* mcconf READ mcconf NOTIFY mcconfChanged)
     QML_READONLY_PROPERTY(QString, mcconfDetectResultBrowser)
     QML_READONLY_PROPERTY(QString, firmwareVersion)
+    QML_READONLY_PROPERTY(double, firmwareProgress)
+    QML_READONLY_PROPERTY(bool, firmwareUploadEnabled)
+    QML_READONLY_PROPERTY(bool, firmwareCancelEnabled)
+    QML_READONLY_PROPERTY(QString, firmwareUploadStatus)
+    QML_READONLY_PROPERTY(double, rotorPos)
+    QML_READONLY_PROPERTY(QString, status)
+
     QML_WRITEONLY_PROPERTY(int, sampleNum)
     QML_WRITEONLY_PROPERTY(int, mcconfFocCalcCCTc)
     QML_WRITEONLY_PROPERTY(int, mcconfFocCalcKp)
     QML_WRITEONLY_PROPERTY(int, mcconfFocCalcKi)
+    QML_WRITEONLY_PROPERTY(bool, canFwd)
+    QML_WRITEONLY_PROPERTY(bool, canId)
+    QML_WRITEONLY_PROPERTY(bool, realtimeActivate)
+    QML_WRITEONLY_PROPERTY(bool, appconfUpdatePpm       )
+    QML_WRITEONLY_PROPERTY(bool, appconfAdcUpdate       )
+    QML_WRITEONLY_PROPERTY(bool, appconfUpdateChuk      )
+    QML_WRITABLE_PROPERTY(bool, mcconfCommInt           )
+
+    QML_WRITEONLY_PROPERTY(bool, keyLeft )
+    QML_WRITEONLY_PROPERTY(bool, keyRight)
 
     QML_WRITABLE_PROPERTY(double, mcconfFocDetectR		          )
     QML_WRITABLE_PROPERTY(double, mcconfFocDetectL		          )
@@ -65,14 +82,15 @@ class BLDCInterface : public QObject
     QML_WRITABLE_PROPERTY(double, mcconfFocMeasureHallCurrent	  )
     QML_WRITABLE_PROPERTY(QList<double>, mcconfDetectHallTable	  )
     QML_WRITABLE_PROPERTY(QList<double>, mcconfFocMeasureHallTable)
-    QML_READONLY_PROPERTY(int, appconfDecodedChuk)
-    QML_READONLY_PROPERTY(int, appconfAdcDecoded)
-    QML_READONLY_PROPERTY(int, appconfAdcDecoded2)
+    QML_READONLY_PROPERTY(double, appconfDecodedChuk)
+    QML_READONLY_PROPERTY(double, appconfAdcDecoded )
+    QML_READONLY_PROPERTY(double, appconfAdcDecoded2)
     QML_READONLY_PROPERTY(double, appconfAdcVoltage)
     QML_READONLY_PROPERTY(double, appconfAdcVoltage2)
-    QML_READONLY_PROPERTY(int, appconfDecodedPpm)
+    QML_READONLY_PROPERTY(double, appconfDecodedPpm)
     QML_READONLY_PROPERTY(double, appconfPpmPulsewidth)
     Q_PROPERTY(AppConfiguration *appconf READ appconf NOTIFY appconfChanged)
+
 
 
 public:
@@ -161,8 +179,7 @@ private:
     bool mDoReplot;
     bool mDoReplotPos;
     bool mDoRescale;
-    bool mDoFilterReplot;    bool keyLeft;
-    bool keyRight;
+    bool mDoFilterReplot;
     bool mMcconfLoaded;
     bool mAppconfLoaded;
 

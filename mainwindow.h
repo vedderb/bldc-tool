@@ -195,6 +195,7 @@ private:
     void clearBuffers();
     void saveExperimentSamplesToFile(QString path);
     void refreshSerialDevices();
+    void UpdatePlots();
 };
 
 #endif // MAINWINDOW_H
