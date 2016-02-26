@@ -1,5 +1,6 @@
 #include "bldcinterface.h"
 #include <math.h>
+#include <QThread>
 
 namespace {
 void stepTowards(double &value, double goal, double step) {
@@ -113,7 +114,6 @@ void BLDCInterface::serialDataAvailable()
 }
 
 void BLDCInterface::serialPortError(QSerialPort::SerialPortError error)
-
 {
     QString message;
     switch (error) {
@@ -170,7 +170,7 @@ void BLDCInterface::timerSlot()
             // Timeout if the firmware cannot be read
             if (mFwRetries >= 100) {
                 emit statusInfoChanged("No firmware read response", false);
-                disconnect();
+                serialDisconnect();
             }
         }
 
@@ -307,8 +307,8 @@ void BLDCInterface::timerSlot()
         lastKeyPower = keyPower;
         mPacketInterface->setDutyCycle(keyPower);
     }
+    emit update();
 }
-
 
 void BLDCInterface::packetDataToSend(QByteArray &data)
 {
@@ -318,7 +318,6 @@ void BLDCInterface::packetDataToSend(QByteArray &data)
 }
 
 void BLDCInterface::fwVersionReceived(int major, int minor)
-
 {
     QPair<int, int> highest_supported = *std::max_element(mCompatibleFws.begin(), mCompatibleFws.end());
     QPair<int, int> fw_connected = qMakePair(major, minor);
@@ -328,7 +327,7 @@ void BLDCInterface::fwVersionReceived(int major, int minor)
     if (major < 0) {
         mFwVersionReceived = false;
         mFwRetries = 0;
-        disconnect();
+        serialDisconnect();
         emit msgCritical( "Error", "The firmware on the connected VESC is too old. Please"
                             " update it using a programmer.");
         update_firmwareVersion("Old Firmware");
@@ -357,7 +356,7 @@ void BLDCInterface::fwVersionReceived(int major, int minor)
         } else {
             mFwVersionReceived = false;
             mFwRetries = 0;
-            disconnect();
+            serialDisconnect();
             if (!wasReceived) {
                 emit msgCritical( "Error", "The firmware on the connected VESC is too old. Please"
                                                    " update it using a programmer.");
@@ -429,6 +428,7 @@ void BLDCInterface::samplesReceived(QByteArray data)
         }
     }
 }
+
 void BLDCInterface::mcconfReceived(mc_configuration &mcconf)
 {
     m_mcconf->setData(mcconf);
@@ -482,7 +482,6 @@ void BLDCInterface::motorParamReceived(double cycle_int_limit, double bemf_coupl
                                                              hall_str.toLocal8Bit().data()));
 }
 
-
 void BLDCInterface::motorRLReceived(double r, double l)
 {
     if (r < 1e-9 && l < 1e-9) {
@@ -494,7 +493,6 @@ void BLDCInterface::motorRLReceived(double r, double l)
         mcconfFocCalcCC();
     }
 }
-
 
 void BLDCInterface::motorLinkageReceived(double flux_linkage)
 {
@@ -520,7 +518,6 @@ void BLDCInterface::encoderParamReceived(double offset, double ratio, bool inver
     }
 }
 
-
 void BLDCInterface::focHallTableReceived(QVector<int> hall_table, int res)
 {
     if (res != 0) {
@@ -533,7 +530,6 @@ void BLDCInterface::focHallTableReceived(QVector<int> hall_table, int res)
         set_mcconfFocMeasureHallTable(table);
     }
 }
-
 
 void BLDCInterface::appconfReceived(app_configuration appconf){
     m_appconf->setData(appconf);
@@ -559,10 +555,6 @@ void BLDCInterface::decodedChukReceived(double chuk_value)
 {
     update_appconfDecodedChuk((chuk_value + 1.0) * 0.5);
 }
-
-
-
-
 
 void BLDCInterface::mcconfFocCalcCC()
 {
@@ -604,10 +596,10 @@ void BLDCInterface::refreshSerialDevices()
         }
         m_serialPortList.insert(index, new SerialPort(name, port.systemLocation()));
     }
-
+    set_currentSerialPort(0);
 }
 
-void BLDCInterface::disconnect()
+void BLDCInterface::serialDisconnect()
 {
     if (mSerialPort->isOpen()) {
         mSerialPort->close();
@@ -619,4 +611,34 @@ void BLDCInterface::disconnect()
 
     mFwVersionReceived = false;
     mFwRetries = 0;
+}
+
+
+void BLDCInterface::serialConnect()
+{
+    if(mSerialPort->isOpen()) {
+        return;
+    }
+
+    mSerialPort->setPortName(m_serialPortList.at(m_currentSerialPort)->get_systemLocation());
+    mSerialPort->open(QIODevice::ReadWrite);
+
+    if(!mSerialPort->isOpen()) {
+        return;
+    }
+
+    mSerialPort->setBaudRate(QSerialPort::Baud115200);
+    mSerialPort->setDataBits(QSerialPort::Data8);
+    mSerialPort->setParity(QSerialPort::NoParity);
+    mSerialPort->setStopBits(QSerialPort::OneStop);
+    mSerialPort->setFlowControl(QSerialPort::NoFlowControl);
+
+    // For nrf
+    mSerialPort->setRequestToSend(true);
+    mSerialPort->setDataTerminalReady(true);
+    QThread::msleep(5);
+    mSerialPort->setDataTerminalReady(false);
+    QThread::msleep(100);
+
+    mPacketInterface->stopUdpConnection();
 }

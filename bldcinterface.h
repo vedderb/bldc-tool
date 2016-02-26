@@ -40,6 +40,7 @@ class BLDCInterface : public QObject
 
     QML_WRITABLE_PROPERTY(QString, udpIp)
     QML_LIST_PROPERTY(BLDCInterface, serialPortList, SerialPort)// @@ToDo: add notify signal
+    QML_WRITABLE_PROPERTY(int, currentSerialPort)
     QML_READONLY_PROPERTY(QString, firmwareSupported)
     Q_PROPERTY(McConfiguration* mcconf READ mcconf NOTIFY mcconfChanged)
     QML_READONLY_PROPERTY(QString, mcconfDetectResultBrowser)
@@ -106,6 +107,8 @@ public:
         return m_mcconf;
     }
 
+public slots:
+    void serialConnect();
 signals:
     void statusInfoChanged(QString info, bool isGood);
     void msgCritical(QString title, QString text);
@@ -118,6 +121,7 @@ signals:
     void rotorPosReceived(double pos);
     void appconfChanged(AppConfiguration * appconf);
     void mcconfChanged(McConfiguration* mcconf);
+    void update();
 
 private slots:
 
@@ -127,7 +131,7 @@ private slots:
     void timerSlot();
     void packetDataToSend(QByteArray &data);
     void fwVersionReceived(int major, int minor);
-    void disconnect();
+    void serialDisconnect();
 
     void samplesReceived(QByteArray data);
     void mcconfReceived(mc_configuration &mcconf);
