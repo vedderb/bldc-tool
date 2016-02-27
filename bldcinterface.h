@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QQmlListProperty>
 #include <QtSerialPort/QSerialPortInfo>
+#include <QFile>
+#include <QFileInfo>
 
 #include "packetinterface.h"
 #include "serialization.h"
@@ -20,8 +22,8 @@ class SerialPort : public QObject
     QML_READONLY_PROPERTY(QString, systemLocation)
 public:
     SerialPort(QString name, QString location) :
-    m_portName(name),
-    m_systemLocation(location)
+        m_portName(name),
+        m_systemLocation(location)
     {}
     virtual ~SerialPort() {}
 };
@@ -38,10 +40,12 @@ class BLDCInterface : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(PacketInterface*  packetInterface READ packetInterface)
     QML_WRITABLE_PROPERTY(QString, udpIp)
     QML_LIST_PROPERTY(BLDCInterface, serialPortList, SerialPort)// @@ToDo: add notify signal
     QML_WRITABLE_PROPERTY(int, currentSerialPort)
     QML_READONLY_PROPERTY(QString, firmwareSupported)
+    QML_READONLY_PROPERTY(QString, firmware)
     Q_PROPERTY(McConfiguration* mcconf READ mcconf NOTIFY mcconfChanged)
     QML_READONLY_PROPERTY(QString, mcconfDetectResultBrowser)
     QML_READONLY_PROPERTY(QString, firmwareVersion)
@@ -51,6 +55,8 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(QString, firmwareUploadStatus)
     QML_READONLY_PROPERTY(double, rotorPos)
     QML_READONLY_PROPERTY(QString, status)
+    QML_READONLY_PROPERTY(bool, mcconfLoaded )
+    QML_READONLY_PROPERTY(bool, appconfLoaded)
 
     QML_WRITEONLY_PROPERTY(int, sampleNum)
     QML_WRITEONLY_PROPERTY(int, mcconfFocCalcCCTc)
@@ -63,6 +69,10 @@ class BLDCInterface : public QObject
     QML_WRITEONLY_PROPERTY(bool, appconfAdcUpdate       )
     QML_WRITEONLY_PROPERTY(bool, appconfUpdateChuk      )
     QML_WRITABLE_PROPERTY(bool, mcconfCommInt           )
+    QML_WRITABLE_PROPERTY(bool, doReplot)
+    QML_WRITABLE_PROPERTY(bool, doRescale)
+    QML_WRITABLE_PROPERTY(bool, doFilterReplot)
+
 
     QML_WRITEONLY_PROPERTY(bool, keyLeft )
     QML_WRITEONLY_PROPERTY(bool, keyRight)
@@ -107,6 +117,11 @@ public:
         return m_mcconf;
     }
 
+    PacketInterface* packetInterface() const
+    {
+        return mPacketInterface;
+    }
+
 public slots:
     void serialConnect();
 signals:
@@ -123,16 +138,45 @@ signals:
     void mcconfChanged(McConfiguration* mcconf);
     void update();
 
-private slots:
+public slots:
 
     void serialDataAvailable();
     void serialPortError(QSerialPort::SerialPortError error);
+    void packetDataToSend(QByteArray &data);
+    void serialDisconnect();
+    void detect();
+    void stopDetect();
+    void sendTerminal(QString &cmd);
+    void readMcconf();
+    void readMcconfDefault();
+    void writeMcconf();
+    void setCurrentBrake(double current);
+    void loadMcconfXml();
+    void saveMcconfXml();
+    void detectMotorParam(double current, double min_rpm, double low_duty);
+    void readAppConf();
+    void readAppConfDefault();
+    void writeAppConf();
+    void reboot();
+    void setPos(double pos);
+    void updateFirmware(QString fileName);
+    void readFirmwareVersion();
+    void cancelFirmwareUpload();
+    void setServoPos(int pos);
+    void measureRL();
+    void measureLinkage(double current, double min_rpm, double low_duty, double resistance);
+    void measureEncoder(double current);
+    void detectEncoder();
+    void detectEncoderPosError();
+    void detectEncoderObserverError();
+    void detectObserver();
+    void measureHallFoc(double current);
+
+
+private slots:
 
     void timerSlot();
-    void packetDataToSend(QByteArray &data);
     void fwVersionReceived(int major, int minor);
-    void serialDisconnect();
-
     void samplesReceived(QByteArray data);
     void mcconfReceived(mc_configuration &mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
@@ -177,16 +221,7 @@ private:
     QByteArray tmpStatusArray;
     QByteArray tmpCurrTotArray;
     QByteArray tmpFSwArray;
-
     detect_res_t mDetectRes;
-
-    bool mDoReplot;
-    bool mDoReplotPos;
-    bool mDoRescale;
-    bool mDoFilterReplot;
-    bool mMcconfLoaded;
-    bool mAppconfLoaded;
-
     AppConfiguration * m_appconf;
     McConfiguration* m_mcconf;
 };

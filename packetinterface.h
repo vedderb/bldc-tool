@@ -27,6 +27,9 @@
 class PacketInterface : public QObject
 {
     Q_OBJECT
+
+    Q_ENUMS(disp_pos_mode)
+
 public:
     explicit PacketInterface(QObject *parent = 0);
     ~PacketInterface();

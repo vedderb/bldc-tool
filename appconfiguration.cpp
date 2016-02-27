@@ -69,3 +69,8 @@ void AppConfiguration::setData(app_configuration &src)
     set_nrf_send_crc_ack			(src.app_nrf_conf.send_crc_ack);
 }
 
+const app_configuration &AppConfiguration::data()
+{
+    return m_data;
+}
+

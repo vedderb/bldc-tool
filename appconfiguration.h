@@ -82,6 +82,7 @@ public:
     explicit AppConfiguration(QObject *parent = 0);
     AppConfiguration(app_configuration &data);
     void setData(app_configuration& src);
+    const app_configuration& data();
 
 signals:
 

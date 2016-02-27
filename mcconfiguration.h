@@ -119,7 +119,6 @@ public slots:
 signals:
 
     void foc_hall_tableChanged(QList<int> foc_hall_table);
-
     void hall_tableChanged(QList<int> hall_table);
 
 private:

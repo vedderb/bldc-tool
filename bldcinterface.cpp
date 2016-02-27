@@ -52,9 +52,9 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     mTimer->start();
 
     mSampleInt = 0;
-    mDoReplot = false;
-    mDoRescale = true;
-    mDoFilterReplot = true;
+    m_doReplot =(false );
+    m_doRescale=( true);
+    m_doFilterReplot = true;
     mPacketInterface = new PacketInterface(this);
     mDetectRes.updated = false;
 
@@ -422,9 +422,9 @@ void BLDCInterface::samplesReceived(QByteArray data)
             statusArray = tmpStatusArray;
             currTotArray = tmpCurrTotArray;
             fSwArray = tmpFSwArray;
-            mDoReplot = true;
-            mDoFilterReplot = true;
-            mDoRescale = true;
+            set_doReplot(true);
+            set_doFilterReplot(true);
+            set_doRescale(true);
         }
     }
 }
@@ -432,6 +432,7 @@ void BLDCInterface::samplesReceived(QByteArray data)
 void BLDCInterface::mcconfReceived(mc_configuration &mcconf)
 {
     m_mcconf->setData(mcconf);
+    m_mcconfLoaded = true;
     emit statusInfoChanged("MCCONF Received", true);
 }
 
@@ -533,6 +534,7 @@ void BLDCInterface::focHallTableReceived(QVector<int> hall_table, int res)
 
 void BLDCInterface::appconfReceived(app_configuration appconf){
     m_appconf->setData(appconf);
+    update_appconfLoaded( true );
     emit statusInfoChanged("APPCONF Received", true);
 }
 
@@ -599,8 +601,7 @@ void BLDCInterface::refreshSerialDevices()
     set_currentSerialPort(0);
 }
 
-void BLDCInterface::serialDisconnect()
-{
+void BLDCInterface::serialDisconnect(){
     if (mSerialPort->isOpen()) {
         mSerialPort->close();
     }
@@ -613,6 +614,166 @@ void BLDCInterface::serialDisconnect()
     mFwRetries = 0;
 }
 
+void BLDCInterface::detect()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_INDUCTANCE);
+}
+
+void BLDCInterface::stopDetect()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_NONE);
+}
+
+void BLDCInterface::sendTerminal(QString &cmd)
+{
+    mPacketInterface->sendTerminalCmd(cmd);
+}
+
+void BLDCInterface::readMcconf()
+{
+    mPacketInterface->getMcconf();
+}
+
+void BLDCInterface::readMcconfDefault()
+{
+    mPacketInterface->getMcconfDefault();
+}
+
+void BLDCInterface::writeMcconf()
+{
+    if (!m_mcconfLoaded) {
+        emit msgCritical("Error", "The configuration should be read or loaded at least once before writing it.");
+        return;
+    }
+    mPacketInterface->setMcconf(m_mcconf->data());
+}
+
+void BLDCInterface::setCurrentBrake(double current){
+    mPacketInterface->setCurrentBrake(current);
+}
+
+void BLDCInterface::loadMcconfXml()
+{
+    mc_configuration tmp = m_mcconf->data();
+    if (mSerialization->readMcconfXml(tmp)) {
+        m_mcconf->setData(tmp);
+    } else {
+        emit statusInfoChanged("Loading MCCONF failed", false);
+    }
+}
+
+void BLDCInterface::saveMcconfXml(){
+    mSerialization->writeMcconfXml(m_mcconf->data());
+}
+
+void BLDCInterface::detectMotorParam(double current, double min_rpm, double low_duty){
+    mPacketInterface->detectMotorParam(current, min_rpm, low_duty);
+}
+
+void BLDCInterface::readAppConf(){
+    mPacketInterface->getAppConf();
+}
+
+void BLDCInterface::readAppConfDefault(){
+    mPacketInterface->getAppConfDefault();
+}
+
+void BLDCInterface::writeAppConf(){
+    if (!m_appconfLoaded) {
+        emit msgCritical( "Error", "The configuration should be read at least once before writing it.");
+        return;
+    }
+    mPacketInterface->setAppConf(m_appconf->data());
+}
+
+void BLDCInterface::reboot(){
+    mPacketInterface->reboot();
+}
+
+void BLDCInterface::setPos(double pos){
+    mPacketInterface->setPos(pos);
+}
+
+void BLDCInterface::updateFirmware(QString fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        emit msgCritical("Error", "Could not open file. Make sure that the path is valid.");
+        return;
+    }
+
+    if (file.size() > 400000) {
+        emit msgCritical("Error", "The selected file is too large to be a firmware.");
+        return;
+    }
+
+    QFileInfo fileInfo(file.fileName());
+
+    if (!(fileInfo.fileName().startsWith("BLDC_4") || fileInfo.fileName().startsWith("VESC"))
+            || !fileInfo.fileName().endsWith(".bin")) {
+        emit msgCritical("Error", "The selected file name seems invalid.");
+        return;
+    }
+
+    QByteArray fw = file.readAll();
+    mPacketInterface->startFirmwareUpload(fw);
+}
+
+void BLDCInterface::readFirmwareVersion()
+{
+    mFwVersionReceived = false;
+    mFwRetries = 0;
+    mPacketInterface->getFwVersion();
+}
+
+void BLDCInterface::cancelFirmwareUpload()
+{
+    mPacketInterface->cancelFirmwareUpload();
+}
+
+void BLDCInterface::setServoPos(int pos)
+{
+    mPacketInterface->setServoPos(pos);
+}
+
+void BLDCInterface::measureRL(){
+    mPacketInterface->measureRL();
+}
+
+void BLDCInterface::measureLinkage(double current, double min_rpm, double low_duty, double resistance)
+{
+    mPacketInterface->measureLinkage(current,min_rpm,low_duty,resistance);
+}
+
+void BLDCInterface::measureEncoder(double current)
+{
+    mPacketInterface->measureEncoder(current);
+}
+
+void BLDCInterface::detectEncoder()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER);
+}
+
+void BLDCInterface::detectEncoderPosError()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER_POS_ERROR);
+}
+
+void BLDCInterface::detectEncoderObserverError()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER_OBSERVER_ERROR);
+}
+
+void BLDCInterface::detectObserver()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_OBSERVER);
+}
+
+void BLDCInterface::measureHallFoc(double current)
+{
+    mPacketInterface->measureHallFoc(current);
+}
 
 void BLDCInterface::serialConnect()
 {
