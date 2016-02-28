@@ -17,11 +17,11 @@ class AppConfiguration : public QObject
     Q_ENUMS(NRF_CRC 	   )
     Q_ENUMS(NRF_RETR_DELAY )
     // Settings
-    QML_WRITABLE_PROPERTY_W( quint8 	,controller_id 			,m_data.controller_id 			)
-    QML_WRITABLE_PROPERTY_W( quint32 	,timeout_msec 			,m_data.timeout_msec 			)
+    QML_WRITABLE_PROPERTY_W( int 	,controller_id 			,m_data.controller_id 			)
+    QML_WRITABLE_PROPERTY_W( int 	,timeout_msec 			,m_data.timeout_msec 			)
     QML_WRITABLE_PROPERTY_W( float 		,timeout_brake_current 	,m_data.timeout_brake_current 	)
     QML_WRITABLE_PROPERTY_W( bool 		,send_can_status 		,m_data.send_can_status 		)
-    QML_WRITABLE_PROPERTY_W( quint32 	,send_can_status_rate_hz,m_data.send_can_status_rate_hz)
+    QML_WRITABLE_PROPERTY_W( int 	,send_can_status_rate_hz,m_data.send_can_status_rate_hz)
     // Application to use
     QML_WRITABLE_PROPERTY_W( app_use ,app_to_use, m_data.app_to_use )
     // PPM application settings
@@ -52,9 +52,9 @@ class AppConfiguration : public QObject
     QML_WRITABLE_PROPERTY_W( bool 				,adc_multi_esc 			,m_data.app_adc_conf.multi_esc 			)
     QML_WRITABLE_PROPERTY_W( bool 				,adc_tc 				,m_data.app_adc_conf.tc 				)
     QML_WRITABLE_PROPERTY_W( float				,adc_tc_max_diff 		,m_data.app_adc_conf.tc_max_diff 		)
-    QML_WRITABLE_PROPERTY_W( quint32 			,adc_update_rate_hz 	,m_data.app_adc_conf.update_rate_hz 	)
+    QML_WRITABLE_PROPERTY_W( int 			,adc_update_rate_hz 	,m_data.app_adc_conf.update_rate_hz 	)
     // UART application settings
-    QML_WRITABLE_PROPERTY_W( quint32 ,app_uart_baudrate	,m_data.app_uart_baudrate)
+    QML_WRITABLE_PROPERTY_W( int ,app_uart_baudrate	,m_data.app_uart_baudrate)
     // Nunchuk application settings
     QML_WRITABLE_PROPERTY_W( chuk_control_type 	,chuk_ctrl_type 			,m_data.app_chuk_conf.ctrl_type 			)
     QML_WRITABLE_PROPERTY_W( float				,chuk_hyst 					,m_data.app_chuk_conf.hyst 					)

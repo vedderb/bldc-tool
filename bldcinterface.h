@@ -40,13 +40,13 @@ class BLDCInterface : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(PacketInterface*  packetInterface READ packetInterface)
+    QML_READONLY_PROPERTY(PacketInterface*, packetInterface)
     QML_WRITABLE_PROPERTY(QString, udpIp)
     QML_LIST_PROPERTY(BLDCInterface, serialPortList, SerialPort)// @@ToDo: add notify signal
     QML_WRITABLE_PROPERTY(int, currentSerialPort)
     QML_READONLY_PROPERTY(QString, firmwareSupported)
     QML_READONLY_PROPERTY(QString, firmware)
-    Q_PROPERTY(McConfiguration* mcconf READ mcconf NOTIFY mcconfChanged)
+    QML_READONLY_PROPERTY(McConfiguration*, mcconf )
     QML_READONLY_PROPERTY(QString, mcconfDetectResultBrowser)
     QML_READONLY_PROPERTY(QString, firmwareVersion)
     QML_READONLY_PROPERTY(double, firmwareProgress)
@@ -100,17 +100,17 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(double, appconfAdcVoltage2)
     QML_READONLY_PROPERTY(double, appconfDecodedPpm)
     QML_READONLY_PROPERTY(double, appconfPpmPulsewidth)
-    Q_PROPERTY(AppConfiguration *appconf READ appconf NOTIFY appconfChanged)
+    QML_READONLY_PROPERTY(AppConfiguration*, appconf)
 
 
 
 public:
     explicit BLDCInterface(QObject *parent = 0);
 
-    AppConfiguration * appconf() const
-    {
-        return m_appconf;
-    }
+//    const AppConfiguration& appconf() const
+//    {
+//        return m_appconf;
+//    }
 
     McConfiguration* mcconf() const
     {
@@ -131,13 +131,10 @@ signals:
     void ackReceived(QString ackType);
     void mcValuesReceived(MC_VALUES values);
     void printReceived(QString str);
-    void experimentSamplesReceived(QVector<double> samples);
     void serialPortsInfoChanged(QQmlListProperty<QSerialPortInfo> serialPortsInfo);
     void rotorPosReceived(double pos);
-    void appconfChanged(AppConfiguration * appconf);
-    void mcconfChanged(McConfiguration* mcconf);
     void update();
-
+    void experimentSamplesReceived(QList<double>);
 public slots:
 
     void serialDataAvailable();
@@ -172,13 +169,12 @@ public slots:
     void detectObserver();
     void measureHallFoc(double current);
 
-
 private slots:
 
     void timerSlot();
     void fwVersionReceived(int major, int minor);
     void samplesReceived(QByteArray data);
-    void mcconfReceived(mc_configuration &mcconf);
+    void mcconfReceived(mc_configuration mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
     void motorRLReceived(double r, double l);
     void motorLinkageReceived(double flux_linkage);
@@ -189,6 +185,7 @@ private slots:
     void decodedAdcReceived(double adc_value, double adc_voltage, double adc_value2, double adc_voltage2);
     void decodedChukReceived(double chuk_value);
     void mcconfFocCalcCC();
+    void experimentSamplesReceived(QVector<double>);
 private:
 
     void refreshSerialDevices();
@@ -222,8 +219,6 @@ private:
     QByteArray tmpCurrTotArray;
     QByteArray tmpFSwArray;
     detect_res_t mDetectRes;
-    AppConfiguration * m_appconf;
-    McConfiguration* m_mcconf;
 };
 
 #endif // BLDCINTERFACE_H

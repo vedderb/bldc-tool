@@ -17,16 +17,21 @@
 
 #include <QApplication>
 
+
 #ifdef QML
 
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+#include "bldcinterface.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-
+    BLDCInterface bldcIntrface;
+    engine.rootContext()->setContextObject(&bldcIntrface);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     return app.exec();
 }

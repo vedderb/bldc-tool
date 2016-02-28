@@ -80,6 +80,7 @@ BasicPage {
                             anchors.rightMargin: rowLeftMargin
                             width: rectMain.width*0.2
                             anchors.verticalCenter:textConID.verticalCenter
+                            text: appconf.controller_id
                         }
                     }
                     CheckBox{
@@ -457,7 +458,7 @@ BasicPage {
                             text:"Reboot"
                             width: rectMain.width * 0.31
                             onClicked: {
-
+                                reboot()
                             }
                             style: ButtonStyle {
                                 label: Text {

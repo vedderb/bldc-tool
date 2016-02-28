@@ -26,6 +26,10 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
 
+    //for test
+//    m_appconf->set_controller_id(5);
+    ///////////
+
     refreshSerialDevices();
     set_udpIp("192.168.1.118");
 
@@ -73,7 +77,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     connect(mPacketInterface, SIGNAL(valuesReceived(MC_VALUES)),
             this, SIGNAL(mcValuesReceived(MC_VALUES)));
     connect(mPacketInterface, SIGNAL(printReceived(QString)),
-            this, SLOT(printReceived(QString)));
+            this, SIGNAL(printReceived(QString)));
     connect(mPacketInterface, SIGNAL(samplesReceived(QByteArray)),
             this, SLOT(samplesReceived(QByteArray)));
     connect(mPacketInterface, SIGNAL(rotorPosReceived(double)),
@@ -429,7 +433,7 @@ void BLDCInterface::samplesReceived(QByteArray data)
     }
 }
 
-void BLDCInterface::mcconfReceived(mc_configuration &mcconf)
+void BLDCInterface::mcconfReceived(mc_configuration mcconf)
 {
     m_mcconf->setData(mcconf);
     m_mcconfLoaded = true;
@@ -581,6 +585,11 @@ void BLDCInterface::mcconfFocCalcCC()
 
     set_mcconfFocCalcKp(kp);
     set_mcconfFocCalcKi(ki);
+}
+
+void BLDCInterface::experimentSamplesReceived(QVector<double> samples)
+{
+    emit experimentSamplesReceived(samples.toList());
 }
 
 void BLDCInterface::refreshSerialDevices()
