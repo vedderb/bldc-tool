@@ -88,8 +88,9 @@ signals:
 
 public slots:
 
+
 private:
-    app_configuration m_data;
+app_configuration m_data;
 };
 
 #endif // APPCONF_H

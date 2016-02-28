@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
+import bldc 1.0
 
 BasicPage {
     id:rootAppConfig
@@ -85,7 +86,7 @@ BasicPage {
                     }
                     CheckBox{
                         id:rbStatus
-                        checked: false
+                        checked: appconf.send_can_status
                         text: "Send status over CAN"
                         anchors.top: rowControllerId.bottom
                         anchors.topMargin: rowVerticalMargin
@@ -187,7 +188,7 @@ BasicPage {
                             //  anchors.centerIn: parent
                             RadioButton{
                                 id:rbNoApp
-                                checked: false
+                                checked: appconf.app_to_use == AppConf.APP_NONE
 
                                 text: "No application"
 
@@ -418,7 +419,7 @@ BasicPage {
                             text:"Read Config"
                             width: rectButtons.width * 0.31
                             onClicked: {
-
+                                readAppConf();
                             }
                             style: ButtonStyle {
                                 label: Text {

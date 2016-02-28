@@ -1,8 +1,8 @@
 #include "appconfiguration.h"
 
+
 AppConfiguration::AppConfiguration(QObject *parent) : QObject(parent)
 {
-
 }
 
 AppConfiguration::AppConfiguration(app_configuration &data)

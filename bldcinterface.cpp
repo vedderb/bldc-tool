@@ -1,6 +1,7 @@
 #include "bldcinterface.h"
 #include <math.h>
 #include <QThread>
+#include <QtQml>
 
 namespace {
 void stepTowards(double &value, double goal, double step) {
@@ -28,6 +29,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
 
     //for test
 //    m_appconf->set_controller_id(5);
+    m_appconf->set_app_to_use(APP_NONE);
     ///////////
 
     refreshSerialDevices();
@@ -106,6 +108,10 @@ BLDCInterface::BLDCInterface(QObject *parent) :
             this, SLOT(decodedChukReceived(double)));
 
     mSerialization = new Serialization(this);
+
+    qmlRegisterType<AppConfiguration>("bldc", 1, 0, "AppConf");
+    qmlRegisterType<McConfiguration>("bldc", 1, 0, "McConf");
+
 
 }
 
