@@ -115,6 +115,33 @@
         void name##Changed (type name); \
     private:
 
+#define QML_WRITABLE_ENUM_PROPERTY_W(type, name, datatype, data) \
+    protected: \
+        Q_ENUMS(type) \
+        Q_PROPERTY (type name READ get_##name WRITE set_##name NOTIFY name##Changed) \
+    public: \
+        type get_##name () const { \
+            return (type)data ; \
+        } \
+        datatype get_src_##name () const { \
+            return data ; \
+        } \
+    public Q_SLOTS: \
+        bool set_##name (type name) { \
+            return set_##name((datatype) name); \
+        } \
+        bool set_##name (datatype name) { \
+            bool ret = false; \
+            if ((ret = data != name)) { \
+                data = name; \
+                emit name##Changed ((type)data); \
+            } \
+            return ret; \
+        } \
+    Q_SIGNALS: \
+        void name##Changed (type name); \
+    private:
+
 
 #define QML_WRITEONLY_PROPERTY(type, name) \
     protected: \

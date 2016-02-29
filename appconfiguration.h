@@ -8,7 +8,21 @@
 class AppConfiguration : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(app_use)
+
+public:
+    typedef enum {
+        APP_NONE = 0,
+        APP_PPM,
+        APP_ADC,
+        APP_UART,
+        APP_PPM_UART,
+        APP_ADC_UART,
+        APP_NUNCHUK,
+        APP_NRF,
+        APP_CUSTOM
+    } App_use;
+
+protected:
     Q_ENUMS(ppm_control_type)
     Q_ENUMS(adc_control_type)
     Q_ENUMS(chuk_control_type)
@@ -23,7 +37,7 @@ class AppConfiguration : public QObject
     QML_WRITABLE_PROPERTY_W( bool 		,send_can_status 		,m_data.send_can_status 		)
     QML_WRITABLE_PROPERTY_W( int 	,send_can_status_rate_hz,m_data.send_can_status_rate_hz)
     // Application to use
-    QML_WRITABLE_PROPERTY_W( app_use ,app_to_use, m_data.app_to_use )
+    QML_WRITABLE_ENUM_PROPERTY_W( App_use ,app_to_use, app_use, m_data.app_to_use )
     // PPM application settings
     QML_WRITABLE_PROPERTY_W( ppm_control_type 	,ppm_ctrl_type 		,m_data.app_ppm_conf.ctrl_type 		)
     QML_WRITABLE_PROPERTY_W( float 				,ppm_pid_max_erpm 	,m_data.app_ppm_conf.pid_max_erpm 	)
@@ -79,6 +93,8 @@ class AppConfiguration : public QObject
     QML_WRITABLE_PROPERTY_W( bool 			,nrf_send_crc_ack	,m_data.app_nrf_conf.send_crc_ack)
 
 public:
+
+
     explicit AppConfiguration(QObject *parent = 0);
     AppConfiguration(app_configuration &data);
     void setData(app_configuration& src);

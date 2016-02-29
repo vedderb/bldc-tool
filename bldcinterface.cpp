@@ -29,7 +29,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
 
     //for test
 //    m_appconf->set_controller_id(5);
-    m_appconf->set_app_to_use(APP_NONE);
+    m_appconf->set_app_to_use(APP_PPM);
     ///////////
 
     refreshSerialDevices();

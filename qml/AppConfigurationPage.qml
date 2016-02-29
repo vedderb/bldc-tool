@@ -206,7 +206,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbPPMUART
-                                checked: false
+                                checked: appconf.app_to_use === AppConf.APP_PPM
                                 text: "PPM and UART"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
