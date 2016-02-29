@@ -9,18 +9,41 @@
 class McConfiguration : public QObject
 {
     Q_OBJECT
+public:
+    typedef enum {
+        COMM_MODE_INTEGRATE = 0,
+        COMM_MODE_DELAY
+    } MC_comm_mode;
 
-    Q_ENUMS(mc_pwm_mode   )
-    Q_ENUMS(mc_comm_mode  )
-    Q_ENUMS(mc_motor_type )
-    Q_ENUMS(mc_sensor_mode)
-    Q_ENUMS(mc_foc_sensor_mode)
+    typedef enum {
+        SENSOR_MODE_SENSORLESS = 0,
+        SENSOR_MODE_SENSORED,
+        SENSOR_MODE_HYBRID
+    } MC_sensor_mode;
+
+    typedef enum {
+        FOC_SENSOR_MODE_SENSORLESS = 0,
+        FOC_SENSOR_MODE_ENCODER,
+        FOC_SENSOR_MODE_HALL
+    } MC_foc_sensor_mode;
+
+    typedef enum {
+        MOTOR_TYPE_BLDC = 0,
+        MOTOR_TYPE_DC,
+        MOTOR_TYPE_FOC
+    } MC_motor_type;
+
+    typedef enum {
+        PWM_MODE_NONSYNCHRONOUS_HISW = 0, // This mode is not recommended
+        PWM_MODE_SYNCHRONOUS, // The recommended and most tested mode
+        PWM_MODE_BIPOLAR // Some glitches occasionally, can kill MOSFETs
+    } MC_pwm_mode;
 
     // Switching and drive
-    QML_WRITABLE_PROPERTY_W( mc_pwm_mode    ,pwm_mode    ,m_data.pwm_mode    )
-    QML_WRITABLE_PROPERTY_W( mc_comm_mode  	,comm_mode   ,m_data.comm_mode   )
-    QML_WRITABLE_PROPERTY_W( mc_motor_type 	,motor_type  ,m_data.motor_type  )
-    QML_WRITABLE_PROPERTY_W( mc_sensor_mode	,sensor_mode ,m_data.sensor_mode )
+    QML_WRITABLE_ENUM_PROPERTY_W( MC_pwm_mode       ,pwm_mode   ,mc_pwm_mode    ,m_data.pwm_mode       )
+    QML_WRITABLE_ENUM_PROPERTY_W( MC_comm_mode  	,comm_mode  ,mc_comm_mode   ,m_data.comm_mode   )
+    QML_WRITABLE_ENUM_PROPERTY_W( MC_motor_type 	,motor_type ,mc_motor_type  ,m_data.motor_type  )
+    QML_WRITABLE_ENUM_PROPERTY_W( MC_sensor_mode	,sensor_mode,mc_sensor_mode ,m_data.sensor_mode )
     // Limits
     QML_WRITABLE_PROPERTY_W( float	,l_current_max          ,m_data.l_current_max        )
     QML_WRITABLE_PROPERTY_W( float	,l_current_min          ,m_data.l_current_min        )
@@ -75,7 +98,7 @@ class McConfiguration : public QObject
     QML_WRITABLE_PROPERTY_W( float 				,foc_sl_openloop_time	,m_data.foc_sl_openloop_time	 )
     QML_WRITABLE_PROPERTY_W( float 				,foc_sl_d_current_duty	,m_data.foc_sl_d_current_duty	 )
     QML_WRITABLE_PROPERTY_W( float 				,foc_sl_d_current_factor,m_data.foc_sl_d_current_factor )
-    QML_WRITABLE_PROPERTY_W( mc_foc_sensor_mode ,foc_sensor_mode		,m_data.foc_sensor_mode		 )
+    QML_WRITABLE_ENUM_PROPERTY_W( MC_foc_sensor_mode ,foc_sensor_mode		,mc_foc_sensor_mode ,m_data.foc_sensor_mode)
     Q_PROPERTY(QList<int> foc_hall_table READ foc_hall_table WRITE setFoc_hall_table NOTIFY foc_hall_tableChanged)
     QML_WRITABLE_PROPERTY_W( float 				,foc_hall_sl_erpm		,m_data.foc_hall_sl_erpm )
     // Speed PID

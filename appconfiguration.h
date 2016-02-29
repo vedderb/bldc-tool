@@ -21,15 +21,73 @@ public:
         APP_NRF,
         APP_CUSTOM
     } App_use;
+    typedef enum {
+        PPM_CTRL_TYPE_NONE = 0,
+        PPM_CTRL_TYPE_CURRENT,
+        PPM_CTRL_TYPE_CURRENT_NOREV,
+        PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE,
+        PPM_CTRL_TYPE_DUTY,
+        PPM_CTRL_TYPE_DUTY_NOREV,
+        PPM_CTRL_TYPE_PID,
+        PPM_CTRL_TYPE_PID_NOREV
+    } PPM_control_type;
+    typedef enum {
+        ADC_CTRL_TYPE_NONE = 0,
+        ADC_CTRL_TYPE_CURRENT,
+        ADC_CTRL_TYPE_CURRENT_REV_CENTER,
+        ADC_CTRL_TYPE_CURRENT_REV_BUTTON,
+        ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_CENTER,
+        ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_BUTTON,
+        ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_ADC,
+        ADC_CTRL_TYPE_DUTY,
+        ADC_CTRL_TYPE_DUTY_REV_CENTER,
+        ADC_CTRL_TYPE_DUTY_REV_BUTTON
+    } ADC_control_type;
+    typedef enum {
+        CHUK_CTRL_TYPE_NONE = 0,
+        CHUK_CTRL_TYPE_CURRENT,
+        CHUK_CTRL_TYPE_CURRENT_NOREV
+    } Chuk_control_type;
+    typedef enum {
+        NRF_SPEED_250K = 0,
+        NRF_SPEED_1M,
+        NRF_SPEED_2M
+    } NRFSPEED;
+    typedef enum {
+        NRF_POWER_M18DBM = 0,
+        NRF_POWER_M12DBM,
+        NRF_POWER_M6DBM,
+        NRF_POWER_0DBM
+    } NRFPOWER;
 
-protected:
-    Q_ENUMS(ppm_control_type)
-    Q_ENUMS(adc_control_type)
-    Q_ENUMS(chuk_control_type)
-    Q_ENUMS(NRF_SPEED 	   )
-    Q_ENUMS(NRF_POWER 	   )
-    Q_ENUMS(NRF_CRC 	   )
-    Q_ENUMS(NRF_RETR_DELAY )
+    typedef enum {
+        NRF_AW_3 = 0,
+        NRF_AW_4,
+        NRF_AW_5
+    } NRFAW;
+    typedef enum {
+        NRF_CRC_DISABLED = 0,
+        NRF_CRC_1B,
+        NRF_CRC_2B
+    } NRFCRC;typedef enum {
+        NRF_RETR_DELAY_250US = 0,
+        NRF_RETR_DELAY_500US,
+        NRF_RETR_DELAY_750US,
+        NRF_RETR_DELAY_1000US,
+        NRF_RETR_DELAY_1250US,
+        NRF_RETR_DELAY_1500US,
+        NRF_RETR_DELAY_1750US,
+        NRF_RETR_DELAY_2000US,
+        NRF_RETR_DELAY_2250US,
+        NRF_RETR_DELAY_2500US,
+        NRF_RETR_DELAY_2750US,
+        NRF_RETR_DELAY_3000US,
+        NRF_RETR_DELAY_3250US,
+        NRF_RETR_DELAY_3500US,
+        NRF_RETR_DELAY_3750US,
+        NRF_RETR_DELAY_4000US
+    } NRFRETRDELAY;
+
     // Settings
     QML_WRITABLE_PROPERTY_W( int 	,controller_id 			,m_data.controller_id 			)
     QML_WRITABLE_PROPERTY_W( int 	,timeout_msec 			,m_data.timeout_msec 			)
@@ -39,7 +97,7 @@ protected:
     // Application to use
     QML_WRITABLE_ENUM_PROPERTY_W( App_use ,app_to_use, app_use, m_data.app_to_use )
     // PPM application settings
-    QML_WRITABLE_PROPERTY_W( ppm_control_type 	,ppm_ctrl_type 		,m_data.app_ppm_conf.ctrl_type 		)
+    QML_WRITABLE_ENUM_PROPERTY_W( PPM_control_type, ppm_ctrl_type, ppm_control_type, m_data.app_ppm_conf.ctrl_type)
     QML_WRITABLE_PROPERTY_W( float 				,ppm_pid_max_erpm 	,m_data.app_ppm_conf.pid_max_erpm 	)
     QML_WRITABLE_PROPERTY_W( float 				,ppm_hyst 			,m_data.app_ppm_conf.hyst 			)
     QML_WRITABLE_PROPERTY_W( float 				,ppm_pulse_start 	,m_data.app_ppm_conf.pulse_start 	)
@@ -52,7 +110,7 @@ protected:
     QML_WRITABLE_PROPERTY_W( bool 				,ppm_tc 			,m_data.app_ppm_conf.tc 			)
     QML_WRITABLE_PROPERTY_W( float				,ppm_tc_max_diff 	,m_data.app_ppm_conf.tc_max_diff 	)
     // ADC application settings
-    QML_WRITABLE_PROPERTY_W( adc_control_type 	,adc_ctrl_type 			,m_data.app_adc_conf.ctrl_type 			)
+    QML_WRITABLE_ENUM_PROPERTY_W( ADC_control_type ,adc_ctrl_type,adc_control_type, m_data.app_adc_conf.ctrl_type)
     QML_WRITABLE_PROPERTY_W( float				,adc_hyst 				,m_data.app_adc_conf.hyst 				)
     QML_WRITABLE_PROPERTY_W( float				,adc_voltage_start 		,m_data.app_adc_conf.voltage_start 		)
     QML_WRITABLE_PROPERTY_W( float				,adc_voltage_end 		,m_data.app_adc_conf.voltage_end 		)
@@ -70,7 +128,7 @@ protected:
     // UART application settings
     QML_WRITABLE_PROPERTY_W( int ,app_uart_baudrate	,m_data.app_uart_baudrate)
     // Nunchuk application settings
-    QML_WRITABLE_PROPERTY_W( chuk_control_type 	,chuk_ctrl_type 			,m_data.app_chuk_conf.ctrl_type 			)
+    QML_WRITABLE_ENUM_PROPERTY_W( Chuk_control_type 	,chuk_ctrl_type, chuk_control_type,m_data.app_chuk_conf.ctrl_type 			)
     QML_WRITABLE_PROPERTY_W( float				,chuk_hyst 					,m_data.app_chuk_conf.hyst 					)
     QML_WRITABLE_PROPERTY_W( float				,chuk_rpm_lim_start 		,m_data.app_chuk_conf.rpm_lim_start 		)
     QML_WRITABLE_PROPERTY_W( float				,chuk_rpm_lim_end 			,m_data.app_chuk_conf.rpm_lim_end 			)
@@ -81,10 +139,10 @@ protected:
     QML_WRITABLE_PROPERTY_W( bool 				,chuk_tc					,m_data.app_chuk_conf.tc					)
     QML_WRITABLE_PROPERTY_W( float				,chuk_tc_max_diff			,m_data.app_chuk_conf.tc_max_diff			)
     // NRF application settings
-    QML_WRITABLE_PROPERTY_W( NRF_SPEED 		,nrf_speed			,m_data.app_nrf_conf.speed		)
-    QML_WRITABLE_PROPERTY_W( NRF_POWER 		,nrf_power			,m_data.app_nrf_conf.power		)
-    QML_WRITABLE_PROPERTY_W( NRF_CRC 		,nrf_crc_type		,m_data.app_nrf_conf.crc_type	)
-    QML_WRITABLE_PROPERTY_W( NRF_RETR_DELAY ,nrf_retry_delay	,m_data.app_nrf_conf.retry_delay)
+    QML_WRITABLE_ENUM_PROPERTY_W( NRFSPEED 		,nrf_speed		, NRF_SPEED 	,m_data.app_nrf_conf.speed		)
+    QML_WRITABLE_ENUM_PROPERTY_W( NRFPOWER 		,nrf_power		, NRF_POWER 	,m_data.app_nrf_conf.power		)
+    QML_WRITABLE_ENUM_PROPERTY_W( NRFCRC        ,nrf_crc_type	, NRF_CRC       ,m_data.app_nrf_conf.crc_type	)
+    QML_WRITABLE_ENUM_PROPERTY_W( NRFRETRDELAY  ,nrf_retry_delay, NRF_RETR_DELAY,m_data.app_nrf_conf.retry_delay)
     QML_WRITABLE_PROPERTY_W( unsigned char 	,nrf_retries		,m_data.app_nrf_conf.retries	)
     QML_WRITABLE_PROPERTY_W( unsigned char 	,nrf_channel		,m_data.app_nrf_conf.channel	)
     QML_WRITABLE_PROPERTY_W( unsigned char 	,nrf_address0		,m_data.app_nrf_conf.address[0]	)
