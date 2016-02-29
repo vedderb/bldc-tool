@@ -124,6 +124,7 @@ BasicPage {
                         }
                         TextField{
                             id:textFieldRate
+                            text: appconf.send_can_status_rate_hz
                             enabled: rbStatus.checked
                             anchors.right: parent.right
                             anchors.rightMargin: rowLeftMargin
@@ -441,7 +442,20 @@ BasicPage {
                             text:"Write Config"
                             width: rectMain.width * 0.31
                             onClicked: {
+                                appconf.controller_id = textfieldControllerId.text
+                                appconf.send_can_status = rbStatus.checked
+                                appconf.send_can_status_rate_hz = textFieldRate.text
+                                if(rbNoApp.checked)         appconf.app_to_use = AppConf.APP_NONE
+                                else if(rbPPMUART.checked)  appconf.app_to_use = AppConf.APP_PPM
+                                else if(rbCustomApp.checked)appconf.app_to_use = AppConf.APP_CUSTOM
+                                else if(rbPPM.checked)      appconf.app_to_use = AppConf.APP_PPM
+                                else if(rbNunChuk.checked)  appconf.app_to_use = AppConf.APP_NUNCHUK
+                                else if(rbUART.checked)     appconf.app_to_use = AppConf.APP_UART
+                                else if(rbNRF.checked)      appconf.app_to_use = AppConf.APP_NRF
+                                appconf.timeout_msec = textFieldTimeout.text
+                                appconf.timeout_brake_current = textFieldBrakeCurrent.text
 
+                                writeAppConf()
                             }
                             style: ButtonStyle {
                                 label: Text {
