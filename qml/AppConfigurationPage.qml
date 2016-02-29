@@ -188,7 +188,7 @@ BasicPage {
                             //  anchors.centerIn: parent
                             RadioButton{
                                 id:rbNoApp
-                                checked: appconf.app_to_use == AppConf.APP_NONE
+                                checked: appconf.app_to_use === AppConf.APP_NONE
 
                                 text: "No application"
 
@@ -222,7 +222,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbCustomApp
-                                checked: false
+                                checked: appconf.app_to_use === AppConf.APP_CUSTOM
 
                                 text: "Custom user application"
                                 exclusiveGroup :groupOptions
@@ -242,7 +242,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbPPM
-                                checked: false
+                                checked: appconf.app_to_use === AppConf.APP_PPM
                                 text: "PPM"
 
                                 exclusiveGroup :groupOptions
@@ -259,7 +259,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbNunChuk
-                                checked: false
+                                checked: appconf.app_to_use === AppConf.APP_NUNCHUK
                                 text: "NunChuk"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -275,7 +275,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbUART
-                                checked: false
+                                checked: appconf.app_to_use === AppConf.APP_UART
                                 text: "UART"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -291,7 +291,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbNRF
-                                checked: false
+                                checked: appconf.app_to_use === AppConf.APP_NRF
                                 text: "NRF"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -356,6 +356,7 @@ BasicPage {
                         }
                         TextField{
                             id:textFieldTimeout
+                            text: appconf.timeout_msec
                             width: rectMain.width*0.2
                             anchors.right: parent.right
                             anchors.rightMargin: rowLeftMargin
@@ -387,6 +388,7 @@ BasicPage {
                         }
                         TextField{
                             id:textFieldBrakeCurrent
+                            text: appconf.timeout_brake_current
                             width: rectMain.width*0.2
                             anchors.right: parent.right
                             anchors.rightMargin: rowLeftMargin

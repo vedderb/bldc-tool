@@ -1,8 +1,8 @@
 #include "appconfiguration.h"
 
-
 AppConfiguration::AppConfiguration(QObject *parent) : QObject(parent)
 {
+    memset(&m_data, 0, sizeof(app_configuration));
 }
 
 AppConfiguration::AppConfiguration(app_configuration &data)

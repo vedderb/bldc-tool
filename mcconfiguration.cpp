@@ -1,7 +1,9 @@
 #include "mcconfiguration.h"
 
 McConfiguration::McConfiguration(QObject*)
+
 {
+    memset(&m_data, 0, sizeof(mc_configuration));
 }
 
 McConfiguration::McConfiguration(const mc_configuration &src)
