@@ -27,10 +27,6 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
 
-    //for test
-//    m_appconf->set_controller_id(5);
-    m_appconf->set_app_to_use(APP_PPM);
-    ///////////
 
     refreshSerialDevices();
     set_udpIp("192.168.1.118");
@@ -61,7 +57,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     m_doReplot =(false );
     m_doRescale=( true);
     m_doFilterReplot = true;
-    mPacketInterface = new PacketInterface(this);
+    m_packetInterface = new PacketInterface(this);
     mDetectRes.updated = false;
 
     connect(mSerialPort, SIGNAL(readyRead()),
@@ -70,41 +66,41 @@ BLDCInterface::BLDCInterface(QObject *parent) :
             this, SLOT(serialPortError(QSerialPort::SerialPortError)));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
 
-    connect(mPacketInterface, SIGNAL(dataToSend(QByteArray&)),
+    connect(m_packetInterface, SIGNAL(dataToSend(QByteArray&)),
             this, SLOT(packetDataToSend(QByteArray&)));
-    connect(mPacketInterface, SIGNAL(fwVersionReceived(int,int)),
+    connect(m_packetInterface, SIGNAL(fwVersionReceived(int,int)),
             this, SLOT(fwVersionReceived(int,int)));
-    connect(mPacketInterface, SIGNAL(ackReceived(QString)),
+    connect(m_packetInterface, SIGNAL(ackReceived(QString)),
             this, SIGNAL(ackReceived(QString)));
-    connect(mPacketInterface, SIGNAL(valuesReceived(MC_VALUES)),
+    connect(m_packetInterface, SIGNAL(valuesReceived(MC_VALUES)),
             this, SIGNAL(mcValuesReceived(MC_VALUES)));
-    connect(mPacketInterface, SIGNAL(printReceived(QString)),
+    connect(m_packetInterface, SIGNAL(printReceived(QString)),
             this, SIGNAL(printReceived(QString)));
-    connect(mPacketInterface, SIGNAL(samplesReceived(QByteArray)),
+    connect(m_packetInterface, SIGNAL(samplesReceived(QByteArray)),
             this, SLOT(samplesReceived(QByteArray)));
-    connect(mPacketInterface, SIGNAL(rotorPosReceived(double)),
+    connect(m_packetInterface, SIGNAL(rotorPosReceived(double)),
             this, SIGNAL(rotorPosReceived(double)));
-    connect(mPacketInterface, SIGNAL(experimentSamplesReceived(QVector<double>)),
+    connect(m_packetInterface, SIGNAL(experimentSamplesReceived(QVector<double>)),
             this, SLOT(experimentSamplesReceived(QVector<double>)));
-    connect(mPacketInterface, SIGNAL(mcconfReceived(mc_configuration)),
+    connect(m_packetInterface, SIGNAL(mcconfReceived(mc_configuration)),
             this, SLOT(mcconfReceived(mc_configuration)));
-    connect(mPacketInterface, SIGNAL(motorParamReceived(double,double,QVector<int>,int)),
+    connect(m_packetInterface, SIGNAL(motorParamReceived(double,double,QVector<int>,int)),
             this, SLOT(motorParamReceived(double,double,QVector<int>,int)));
-    connect(mPacketInterface, SIGNAL(motorRLReceived(double,double)),
+    connect(m_packetInterface, SIGNAL(motorRLReceived(double,double)),
             this, SLOT(motorRLReceived(double,double)));
-    connect(mPacketInterface, SIGNAL(motorLinkageReceived(double)),
+    connect(m_packetInterface, SIGNAL(motorLinkageReceived(double)),
             this, SLOT(motorLinkageReceived(double)));
-    connect(mPacketInterface, SIGNAL(encoderParamReceived(double,double,bool)),
+    connect(m_packetInterface, SIGNAL(encoderParamReceived(double,double,bool)),
             this, SLOT(encoderParamReceived(double,double,bool)));
-    connect(mPacketInterface, SIGNAL(focHallTableReceived(QVector<int>,int)),
+    connect(m_packetInterface, SIGNAL(focHallTableReceived(QVector<int>,int)),
             this, SLOT(focHallTableReceived(QVector<int>,int)));
-    connect(mPacketInterface, SIGNAL(appconfReceived(app_configuration)),
+    connect(m_packetInterface, SIGNAL(appconfReceived(app_configuration)),
             this, SLOT(appconfReceived(app_configuration)));
-    connect(mPacketInterface, SIGNAL(decodedPpmReceived(double,double)),
+    connect(m_packetInterface, SIGNAL(decodedPpmReceived(double,double)),
             this, SLOT(decodedPpmReceived(double,double)));
-    connect(mPacketInterface, SIGNAL(decodedAdcReceived(double,double,double,double)),
+    connect(m_packetInterface, SIGNAL(decodedAdcReceived(double,double,double,double)),
             this, SLOT(decodedAdcReceived(double,double,double,double)));
-    connect(mPacketInterface, SIGNAL(decodedChukReceived(double)),
+    connect(m_packetInterface, SIGNAL(decodedChukReceived(double)),
             this, SLOT(decodedChukReceived(double)));
 
     mSerialization = new Serialization(this);
@@ -119,7 +115,7 @@ void BLDCInterface::serialDataAvailable()
 {
     while (mSerialPort->bytesAvailable() > 0) {
         QByteArray data = mSerialPort->readAll();
-        mPacketInterface->processData(data);
+        m_packetInterface->processData(data);
     }
 }
 
@@ -161,12 +157,12 @@ void BLDCInterface::serialPortError(QSerialPort::SerialPortError error)
 void BLDCInterface::timerSlot()
 {
     // Update CAN fwd function
-    mPacketInterface->setSendCan(m_canFwd, m_canId);
+    m_packetInterface->setSendCan(m_canFwd, m_canId);
 
     // Read FW version if needed
     static bool sendCanBefore = false;
     static int canIdBefore = 0;
-    if (mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) {
+    if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected()) {
         if (sendCanBefore != m_canFwd ||
                 canIdBefore != m_canId) {
             mFwVersionReceived = false;
@@ -174,13 +170,13 @@ void BLDCInterface::timerSlot()
         }
 
         if (!mFwVersionReceived) {
-            mPacketInterface->getFwVersion();
+            m_packetInterface->getFwVersion();
             mFwRetries++;
 
             // Timeout if the firmware cannot be read
             if (mFwRetries >= 100) {
                 emit statusInfoChanged("No firmware read response", false);
-                serialDisconnect();
+                disconnectSerial();
             }
         }
 
@@ -193,8 +189,8 @@ void BLDCInterface::timerSlot()
 
     // Update status label
     {
-        if (mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) {
-            if (mPacketInterface->isLimitedMode()) {
+        if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected()) {
+            if (m_packetInterface->isLimitedMode()) {
                 update_status("Connected, limited");
             } else {
                 update_status("Connected");
@@ -205,7 +201,7 @@ void BLDCInterface::timerSlot()
     }
 
     // Update fw upload bar and label
-    double fw_prog = mPacketInterface->getFirmwareUploadProgress();
+    double fw_prog = m_packetInterface->getFirmwareUploadProgress();
     if (fw_prog > -0.1) {
         update_firmwareProgress( fw_prog );
         update_firmwareUploadEnabled(false);
@@ -215,7 +211,7 @@ void BLDCInterface::timerSlot()
         if (!m_firmwareUploadEnabled) {
             mFwVersionReceived = false;
             mFwRetries = 0;
-            if (mPacketInterface->getFirmwareUploadStatus().compare("FW Upload Done") == 0) {
+            if (m_packetInterface->getFirmwareUploadStatus().compare("FW Upload Done") == 0) {
                 update_firmwareProgress(1.0);
             } else {
                 update_firmwareProgress(0.0);
@@ -229,29 +225,29 @@ void BLDCInterface::timerSlot()
         alive_cnt++;
         if (alive_cnt >= 10) {
             alive_cnt = 0;
-            mPacketInterface->sendAlive();
+            m_packetInterface->sendAlive();
         }
     }
-    update_firmwareUploadStatus(mPacketInterface->getFirmwareUploadStatus());
+    update_firmwareUploadStatus(m_packetInterface->getFirmwareUploadStatus());
 
     // Update MC readings
     if (m_realtimeActivate) {
-        mPacketInterface->getValues();
+        m_packetInterface->getValues();
     }
 
     // Update decoded servo value
     if (m_appconfUpdatePpm) {
-        mPacketInterface->getDecodedPpm();
+        m_packetInterface->getDecodedPpm();
     }
 
     // Update decoded adc value
     if (m_appconfAdcUpdate) {
-        mPacketInterface->getDecodedAdc();
+        m_packetInterface->getDecodedAdc();
     }
 
     // Update decoded nunchuk value
     if (m_appconfUpdateChuk) {
-        mPacketInterface->getDecodedChuk();
+        m_packetInterface->getDecodedChuk();
     }
 
     // Enable/disable fields in the configuration page
@@ -315,7 +311,7 @@ void BLDCInterface::timerSlot()
 
     if (keyPower != lastKeyPower) {
         lastKeyPower = keyPower;
-        mPacketInterface->setDutyCycle(keyPower);
+        m_packetInterface->setDutyCycle(keyPower);
     }
     emit update();
 }
@@ -337,13 +333,13 @@ void BLDCInterface::fwVersionReceived(int major, int minor)
     if (major < 0) {
         mFwVersionReceived = false;
         mFwRetries = 0;
-        serialDisconnect();
+        disconnectSerial();
         emit msgCritical( "Error", "The firmware on the connected VESC is too old. Please"
                             " update it using a programmer.");
         update_firmwareVersion("Old Firmware");
     } else if (fw_connected > highest_supported) {
         mFwVersionReceived = true;
-        mPacketInterface->setLimitedMode(true);
+        m_packetInterface->setLimitedMode(true);
         if (!wasReceived) {
             emit msgwarning("Warning", "The connected VESC has newer firmware than this version of"
                                                 " BLDC Tool supports. It is recommended that you update BLDC "
@@ -355,7 +351,7 @@ void BLDCInterface::fwVersionReceived(int major, int minor)
     } else if (!mCompatibleFws.contains(fw_connected)) {
         if (fw_connected >= qMakePair(1, 1)) {
             mFwVersionReceived = true;
-            mPacketInterface->setLimitedMode(true);
+            m_packetInterface->setLimitedMode(true);
             if (!wasReceived) {
                 emit msgwarning("Warning", "The connected VESC has too old firmware. Since the"
                                                     " connected VESC has firmware with bootloader support, it can be"
@@ -366,7 +362,7 @@ void BLDCInterface::fwVersionReceived(int major, int minor)
         } else {
             mFwVersionReceived = false;
             mFwRetries = 0;
-            serialDisconnect();
+            disconnectSerial();
             if (!wasReceived) {
                 emit msgCritical( "Error", "The firmware on the connected VESC is too old. Please"
                                                    " update it using a programmer.");
@@ -382,7 +378,7 @@ void BLDCInterface::fwVersionReceived(int major, int minor)
         }
 
         QString fwStr;
-        mPacketInterface->setLimitedMode(false);
+        m_packetInterface->setLimitedMode(false);
         fwStr.sprintf("VESC Firmware Version %d.%d", major, minor);
         emit statusInfoChanged(fwStr, true);
     }
@@ -616,13 +612,27 @@ void BLDCInterface::refreshSerialDevices()
     set_currentSerialPort(0);
 }
 
-void BLDCInterface::serialDisconnect(){
+void BLDCInterface::clearBuffers()
+{
+    mSampleInt = 0;
+    tmpCurr1Array.clear();
+    tmpCurr2Array.clear();
+    tmpPh1Array.clear();
+    tmpPh2Array.clear();
+    tmpPh3Array.clear();
+    tmpVZeroArray.clear();
+    tmpStatusArray.clear();
+    tmpCurrTotArray.clear();
+    tmpFSwArray.clear();
+}
+
+void BLDCInterface::disconnectSerial(){
     if (mSerialPort->isOpen()) {
         mSerialPort->close();
     }
 
-    if (mPacketInterface->isUdpConnected()) {
-        mPacketInterface->stopUdpConnection();
+    if (m_packetInterface->isUdpConnected()) {
+        m_packetInterface->stopUdpConnection();
     }
 
     mFwVersionReceived = false;
@@ -631,27 +641,27 @@ void BLDCInterface::serialDisconnect(){
 
 void BLDCInterface::detect()
 {
-    mPacketInterface->setDetect(DISP_POS_MODE_INDUCTANCE);
+    m_packetInterface->setDetect(DISP_POS_MODE_INDUCTANCE);
 }
 
 void BLDCInterface::stopDetect()
 {
-    mPacketInterface->setDetect(DISP_POS_MODE_NONE);
+    m_packetInterface->setDetect(DISP_POS_MODE_NONE);
 }
 
 void BLDCInterface::sendTerminal(QString &cmd)
 {
-    mPacketInterface->sendTerminalCmd(cmd);
+    m_packetInterface->sendTerminalCmd(cmd);
 }
 
 void BLDCInterface::readMcconf()
 {
-    mPacketInterface->getMcconf();
+    m_packetInterface->getMcconf();
 }
 
 void BLDCInterface::readMcconfDefault()
 {
-    mPacketInterface->getMcconfDefault();
+    m_packetInterface->getMcconfDefault();
 }
 
 void BLDCInterface::writeMcconf()
@@ -660,11 +670,7 @@ void BLDCInterface::writeMcconf()
         emit msgCritical("Error", "The configuration should be read or loaded at least once before writing it.");
         return;
     }
-    mPacketInterface->setMcconf(m_mcconf->data());
-}
-
-void BLDCInterface::setCurrentBrake(double current){
-    mPacketInterface->setCurrentBrake(current);
+    m_packetInterface->setMcconf(m_mcconf->data());
 }
 
 void BLDCInterface::loadMcconfXml()
@@ -682,15 +688,15 @@ void BLDCInterface::saveMcconfXml(){
 }
 
 void BLDCInterface::detectMotorParam(double current, double min_rpm, double low_duty){
-    mPacketInterface->detectMotorParam(current, min_rpm, low_duty);
+    m_packetInterface->detectMotorParam(current, min_rpm, low_duty);
 }
 
 void BLDCInterface::readAppConf(){
-    mPacketInterface->getAppConf();
+    m_packetInterface->getAppConf();
 }
 
 void BLDCInterface::readAppConfDefault(){
-    mPacketInterface->getAppConfDefault();
+    m_packetInterface->getAppConfDefault();
 }
 
 void BLDCInterface::writeAppConf(){
@@ -698,15 +704,15 @@ void BLDCInterface::writeAppConf(){
         emit msgCritical( "Error", "The configuration should be read at least once before writing it.");
         return;
     }
-    mPacketInterface->setAppConf(m_appconf->data());
+    m_packetInterface->setAppConf(m_appconf->data());
 }
 
 void BLDCInterface::reboot(){
-    mPacketInterface->reboot();
+    m_packetInterface->reboot();
 }
 
 void BLDCInterface::setPos(double pos){
-    mPacketInterface->setPos(pos);
+    m_packetInterface->setPos(pos);
 }
 
 void BLDCInterface::updateFirmware(QString fileName)
@@ -731,72 +737,55 @@ void BLDCInterface::updateFirmware(QString fileName)
     }
 
     QByteArray fw = file.readAll();
-    mPacketInterface->startFirmwareUpload(fw);
+    m_packetInterface->startFirmwareUpload(fw);
 }
 
 void BLDCInterface::readFirmwareVersion()
 {
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mPacketInterface->getFwVersion();
-}
-
-void BLDCInterface::cancelFirmwareUpload()
-{
-    mPacketInterface->cancelFirmwareUpload();
-}
-
-void BLDCInterface::setServoPos(int pos)
-{
-    mPacketInterface->setServoPos(pos);
-}
-
-void BLDCInterface::measureRL(){
-    mPacketInterface->measureRL();
-}
-
-void BLDCInterface::measureLinkage(double current, double min_rpm, double low_duty, double resistance)
-{
-    mPacketInterface->measureLinkage(current,min_rpm,low_duty,resistance);
-}
-
-void BLDCInterface::measureEncoder(double current)
-{
-    mPacketInterface->measureEncoder(current);
+    m_packetInterface->getFwVersion();
 }
 
 void BLDCInterface::detectEncoder()
 {
-    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER);
+    m_packetInterface->setDetect(DISP_POS_MODE_ENCODER);
 }
 
 void BLDCInterface::detectEncoderPosError()
 {
-    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER_POS_ERROR);
+    m_packetInterface->setDetect(DISP_POS_MODE_ENCODER_POS_ERROR);
 }
 
 void BLDCInterface::detectEncoderObserverError()
 {
-    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER_OBSERVER_ERROR);
+    m_packetInterface->setDetect(DISP_POS_MODE_ENCODER_OBSERVER_ERROR);
 }
 
 void BLDCInterface::detectObserver()
 {
-    mPacketInterface->setDetect(DISP_POS_MODE_OBSERVER);
+    m_packetInterface->setDetect(DISP_POS_MODE_OBSERVER);
 }
 
-void BLDCInterface::measureHallFoc(double current)
+
+void BLDCInterface::getSampleData(bool atStart, int sampleNum, int sampleInt)
 {
-    mPacketInterface->measureHallFoc(current);
+    clearBuffers();
+    m_packetInterface->samplePrint(atStart, sampleNum, sampleInt);
 }
 
-void BLDCInterface::serialConnect()
+void BLDCInterface::connectCurrentSerial()
+{
+    QString serialPort = m_serialPortList.at(m_currentSerialPort)->get_systemLocation();
+    connectSerial(serialPort);
+}
+
+void BLDCInterface::connectSerial(QString port)
 {
     if(mSerialPort->isOpen()) {
         return;
     }
-
-    mSerialPort->setPortName(m_serialPortList.at(m_currentSerialPort)->get_systemLocation());
+    mSerialPort->setPortName(port);
     mSerialPort->open(QIODevice::ReadWrite);
 
     if(!mSerialPort->isOpen()) {
@@ -816,5 +805,6 @@ void BLDCInterface::serialConnect()
     mSerialPort->setDataTerminalReady(false);
     QThread::msleep(100);
 
-    mPacketInterface->stopUdpConnection();
+    m_packetInterface->stopUdpConnection();
+
 }

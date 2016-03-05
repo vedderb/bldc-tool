@@ -72,6 +72,10 @@ class BLDCInterface : public QObject
     QML_WRITABLE_PROPERTY(bool, doReplot)
     QML_WRITABLE_PROPERTY(bool, doRescale)
     QML_WRITABLE_PROPERTY(bool, doFilterReplot)
+    QML_WRITEONLY_PROPERTY(bool, overrideKb)
+    QML_WRITEONLY_PROPERTY(double, sampleFreq)
+    QML_WRITEONLY_PROPERTY(bool, horizontalZoom)
+    QML_WRITEONLY_PROPERTY(bool, verticalZoom)
 
 
     QML_WRITEONLY_PROPERTY(bool, keyLeft )
@@ -117,13 +121,6 @@ public:
         return m_mcconf;
     }
 
-    PacketInterface* packetInterface() const
-    {
-        return mPacketInterface;
-    }
-
-public slots:
-    void serialConnect();
 signals:
     void statusInfoChanged(QString info, bool isGood);
     void msgCritical(QString title, QString text);
@@ -137,17 +134,18 @@ signals:
     void experimentSamplesReceived(QList<double>);
 public slots:
 
+    void connectCurrentSerial();
+    void connectSerial(QString port);
     void serialDataAvailable();
     void serialPortError(QSerialPort::SerialPortError error);
     void packetDataToSend(QByteArray &data);
-    void serialDisconnect();
+    void disconnectSerial();
     void detect();
     void stopDetect();
     void sendTerminal(QString &cmd);
     void readMcconf();
     void readMcconfDefault();
     void writeMcconf();
-    void setCurrentBrake(double current);
     void loadMcconfXml();
     void saveMcconfXml();
     void detectMotorParam(double current, double min_rpm, double low_duty);
@@ -158,16 +156,11 @@ public slots:
     void setPos(double pos);
     void updateFirmware(QString fileName);
     void readFirmwareVersion();
-    void cancelFirmwareUpload();
-    void setServoPos(int pos);
-    void measureRL();
-    void measureLinkage(double current, double min_rpm, double low_duty, double resistance);
-    void measureEncoder(double current);
     void detectEncoder();
     void detectEncoderPosError();
     void detectEncoderObserverError();
     void detectObserver();
-    void measureHallFoc(double current);
+    void getSampleData(bool atStart, int sampleNum, int sampleInt);
 
 private slots:
 
@@ -189,6 +182,7 @@ private slots:
 private:
 
     void refreshSerialDevices();
+    void clearBuffers();
 
     QSerialPort *mSerialPort;
     QTimer *mTimer;
@@ -196,7 +190,6 @@ private:
     bool mFwVersionReceived;
     int mFwRetries;
     QList<QPair<int, int> > mCompatibleFws;
-    PacketInterface *mPacketInterface;
     Serialization *mSerialization;
 
     int mSampleInt;

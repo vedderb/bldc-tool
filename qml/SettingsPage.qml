@@ -93,7 +93,7 @@ BasicPage {
                                 text:"Connect"
                                 width: rectConnection.width *0.4
                                 onClicked: {
-
+                                    connectSerial(textFieldPort.text);
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -113,7 +113,7 @@ BasicPage {
                                 width: rectConnection.width *0.4
                                 text:"Disconnect"
                                 onClicked: {
-
+                                    disconnectSerial();
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -185,7 +185,7 @@ BasicPage {
                                 text:"Duty Cycle"
                                 width: rectConnection.width *0.4
                                 onClicked: {
-
+                                    packetInterface.setDutyCycle(textDutyCycle.text)
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -214,7 +214,7 @@ BasicPage {
                                 text:"RPM"
                                 width: rectConnection.width *0.4
                                 onClicked: {
-
+                                    packetInterface.setRpm(textRPM.text)
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -242,7 +242,7 @@ BasicPage {
                                 text:"Current"
                                 width: rectConnection.width *0.4
                                 onClicked: {
-
+                                    packetInterface.setCurrent(textCurrent.text)
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -271,7 +271,7 @@ BasicPage {
                                 width: rectConnection.width *0.4
                                 text:"Brake Current"
                                 onClicked: {
-
+                                    packetInterface.setCurrentBrake(textBrakeCurrent)
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -285,13 +285,6 @@ BasicPage {
                                     }
                                 }
                             }
-
-
-
-
-
-
-
                         }}
 
                     Row {
@@ -306,6 +299,8 @@ BasicPage {
                             id: kbControlChkBox
                             text: qsTr("Keyboard Control")
                             checked: true
+                            onClicked: overrideKb = checked
+                            Component.onCompleted:  overrideKb = checked
                             //                    anchors.topMargin: 8
                             //                    anchors.top: rectControl.bottom
                             //                    anchors.leftMargin: parent.width * 0.02
@@ -368,7 +363,7 @@ BasicPage {
                                 text:"Release"
                                 width: rectConnection.width *0.4
                                 onClicked: {
-
+                                    packetInterface.setCurrent(0.0)
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -387,7 +382,7 @@ BasicPage {
                                 text:"Full Brake"
                                 width: rectConnection.width *0.4
                                 onClicked: {
-
+                                    packetInterface.setDutyCycle(0.0)
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -447,7 +442,7 @@ BasicPage {
                                 text:"Now"
                                 width: rectConnection.width * 0.4
                                 onClicked: {
-
+                                    getSampleData(false, textFieldKSamples.text, textFieldDecimation.text)
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -466,7 +461,7 @@ BasicPage {
                                 text:"At Start"
                                 width: rectConnection.width * 0.4
                                 onClicked: {
-
+                                    getSampleData(true, textFieldKSamples.text, textFieldDecimation.text)
                                 }
                                 style: ButtonStyle {
                                     label: Text {
@@ -524,6 +519,8 @@ BasicPage {
                                 horizontalAlignment: Text.AlignRight
                                 verticalAlignment: Text.AlignVCenter
                                 font.pointSize: 12
+                                onEditingFinished: sampleFreq = text
+                                Component.onCompleted: sampleFreq = text
                             }
 
 
@@ -563,6 +560,8 @@ BasicPage {
                             id: hZoomChkBox
                             text: qsTr("Horizontal Zoom")
                             checked: true
+                            Component.objectName: verticalZoom = checked
+                            onClicked: horizontalZoom = checked
                             style: CheckBoxStyle{
                                 label: Text {
                                     renderType: Text.NativeRendering
@@ -588,6 +587,8 @@ BasicPage {
                             id: vZoomChkBox
                             text: qsTr("Vertcial Zoom")
                             checked: true
+                            Component.objectName: horizontalZoom = checked
+                            onClicked: horizontalZoom = checked
                             style: CheckBoxStyle{
                                 label: Text {
                                     renderType: Text.NativeRendering
@@ -614,7 +615,7 @@ BasicPage {
                             text:"Rescale"
                             width: rectConnection.width * 0.4
                             onClicked: {
-
+                                doRescale = true
                             }
                             style: ButtonStyle {
                                 label: Text {
@@ -633,7 +634,8 @@ BasicPage {
                             text:"Replot"
                             width: rectConnection.width * 0.4
                             onClicked: {
-
+                                doReplot = true
+                                doFilterReplot = true
                             }
                             style: ButtonStyle {
                                 label: Text {
