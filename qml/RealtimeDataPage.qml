@@ -13,69 +13,67 @@ BasicPage {
         when:true
     }
 
-    ListModel{
-        id:listModel1
-        ListElement{
-            lValue:"Power"
-            rValue:"0.0 W"
+    property list<QtObject> listModel1: [
+        QtObject{
+            property string lValue:"Power"
+            property string rValue: mcValues.power + " W"
+        },
+        QtObject{
+            property string lValue:"Duty Cycle"
+            property string rValue: mcValues.dutyCycle + " %"
+        },
+        QtObject{
+            property string lValue:"Electrical speed"
+            property string rValue: mcValues.electricalSpeed + " rpm"
+        },
+        QtObject{
+            property string lValue:"Battery current"
+            property string rValue: mcValues.batteryCurrent + " A"
+        },
+        QtObject{
+            property string lValue:"Motor current"
+            property string rValue: mcValues.motorCurrent +" A"
+        },
+        QtObject{
+            property string lValue:"MOFSET Temp"
+            property string rValue: MOSFET_Temp + " Deg C"
+        },
+        QtObject{
+            property string lValue:"Fault code"
+            property string rValue: mcValues.faultString
         }
-        ListElement{
-            lValue:"Duty Cycle"
-            rValue:"0.20 %"
-        }
-        ListElement{
-            lValue:"Electrical speed"
-            rValue:"4.0 rpm"
-        }
-        ListElement{
-            lValue:"Battery current"
-            rValue:"0.00 A"
-        }
-        ListElement{
-            lValue:"Motor current"
-            rValue:"-0.20 A"
-        }
-        ListElement{
-            lValue:"MOFSET Temp"
-            rValue:"34.40 Deg C"
-        }
-        ListElement{
-            lValue:"Fault code"
-            rValue:"NONE"
-        }
-    }
+    ]
 
-    ListModel{
-        id:listModel2
-        ListElement{
-            lValue:"Drawn cap"
-            rValue:"32.4 mAh"
+    property list<QtObject> listModel2: [
+        QtObject{
+            property string lValue:"Drawn cap"
+            property string rValue: mcValues.drawnCap + " mAh"
+        },
+        QtObject{
+            property string lValue:"Charged cap"
+            property string rValue: mcValues.chargedCap + " mAh"
+        },
+        QtObject{
+            property string lValue:"Drawn energy"
+            property string rValue: mcValues.drawnEnergy + " Wh"
+        },
+        QtObject{
+            property string lValue:"Charged energy"
+            property string rValue: mcValues.chargedEnergy + " Wh"
+        },
+        QtObject{
+            property string lValue:"Tacho"
+            property string rValue: mcValues.tacho + " counts"
+        },
+        QtObject{
+            property string lValue:"Tacho ABS"
+            property string rValue: mcValues.tachoABS + " counts"
+        },
+        QtObject{
+            property string lValue:"Battery voltage"
+            property string rValue: mcValues.batteryVoltage + " V"
         }
-        ListElement{
-            lValue:"Charged cap"
-            rValue:"0.8 mAh"
-        }
-        ListElement{
-            lValue:"Drawn energy"
-            rValue:"0.67 Wh"
-        }
-        ListElement{
-            lValue:"Charged energy"
-            rValue:"0.02 Wh"
-        }
-        ListElement{
-            lValue:"Tacho"
-            rValue:"17330 counts"
-        }
-        ListElement{
-            lValue:"Tacho ABS"
-            rValue:"56406 counts"
-        }
-        ListElement{
-            lValue:"Battery voltage"
-            rValue:"21.1 V"
-        }
-    }
+    ]
 
     property Component mainComponent: Item {
         id: mainItem
@@ -97,7 +95,7 @@ BasicPage {
                     model: listModel1
                     delegate:RealtimeListDelegate{
                         width: parent.width
-                        height: rect1.height/listModel1.count
+                        height: rect1.height/ListView.view.count
                     }
                 }
             }
@@ -114,7 +112,7 @@ BasicPage {
                     model: listModel2
                     delegate: RealtimeListDelegate{
                         width: parent.width
-                        height: rect2.height/listModel2.count
+                        height: rect2.height/ListView.view.count
                     }
                 }
             }

@@ -9,3 +9,9 @@ contains(DEFINES,QML){
 } else {
     include(Widgets.pri)
 }
+
+HEADERS += \
+    mcvalues.h
+
+SOURCES += \
+    mcvalues.cpp

@@ -26,6 +26,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
 {
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
+    m_mcValues = new McValues(this);
 
 
     refreshSerialDevices();
@@ -73,7 +74,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     connect(m_packetInterface, SIGNAL(ackReceived(QString)),
             this, SIGNAL(ackReceived(QString)));
     connect(m_packetInterface, SIGNAL(valuesReceived(MC_VALUES)),
-            this, SIGNAL(mcValuesReceived(MC_VALUES)));
+            this, SLOT(onMcValuesReceived(MC_VALUES)));
     connect(m_packetInterface, SIGNAL(printReceived(QString)),
             this, SIGNAL(printReceived(QString)));
     connect(m_packetInterface, SIGNAL(samplesReceived(QByteArray)),
@@ -592,6 +593,11 @@ void BLDCInterface::mcconfFocCalcCC()
 void BLDCInterface::experimentSamplesReceived(QVector<double> samples)
 {
     emit experimentSamplesReceived(samples.toList());
+}
+
+void BLDCInterface::onMcValuesReceived(MC_VALUES values)
+{
+    m_mcValues->setValues(values);
 }
 
 void BLDCInterface::refreshSerialDevices()
