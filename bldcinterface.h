@@ -154,7 +154,7 @@ public slots:
     void writeAppConf();
     void reboot();
     void setPos(double pos);
-    void updateFirmware(QString fileName);
+    void uploadFirmware(QString fileName);
     void readFirmwareVersion();
     void detectEncoder();
     void detectEncoderPosError();

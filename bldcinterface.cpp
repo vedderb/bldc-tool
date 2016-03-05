@@ -715,7 +715,7 @@ void BLDCInterface::setPos(double pos){
     m_packetInterface->setPos(pos);
 }
 
-void BLDCInterface::updateFirmware(QString fileName)
+void BLDCInterface::uploadFirmware(QString fileName)
 {
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {

@@ -19,6 +19,7 @@ ApplicationWindow {
     }
     MessageDialog {
         id: messageDialog
+        modality: Qt.ApplicationModal
         function show(title, text){
             messageDialog.title = title
             messageDialog.text = text

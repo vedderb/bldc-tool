@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
+import QtQuick.Dialogs 1.0
 
 BasicPage {
     id:rootFirmware
@@ -25,7 +26,15 @@ BasicPage {
     property Component mainComponent: Rectangle {
         id: rectMain
         color: "#DCDCDC"
+        FileDialog {
+            id: fileDialog
+            title: "Please choose a file"
+            selectMultiple: false
+            onAccepted: {
+                textfieldPath.text = fileDialog.fileUrl
+            }
 
+        }
         Rectangle{
             id:  rectUploadFirmware
             width: parent.height
@@ -70,8 +79,17 @@ BasicPage {
                     text:"Choose"
                     width: rectMain.width * 0.17
                     onClicked: {
-
+                        messageDialog.showWarrning("Warning", "WARNING: Uploading firmware for the wrong"+
+                                                   " hardware version WILL damage the VESC for sure. Make "+
+                                                   "sure that you choose the correct hardware version.")
+                        // wait for message dialog and show file dialog
+                        messageDialog.onAccepted.connect(openFileDialog)
                     }
+                    function openFileDialog(){
+                        fileDialog.open()
+                        messageDialog.onAccepted.disconnect(openFileDialog)
+                    }
+
                     style: ButtonStyle {
                         label: Text {
                             renderType: Text.NativeRendering
@@ -116,7 +134,7 @@ BasicPage {
                     text:"upload"
                     width: rectMain.width * 0.17
                     onClicked: {
-
+                        uploadFirmware(textfieldPath.text)
                     }
                     style: ButtonStyle {
                         label: Text {
@@ -129,12 +147,6 @@ BasicPage {
                         }
                     }
                 }
-
-
-
-
-
-
             }
 
         }
