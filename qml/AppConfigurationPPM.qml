@@ -1,27 +1,24 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
-
+import bldc 1.0
 BasicPage {
     id:rootAppConfigPPM
     showTopbar: true
     showBackButton: true
     pageTitle: "App Configuration(PPM)"
-
     property int headingTopMargin:4
     property int headingLeftMargin:6
     property int rowVerticalMargin:6
     property int rowLeftMargin:16
     property int rowContentSpacing: 10
     property int rectGap: 20
-
     Binding{
         target:rootAppConfigPPM
         property: "pageComponent"
         value:mainComponent
         when:true
     }
-
     property Component mainComponent: Rectangle{
         color: "#DCDCDC"
         Flickable{
@@ -35,18 +32,15 @@ BasicPage {
                 anchors.fill: parent
                 color: "#DCDCDC"
                 height: rectControlMode.height + rectSettings.height +rectRPMLimit.height +rectDisplay.height + rectMultESC.height  + rectButtons.height  +( mainWindow.height > mainWindow.width ?  (7 * rectGap) : (6 *rectGap))
-
                 Rectangle{
                     id:rectControlMode
                     anchors.top: parent.top
                     width: parent.width
                     height: textHeadingControl.height +headingTopMargin +rectGridControl.height +rowVerticalMargin
                     color: "#DCDCDC"
-
                     ExclusiveGroup{
                         id:groupOptions
                     }
-
                     Text {
                         id: textHeadingControl
                         text: "Control Mode"
@@ -67,17 +61,15 @@ BasicPage {
                         anchors.topMargin: rowVerticalMargin
                         height: childrenRect.height
                         color: parent.color
-
                         Grid{
                             id:gridControl
                             width: parent.width
                             columns: 2
                             columnSpacing: 2
                             rowSpacing: rowVerticalMargin*0.6
-
                             RadioButton{
                                 id:rbDisabled
-                                checked: false
+                                checked: appconf.ppm_ctrl_type === AppConf.PPM_CTRL_TYPE_NONE
                                 text: "Disabled"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -93,10 +85,9 @@ BasicPage {
                                     }
                                 }
                             }
-
                             RadioButton{
                                 id:rbDutyCycle
-                                checked: false
+                                checked: appconf.ppm_ctrl_type === AppConf.PPM_CTRL_TYPE_DUTY
                                 text: "Duty Cycle"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -113,7 +104,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbCurrent
-                                checked: false
+                                checked: appconf.ppm_ctrl_type === AppConf.PPM_CTRL_TYPE_CURRENT
                                 text: "Current"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -131,7 +122,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbDutyCycleNoRev
-                                checked: false
+                                checked: appconf.ppm_ctrl_type === AppConf.PPM_CTRL_TYPE_DUTY_NOREV
                                 text: "Duty Cycle no reverse"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -149,7 +140,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbCurrentNoRev
-                                checked: false
+                                checked: appconf.ppm_ctrl_type === AppConf.PPM_CTRL_TYPE_CURRENT_NOREV
                                 text: "Current no reverse"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -167,7 +158,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbPIDSC
-                                checked: false
+                                checked: appconf.ppm_ctrl_type === AppConf.PPM_CTRL_TYPE_PID
                                 text: "PID speed control"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -185,7 +176,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbCurrNoRevBrake
-                                checked: false
+                                checked: appconf.ppm_ctrl_type === AppConf.PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE
                                 text: "Current no reverse with brake"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -203,7 +194,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbPIDSCNoRev
-                                checked: false
+                                checked: appconf.ppm_ctrl_type === AppConf.PPM_CTRL_TYPE_PID_NOREV
                                 text: "PID speed control no reverse"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -238,7 +229,6 @@ BasicPage {
                         anchors.left: parent.left
                         anchors.leftMargin: headingLeftMargin
                     }
-
                     Rectangle{
                         id:rectGridSettings
                         width:parent.width - (2 * rowLeftMargin)
@@ -250,14 +240,12 @@ BasicPage {
                         anchors.topMargin: rowVerticalMargin
                         height: childrenRect.height
                         color: parent.color
-
                         Grid{
                             id:gridSettings
                             width: parent.width
                             columns: 2
                             columnSpacing: 2
                             rowSpacing: rowVerticalMargin*0.6
-
                             Text {
                                 id: textPID
                                 text: "PID max ERPM"
@@ -269,6 +257,7 @@ BasicPage {
                             TextField{
                                 id:textFieldPID
                                 width: rectGridSettings.width * 0.2
+                                text: appconf.ppm_pid_max_erpm
                             }
                             Text {
                                 id: textDeadband
@@ -281,6 +270,7 @@ BasicPage {
                             TextField{
                                 id:textFieldDeadband
                                 width: rectGridSettings.width * 0.2
+                                text: appconf.ppm_hyst
                             }
                             Text {
                                 id: textMinPulse
@@ -293,6 +283,7 @@ BasicPage {
                             TextField{
                                 id:textFieldMinPulse
                                 width: rectGridSettings.width * 0.2
+                                text: appconf.ppm_pulse_start
                             }
                             Text {
                                 id: textWidMinPulse
@@ -305,10 +296,10 @@ BasicPage {
                             TextField{
                                 id:textFieldWidMinPulse
                                 width: rectGridSettings.width * 0.2
+                                text: appconf.ppm_pulse_end
                             }
                         }
                     }
-
                 }
                 Rectangle{
                     id:rectRPMLimit
@@ -317,10 +308,9 @@ BasicPage {
                     width: parent.width
                     height: cbRPMLimit.height +headingTopMargin +rectGridRPMLimit.height +rowVerticalMargin
                     color: parent.color
-
                     CheckBox{
                         id:cbRPMLimit
-                        checked: false
+                        checked: appconf.ppm_rpm_lim_end  >= 200000.0
                         text: "Soft RPM limit(current mode only)"
                         anchors.top: parent.top
                         anchors.topMargin: headingTopMargin
@@ -337,7 +327,6 @@ BasicPage {
                             }
                         }
                     }
-
                     Rectangle{
                         id:rectGridRPMLimit
                         width:parent.width - (2 * rowLeftMargin)
@@ -349,14 +338,12 @@ BasicPage {
                         anchors.topMargin: rowVerticalMargin
                         height: childrenRect.height
                         color: parent.color
-
                         Grid{
                             id:gridRPMLimit
                             width: parent.width
                             columns: 2
                             columnSpacing: 2
                             rowSpacing: rowVerticalMargin*0.6
-
                             Text {
                                 id: textRPMLimStart
                                 text: "RPM limit start"
@@ -365,12 +352,12 @@ BasicPage {
                                 width: rectGridSettings.width * 0.75
                                 font.pointSize: 14
                                 color:cbRPMLimit.checked?"black":"#b5bbb7"
-
                             }
                             TextField{
                                 id:textFieldRPMLimStart
                                 width: rectGridSettings.width * 0.2
                                 enabled: cbRPMLimit.checked
+                                text: appconf.ppm_rpm_lim_start
                             }
                             Text {
                                 id: textRPMLimEnd
@@ -385,11 +372,11 @@ BasicPage {
                                 id:textFieldRPMLimEnd
                                 width: rectGridSettings.width * 0.2
                                 enabled: cbRPMLimit.checked
+                                text: appconf.ppm_rpm_lim_end
                             }
                         }
                     }
                 }
-
                 Rectangle{
                     id:rectMultESC
                     anchors.top: rectRPMLimit.bottom
@@ -397,10 +384,9 @@ BasicPage {
                     width: parent.width
                     height: cbMultESC.height +headingTopMargin +rectGridMultESC.height +rowVerticalMargin
                     color: parent.color
-
                     CheckBox{
                         id:cbMultESC
-                        checked: false
+                        checked: appconf.ppm_multi_esc
                         text: "Multiple ESCs over CAN"
                         anchors.top: parent.top
                         anchors.topMargin: headingTopMargin
@@ -417,7 +403,6 @@ BasicPage {
                             }
                         }
                     }
-
                     Rectangle{
                         id:rectGridMultESC
                         width:parent.width - (2 * rowLeftMargin)
@@ -429,12 +414,11 @@ BasicPage {
                         anchors.topMargin: rowVerticalMargin
                         height: cbEnableTraction.height
                         color: parent.color
-
                         CheckBox{
                             id:cbEnableTraction
                             anchors.left: parent.left
                             width: parent.width * 0.40
-                            checked: false
+                            checked: appconf.ppm_tc
                             text: "Enable Traction Control(current mode only)"
                             style: CheckBoxStyle{
                                 label: Text {
@@ -446,11 +430,9 @@ BasicPage {
                                     maximumLineCount: 3
                                     wrapMode: Text.WordWrap
                                     width: rectGridMultESC.width * 0.38
-
                                 }
                             }
                         }
-
                         Text{
                             id:textTractCont
                             text:"Traction Control ERPM diff"
@@ -461,16 +443,15 @@ BasicPage {
                             width: parent.width * 0.38
                             anchors.right: textFieldTractCont.left
                             anchors.rightMargin: 4
-
                         }
                         TextField{
                             id:textFieldTractCont
                             width: parent.width * 0.20
                             anchors.right: parent.right
+                            text: appconf.ppm_tc_max_diff
                         }
                     }
                 }
-
                 Rectangle{
                     id:rectDisplay
                     anchors.top: rectMultESC.bottom
@@ -478,7 +459,6 @@ BasicPage {
                     width: parent.width
                     height: textHeadingDisplay.height +headingTopMargin + progressBar.height + 2 *rowVerticalMargin + cbDecPPM.height
                     color: parent.color
-
                     Text {
                         id: textHeadingDisplay
                         text: "Display"
@@ -488,7 +468,6 @@ BasicPage {
                         anchors.left: parent.left
                         anchors.leftMargin: headingLeftMargin
                     }
-
                     CheckBox{
                         id:cbDecPPM
                         checked: false
@@ -508,7 +487,6 @@ BasicPage {
                             }
                         }
                     }
-
                     ProgressBar{
                         id:progressBar
                         anchors.top: cbDecPPM.bottom
@@ -520,13 +498,9 @@ BasicPage {
                         width:rectDisplay.width - (2* rowLeftMargin)
                         minimumValue: 0
                         maximumValue: 100
-
+                        value: appconfDecodedPpm
                     }
-
-
-
                 }
-
                 Rectangle{
                     id:rectButtons
                     width: rectMain.width - (2 * headingLeftMargin)
@@ -540,15 +514,12 @@ BasicPage {
                         id:gridButtons
                         columns: 3
                         columnSpacing: headingLeftMargin/1.5
-
                         Button{
                             id:buttonReadConf
                             height: textfieldPath.height
                             text:"Read Config"
                             width: rectButtons.width * 0.31
-                            onClicked: {
-
-                            }
+                            onClicked: readAppConf()
                             style: ButtonStyle {
                                 label: Text {
                                     renderType: Text.NativeRendering
@@ -560,14 +531,36 @@ BasicPage {
                                 }
                             }
                         }
-
                         Button{
                             id:buttonWriteConf
                             height: textfieldPath.height
                             text:"Write Config"
                             width: rectMain.width * 0.31
                             onClicked: {
+                                if(rbDisabled.checked)              appconf.ppm_ctrl_type = AppConf.PPM_CTRL_TYPE_NONE
+                                else if(rbDutyCycle.checked)        appconf.ppm_ctrl_type = AppConf.PPM_CTRL_TYPE_DUTY
+                                else if(rbCurrent.checked)          appconf.ppm_ctrl_type = AppConf.PPM_CTRL_TYPE_CURRENT
+                                else if(rbDutyCycleNoRev.checked)   appconf.ppm_ctrl_type = AppConf.PPM_CTRL_TYPE_DUTY_NOREV
+                                else if(rbCurrentNoRev.checked)     appconf.ppm_ctrl_type = AppConf.PPM_CTRL_TYPE_CURRENT_NOREV
+                                else if(rbPIDSC.checked)            appconf.ppm_ctrl_type = AppConf.PPM_CTRL_TYPE_PID
+                                else if(rbCurrNoRevBrake.checked)   appconf.ppm_ctrl_type = AppConf.PPM_CTRL_TYPE_CURRENT_NOREV_BRAKE
+                                else if(rbPIDSCNoRev.checked)       appconf.ppm_ctrl_type = AppConf.PPM_CTRL_TYPE_PID_NOREV
 
+                                appconf.ppm_pid_max_erpm = textFieldPID.text
+                                appconf.ppm_hyst = textFieldDeadband.text
+                                appconf.ppm_pulse_start = textFieldMinPulse.text
+                                appconf.ppm_pulse_end = textFieldWidMinPulse.text
+
+                                if(cbRPMLimit.checked){
+                                    appconf.ppm_rpm_lim_start = textFieldRPMLimStart.text
+                                    appconf.ppm_rpm_lim_end = textFieldRPMLimEnd.text
+                                }
+                                appconf.ppm_multi_esc = cbMultESC.checked
+                                appconf.ppm_tc = cbEnableTraction.checked
+                                appconfUpdatePpm = cbDecPPM.checked
+                                appconf.ppm_tc_max_diff = textFieldTractCont.text
+
+                                writeAppConf()
                             }
                             style: ButtonStyle {
                                 label: Text {
@@ -580,15 +573,12 @@ BasicPage {
                                 }
                             }
                         }
-
                         Button{
                             id:buttonReboot
                             height: textfieldPath.height
                             text:"Reboot"
                             width: rectMain.width * 0.31
-                            onClicked: {
-
-                            }
+                            onClicked: reboot()
                             style: ButtonStyle {
                                 label: Text {
                                     renderType: Text.NativeRendering
@@ -600,16 +590,9 @@ BasicPage {
                                 }
                             }
                         }
-
                     }
                 }
-
-
             }
-
-
-
         }
     }
 }
-

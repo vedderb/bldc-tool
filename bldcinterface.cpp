@@ -547,7 +547,7 @@ void BLDCInterface::appconfReceived(app_configuration appconf){
 
 void BLDCInterface::decodedPpmReceived(double ppm_value, double ppm_last_len)
 {
-    update_appconfDecodedPpm((ppm_value + 1.0) * 5.0);
+    update_appconfDecodedPpm((ppm_value + 1.0) * 500.0);
     update_appconfPpmPulsewidth(ppm_last_len);
 }
 

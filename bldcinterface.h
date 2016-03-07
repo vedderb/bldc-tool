@@ -106,7 +106,7 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(double, appconfAdcDecoded2)
     QML_READONLY_PROPERTY(double, appconfAdcVoltage)
     QML_READONLY_PROPERTY(double, appconfAdcVoltage2)
-    QML_READONLY_PROPERTY(double, appconfDecodedPpm)
+    QML_READONLY_PROPERTY(int, appconfDecodedPpm)
     QML_READONLY_PROPERTY(double, appconfPpmPulsewidth)
 
 

@@ -421,9 +421,7 @@ BasicPage {
                             height: textfieldPath.height
                             text:"Read Config"
                             width: rectButtons.width * 0.31
-                            onClicked: {
-                                readAppConf();
-                            }
+                            onClicked: readAppConf()
                             style: ButtonStyle {
                                 label: Text {
                                     renderType: Text.NativeRendering
@@ -474,9 +472,7 @@ BasicPage {
                             height: textfieldPath.height
                             text:"Reboot"
                             width: rectMain.width * 0.31
-                            onClicked: {
-                                reboot()
-                            }
+                            onClicked: reboot()
                             style: ButtonStyle {
                                 label: Text {
                                     renderType: Text.NativeRendering
