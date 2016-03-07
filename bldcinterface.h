@@ -139,7 +139,7 @@ public slots:
     void readMcconf();
     void readMcconfDefault();
     void writeMcconf();
-    void loadMcconfXml();
+    void loadMcconfXml(QString xmlfile);
     void saveMcconfXml();
     void detectMotorParam(double current, double min_rpm, double low_duty);
     void readAppConf();

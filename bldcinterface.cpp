@@ -679,10 +679,10 @@ void BLDCInterface::writeMcconf()
     m_packetInterface->setMcconf(m_mcconf->data());
 }
 
-void BLDCInterface::loadMcconfXml()
+void BLDCInterface::loadMcconfXml(QString xmlfile)
 {
     mc_configuration tmp = m_mcconf->data();
-    if (mSerialization->readMcconfXml(tmp)) {
+    if (mSerialization->readMcconfXml(xmlfile, tmp)) {
         m_mcconf->setData(tmp);
     } else {
         emit statusInfoChanged("Loading MCCONF failed", false);

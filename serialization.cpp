@@ -31,12 +31,24 @@ bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *pare
     QString filename = QFileDialog::getSaveFileName(parent,
                                             tr("Save Configuration"), ".",
                                             tr("Xml files (*.xml)"));
+    return writeMcconfXml(filename, mcconf);
+}
 
-    if (!filename.toLower().endsWith(".xml")) {
-        filename.append(".xml");
+bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
+{
+    QString filename = QFileDialog::getOpenFileName(parent,
+                                                    tr("Load Configuration"), ".",
+                                                    tr("Xml files (*.xml)"));
+    return readMcconfXml(filename, mcconf);
+}
+
+bool Serialization::writeMcconfXml(QString xmlfile, const mc_configuration &mcconf)
+{
+    if (!xmlfile.toLower().endsWith(".xml")) {
+        xmlfile.append(".xml");
     }
 
-    QFile file(filename);
+    QFile file(xmlfile);
     if (!file.open(QIODevice::WriteOnly)) {
         return false;
     }
@@ -140,17 +152,15 @@ bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *pare
     file.close();
 
     return true;
+
 }
 
-bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
+bool Serialization::readMcconfXml(QString xmlfile, mc_configuration &mcconf)
 {
-    QString filename = QFileDialog::getOpenFileName(parent,
-                                                    tr("Load Configuration"), ".",
-                                                    tr("Xml files (*.xml)"));
 
     bool retval = true;
 
-    QFile file(filename);
+    QFile file(xmlfile);
     if (!file.open(QIODevice::ReadOnly)) {
         return false;
     }
@@ -277,4 +287,5 @@ bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
     file.close();
 
     return retval;
+
 }

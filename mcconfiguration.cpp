@@ -3,7 +3,9 @@
 McConfiguration::McConfiguration(QObject*)
 
 {
-    memset(&m_data, 0, sizeof(mc_configuration));
+    // don't memset meta_description (QString)
+    size_t size = sizeof(mc_configuration) - sizeof(QString);
+    memset(&m_data, 0, size);
 }
 
 McConfiguration::McConfiguration(const mc_configuration &src)
