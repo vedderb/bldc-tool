@@ -51,7 +51,7 @@ class BLDCInterface : public QObject
     QML_WRITABLE_PROPERTY(int, currentSerialPort)
     QML_READONLY_PROPERTY(QString, firmwareSupported)
     QML_READONLY_PROPERTY(QString, firmware)
-    QML_READONLY_PROPERTY(QString, mcconfDetectResultBrowser)
+    QML_READONLY_PROPERTY(QString, mcconfDetectResult)
     QML_READONLY_PROPERTY(QString, firmwareVersion)
     QML_READONLY_PROPERTY(double, firmwareProgress)
     QML_READONLY_PROPERTY(bool, firmwareUploadEnabled)

@@ -11,10 +11,6 @@ McConfiguration::McConfiguration(QObject*)
 McConfiguration::McConfiguration(const mc_configuration &src)
 {
     m_data = src;
-    for (int i = 0; i < 8; ++i) {
-        m_hall_table.append(src.hall_table[i]);
-        m_foc_hall_table.append(src.foc_hall_table[i]);
-    }
 }
 
 void McConfiguration::setData(const mc_configuration &src)
@@ -92,61 +88,24 @@ void McConfiguration::setData(const mc_configuration &src)
     set_m_current_backoff_gain(src.m_current_backoff_gain);
     set_m_encoder_counts(src.m_encoder_counts);
     set_meta_description(src.meta_description);
-
-    // special handling for tables
-    QList<int> foc_hall_table;
-    QList<int> hall_table;
-    for (int i = 0; i < 8; ++i) {
-        hall_table.append(src.hall_table[i]);
-        foc_hall_table.append(src.foc_hall_table[i]);
-    }
-    if(hall_table != m_hall_table){
-        m_hall_table = hall_table;
-        emit hall_tableChanged(m_hall_table);
-    }
-    if(foc_hall_table != m_foc_hall_table){
-        m_foc_hall_table = foc_hall_table;
-        emit foc_hall_tableChanged(m_foc_hall_table);
-    }
-
-}
-
-QList<int> McConfiguration::foc_hall_table() const
-{
-    return m_foc_hall_table;
-}
-
-QList<int> McConfiguration::hall_table() const
-{
-    return m_hall_table;
+    set_hall_table1(src.hall_table[0]);
+    set_hall_table2(src.hall_table[1]);
+    set_hall_table3(src.hall_table[2]);
+    set_hall_table4(src.hall_table[3]);
+    set_hall_table5(src.hall_table[4]);
+    set_hall_table6(src.hall_table[5]);
+    set_hall_table7(src.hall_table[6]);
+    set_hall_table8(src.hall_table[7]);
+    set_foc_hall_table1(src.foc_hall_table[0]);
+    set_foc_hall_table2(src.foc_hall_table[1]);
+    set_foc_hall_table3(src.foc_hall_table[2]);
+    set_foc_hall_table4(src.foc_hall_table[3]);
+    set_foc_hall_table5(src.foc_hall_table[4]);
+    set_foc_hall_table6(src.foc_hall_table[5]);
+    set_foc_hall_table7(src.foc_hall_table[6]);
+    set_foc_hall_table8(src.foc_hall_table[7]);
 }
 
 const mc_configuration &McConfiguration::data(){
     return m_data;
-}
-
-void McConfiguration::setFoc_hall_table(QList<int> foc_hall_table)
-{
-    if (m_foc_hall_table == foc_hall_table)
-        return;
-
-    Q_ASSERT(foc_hall_table.length() <= 8);
-    for (int i = 0; i < foc_hall_table.length(); ++i) {
-        m_data.foc_hall_table[i] = foc_hall_table.at(i);
-    }
-    m_foc_hall_table = foc_hall_table;
-    emit foc_hall_tableChanged(foc_hall_table);
-}
-
-void McConfiguration::setHall_table(QList<int> hall_table)
-{
-    if (m_hall_table == hall_table)
-        return;
-
-    Q_ASSERT(hall_table.length() <= 8);
-    for (int i = 0; i < hall_table.length(); ++i) {
-        m_data.hall_table[i] = hall_table.at(i);
-    }
-    m_hall_table = hall_table;
-    emit hall_tableChanged(hall_table);
 }

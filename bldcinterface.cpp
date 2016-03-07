@@ -447,7 +447,7 @@ void BLDCInterface::motorParamReceived(double cycle_int_limit, double bemf_coupl
 {
     if (cycle_int_limit < 0.01 && bemf_coupling_k < 0.01) {
         emit statusInfoChanged("Bad Detection Result Received", false);
-        update_mcconfDetectResultBrowser("Detection failed.");
+        update_mcconfDetectResult("Detection failed.");
         return;
     }
     emit statusInfoChanged("Detection Result Received", true);
@@ -481,7 +481,7 @@ void BLDCInterface::motorParamReceived(double cycle_int_limit, double bemf_coupl
         hall_str.sprintf("Unknown hall error: %d\n", hall_res);
     }
 
-    update_mcconfDetectResultBrowser(QString().sprintf("Detection results:\n"
+    update_mcconfDetectResult(QString().sprintf("Detection results:\n"
                                                              "Integrator limit: %.2f\n"
                                                              "BEMF Coupling: %.2f\n\n"
                                                              "%s",

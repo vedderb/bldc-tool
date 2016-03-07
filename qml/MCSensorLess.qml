@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
+import bldc 1.0
 
 BasicPage {
     id:rootMotorConfigSensonLess
@@ -81,7 +82,7 @@ BasicPage {
 
                             RadioButton{
                                 id:rbSensorless
-                                checked: false
+                                checked: mcconf.sensor_mode === McConf.SENSOR_MODE_SENSORLESS
                                 text: "Sensorless"
                                 exclusiveGroup :groupOptionsSensorMode
                                 style: RadioButtonStyle{
@@ -97,7 +98,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbSensored
-                                checked: false
+                                checked: mcconf.sensor_mode === McConf.SENSOR_MODE_SENSORED
                                 text: "Sensored"
                                 exclusiveGroup :groupOptionsSensorMode
                                 style: RadioButtonStyle{
@@ -114,7 +115,7 @@ BasicPage {
 
                             RadioButton{
                                 id:rbHybrid
-                                checked: false
+                                checked: mcconf.sensor_mode === McConf.SENSOR_MODE_HYBRID
                                 text: "Hybrid"
                                 exclusiveGroup :groupOptionsSensorMode
                                 style: RadioButtonStyle{
@@ -128,15 +129,9 @@ BasicPage {
                                     }
                                 }
                             }
-
-
-
                         }
-
-
                     }
                 }
-
 
                 Rectangle{
                     id:rectSensorless
@@ -203,7 +198,7 @@ BasicPage {
 
                         RadioButton{
                             id:rbIntegrate
-                            checked: false
+                            checked: mcconf.comm_mode === McConf.COMM_MODE_INTEGRATE
                             // enabled: cbSensorless.checked
                             anchors.left: parent.left
                             anchors.leftMargin: rowLeftMargin
@@ -224,7 +219,7 @@ BasicPage {
                         }
                         RadioButton{
                             id:rbDelay
-                            checked: false
+                            checked: mcconf.comm_mode === McConf.COMM_MODE_DELAY
                             text: "Delay"
                             // enabled: cbSensorless.checked
                             anchors.left: rbIntegrate.right
@@ -275,7 +270,7 @@ BasicPage {
                                 id:textFieldMinERPM
                                 // enabled: cbSensorless.checked
                                 width: parent.width*0.2
-
+                                text: mcconf.sl_min_erpm
                             }
 
                             Text{
@@ -292,6 +287,7 @@ BasicPage {
                                 id:textFieldMinERPMLimit
                                 //  enabled: cbSensorless.checked
                                 width: parent.width*0.2
+                                text: mcconf.sl_min_erpm_cycle_int_limit
                             }
 
                             Text{
@@ -308,6 +304,7 @@ BasicPage {
                                 id:textFieldMaxBrake
                                 //  enabled: cbSensorless.checked
                                 width: parent.width*0.2
+                                text: mcconf.sl_max_fullbreak_current_dir_change
                             }
                             Text{
                                 id:textIntLimit
@@ -323,6 +320,7 @@ BasicPage {
                                 id:textFieldIntLimit
                                 //   enabled: cbSensorless.checked
                                 width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_limit
                             }
                             Text{
                                 id:textphase
@@ -338,6 +336,7 @@ BasicPage {
                                 id:textFieldPhase
                                 //   enabled: cbSensorless.checked
                                 width: parent.width*0.2
+                                text: mcconf.sl_phase_advance_at_br
                             }
                             Text{
                                 id:textBRERPM
@@ -353,6 +352,7 @@ BasicPage {
                                 id:textFieldBRERPM
                                 //  enabled: cbSensorless.checked
                                 width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
                             Text{
                                 id:textBEMF
@@ -368,6 +368,7 @@ BasicPage {
                                 id:textFieldBEMF
                                 // enabled: cbSensorless.checked
                                 width: parent.width*0.2
+                                text: mcconf.sl_bemf_coupling_k
                             }
                         }
                     }
@@ -415,42 +416,42 @@ BasicPage {
                             TextField{
                                 id:textFieldTable1
                                 width: parent.width*0.09
-
+                                text: mcconf.hall_table1
                             }
                             TextField{
                                 id:textFieldTable2
                                 width: parent.width*0.09
-
+                                text: mcconf.hall_table2
                             }
                             TextField{
                                 id:textFieldTable3
                                 width: parent.width*0.09
-
+                                text: mcconf.hall_table3
                             }
                             TextField{
                                 id:textFieldTable4
                                 width: parent.width*0.09
-
+                                text: mcconf.hall_table4
                             }
                             TextField{
                                 id:textFieldTable5
                                 width: parent.width*0.09
-
+                                text: mcconf.hall_table5
                             }
                             TextField{
                                 id:textFieldTable6
                                 width: parent.width*0.09
-
+                                text: mcconf.hall_table6
                             }
                             TextField{
                                 id:textFieldTable7
                                 width: parent.width*0.09
-
+                                text: mcconf.hall_table7
                             }
                             TextField{
                                 id:textFieldTable8
                                 width: parent.width*0.09
-
+                                text: mcconf.hall_table8
                             }
 
                         }
@@ -484,6 +485,7 @@ BasicPage {
                             TextField{
                                 id:textFieldHybridMode
                                 width: parent.width * 0.2
+                                text: mcconf.hall_sl_erpm
                             }
 
                     }
@@ -517,6 +519,9 @@ BasicPage {
                         text:"Start detection"
                         onClicked: {
                             console.log("Start Detection tapped")
+                            packetInterface.detectMotorParam(textFieldCurrent.text,
+                                             textFieldMinRPM.text,
+                                             textFieldLowDuty.text)
                         }
                         style: ButtonStyle {
                             label: Text {
@@ -557,7 +562,6 @@ BasicPage {
                             TextField{
                                 id:textFieldCurrent
                                 width: parent.width*0.2
-
                             }
 
                             Text{
@@ -569,7 +573,6 @@ BasicPage {
                             TextField{
                                 id:textFieldMinRPM
                                 width: parent.width*0.2
-
                             }
 
                             Text{
@@ -581,15 +584,8 @@ BasicPage {
                             TextField{
                                 id:textFieldLowDuty
                                 width: parent.width*0.2
-
                             }
-
-
-
                         }
-
-
-
                     }
 
                     TextArea{
@@ -601,6 +597,7 @@ BasicPage {
                         anchors.leftMargin: rowLeftMargin/2
                         anchors.right: parent.right
                         anchors.rightMargin: rowLeftMargin
+                        text: mcconfDetectResult
 
                     }
                 }
@@ -624,9 +621,7 @@ BasicPage {
                             height: textfieldPath.height
                             text:"Read Config"
                             width: rectButtons.width * 0.31
-                            onClicked: {
-
-                            }
+                            onClicked: readAppConf()
                             style: ButtonStyle {
                                 label: Text {
                                     renderType: Text.NativeRendering
@@ -645,7 +640,30 @@ BasicPage {
                             text:"Write Config"
                             width: rectMain.width * 0.31
                             onClicked: {
+                                if(rbSensorless.checked)    mcconf.sensor_mode = McConf.SENSOR_MODE_SENSORLESS
+                                else if(rbSensored.checked) mcconf.sensor_mode = McConf.SENSOR_MODE_SENSORED
+                                else if(rbHybrid.checked)   mcconf.sensor_mode = McConf.SENSOR_MODE_HYBRID
 
+                                if(rbIntegrate.checked)  mcconf.comm_mode = McConf.COMM_MODE_INTEGRATE
+                                else if(rbDelay.checked) mcconf.comm_mode = McConf.COMM_MODE_DELAY
+
+                                mcconf.sl_min_erpm = textFieldMinERPM.text
+                                mcconf.sl_max_fullbreak_current_dir_change = textFieldMaxBrake.text
+                                mcconf.sl_cycle_int_limit = textFieldIntLimit.text
+                                mcconf.sl_phase_advance_at_br = textFieldPhase.text
+                                mcconf.sl_cycle_int_rpm_br = textFieldBRERPM.text
+                                mcconf.sl_bemf_coupling_k = textFieldBEMF.text
+                                mcconf.hall_table1 = textFieldTable1.text
+                                mcconf.hall_table2 = textFieldTable2.text
+                                mcconf.hall_table3 = textFieldTable3.text
+                                mcconf.hall_table4 = textFieldTable4.text
+                                mcconf.hall_table5 = textFieldTable5.text
+                                mcconf.hall_table6 = textFieldTable6.text
+                                mcconf.hall_table7 = textFieldTable7.text
+                                mcconf.hall_table8 = textFieldTable8.text
+                                mcconf.hall_sl_erpm = textFieldHybridMode.text
+
+                                writeAppConf()
                             }
                             style: ButtonStyle {
                                 label: Text {
@@ -664,9 +682,7 @@ BasicPage {
                             height: textfieldPath.height
                             text:"Reboot"
                             width: rectMain.width * 0.31
-                            onClicked: {
-
-                            }
+                            onClicked: reboot()
                             style: ButtonStyle {
                                 label: Text {
                                     renderType: Text.NativeRendering
@@ -678,10 +694,8 @@ BasicPage {
                                 }
                             }
                         }
-
                     }
                 }
-
             }
         }
     }

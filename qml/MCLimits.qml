@@ -58,7 +58,7 @@ BasicPage {
                         }
                         RadioButton{
                             id:rbBLDC
-                            checked: mcconf.motor_type === AppConf.MOTOR_TYPE_BLDC
+                            checked: mcconf.motor_type === McConf.MOTOR_TYPE_BLDC
                             text: "BLDC"
                             exclusiveGroup :groupOptions
                             style: RadioButtonStyle{
@@ -76,7 +76,7 @@ BasicPage {
                         }
                         RadioButton{
                             id:rbDC
-                            checked: mcconf.motor_type === AppConf.MOTOR_TYPE_DC
+                            checked: mcconf.motor_type === McConf.MOTOR_TYPE_DC
                             text: "DC"
                             exclusiveGroup :groupOptions
                             style: RadioButtonStyle{
@@ -663,8 +663,8 @@ BasicPage {
                                 text:"Write Config"
                                 width: rectMain.width * 0.31
                                 onClicked: {
-                                    if(rbDC.checked) mcconf.motor_type = AppConf.MOTOR_TYPE_BLDC
-                                    else if(rbBLDC.checked) mcconf.motor_type = AppConf.MOTOR_TYPE_DC
+                                    if(rbDC.checked) mcconf.motor_type = McConf.MOTOR_TYPE_BLDC
+                                    else if(rbBLDC.checked) mcconf.motor_type = McConf.MOTOR_TYPE_DC
                                     mcconf.l_current_max = textFieldMotor.text
                                     mcconf.l_current_min = textFieldMotorMin.text
                                     mcconf.l_in_current_max = textFieldBattMax.text

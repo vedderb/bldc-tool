@@ -75,7 +75,14 @@ public:
     QML_WRITABLE_PROPERTY_W( float	,sl_cycle_int_rpm_br                   ,m_data.sl_cycle_int_rpm_br                 )
     QML_WRITABLE_PROPERTY_W( float	,sl_bemf_coupling_k                    ,m_data.sl_bemf_coupling_k                  )
     // Hall sensor
-    Q_PROPERTY(QList<int> hall_table READ hall_table WRITE setHall_table NOTIFY hall_tableChanged)
+    QML_WRITABLE_PROPERTY_W(int         ,hall_table1     , m_data.hall_table[0])
+    QML_WRITABLE_PROPERTY_W(int         ,hall_table2     , m_data.hall_table[1])
+    QML_WRITABLE_PROPERTY_W(int         ,hall_table3     , m_data.hall_table[2])
+    QML_WRITABLE_PROPERTY_W(int         ,hall_table4     , m_data.hall_table[3])
+    QML_WRITABLE_PROPERTY_W(int         ,hall_table5     , m_data.hall_table[4])
+    QML_WRITABLE_PROPERTY_W(int         ,hall_table6     , m_data.hall_table[5])
+    QML_WRITABLE_PROPERTY_W(int         ,hall_table7     , m_data.hall_table[6])
+    QML_WRITABLE_PROPERTY_W(int         ,hall_table8     , m_data.hall_table[7])
     QML_WRITABLE_PROPERTY_W( float 		,hall_sl_erpm   ,m_data.hall_sl_erpm)
     // FOC
     QML_WRITABLE_PROPERTY_W( float 				,foc_current_kp 		,m_data.foc_current_kp 		 )
@@ -99,7 +106,14 @@ public:
     QML_WRITABLE_PROPERTY_W( float 				,foc_sl_d_current_duty	,m_data.foc_sl_d_current_duty	 )
     QML_WRITABLE_PROPERTY_W( float 				,foc_sl_d_current_factor,m_data.foc_sl_d_current_factor )
     QML_WRITABLE_ENUM_PROPERTY_W( MC_foc_sensor_mode ,foc_sensor_mode		,mc_foc_sensor_mode ,m_data.foc_sensor_mode)
-    Q_PROPERTY(QList<int> foc_hall_table READ foc_hall_table WRITE setFoc_hall_table NOTIFY foc_hall_tableChanged)
+    QML_WRITABLE_PROPERTY_W(int         ,foc_hall_table1     , m_data.foc_hall_table[0])
+    QML_WRITABLE_PROPERTY_W(int         ,foc_hall_table2     , m_data.foc_hall_table[1])
+    QML_WRITABLE_PROPERTY_W(int         ,foc_hall_table3     , m_data.foc_hall_table[2])
+    QML_WRITABLE_PROPERTY_W(int         ,foc_hall_table4     , m_data.foc_hall_table[3])
+    QML_WRITABLE_PROPERTY_W(int         ,foc_hall_table5     , m_data.foc_hall_table[4])
+    QML_WRITABLE_PROPERTY_W(int         ,foc_hall_table6     , m_data.foc_hall_table[5])
+    QML_WRITABLE_PROPERTY_W(int         ,foc_hall_table7     , m_data.foc_hall_table[6])
+    QML_WRITABLE_PROPERTY_W(int         ,foc_hall_table8     , m_data.foc_hall_table[7])
     QML_WRITABLE_PROPERTY_W( float 				,foc_hall_sl_erpm		,m_data.foc_hall_sl_erpm )
     // Speed PID
     QML_WRITABLE_PROPERTY_W( float	,s_pid_kp		,m_data.s_pid_kp		 )
@@ -136,19 +150,8 @@ public:
 public slots:
     const mc_configuration& data();
 
-    void setFoc_hall_table(QList<int> foc_hall_table);
-    void setHall_table(QList<int> hall_table);
-
-signals:
-
-    void foc_hall_tableChanged(QList<int> foc_hall_table);
-    void hall_tableChanged(QList<int> hall_table);
-
 private:
     mc_configuration m_data;
-
-    QList<int> m_foc_hall_table;
-    QList<int> m_hall_table;
 };
 
 #endif // MCCONFIGURATION_H
