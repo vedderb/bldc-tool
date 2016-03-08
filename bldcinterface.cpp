@@ -22,7 +22,8 @@ void stepTowards(double &value, double goal, double step) {
 }
 
 BLDCInterface::BLDCInterface(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_realtimeActivate(false)
 {
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
