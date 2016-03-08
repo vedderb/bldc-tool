@@ -1,4 +1,6 @@
 import QtQuick 2.0
+import QtQuick.Controls 1.3
+import QtQuick.Controls.Styles 1.3
 
 BasicPage {
     id:rootRealTimeData
@@ -36,7 +38,7 @@ BasicPage {
         },
         QtObject{
             property string lValue:"MOFSET Temp"
-            property string rValue: MOSFET_Temp + " Deg C"
+            property string rValue: mcValues.MOSFET_Temp + " Deg C"
         },
         QtObject{
             property string lValue:"Fault code"
@@ -113,6 +115,21 @@ BasicPage {
                     delegate: RealtimeListDelegate{
                         width: parent.width
                         height: rect2.height/ListView.view.count
+                    }
+                }
+            }
+            CheckBox{
+                checked: false
+                onCheckedChanged: realtimeActivate = checked
+                text: "Activate sampling"
+                style: CheckBoxStyle{
+                    label: Text {
+                        renderType: Text.NativeRendering
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        font.family: "Helvetica"
+                        font.bold: true
+                        text: control.text
                     }
                 }
             }
