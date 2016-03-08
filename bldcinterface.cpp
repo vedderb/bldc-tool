@@ -717,10 +717,6 @@ void BLDCInterface::reboot(){
     m_packetInterface->reboot();
 }
 
-void BLDCInterface::setPos(double pos){
-    m_packetInterface->setPos(pos);
-}
-
 void BLDCInterface::uploadFirmware(QString fileName)
 {
     QFile file(fileName);

@@ -146,7 +146,6 @@ public slots:
     void readAppConfDefault();
     void writeAppConf();
     void reboot();
-    void setPos(double pos);
     void uploadFirmware(QString fileName);
     void readFirmwareVersion();
     void getSampleData(bool atStart, int sampleNum, int sampleInt);

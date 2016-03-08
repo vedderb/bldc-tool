@@ -2,6 +2,7 @@ import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Window 2.1
 import QtQuick.Dialogs 1.1
+import QtQuick.Layouts 1.0
 
 ApplicationWindow {
     id:mainWindow
@@ -15,7 +16,7 @@ ApplicationWindow {
     Loader {
         id: mainLoader
         width: mainWindow.width
-        height: mainWindow.height
+        height: mainWindow.height - statusbar.height
     }
     MessageDialog {
         id: messageDialog
@@ -39,5 +40,27 @@ ApplicationWindow {
             onMsgwarning.connect( showWarrning );
         }
     }
-
+    statusBar: StatusBar {
+        id: statusbar
+        Rectangle{
+            id: background
+            anchors.fill: parent
+            color: 'transparent'
+        }
+        Label {
+            id: label
+            anchors.fill: parent
+            anchors.leftMargin: 10
+        }
+        function showStatus(text, good){
+            label.text = text
+            if(good)
+                background.color = 'lightgreen'
+            else
+                background.color = 'red'
+        }
+        Component.onCompleted: {
+            onStatusInfoChanged.connect(showStatus);
+        }
+    }
 }
