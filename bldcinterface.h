@@ -136,7 +136,7 @@ public slots:
     void detect();
     void stopDetect();
     void sendTerminal(QString &cmd);
-    void readMcconf();
+    void readMcConf();
     void readMcconfDefault();
     void writeMcconf();
     void loadMcconfXml(QString xmlfile);

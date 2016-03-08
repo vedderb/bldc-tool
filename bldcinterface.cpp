@@ -660,7 +660,7 @@ void BLDCInterface::sendTerminal(QString &cmd)
     m_packetInterface->sendTerminalCmd(cmd);
 }
 
-void BLDCInterface::readMcconf()
+void BLDCInterface::readMcConf()
 {
     m_packetInterface->getMcconf();
 }

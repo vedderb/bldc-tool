@@ -621,7 +621,7 @@ BasicPage {
                             height: textfieldPath.height
                             text:"Read Config"
                             width: rectButtons.width * 0.31
-                            onClicked: readAppConf()
+                            onClicked: readMcConf()
                             style: ButtonStyle {
                                 label: Text {
                                     renderType: Text.NativeRendering
