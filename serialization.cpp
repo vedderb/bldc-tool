@@ -136,6 +136,7 @@ bool Serialization::writeMcconfXml(QString xmlfile, const mc_configuration &mcco
     xmlwriter.writeTextElement("p_pid_kp", QString::number(mcconf.p_pid_kp));
     xmlwriter.writeTextElement("p_pid_ki", QString::number(mcconf.p_pid_ki));
     xmlwriter.writeTextElement("p_pid_kd", QString::number(mcconf.p_pid_kd));
+    xmlwriter.writeTextElement("p_pid_ang_div", QString::number(mcconf.p_pid_ang_div));
     xmlwriter.writeTextElement("cc_startup_boost_duty", QString::number(mcconf.cc_startup_boost_duty));
     xmlwriter.writeTextElement("cc_min_current", QString::number(mcconf.cc_min_current));
     xmlwriter.writeTextElement("cc_gain", QString::number(mcconf.cc_gain));
@@ -256,6 +257,7 @@ bool Serialization::readMcconfXml(QString xmlfile, mc_configuration &mcconf)
                     else if (xmlreader.name() == "p_pid_kp") {mcconf.p_pid_kp = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "p_pid_ki") {mcconf.p_pid_ki = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "p_pid_kd") {mcconf.p_pid_kd = xmlreader.readElementText().toDouble();}
+                    else if (xmlreader.name() == "p_pid_ang_div") {mcconf.p_pid_ang_div = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "cc_startup_boost_duty") {mcconf.cc_startup_boost_duty = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "cc_min_current") {mcconf.cc_min_current = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "cc_gain") {mcconf.cc_gain = xmlreader.readElementText().toDouble();}

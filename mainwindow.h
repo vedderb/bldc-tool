@@ -123,7 +123,8 @@ private slots:
     void on_mcconfFocMeasureEncoderButton_clicked();
     void on_mcconfFocMeasureEncoderApplyButton_clicked();
     void on_detectEncoderButton_clicked();
-    void on_detectEncoderPosErrorButton_clicked();
+    void on_detectPidPosButton_clicked();
+    void on_detectPidPosErrorButton_clicked();
     void on_detectEncoderObserverErrorButton_clicked();
     void on_detectObserverButton_clicked();
     void on_mcconfFocMeasureHallButton_clicked();

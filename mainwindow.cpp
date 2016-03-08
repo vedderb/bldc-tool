@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 15));
+    mCompatibleFws.append(qMakePair(2, 16));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -144,6 +144,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->filterResponsePlot2->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     ui->realtimePlotTemperature->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     ui->realtimePlotRest->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    ui->realtimePlotRpm->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     ui->realtimePlotPosition->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
     QFont legendFont = font();
@@ -372,6 +373,7 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.p_pid_kp = ui->mcconfPpidKpBox->value();
     mcconf.p_pid_ki = ui->mcconfPpidKiBox->value();
     mcconf.p_pid_kd = ui->mcconfPpidKdBox->value();
+    mcconf.p_pid_ang_div = ui->mcconfPpidAngDivBox->value();
 
     mcconf.cc_startup_boost_duty = ui->mcconfCcBoostBox->value();
     mcconf.cc_min_current = ui->mcconfCcMinBox->value();
@@ -549,6 +551,7 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfPpidKpBox->setValue(mcconf.p_pid_kp);
     ui->mcconfPpidKiBox->setValue(mcconf.p_pid_ki);
     ui->mcconfPpidKdBox->setValue(mcconf.p_pid_kd);
+    ui->mcconfPpidAngDivBox->setValue(mcconf.p_pid_ang_div);
 
     ui->mcconfCcBoostBox->setValue(mcconf.cc_startup_boost_duty);
     ui->mcconfCcMinBox->setValue(mcconf.cc_min_current);
@@ -1434,6 +1437,7 @@ void MainWindow::mcValuesReceived(MC_VALUES values)
     int graphIndex = 0;
 
     if (!mRealtimeGraphsAdded) {
+        // Temperatures
         ui->realtimePlotTemperature->addGraph();
         ui->realtimePlotTemperature->graph(graphIndex)->setPen(QPen(Qt::blue));
         ui->realtimePlotTemperature->graph(graphIndex)->setName("Temperature MOSFET 1");
@@ -1472,7 +1476,7 @@ void MainWindow::mcValuesReceived(MC_VALUES values)
         ui->realtimePlotTemperature->graph(graphIndex)->setName("Temperature PCB");
         graphIndex++;
 
-        // Next plot
+        // Current and duty
         graphIndex = 0;
         ui->realtimePlotRest->addGraph();
         ui->realtimePlotRest->graph(graphIndex)->setPen(QPen(Qt::blue));
@@ -1487,6 +1491,13 @@ void MainWindow::mcValuesReceived(MC_VALUES values)
         ui->realtimePlotRest->addGraph(ui->realtimePlotRest->xAxis, ui->realtimePlotRest->yAxis2);
         ui->realtimePlotRest->graph(graphIndex)->setPen(QPen(Qt::green));
         ui->realtimePlotRest->graph(graphIndex)->setName("Duty cycle");
+        graphIndex++;
+
+        // RPM
+        graphIndex = 0;
+        ui->realtimePlotRpm->addGraph();
+        ui->realtimePlotRpm->graph(graphIndex)->setPen(QPen(Qt::blue));
+        ui->realtimePlotRpm->graph(graphIndex)->setName("ERPM");
         graphIndex++;
 
         ui->realtimePlotTemperature->legend->setVisible(true);
@@ -1504,10 +1515,18 @@ void MainWindow::mcValuesReceived(MC_VALUES values)
         ui->realtimePlotRest->yAxis->setLabel("Ampere (A)");
         ui->realtimePlotRest->yAxis2->setLabel("Duty Cycle");
 
+        ui->realtimePlotRpm->legend->setVisible(true);
+        ui->realtimePlotRpm->legend->setFont(legendFont);
+        ui->realtimePlotRpm->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignRight|Qt::AlignBottom);
+        ui->realtimePlotRpm->legend->setBrush(QBrush(QColor(255,255,255,230)));
+        ui->realtimePlotRpm->xAxis->setLabel("Seconds (s)");
+        ui->realtimePlotRpm->yAxis->setLabel("ERPM");
+
         ui->realtimePlotTemperature->yAxis->setRange(0, 120);
         ui->realtimePlotRest->yAxis->setRange(-20, 130);
         ui->realtimePlotRest->yAxis2->setRange(-0.2, 1.3);
         ui->realtimePlotRest->yAxis2->setVisible(true);
+        ui->realtimePlotRpm->yAxis->setRange(0, 120);
 
         mRealtimeGraphsAdded = true;
     }
@@ -1528,21 +1547,25 @@ void MainWindow::mcValuesReceived(MC_VALUES values)
     ui->realtimePlotRest->graph(graphIndex++)->setData(xAxis, currMotorVec);
     ui->realtimePlotRest->graph(graphIndex++)->setData(xAxis, dutyVec);
 
+    // RPM plot
+    graphIndex = 0;
+    ui->realtimePlotRpm->graph(graphIndex++)->setData(xAxis, rpmVec);
+
     if (ui->realtimeAutoScaleBox->isChecked()) {
         ui->realtimePlotTemperature->rescaleAxes();
         ui->realtimePlotRest->rescaleAxes();
+        ui->realtimePlotRpm->rescaleAxes();
     }
 
     if (dataSize < maxS) {
         ui->realtimePlotTemperature->xAxis->setRange(0, dataSize / fsamp);
-    }
-
-    if (dataSize < maxS) {
         ui->realtimePlotRest->xAxis->setRange(0, dataSize / fsamp);
+        ui->realtimePlotRpm->xAxis->setRange(0, dataSize / fsamp);
     }
 
     ui->realtimePlotTemperature->replot();
     ui->realtimePlotRest->replot();
+    ui->realtimePlotRpm->replot();
 }
 
 void MainWindow::printReceived(QString str)
@@ -2203,6 +2226,9 @@ void MainWindow::on_rescaleButton_clicked()
     ui->realtimePlotRest->rescaleAxes();
     ui->realtimePlotRest->replot();
 
+    ui->realtimePlotRpm->rescaleAxes();
+    ui->realtimePlotRpm->replot();
+
     ui->realtimePlotPosition->rescaleAxes();
     ui->realtimePlotPosition->replot();
 }
@@ -2221,6 +2247,7 @@ void MainWindow::on_horizontalZoomBox_clicked()
     ui->filterResponsePlot2->axisRect()->setRangeZoom(plotOrientations);
     ui->realtimePlotTemperature->axisRect()->setRangeZoom(plotOrientations);
     ui->realtimePlotRest->axisRect()->setRangeZoom(plotOrientations);
+    ui->realtimePlotRpm->axisRect()->setRangeZoom(plotOrientations);
     ui->realtimePlotPosition->axisRect()->setRangeZoom(plotOrientations);
 }
 
@@ -2749,9 +2776,14 @@ void MainWindow::on_detectEncoderButton_clicked()
     mPacketInterface->setDetect(DISP_POS_MODE_ENCODER);
 }
 
-void MainWindow::on_detectEncoderPosErrorButton_clicked()
+void MainWindow::on_detectPidPosButton_clicked()
 {
-    mPacketInterface->setDetect(DISP_POS_MODE_ENCODER_POS_ERROR);
+    mPacketInterface->setDetect(DISP_POS_MODE_PID_POS);
+}
+
+void MainWindow::on_detectPidPosErrorButton_clicked()
+{
+    mPacketInterface->setDetect(DISP_POS_MODE_PID_POS_ERROR);
 }
 
 void MainWindow::on_detectEncoderObserverErrorButton_clicked()

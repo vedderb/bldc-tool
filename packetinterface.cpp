@@ -472,6 +472,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.p_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.p_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.p_pid_kd = utility::buffer_get_double32(data, 1000000.0, &ind);
+        mcconf.p_pid_ang_div = utility::buffer_get_double32(data, 1e5, &ind);
 
         mcconf.cc_startup_boost_duty = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.cc_min_current = utility::buffer_get_double32(data, 1000.0, &ind);
@@ -970,6 +971,7 @@ bool PacketInterface::setMcconf(const mc_configuration &mcconf)
     utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_kp, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_ki, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_kd, 1000000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.p_pid_ang_div, 1e5, &send_index);
 
     utility::buffer_append_double32(mSendBuffer,mcconf.cc_startup_boost_duty, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.cc_min_current, 1000, &send_index);
@@ -1196,7 +1198,7 @@ bool PacketInterface::sendCustomAppData(unsigned char *data, unsigned int len)
 {
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_CUSTOM_APP_DATA;
-    memcpy(mSendBuffer, data, len);
+    memcpy(mSendBuffer + send_index, data, len);
     send_index += len;
     return sendPacket(mSendBuffer, send_index);
 }
