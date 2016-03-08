@@ -149,10 +149,6 @@ public slots:
     void setPos(double pos);
     void uploadFirmware(QString fileName);
     void readFirmwareVersion();
-    void detectEncoder();
-    void detectEncoderPosError();
-    void detectEncoderObserverError();
-    void detectObserver();
     void getSampleData(bool atStart, int sampleNum, int sampleInt);
 
 private slots:

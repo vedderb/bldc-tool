@@ -121,9 +121,10 @@ public:
     QML_WRITABLE_PROPERTY_W( float	,s_pid_kd		,m_data.s_pid_kd		 )
     QML_WRITABLE_PROPERTY_W( float	,s_pid_min_erpm	,m_data.s_pid_min_erpm	 )
     // Pos PID
-    QML_WRITABLE_PROPERTY_W( float	,p_pid_kp	,m_data.p_pid_kp )
-    QML_WRITABLE_PROPERTY_W( float	,p_pid_ki	,m_data.p_pid_ki )
-    QML_WRITABLE_PROPERTY_W( float	,p_pid_kd	,m_data.p_pid_kd )
+    QML_WRITABLE_PROPERTY_W( float	,p_pid_kp       ,m_data.p_pid_kp )
+    QML_WRITABLE_PROPERTY_W( float	,p_pid_ki       ,m_data.p_pid_ki )
+    QML_WRITABLE_PROPERTY_W( float	,p_pid_kd       ,m_data.p_pid_kd )
+    QML_WRITABLE_PROPERTY_W( float  ,p_pid_ang_div  ,m_data.p_pid_ang_div)
     // Current controller
     QML_WRITABLE_PROPERTY_W( float	,cc_startup_boost_duty		,m_data.cc_startup_boost_duty	 )
     QML_WRITABLE_PROPERTY_W( float	,cc_min_current				,m_data.cc_min_current			 )

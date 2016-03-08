@@ -753,27 +753,6 @@ void BLDCInterface::readFirmwareVersion()
     m_packetInterface->getFwVersion();
 }
 
-void BLDCInterface::detectEncoder()
-{
-    m_packetInterface->setDetect(DISP_POS_MODE_ENCODER);
-}
-
-void BLDCInterface::detectEncoderPosError()
-{
-    m_packetInterface->setDetect(DISP_POS_MODE_ENCODER_POS_ERROR);
-}
-
-void BLDCInterface::detectEncoderObserverError()
-{
-    m_packetInterface->setDetect(DISP_POS_MODE_ENCODER_OBSERVER_ERROR);
-}
-
-void BLDCInterface::detectObserver()
-{
-    m_packetInterface->setDetect(DISP_POS_MODE_OBSERVER);
-}
-
-
 void BLDCInterface::getSampleData(bool atStart, int sampleNum, int sampleInt)
 {
     clearBuffers();
