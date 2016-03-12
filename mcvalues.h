@@ -9,7 +9,6 @@
 class McValues : public QObject
 {
     Q_OBJECT
-
         QML_READONLY_PROPERTY(double, power           )
         QML_READONLY_PROPERTY(double, batteryVoltage  )
         QML_READONLY_PROPERTY(double, MOSFET_Temp     )
@@ -23,16 +22,11 @@ class McValues : public QObject
         QML_READONLY_PROPERTY(double, chargedEnergy   )
         QML_READONLY_PROPERTY(int,    tacho           )
         QML_READONLY_PROPERTY(int,    tachoABS        )
-        QML_READONLY_PROPERTY(QString,faultString     )
+    QML_READONLY_PROPERTY(QString,faultString     )
 public:
     explicit McValues(QObject *parent = 0);
     McValues(MC_VALUES values);
     void setValues(MC_VALUES values);
 
-signals:
-
-public slots:
-
 };
-
 #endif // MCVALUES_H

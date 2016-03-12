@@ -109,8 +109,8 @@ BLDCInterface::BLDCInterface(QObject *parent) :
 
     qmlRegisterType<AppConfiguration>("bldc", 1, 0, "AppConf");
     qmlRegisterType<McConfiguration>("bldc", 1, 0, "McConf");
-
-
+    qmlRegisterType<McValues>("bldc", 1, 0, "McValues");
+    qmlRegisterType<PacketInterface>("bldc", 1, 0, "PacketInterface");
 }
 
 void BLDCInterface::serialDataAvailable()
@@ -603,19 +603,20 @@ void BLDCInterface::onMcValuesReceived(MC_VALUES values)
 
 void BLDCInterface::refreshSerialDevices()
 {
-    m_serialPortList.clear();
+    m_serialPortsLocations.clear();
+    QStringList serialPortNames;
 
     QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
     foreach(const QSerialPortInfo &port, ports) {
         QString name = port.portName();
-        int index = m_serialPortList.count();
         // put STMicroelectronics device first in list and add prefix
         if(port.manufacturer() == "STMicroelectronics") {
             name.insert(0, "VESC - ");
-            index = 0;
         }
-        m_serialPortList.insert(index, new SerialPort(name, port.systemLocation()));
+        serialPortNames.append(name);
+        m_serialPortsLocations.append(port.systemLocation());
     }
+    update_serialPortNames(serialPortNames);
     set_currentSerialPort(0);
 }
 
@@ -758,8 +759,7 @@ void BLDCInterface::getSampleData(bool atStart, int sampleNum, int sampleInt)
 
 void BLDCInterface::connectCurrentSerial()
 {
-    QString serialPort = m_serialPortList.at(m_currentSerialPort)->get_systemLocation();
-    connectSerial(serialPort);
+    connectSerial(m_serialPortsLocations.at(m_currentSerialPort));
 }
 
 void BLDCInterface::connectSerial(QString port)

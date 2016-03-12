@@ -47,7 +47,7 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(McValues*, mcValues)
 
     QML_WRITABLE_PROPERTY(QString, udpIp)
-    QML_LIST_PROPERTY(BLDCInterface, serialPortList, SerialPort)// @@ToDo: add notify signal
+    QML_READONLY_PROPERTY(QStringList, serialPortNames)
     QML_WRITABLE_PROPERTY(int, currentSerialPort)
     QML_READONLY_PROPERTY(QString, firmwareSupported)
     QML_READONLY_PROPERTY(QString, firmware)
@@ -174,6 +174,7 @@ private:
     void clearBuffers();
 
     QSerialPort *mSerialPort;
+    QStringList m_serialPortsLocations;
     QTimer *mTimer;
     int mStatusInfoTime;
     bool mFwVersionReceived;
@@ -201,6 +202,7 @@ private:
     QByteArray tmpCurrTotArray;
     QByteArray tmpFSwArray;
     detect_res_t mDetectRes;
+
 };
 
 #endif // BLDCINTERFACE_H
