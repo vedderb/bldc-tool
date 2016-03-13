@@ -92,6 +92,24 @@ BasicPage {
                                 }
                             }
                         }
+                        RadioButton{
+                            id:rbFOC
+                            checked: mcconf.motor_type === McConf.MOTOR_TYPE_FOC
+                            text: "FOC"
+                            exclusiveGroup :groupOptions
+                            style: RadioButtonStyle{
+                                label: Text {
+                                    renderType: Text.NativeRendering
+                                    verticalAlignment: Text.AlignVCenter
+                                    font.family: "Helvetica"
+                                    font.pointSize: 14
+                                    maximumLineCount: 2
+                                    wrapMode: Text.WordWrap
+                                    text: control.text
+                                    width: rectMotortype.width *0.25
+                                }
+                            }
+                        }
                     }
                 }
                 Rectangle{
@@ -663,8 +681,10 @@ BasicPage {
                                 text:"Write Config"
                                 width: rectMain.width * 0.31
                                 onClicked: {
-                                    if(rbDC.checked) mcconf.motor_type = McConf.MOTOR_TYPE_BLDC
-                                    else if(rbBLDC.checked) mcconf.motor_type = McConf.MOTOR_TYPE_DC
+                                    if(rbDC.checked) mcconf.motor_type = McConf.MOTOR_TYPE_DC
+                                    else if(rbBLDC.checked) mcconf.motor_type = McConf.MOTOR_TYPE_BLDC
+                                    else if(rbFOC.checked)mcconf.motor_type = McConf.MOTOR_TYPE_FOC
+
                                     mcconf.l_current_max = textFieldMotor.text
                                     mcconf.l_current_min = textFieldMotorMin.text
                                     mcconf.l_in_current_max = textFieldBattMax.text
