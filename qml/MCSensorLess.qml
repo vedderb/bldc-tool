@@ -562,6 +562,7 @@ BasicPage {
                             TextField{
                                 id:textFieldCurrent
                                 width: parent.width*0.2
+                                text: "6.0"
                             }
 
                             Text{
@@ -573,6 +574,7 @@ BasicPage {
                             TextField{
                                 id:textFieldMinRPM
                                 width: parent.width*0.2
+                                text: "600"
                             }
 
                             Text{
@@ -584,6 +586,7 @@ BasicPage {
                             TextField{
                                 id:textFieldLowDuty
                                 width: parent.width*0.2
+                                text: "0.05"
                             }
                         }
                     }
@@ -663,7 +666,7 @@ BasicPage {
                                 mcconf.hall_table8 = textFieldTable8.text
                                 mcconf.hall_sl_erpm = textFieldHybridMode.text
 
-                                writeAppConf()
+                                writeMcconf()
                             }
                             style: ButtonStyle {
                                 label: Text {
