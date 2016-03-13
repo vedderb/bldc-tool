@@ -31,7 +31,9 @@ BasicPage {
             title: "Please choose a file"
             selectMultiple: false
             onAccepted: {
-                textfieldPath.text = fileDialog.fileUrl
+                var path = fileDialog.fileUrl.toString()
+                path = path.replace("file:///", "")
+                textfieldPath.text = path
             }
 
         }
