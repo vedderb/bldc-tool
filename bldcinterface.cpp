@@ -36,7 +36,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 15));
+    mCompatibleFws.append(qMakePair(2, 16));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -774,7 +774,7 @@ void BLDCInterface::connectSerial(QString port)
         return;
     }
 
-    mSerialPort->setBaudRate(QSerialPort::Baud115200);
+    mSerialPort->setBaudRate(QSerialPort::Baud9600);
     mSerialPort->setDataBits(QSerialPort::Data8);
     mSerialPort->setParity(QSerialPort::NoParity);
     mSerialPort->setStopBits(QSerialPort::OneStop);

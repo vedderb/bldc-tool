@@ -2053,7 +2053,7 @@ void MainWindow::on_serialConnectButton_clicked()
         return;
     }
 
-    mSerialPort->setBaudRate(QSerialPort::Baud115200);
+    mSerialPort->setBaudRate(QSerialPort::Baud9600);
     mSerialPort->setDataBits(QSerialPort::Data8);
     mSerialPort->setParity(QSerialPort::NoParity);
     mSerialPort->setStopBits(QSerialPort::OneStop);

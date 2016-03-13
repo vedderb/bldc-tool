@@ -86,6 +86,7 @@ BasicPage {
                             TextField{
                                 id:textFieldPort
                                 width: rectConnection.width *0.4
+                                text:"/dev/tty.usbmodem301"
                             }
 
                             Button{
