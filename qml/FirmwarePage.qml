@@ -31,9 +31,7 @@ BasicPage {
             title: "Please choose a file"
             selectMultiple: false
             onAccepted: {
-                var path = fileDialog.fileUrl.toString()
-                path = path.replace("file:///", "")
-                textfieldPath.text = path
+                textfieldPath.text = localFilePath(fileDialog.fileUrl)
             }
 
         }
@@ -127,6 +125,7 @@ BasicPage {
                     width:rectMain.width - buttonupload.width - gridProgress.columnSpacing - (2* rowLeftMargin)
                     minimumValue: 0
                     maximumValue: 100
+                    value: firmwareProgress * 100
 
                 }
 

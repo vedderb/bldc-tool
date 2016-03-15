@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
 import bldc 1.0
+import QtQuick.Dialogs 1.0
+
 BasicPage {
     id:rootMotorConfigLimit
     showTopbar: true
@@ -609,7 +611,16 @@ BasicPage {
                     anchors.topMargin: rectGap
                     height: buttonLoadXML.height + rectButtons.height +rowVerticalMargin
                     color: parent.color
-
+                    FileDialog {
+                        id: fileDialog
+                        title: "Please choose a file"
+                        selectMultiple: false
+                        onAccepted: {
+                            var path = localFilePath(fileDialog.fileUrl)
+                            console.log("Loading: " + path)
+                            loadMcconfXml(path)
+                        }
+                    }
                     Button
                     {
                         id:buttonLoadXML
@@ -619,20 +630,7 @@ BasicPage {
                         text:"Load XML"
                         onClicked: {
                             console.log("Load XML tapped")
-                            Qt.createQmlObject('
-                                import QtQuick 2.0
-                                import QtQuick.Dialogs 1.0
-                                FileDialog {
-                                    id: fileDialog
-                                    title: "Please choose a file"
-                                    selectMultiple: false
-                                    visible: true
-                                    onAccepted: {
-                                        loadMcconfXml(fileDialog.fileUrl)
-                                        fileDialog.destroy()
-                                    }
-                                }
-                            ', buttonLoadXML)
+                            fileDialog.open()
                         }
                         style: ButtonStyle {
                             label: Text {

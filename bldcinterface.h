@@ -8,6 +8,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QFile>
 #include <QFileInfo>
+#include <QUrl>
 
 #include "packetinterface.h"
 #include "serialization.h"
@@ -125,6 +126,12 @@ signals:
     void rotorPosReceived(double pos);
     void update();
     void experimentSamplesReceived(QList<double>);
+
+public:
+    Q_INVOKABLE static QString localFilePath(QUrl path){
+        return path.toLocalFile();
+    }
+
 public slots:
 
     void connectCurrentSerial();

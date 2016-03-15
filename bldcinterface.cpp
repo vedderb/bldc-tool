@@ -110,7 +110,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     qmlRegisterType<AppConfiguration>("bldc", 1, 0, "AppConf");
     qmlRegisterType<McConfiguration>("bldc", 1, 0, "McConf");
     qmlRegisterType<McValues>("bldc", 1, 0, "McValues");
-    qmlRegisterType<PacketInterface>("bldc", 1, 0, "PacketInterface");
+    qmlRegisterUncreatableType<PacketInterface>("bldc", 1, 0, "PacketInterface", "Uncreatable.");
 }
 
 void BLDCInterface::serialDataAvailable()

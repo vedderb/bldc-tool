@@ -129,12 +129,8 @@ BasicPage {
                                     }
                                 }
                             }
-
-
-
                         }
                     }
-
                 }
 
                 Rectangle{
@@ -651,11 +647,8 @@ BasicPage {
                                 }
                             }
                         }
-
                     }
-
                 }
-
             }
         }
     }
