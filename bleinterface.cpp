@@ -64,9 +64,9 @@ void BLEInterface::scanDevices()
 
 void BLEInterface::write(const QByteArray &data)
 {
-    QLowEnergyCharacteristic characteristic  =  m_service->characteristic(QBluetoothUuid(BLDCSLAVE_SERVICE_UUID));
+    QLowEnergyCharacteristic characteristic  =  m_service->characteristic(QBluetoothUuid(CHARACTARISTIC_UUID));
     if(characteristic.isValid() &&
-            (characteristic.properties() & QLowEnergyCharacteristic::Write) ){
+            (characteristic.properties() & QLowEnergyCharacteristic::WriteNoResponse) ){
         m_service->writeCharacteristic(characteristic, data);
     }
     else {
@@ -158,7 +158,7 @@ void BLEInterface::onDeviceDisconnected()
 //! [Filter BLDCSLAVE service 1]
 void BLEInterface::onServiceDiscovered(const QBluetoothUuid &gatt)
 {
-    if (gatt == QBluetoothUuid(BLDCSLAVE_SERVICE_UUID)) {
+    if (gatt == QBluetoothUuid(SERVICE_UUID)) {
         emit statusInfoChanged("Service discovered. Waiting for service scan to be done...", true);
         m_foundService = true;
     }
@@ -174,7 +174,7 @@ void BLEInterface::onServiceScanDone()
     if (m_foundService) {
         emit statusInfoChanged("Connecting to service...", true);
         m_service = m_control->createServiceObject(
-                    QBluetoothUuid(BLDCSLAVE_SERVICE_UUID), this);
+                    QBluetoothUuid(SERVICE_UUID), this);
     }
 
     if (!m_service) {
@@ -223,7 +223,7 @@ void BLEInterface::onCharacteristicChanged(const QLowEnergyCharacteristic &c,
                                      const QByteArray &value)
 {
     // ignore any other characteristic change -> shouldn't really happen though
-    if (c.uuid() != QBluetoothUuid(BLDCSLAVE_SERVICE_UUID))
+    if (c.uuid() != QBluetoothUuid(CHARACTARISTIC_UUID))
         return;
     emit dataReceived(value);
 }

@@ -9,7 +9,8 @@
 
 #include "lib-qt-qml-tricks/src/qqmlhelpers.h"
 
-static quint16 BLDCSLAVE_SERVICE_UUID = 0xFFE2;
+static quint16 SERVICE_UUID = 0xFFE2;
+static quint16 CHARACTARISTIC_UUID = 0xFFE1;
 
 class DeviceInfo: public QObject
 {
