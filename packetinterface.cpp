@@ -97,7 +97,7 @@ PacketInterface::~PacketInterface()
     delete mSendBuffer;
 }
 
-void PacketInterface::processData(QByteArray &data)
+void PacketInterface::processData(const QByteArray &data)
 {
     unsigned char rx_data;
     const int rx_timeout = 50;

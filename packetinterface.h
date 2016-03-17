@@ -34,7 +34,7 @@ public:
 
     Q_INVOKABLE bool sendPacket(const unsigned char *data, unsigned int len_packet);
     Q_INVOKABLE bool sendPacket(QByteArray data);
-    Q_INVOKABLE void processData(QByteArray &data);
+    Q_INVOKABLE void processData(const QByteArray &data);
     Q_INVOKABLE void setLimitedMode(bool is_limited);
     Q_INVOKABLE bool isLimitedMode();
     Q_INVOKABLE bool getFwVersion();

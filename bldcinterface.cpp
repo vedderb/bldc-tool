@@ -28,6 +28,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
     m_mcValues = new McValues(this);
+    m_bleInterface = new BLEInterface(this);
 
 
     refreshSerialDevices();
@@ -104,6 +105,11 @@ BLDCInterface::BLDCInterface(QObject *parent) :
             this, SLOT(decodedAdcReceived(double,double,double,double)));
     connect(m_packetInterface, SIGNAL(decodedChukReceived(double)),
             this, SLOT(decodedChukReceived(double)));
+    connect(m_bleInterface, SIGNAL(statusInfoChanged(QString,bool)),
+            this, SIGNAL(statusInfoChanged(QString,bool)));
+    connect(m_bleInterface, SIGNAL(dataReceived(QByteArray)),
+            this, SLOT(bleDataReceived(QByteArray)));
+
 
     mSerialization = new Serialization(this);
 
@@ -111,14 +117,17 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     qmlRegisterType<McConfiguration>("bldc", 1, 0, "McConf");
     qmlRegisterType<McValues>("bldc", 1, 0, "McValues");
     qmlRegisterUncreatableType<PacketInterface>("bldc", 1, 0, "PacketInterface", "Uncreatable.");
+    qmlRegisterUncreatableType<BLEInterface>("bldc", 1, 0, "bleInterface", "Uncreatable.");
 }
-
 void BLDCInterface::serialDataAvailable()
 {
     while (mSerialPort->bytesAvailable() > 0) {
         QByteArray data = mSerialPort->readAll();
         m_packetInterface->processData(data);
     }
+}
+void BLDCInterface::bleDataReceived(const QByteArray& data){
+    m_packetInterface->processData(data);
 }
 
 void BLDCInterface::serialPortError(QSerialPort::SerialPortError error)
@@ -164,7 +173,7 @@ void BLDCInterface::timerSlot()
     // Read FW version if needed
     static bool sendCanBefore = false;
     static int canIdBefore = 0;
-    if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected()) {
+    if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected() || m_bleInterface->get_deviceConnected()) {
         if (sendCanBefore != m_canFwd ||
                 canIdBefore != m_canId) {
             mFwVersionReceived = false;
@@ -191,7 +200,7 @@ void BLDCInterface::timerSlot()
 
     // Update status label
     {
-        if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected()) {
+        if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected() || m_bleInterface->get_deviceConnected()) {
             if (m_packetInterface->isLimitedMode()) {
                 update_status("Connected, limited");
             } else {
@@ -322,6 +331,9 @@ void BLDCInterface::packetDataToSend(QByteArray &data)
 {
     if (mSerialPort->isOpen()) {
         mSerialPort->write(data);
+    }
+    else if (m_bleInterface->get_deviceConnected()) {
+        m_bleInterface->write(data);
     }
 }
 
@@ -646,6 +658,18 @@ void BLDCInterface::disconnectSerial(){
     mFwVersionReceived = false;
     mFwRetries = 0;
 }
+void BLDCInterface::disconnectBle(){
+    if (m_bleInterface->get_deviceConnected()) {
+        m_bleInterface->disconnectDevice();
+    }
+
+    if (m_packetInterface->isUdpConnected()) {
+        m_packetInterface->stopUdpConnection();
+    }
+
+    mFwVersionReceived = false;
+    mFwRetries = 0;
+}
 
 void BLDCInterface::detect()
 {
@@ -767,6 +791,10 @@ void BLDCInterface::connectSerial(QString port)
     if(mSerialPort->isOpen()) {
         return;
     }
+    if(m_bleInterface->get_deviceConnected()){
+        emit statusInfoChanged("Bluetooth low energy connected.", false);
+        return;
+    }
     mSerialPort->setPortName(port);
     mSerialPort->open(QIODevice::ReadWrite);
 
@@ -789,4 +817,12 @@ void BLDCInterface::connectSerial(QString port)
 
     m_packetInterface->stopUdpConnection();
 
+}
+
+void BLDCInterface::connectCurrentBleDevice(){
+    if(mSerialPort->isOpen()) {
+        emit statusInfoChanged("Serial port connected.", false);
+        return;
+    }
+    m_bleInterface->connectCurrentDevice();
 }

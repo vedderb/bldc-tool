@@ -16,19 +16,7 @@
 #include "appconfiguration.h"
 #include "lib-qt-qml-tricks/src/qqmlhelpers.h"
 #include "mcvalues.h"
-
-class SerialPort : public QObject
-{
-    Q_OBJECT
-    QML_READONLY_PROPERTY(QString, portName)
-    QML_READONLY_PROPERTY(QString, systemLocation)
-public:
-    SerialPort(QString name, QString location) :
-        m_portName(name),
-        m_systemLocation(location)
-    {}
-    virtual ~SerialPort() {}
-};
+#include "bleinterface.h"
 
 typedef struct {
     bool updated;
@@ -46,6 +34,7 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(McConfiguration*, mcconf )
     QML_READONLY_PROPERTY(AppConfiguration*, appconf)
     QML_READONLY_PROPERTY(McValues*, mcValues)
+    QML_READONLY_PROPERTY(BLEInterface*, bleInterface)
 
     QML_WRITABLE_PROPERTY(QString, udpIp)
     QML_READONLY_PROPERTY(QStringList, serialPortNames)
@@ -157,6 +146,8 @@ public slots:
     void readFirmwareVersion();
     void getSampleData(bool atStart, int sampleNum, int sampleInt);
 
+    void connectCurrentBleDevice();
+    void disconnectBle();
 private slots:
 
     void timerSlot();
@@ -175,6 +166,7 @@ private slots:
     void mcconfFocCalcCC();
     void experimentSamplesReceived(QVector<double>);
     void onMcValuesReceived(MC_VALUES);
+    void bleDataReceived(const QByteArray &data);
 private:
 
     void refreshSerialDevices();
@@ -188,6 +180,7 @@ private:
     int mFwRetries;
     QList<QPair<int, int> > mCompatibleFws;
     Serialization *mSerialization;
+
 
     int mSampleInt;
     QByteArray curr1Array;

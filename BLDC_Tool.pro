@@ -3,6 +3,7 @@ DEFINES += QML # for test
 
 android | ios : DEFINES += QML
 
+QT += bluetooth
 
 contains(DEFINES,QML){
     include(QML.pri)
@@ -11,7 +12,9 @@ contains(DEFINES,QML){
 }
 
 HEADERS += \
-    mcvalues.h
+    mcvalues.h \
+    bleinterface.h
 
 SOURCES += \
-    mcvalues.cpp
+    mcvalues.cpp \
+    bleinterface.cpp

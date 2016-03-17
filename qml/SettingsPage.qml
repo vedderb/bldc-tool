@@ -69,63 +69,155 @@ BasicPage {
                         height: childrenRect.height
                         color: parent.color
 
-                        Grid{
-                            id:gridConnection
+                        TabView{
+                            id: tabveiew
+                            frameVisible: false
                             width: parent.width
-                            columns: 2
-                            columnSpacing: rowLeftMargin
-                            rowSpacing: rowVerticalMargin*0.6
+                            Tab{
+                                id: serialTab
+                                title: "SerialPort"
+                                Grid{
+                                    id:gridConnection
+                                    width: parent.width
+                                    columns: 2
+                                    columnSpacing: rowLeftMargin
+                                    rowSpacing: rowVerticalMargin*0.6
+                                    Component.onCompleted: tabveiew.height = childrenRect.height + 20
 
-                            Text{
-                                id:textPort
-                                text:"Port"
-                                verticalAlignment: Text.AlignVCenter
-                                font.pointSize: 14
-                                width: rectConnection.width *0.4
-                            }
-
-                            TextField{
-                                id:textFieldPort
-                                width: rectConnection.width *0.4
-                                text:"/dev/tty.usbmodem301"
-                            }
-
-                            Button{
-                                id:buttonConnect
-                                text:"Connect"
-                                width: rectConnection.width *0.4
-                                onClicked: {
-                                    connectSerial(textFieldPort.text);
-                                }
-                                style: ButtonStyle {
-                                    label: Text {
-                                        renderType: Text.NativeRendering
+                                    Text{
+                                        id:textPort
+                                        text:"Port"
                                         verticalAlignment: Text.AlignVCenter
-                                        horizontalAlignment: Text.AlignHCenter
-                                        font.family: "Helvetica"
-                                        font.pointSize: 12
-                                        //color: "blue"
-                                        text: control.text
+                                        font.pointSize: 14
+                                        width: rectConnection.width *0.4
+                                    }
+
+                                    TextField{
+                                        id:textFieldPort
+                                        width: rectConnection.width *0.4
+                                        text:"/dev/tty.usbmodem301"
+                                    }
+
+                                    Button{
+                                        id:buttonConnect
+                                        text:"Connect"
+                                        width: rectConnection.width *0.4
+                                        onClicked: {
+                                            connectSerial(textFieldPort.text);
+                                        }
+                                        style: ButtonStyle {
+                                            label: Text {
+                                                renderType: Text.NativeRendering
+                                                verticalAlignment: Text.AlignVCenter
+                                                horizontalAlignment: Text.AlignHCenter
+                                                font.family: "Helvetica"
+                                                font.pointSize: 12
+                                                //color: "blue"
+                                                text: control.text
+                                            }
+                                        }
+                                    }
+
+                                    Button{
+                                        id:buttonDisconnect
+                                        width: rectConnection.width *0.4
+                                        text:"Disconnect"
+                                        onClicked: {
+                                            disconnectSerial();
+                                        }
+                                        style: ButtonStyle {
+                                            label: Text {
+                                                renderType: Text.NativeRendering
+                                                verticalAlignment: Text.AlignVCenter
+                                                horizontalAlignment: Text.AlignHCenter
+                                                font.family: "Helvetica"
+                                                font.pointSize: 12
+                                                //color: "blue"
+                                                text: control.text
+                                            }
+                                        }
                                     }
                                 }
-                            }
 
-                            Button{
-                                id:buttonDisconnect
-                                width: rectConnection.width *0.4
-                                text:"Disconnect"
-                                onClicked: {
-                                    disconnectSerial();
-                                }
-                                style: ButtonStyle {
-                                    label: Text {
-                                        renderType: Text.NativeRendering
+                            }
+                            Tab{
+                                id: bluetoothTab
+                                title: "Bluetooth"
+                                Grid{
+                                    width: parent.width
+                                    columns: 2
+                                    columnSpacing: rowLeftMargin
+                                    rowSpacing: rowVerticalMargin*0.6
+                                    Component.onCompleted: tabveiew.height = childrenRect.height + 20
+
+                                    Text{
+                                        text:"Device"
                                         verticalAlignment: Text.AlignVCenter
-                                        horizontalAlignment: Text.AlignHCenter
-                                        font.family: "Helvetica"
-                                        font.pointSize: 12
-                                        //color: "blue"
-                                        text: control.text
+                                        font.pointSize: 14
+                                        width: rectConnection.width *0.4
+                                    }
+
+                                    ComboBox{
+                                        id: comboBoxBtDevices1
+                                        width: rectConnection.width *0.4
+                                        model: bleInterface.devicesNames
+                                    }
+
+                                    Button{
+                                        text:"Connect"
+                                        width: rectConnection.width *0.4
+                                        onClicked: {
+                                            bleInterface.currentDevice = comboBoxBtDevices.currentIndex
+                                            connectCurrentBleDevice();
+                                        }
+                                        style: ButtonStyle {
+                                            label: Text {
+                                                renderType: Text.NativeRendering
+                                                verticalAlignment: Text.AlignVCenter
+                                                horizontalAlignment: Text.AlignHCenter
+                                                font.family: "Helvetica"
+                                                font.pointSize: 12
+                                                //color: "blue"
+                                                text: control.text
+                                            }
+                                        }
+                                    }
+                                    Button{
+                                        text:"Scan"
+                                        width: rectConnection.width *0.4
+                                        onClicked: {
+                                            bleInterface.scanDevices();
+                                        }
+                                        style: ButtonStyle {
+                                            label: Text {
+                                                renderType: Text.NativeRendering
+                                                verticalAlignment: Text.AlignVCenter
+                                                horizontalAlignment: Text.AlignHCenter
+                                                font.family: "Helvetica"
+                                                font.pointSize: 12
+                                                //color: "blue"
+                                                text: control.text
+                                            }
+                                        }
+                                    }
+
+                                    Button{
+                                        width: rectConnection.width *0.4
+                                        text:"Disconnect"
+                                        onClicked: {
+                                            disconnectBle();
+                                        }
+                                        style: ButtonStyle {
+                                            label: Text {
+                                                renderType: Text.NativeRendering
+                                                verticalAlignment: Text.AlignVCenter
+                                                horizontalAlignment: Text.AlignHCenter
+                                                font.family: "Helvetica"
+                                                font.pointSize: 12
+                                                //color: "blue"
+                                                text: control.text
+                                            }
+                                        }
                                     }
                                 }
                             }
