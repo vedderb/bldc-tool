@@ -33,14 +33,14 @@ BLEInterface::BLEInterface(QObject *parent) : QObject(parent),
 {
 
 
-    m_btDeviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
+    m_deviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
 
-    connect(m_btDeviceDiscoveryAgent, SIGNAL(deviceDiscovered(const QBluetoothDeviceInfo&)),
+    connect(m_deviceDiscoveryAgent, SIGNAL(deviceDiscovered(const QBluetoothDeviceInfo&)),
             this, SLOT(addDevice(const QBluetoothDeviceInfo&)));
-    connect(m_btDeviceDiscoveryAgent, SIGNAL(error(QBluetoothDeviceDiscoveryAgent::Error)),
+    connect(m_deviceDiscoveryAgent, SIGNAL(error(QBluetoothDeviceDiscoveryAgent::Error)),
             this, SLOT(onDeviceScanError(QBluetoothDeviceDiscoveryAgent::Error)));
-    connect(m_btDeviceDiscoveryAgent, SIGNAL(finished()), this, SLOT(onScanFinished()));
-    m_btDeviceDiscoveryAgent->start();
+    connect(m_deviceDiscoveryAgent, SIGNAL(finished()), this, SLOT(onScanFinished()));
+    m_deviceDiscoveryAgent->start();
 }
 
 BLEInterface::~BLEInterface()

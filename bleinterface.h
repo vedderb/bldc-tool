@@ -71,7 +71,6 @@ private slots:
     void serviceError(QLowEnergyService::ServiceError e);
 
 private:
-    QBluetoothDeviceDiscoveryAgent* m_btDeviceDiscoveryAgent;
     QBluetoothDeviceDiscoveryAgent *m_deviceDiscoveryAgent;
     QLowEnergyDescriptor m_notificationDesc;
     QLowEnergyController *m_control;
