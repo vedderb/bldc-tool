@@ -76,7 +76,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     connect(m_packetInterface, SIGNAL(ackReceived(QString)),
             this, SIGNAL(ackReceived(QString)));
     connect(m_packetInterface, SIGNAL(valuesReceived(MC_VALUES)),
-            this, SLOT(onMcValuesReceived(MC_VALUES)));
+            m_mcValues, SLOT(setValues(MC_VALUES)));
     connect(m_packetInterface, SIGNAL(printReceived(QString)),
             this, SIGNAL(printReceived(QString)));
     connect(m_packetInterface, SIGNAL(samplesReceived(QByteArray)),
@@ -108,7 +108,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     connect(m_bleInterface, SIGNAL(statusInfoChanged(QString,bool)),
             this, SIGNAL(statusInfoChanged(QString,bool)));
     connect(m_bleInterface, SIGNAL(dataReceived(QByteArray)),
-            this, SLOT(bleDataReceived(QByteArray)));
+            m_packetInterface, SLOT(processData(QByteArray)));
 
 
     mSerialization = new Serialization(this);
@@ -125,9 +125,6 @@ void BLDCInterface::serialDataAvailable()
         QByteArray data = mSerialPort->readAll();
         m_packetInterface->processData(data);
     }
-}
-void BLDCInterface::bleDataReceived(const QByteArray& data){
-    m_packetInterface->processData(data);
 }
 
 void BLDCInterface::serialPortError(QSerialPort::SerialPortError error)
@@ -608,11 +605,6 @@ void BLDCInterface::experimentSamplesReceived(QVector<double> samples)
     emit experimentSamplesReceived(samples.toList());
 }
 
-void BLDCInterface::onMcValuesReceived(MC_VALUES values)
-{
-    m_mcValues->setValues(values);
-}
-
 void BLDCInterface::refreshSerialDevices()
 {
     m_serialPortsLocations.clear();
@@ -681,21 +673,6 @@ void BLDCInterface::stopDetect()
     m_packetInterface->setDetect(DISP_POS_MODE_NONE);
 }
 
-void BLDCInterface::sendTerminal(QString &cmd)
-{
-    m_packetInterface->sendTerminalCmd(cmd);
-}
-
-void BLDCInterface::readMcConf()
-{
-    m_packetInterface->getMcconf();
-}
-
-void BLDCInterface::readMcconfDefault()
-{
-    m_packetInterface->getMcconfDefault();
-}
-
 void BLDCInterface::writeMcconf()
 {
     if (!m_mcconfLoaded) {
@@ -715,32 +692,12 @@ void BLDCInterface::loadMcconfXml(QString xmlfile)
     }
 }
 
-void BLDCInterface::saveMcconfXml(){
-    mSerialization->writeMcconfXml(m_mcconf->data());
-}
-
-void BLDCInterface::detectMotorParam(double current, double min_rpm, double low_duty){
-    m_packetInterface->detectMotorParam(current, min_rpm, low_duty);
-}
-
-void BLDCInterface::readAppConf(){
-    m_packetInterface->getAppConf();
-}
-
-void BLDCInterface::readAppConfDefault(){
-    m_packetInterface->getAppConfDefault();
-}
-
 void BLDCInterface::writeAppConf(){
     if (!m_appconfLoaded) {
         emit msgCritical( "Error", "The configuration should be read at least once before writing it.");
         return;
     }
     m_packetInterface->setAppConf(m_appconf->data());
-}
-
-void BLDCInterface::reboot(){
-    m_packetInterface->reboot();
 }
 
 void BLDCInterface::uploadFirmware(QString fileName)

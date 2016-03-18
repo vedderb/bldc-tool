@@ -26,6 +26,7 @@ class McValues : public QObject
 public:
     explicit McValues(QObject *parent = 0);
     McValues(MC_VALUES values);
+public slots:
     void setValues(MC_VALUES values);
 
 };

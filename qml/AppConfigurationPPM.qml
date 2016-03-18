@@ -519,7 +519,7 @@ BasicPage {
                             height: textfieldPath.height
                             text:"Read Config"
                             width: rectButtons.width * 0.31
-                            onClicked: readAppConf()
+                            onClicked: packetInterface.getAppConf()
                             style: ButtonStyle {
                                 label: Text {
                                     renderType: Text.NativeRendering
@@ -578,7 +578,7 @@ BasicPage {
                             height: textfieldPath.height
                             text:"Reboot"
                             width: rectMain.width * 0.31
-                            onClicked: reboot()
+                            onClicked: packetInterface.reboot()
                             style: ButtonStyle {
                                 label: Text {
                                     renderType: Text.NativeRendering

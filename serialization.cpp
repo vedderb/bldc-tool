@@ -16,16 +16,12 @@
     */
 
 #include "serialization.h"
-#include <QFileDialog>
 #include <qxmlstream.h>
 #include <QFile>
 #include <QDebug>
 
-Serialization::Serialization(QObject *parent) :
-    QObject(parent)
-{
-}
-
+#ifndef QML
+#include <QFileDialog>
 bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *parent)
 {
     QString filename = QFileDialog::getSaveFileName(parent,
@@ -33,13 +29,18 @@ bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *pare
                                             tr("Xml files (*.xml)"));
     return writeMcconfXml(filename, mcconf);
 }
-
 bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
 {
     QString filename = QFileDialog::getOpenFileName(parent,
                                                     tr("Load Configuration"), ".",
                                                     tr("Xml files (*.xml)"));
     return readMcconfXml(filename, mcconf);
+}
+#endif
+
+Serialization::Serialization(QObject *parent) :
+    QObject(parent)
+{
 }
 
 bool Serialization::writeMcconfXml(QString xmlfile, const mc_configuration &mcconf)

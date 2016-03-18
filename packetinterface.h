@@ -32,9 +32,7 @@ public:
     explicit PacketInterface(QObject *parent = 0);
     ~PacketInterface();
 
-    Q_INVOKABLE bool sendPacket(const unsigned char *data, unsigned int len_packet);
-    Q_INVOKABLE bool sendPacket(QByteArray data);
-    Q_INVOKABLE void processData(const QByteArray &data);
+
     Q_INVOKABLE void setLimitedMode(bool is_limited);
     Q_INVOKABLE bool isLimitedMode();
     Q_INVOKABLE bool getFwVersion();
@@ -75,7 +73,8 @@ public:
     Q_INVOKABLE bool sendCustomAppData(QByteArray data);
     Q_INVOKABLE bool sendCustomAppData(unsigned char *data, unsigned int len);
     Q_INVOKABLE bool setChukData(chuck_data &data);
-
+public slots:
+    void processData(const QByteArray &data);
 signals:
     void dataToSend(QByteArray &data);
     void fwVersionReceived(int major, int minor);
@@ -102,6 +101,8 @@ public slots:
     void readPendingDatagrams();
 
 private:
+    bool sendPacket(const unsigned char *data, unsigned int len_packet);
+    bool sendPacket(QByteArray data);
     unsigned short crc16(const unsigned char *buf, unsigned int len);
     void processPacket(const unsigned char *data, int len);
     QString faultToStr(mc_fault_code fault);

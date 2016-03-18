@@ -131,17 +131,9 @@ public slots:
     void disconnectSerial();
     void detect();
     void stopDetect();
-    void sendTerminal(QString &cmd);
-    void readMcConf();
-    void readMcconfDefault();
     void writeMcconf();
     void loadMcconfXml(QString xmlfile);
-    void saveMcconfXml();
-    void detectMotorParam(double current, double min_rpm, double low_duty);
-    void readAppConf();
-    void readAppConfDefault();
     void writeAppConf();
-    void reboot();
     void uploadFirmware(QString fileName);
     void readFirmwareVersion();
     void getSampleData(bool atStart, int sampleNum, int sampleInt);
@@ -165,8 +157,6 @@ private slots:
     void decodedChukReceived(double chuk_value);
     void mcconfFocCalcCC();
     void experimentSamplesReceived(QVector<double>);
-    void onMcValuesReceived(MC_VALUES);
-    void bleDataReceived(const QByteArray &data);
 private:
 
     void refreshSerialDevices();

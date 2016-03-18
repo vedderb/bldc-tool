@@ -15,21 +15,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
 
-#include <QApplication>
-
-
 #ifdef QML
 
+#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-
 #include "bldcinterface.h"
-
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-
     BLDCInterface bldcIntrface;
     engine.rootContext()->setContextObject(&bldcIntrface);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
@@ -37,6 +32,7 @@ int main(int argc, char *argv[])
 }
 
 #else
+#include <QApplication>
 #include "mainwindow.h"
 int main(int argc, char *argv[])
 {

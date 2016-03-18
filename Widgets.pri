@@ -4,10 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-QT       += printsupport
-QT       += serialport
-QT       += network
+QT += printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,27 +12,21 @@ TARGET = BLDC_Tool
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+SOURCES += \
+    mainwindow.cpp \
     qcustomplot.cpp \
     digitalfiltering.cpp \
-    packetinterface.cpp \
-    utility.cpp \
-    serialization.cpp \
     mrichtextedit.cpp \
     mtextedit.cpp \
     rtdatawidget.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
+    mainwindow.h \
     qcustomplot.h \
     digitalfiltering.h \
-    packetinterface.h \
-    utility.h \
-    serialization.h \
     mrichtextedit.h \
     mtextedit.h \
     rtdatawidget.h \
-    datatypes.h
 
 FORMS    += mainwindow.ui \
     mrichtextedit.ui
