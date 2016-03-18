@@ -29,7 +29,10 @@ void DeviceInfo::setDevice(const QBluetoothDeviceInfo &device)
 
 BLEInterface::BLEInterface(QObject *parent) : QObject(parent),
     m_currentDevice(0),
-    m_deviceConnected(false)
+    m_connected(false),
+    m_control(0),
+    m_service(0),
+    m_readTimer(0)
 {
 
 
@@ -62,16 +65,15 @@ void BLEInterface::scanDevices()
     emit statusInfoChanged("Scanning for devices...", true);
 }
 
+void BLEInterface::read(){
+    if(m_service && m_characteristic.isValid())
+        m_service->readCharacteristic(m_characteristic);
+}
+
 void BLEInterface::write(const QByteArray &data)
 {
-    QLowEnergyCharacteristic characteristic  =  m_service->characteristic(QBluetoothUuid(CHARACTARISTIC_UUID));
-    if(characteristic.isValid() &&
-            (characteristic.properties() & QLowEnergyCharacteristic::WriteNoResponse) ){
-        m_service->writeCharacteristic(characteristic, data);
-    }
-    else {
-        qWarning() << "Write is not supported.";
-    }
+    if(m_service && m_characteristic.isValid())
+        m_service->writeCharacteristic(m_characteristic, data);
 }
 
 //! [devicediscovery-3]
@@ -80,13 +82,13 @@ void BLEInterface::addDevice(const QBluetoothDeviceInfo &device)
     if (device.coreConfigurations() & QBluetoothDeviceInfo::LowEnergyCoreConfiguration) {
         qWarning() << "Discovered LE Device name: " << device.name() << " Address: "
                    << device.address().toString();
-//! [devicediscovery-3]
+        //! [devicediscovery-3]
         m_devicesNames.append(device.name());
         DeviceInfo *dev = new DeviceInfo(device);
         m_devices.append(dev);
         emit devicesNamesChanged(m_devicesNames);
         emit statusInfoChanged("Low Energy device found. Scanning for more...", true);
-//! [devicediscovery-4]
+        //! [devicediscovery-4]
     }
     //...
 }
@@ -123,7 +125,7 @@ void BLEInterface::connectCurrentDevice()
     }
     //! [Connect signals]
     m_control = new QLowEnergyController(m_devices[ m_currentDevice]->getDevice(), this);
-    connect(m_control, SIGNAL(onServiceDiscovered(QBluetoothUuid)),
+    connect(m_control, SIGNAL(serviceDiscovered(QBluetoothUuid)),
             this, SLOT(onServiceDiscovered(QBluetoothUuid)));
     connect(m_control, SIGNAL(discoveryFinished()),
             this, SLOT(onServiceScanDone()));
@@ -142,13 +144,12 @@ void BLEInterface::connectCurrentDevice()
 
 void BLEInterface::onDeviceConnected()
 {
-    update_deviceConnected(true);
     m_control->discoverServices();
 }
 
 void BLEInterface::onDeviceDisconnected()
 {
-    update_deviceConnected(false);
+    update_connected(false);
     emit statusInfoChanged("Service disconnected", false);
     qWarning() << "Remote device disconnected";
 }
@@ -158,10 +159,9 @@ void BLEInterface::onDeviceDisconnected()
 //! [Filter BLDCSLAVE service 1]
 void BLEInterface::onServiceDiscovered(const QBluetoothUuid &gatt)
 {
-    if (gatt == QBluetoothUuid(SERVICE_UUID)) {
-        emit statusInfoChanged("Service discovered. Waiting for service scan to be done...", true);
-        m_foundService = true;
-    }
+    m_serviceUuid =  gatt;
+    emit statusInfoChanged("Service discovered. Waiting for service scan to be done...", true);
+    m_foundService = true;
 }
 //! [Filter BLDCSLAVE service 1]
 
@@ -174,7 +174,7 @@ void BLEInterface::onServiceScanDone()
     if (m_foundService) {
         emit statusInfoChanged("Connecting to service...", true);
         m_service = m_control->createServiceObject(
-                    QBluetoothUuid(SERVICE_UUID), this);
+                    m_serviceUuid, this);
     }
 
     if (!m_service) {
@@ -186,6 +186,10 @@ void BLEInterface::onServiceScanDone()
             this, SLOT(onServiceStateChanged(QLowEnergyService::ServiceState)));
     connect(m_service, SIGNAL(characteristicChanged(QLowEnergyCharacteristic,QByteArray)),
             this, SLOT(onCharacteristicChanged(QLowEnergyCharacteristic,QByteArray)));
+    connect(m_service, SIGNAL(characteristicRead(QLowEnergyCharacteristic,QByteArray)),
+            this, SLOT(onCharacteristicRead(QLowEnergyCharacteristic,QByteArray)));
+    connect(m_service, SIGNAL(characteristicWritten(QLowEnergyCharacteristic,QByteArray)),
+            this, SLOT(onCharacteristicWrite(QLowEnergyCharacteristic,QByteArray)));
 
     m_service->discoverDetails();
     //! [Filter BLDCSLAVE service 2]
@@ -194,6 +198,8 @@ void BLEInterface::onServiceScanDone()
 void BLEInterface::disconnectDevice()
 {
     m_foundService = false;
+    m_readTimer->deleteLater();
+    m_readTimer = NULL;
 
     if (m_devices.isEmpty()) {
         return;
@@ -220,19 +226,39 @@ void BLEInterface::onControllerError(QLowEnergyController::Error error)
 
 //! [Reading value 1]
 void BLEInterface::onCharacteristicChanged(const QLowEnergyCharacteristic &c,
-                                     const QByteArray &value)
+                                           const QByteArray &value)
 {
-    // ignore any other characteristic change -> shouldn't really happen though
-    if (c.uuid() != QBluetoothUuid(CHARACTARISTIC_UUID))
-        return;
+
+}void BLEInterface::onCharacteristicWrite(const QLowEnergyCharacteristic &c,
+                                          const QByteArray &value)
+{
+    qDebug() << "Data Written: " << value;
+}
+void BLEInterface::onCharacteristicRead(const QLowEnergyCharacteristic &c,
+                                        const QByteArray &value){
     emit dataReceived(value);
 }
 
 void BLEInterface::onServiceStateChanged(QLowEnergyService::ServiceState s)
 {
     qDebug() << "serviceStateChanged, state: " << s;
-        //nothing for now
-
+    if (s == QLowEnergyService::ServiceDiscovered) {
+        foreach (QLowEnergyCharacteristic c, m_service->characteristics()) {
+            if(c.isValid() &&
+                    (c.properties() & QLowEnergyCharacteristic::WriteNoResponse) &&
+                    (c.properties() & QLowEnergyCharacteristic::Read) ){
+                m_characteristic = c;
+                if(!m_readTimer){
+                    m_readTimer = new QTimer(this);
+                    connect(m_readTimer, &QTimer::timeout, this, &BLEInterface::read);
+                    m_readTimer->start(READ_INTERVAL_MS);
+                }
+                update_connected(true);
+                return;
+            }
+        }
+        qWarning() << "Can't find Characteristic";
+    }
 }
 void BLEInterface::serviceError(QLowEnergyService::ServiceError e)
 {

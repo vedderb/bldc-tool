@@ -6,11 +6,11 @@
 #include <QBluetoothDeviceInfo>
 #include <QLowEnergyController>
 #include <QLowEnergyService>
+#include <QTimer>
 
 #include "lib-qt-qml-tricks/src/qqmlhelpers.h"
 
-static quint16 SERVICE_UUID = 0xFFE2;
-static quint16 CHARACTARISTIC_UUID = 0xFFE1;
+#define READ_INTERVAL_MS 3000
 
 class DeviceInfo: public QObject
 {
@@ -37,7 +37,7 @@ class BLEInterface : public QObject
 
     QML_WRITABLE_PROPERTY(int, currentDevice)
     QML_READONLY_PROPERTY(QStringList, devicesNames)
-    QML_READONLY_PROPERTY(bool, deviceConnected)
+    Q_PROPERTY(bool connected READ isConnected NOTIFY connectedChanged)
 public:
     explicit BLEInterface(QObject *parent = 0);
     ~BLEInterface();
@@ -47,9 +47,16 @@ public:
     Q_INVOKABLE void scanDevices();
     void write(const QByteArray& data);
 
+    bool isConnected() const
+    {
+        return m_connected;
+    }
+
 signals:
     void statusInfoChanged(QString info, bool isGood);
     void dataReceived(const QByteArray &data);
+    void connectedChanged(bool connected);
+
 private slots:
     //QBluetothDeviceDiscoveryAgent
     void addDevice(const QBluetoothDeviceInfo&);
@@ -70,13 +77,28 @@ private slots:
                               const QByteArray &value);
     void serviceError(QLowEnergyService::ServiceError e);
 
+    void read();
+    void onCharacteristicRead(const QLowEnergyCharacteristic &c, const QByteArray &value);
+    void onCharacteristicWrite(const QLowEnergyCharacteristic &c, const QByteArray &value);
+
 private:
+    void update_connected(bool connected){
+        if(connected != m_connected){
+            m_connected = connected;
+            emit connectedChanged(connected);
+        }
+    }
+
     QBluetoothDeviceDiscoveryAgent *m_deviceDiscoveryAgent;
     QLowEnergyDescriptor m_notificationDesc;
     QLowEnergyController *m_control;
     QLowEnergyService *m_service;
+    QLowEnergyCharacteristic m_characteristic;
     QList<DeviceInfo*> m_devices;
     bool m_foundService;
+    QTimer *m_readTimer;
+    QBluetoothUuid m_serviceUuid;
+    bool m_connected;
 };
 
 #endif // BLEINTERFACE_H

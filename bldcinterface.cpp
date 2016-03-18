@@ -173,7 +173,7 @@ void BLDCInterface::timerSlot()
     // Read FW version if needed
     static bool sendCanBefore = false;
     static int canIdBefore = 0;
-    if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected() || m_bleInterface->get_deviceConnected()) {
+    if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected() || m_bleInterface->isConnected()) {
         if (sendCanBefore != m_canFwd ||
                 canIdBefore != m_canId) {
             mFwVersionReceived = false;
@@ -200,7 +200,7 @@ void BLDCInterface::timerSlot()
 
     // Update status label
     {
-        if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected() || m_bleInterface->get_deviceConnected()) {
+        if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected() || m_bleInterface->isConnected()) {
             if (m_packetInterface->isLimitedMode()) {
                 update_status("Connected, limited");
             } else {
@@ -332,7 +332,7 @@ void BLDCInterface::packetDataToSend(QByteArray &data)
     if (mSerialPort->isOpen()) {
         mSerialPort->write(data);
     }
-    else if (m_bleInterface->get_deviceConnected()) {
+    else if (m_bleInterface->isConnected()) {
         m_bleInterface->write(data);
     }
 }
@@ -659,7 +659,7 @@ void BLDCInterface::disconnectSerial(){
     mFwRetries = 0;
 }
 void BLDCInterface::disconnectBle(){
-    if (m_bleInterface->get_deviceConnected()) {
+    if (m_bleInterface->isConnected()) {
         m_bleInterface->disconnectDevice();
     }
 
@@ -791,7 +791,7 @@ void BLDCInterface::connectSerial(QString port)
     if(mSerialPort->isOpen()) {
         return;
     }
-    if(m_bleInterface->get_deviceConnected()){
+    if(m_bleInterface->isConnected()){
         emit statusInfoChanged("Bluetooth low energy connected.", false);
         return;
     }

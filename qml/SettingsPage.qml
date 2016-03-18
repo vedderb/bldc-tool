@@ -158,7 +158,7 @@ BasicPage {
                                     }
 
                                     ComboBox{
-                                        id: comboBoxBtDevices1
+                                        id: comboBoxBtDevices
                                         width: rectConnection.width *0.4
                                         model: bleInterface.devicesNames
                                     }
