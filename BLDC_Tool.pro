@@ -1,10 +1,10 @@
 
-DEFINES += QML # for test
+#DEFINES += QML # for test
 
 android | ios : DEFINES += QML
 
 QT += core gui bluetooth serialport network
-
+CONFIG += c++11
 contains(DEFINES,QML){
     include(QML.pri)
 } else {

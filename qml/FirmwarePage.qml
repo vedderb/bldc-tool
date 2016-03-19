@@ -125,7 +125,7 @@ BasicPage {
                     width:rectMain.width - buttonupload.width - gridProgress.columnSpacing - (2* rowLeftMargin)
                     minimumValue: 0
                     maximumValue: 100
-                    value: firmwareProgress * 100
+                    value: firmwareProgress
 
                 }
 

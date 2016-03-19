@@ -24,89 +24,46 @@
 #include <cmath>
 #include <QMessageBox>
 #include <QSerialPortInfo>
+#include <QSpinBox>
 #include "digitalfiltering.h"
-
-namespace {
-void stepTowards(double &value, double goal, double step) {
-    if (value < goal) {
-        if ((value + step) < goal) {
-            value += step;
-        } else {
-            value = goal;
-        }
-    } else if (value > goal) {
-        if ((value - step) > goal) {
-            value -= step;
-        } else {
-            value = goal;
-        }
-    }
-}
-}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
-
-    refreshSerialDevices();
     ui->udpIpEdit->setText("192.168.1.118");
-
-    // Compatible firmwares
-    mFwVersionReceived = false;
-    mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 16));
-
-    QString supportedFWs;
-    for (int i = 0;i < mCompatibleFws.size();i++) {
-        QString tmp;
-        tmp.sprintf("%d.%d", mCompatibleFws.at(i).first, mCompatibleFws.at(i).second);
-        if (i < (mCompatibleFws.size() - 1)) {
-            tmp.append("\n");
-        }
-        supportedFWs.append(tmp);
-    }
-    ui->firmwareSupportedLabel->setText(supportedFWs);
-
-    mSerialPort = new QSerialPort(this);
-
-    mTimer = new QTimer(this);
-    mTimer->setInterval(20);
-    mTimer->start();
-
+    ui->firmwareSupportedLabel->setText(m_bldcInterface->get_firmwareSupported());
     mStatusLabel = new QLabel(this);
     ui->statusBar->addPermanentWidget(mStatusLabel);
+
+    m_bldcInterface = new BLDCInterface(this);
+    mPacketInterface = m_bldcInterface->get_packetInterface();
     mSampleInt = 0;
     mDoReplot = false;
     mDoReplotPos = false;
     mDoRescale = true;
     mDoFilterReplot = true;
-    mPacketInterface = new PacketInterface(this);
     mRealtimeGraphsAdded = false;
-    keyLeft = false;
-    keyRight = false;
     mMcconfLoaded = false;
     mAppconfLoaded = false;
     mStatusInfoTime = 0;
-    mDetectRes.updated = false;
 
-    connect(mSerialPort, SIGNAL(readyRead()),
-            this, SLOT(serialDataAvailable()));
-    connect(mSerialPort, SIGNAL(error(QSerialPort::SerialPortError)),
-            this, SLOT(serialPortError(QSerialPort::SerialPortError)));
-    connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
-
-    connect(mPacketInterface, SIGNAL(dataToSend(QByteArray&)),
-            this, SLOT(packetDataToSend(QByteArray&)));
-    connect(mPacketInterface, SIGNAL(fwVersionReceived(int,int)),
-            this, SLOT(fwVersionReceived(int,int)));
-    connect(mPacketInterface, SIGNAL(ackReceived(QString)),
-            this, SLOT(ackReceived(QString)));
+    connect(m_bldcInterface, SIGNAL(statusInfoChanged(QString,bool)),
+            this, SLOT(showStatusInfo(QString,bool)));
+    connect(m_bldcInterface, &BLDCInterface::msgCritical,
+                 this, [this](QString title, QString text){QMessageBox::critical(this, title, text);});
+    connect(m_bldcInterface, &BLDCInterface::msgwarning,
+                 this, [this](QString title, QString text){QMessageBox::warning(this, title, text);});
+    connect(m_bldcInterface, BLDCInterface::firmwareVersionChanged,
+            ui->firmwareVersionLabel, QLabel::setText);
+    connect(mPacketInterface, &PacketInterface::ackReceived,
+            this, [this](QString type){showStatusInfo(type, true);});
     connect(mPacketInterface, SIGNAL(valuesReceived(MC_VALUES)),
             this, SLOT(mcValuesReceived(MC_VALUES)));
-    connect(mPacketInterface, SIGNAL(printReceived(QString)),
-            this, SLOT(printReceived(QString)));
+    connect(mPacketInterface, &PacketInterface::printReceived,
+            ui->terminalBrowser, &QTextBrowser::append);
     connect(mPacketInterface, SIGNAL(samplesReceived(QByteArray)),
             this, SLOT(samplesReceived(QByteArray)));
     connect(mPacketInterface, SIGNAL(rotorPosReceived(double)),
@@ -114,17 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(mPacketInterface, SIGNAL(experimentSamplesReceived(QVector<double>)),
             this, SLOT(experimentSamplesReceived(QVector<double>)));
     connect(mPacketInterface, SIGNAL(mcconfReceived(mc_configuration)),
-            this, SLOT(mcconfReceived(mc_configuration)));
-    connect(mPacketInterface, SIGNAL(motorParamReceived(double,double,QVector<int>,int)),
-            this, SLOT(motorParamReceived(double,double,QVector<int>,int)));
-    connect(mPacketInterface, SIGNAL(motorRLReceived(double,double)),
-            this, SLOT(motorRLReceived(double,double)));
-    connect(mPacketInterface, SIGNAL(motorLinkageReceived(double)),
-            this, SLOT(motorLinkageReceived(double)));
-    connect(mPacketInterface, SIGNAL(encoderParamReceived(double,double,bool)),
-            this, SLOT(encoderParamReceived(double,double,bool)));
-    connect(mPacketInterface, SIGNAL(focHallTableReceived(QVector<int>,int)),
-            this, SLOT(focHallTableReceived(QVector<int>,int)));
+            this, SLOT(setMcconfGui(mc_configuration)));
     connect(mPacketInterface, SIGNAL(appconfReceived(app_configuration)),
             this, SLOT(appconfReceived(app_configuration)));
     connect(mPacketInterface, SIGNAL(decodedPpmReceived(double,double)),
@@ -134,7 +81,65 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(mPacketInterface, SIGNAL(decodedChukReceived(double)),
             this, SLOT(decodedChukReceived(double)));
 
-    mSerialization = new Serialization(this);
+    connect(m_bldcInterface, &BLDCInterface::mcconfDetectResultChanged,
+                 ui->mcconfDetectResultBrowser, &QTextBrowser::setText);
+    connect(m_bldcInterface, &BLDCInterface::mcconfFocDetectRChanged,
+                 ui->mcconfFocDetectRBox,&QDoubleSpinBox::setValue);
+    connect(m_bldcInterface, &BLDCInterface::mcconfFocDetectLChanged,
+                 ui->mcconfFocDetectLBox,&QDoubleSpinBox::setValue);
+    connect(m_bldcInterface,  &BLDCInterface::mcconfFocCalcKpChanged,
+                 ui->mcconfFocCalcKpBox ,&QDoubleSpinBox::setValue);
+    connect(m_bldcInterface,  &BLDCInterface::mcconfFocCalcKiChanged,
+                  ui->mcconfFocCalcKiBox ,&QDoubleSpinBox::setValue);
+    connect(m_bldcInterface,  &BLDCInterface::mcconfFocDetectLinkageChanged,
+                  ui->mcconfFocDetectLinkageBox ,&QDoubleSpinBox::setValue);
+    connect(m_bldcInterface, BLDCInterface::mcconfFocMeasureHallTableChanged,
+                 this, &MainWindow::setFocHallTable);
+    connect(m_bldcInterface, &BLDCInterface::firmwareProgressChanged,
+            ui->firmwareBar, &QProgressBar::setValue);
+    connect(m_bldcInterface, &BLDCInterface::firmwareUploadEnabledChanged,
+            ui->firmwareUploadButton, &QPushButton::setEnabled);
+    connect(m_bldcInterface, &BLDCInterface::firmwareCancelEnabledChanged,
+            ui->firmwareCancelButton, &QPushButton::setEnabled);
+    connect(m_bldcInterface, &BLDCInterface::mcconfSlMinErpmEnabledChanged
+            ,ui->mcconfSlMinErpmBox      , &QWidget::setEnabled);
+    connect(m_bldcInterface, &BLDCInterface::mcconfSlMaxFbCurrEnabledChanged
+            ,ui->mcconfSlMaxFbCurrBox    , &QWidget::setEnabled);
+    connect(m_bldcInterface, &BLDCInterface::mcconfSlBemfKEnabledChanged
+            ,ui->mcconfSlBemfKBox        , &QWidget::setEnabled);
+    connect(m_bldcInterface, &BLDCInterface::mcconfSlBrErpmEnabledChanged
+            ,ui->mcconfSlBrErpmBox       , &QWidget::setEnabled);
+    connect(m_bldcInterface, &BLDCInterface::mcconfSlIntLimEnabledChanged
+            ,ui->mcconfSlIntLimBox       , &QWidget::setEnabled);
+    connect(m_bldcInterface, &BLDCInterface::mcconfSlIntLimScaleBrEnabledChanged
+            ,ui->mcconfSlIntLimScaleBrBox, &QWidget::setEnabled);
+    connect(m_bldcInterface, &BLDCInterface::mcconfSlMinErpmIlEnabledChanged
+            ,ui->mcconfSlMinErpmIlBox    , &QWidget::setEnabled);
+    connect(m_bldcInterface, &BLDCInterface::firmwareUploadStatusChanged,
+            ui->firmwareSupportedLabel, &QLabel::setText);
+    connect(m_bldcInterface, &BLDCInterface::mcconfFocMeasureEncoderOffsetChanged
+                 ,ui->mcconfFocMeasureEncoderOffsetBox  , &QDoubleSpinBox::setValue);
+    connect(m_bldcInterface, &BLDCInterface::mcconfFocMeasureEncoderRatioChanged
+                 ,ui->mcconfFocMeasureEncoderRatioBox   , &QDoubleSpinBox::setValue);
+    connect(m_bldcInterface, &BLDCInterface::mcconfFocMeasureEncoderInvertedChanged
+                 ,ui->mcconfFocMeasureEncoderInvertedBox, &QCheckBox::setChecked);
+    connect(m_bldcInterface, &BLDCInterface::updatePlots,
+                 this, &MainWindow::UpdatePlots);
+
+    connect(ui->canFwdBox, &QCheckBox::toggled,
+                 m_bldcInterface, &BLDCInterface::set_canFwd);
+    connect(ui->realtimeActivateBox, &QCheckBox::toggled,
+                 m_bldcInterface, &BLDCInterface::set_realtimeActivate);
+    connect(ui->appconfUpdatePpmBox, &QGroupBox::toggled,
+                 m_bldcInterface, &BLDCInterface::set_appconfUpdatePpm);
+    connect(ui->appconfAdcUpdateBox, &QGroupBox::toggled,
+                 m_bldcInterface, &BLDCInterface::set_appconfAdcUpdate);
+    connect(ui->appconfUpdateChukBox, &QGroupBox::toggled,
+                 m_bldcInterface, &BLDCInterface::set_appconfUpdateChuk);
+    connect(ui->mcconfCommIntButton, &QRadioButton::toggled,
+                 m_bldcInterface, &BLDCInterface::set_mcconfCommInt);
+    connect(ui->canIdBox, SIGNAL(valueChanged(int)),
+                 m_bldcInterface, SLOT(set_canId(int)));
 
     ui->currentPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     ui->voltagePlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
@@ -170,11 +175,9 @@ MainWindow::~MainWindow()
 bool MainWindow::eventFilter(QObject *object, QEvent *e)
 {
     Q_UNUSED(object);
-
-    if (!(mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) || !ui->overrideKbBox->isChecked()) {
+    if (!m_bldcInterface->isConnected() || !ui->overrideKbBox->isChecked()) {
         return false;
     }
-
     if (e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(e);
         bool isPress = e->type() == QEvent::KeyPress;
@@ -191,11 +194,9 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
         default:
             return false;
         }
-
         if(keyEvent->isAutoRepeat()) {
             return true;
         }
-
         switch(keyEvent->key()) {
         case Qt::Key_Up:
             if (isPress) {
@@ -215,20 +216,19 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
 
         case Qt::Key_Left:
             if (isPress) {
-                keyLeft = true;
+                m_bldcInterface->set_keyLeft(true);
             } else {
-                keyLeft = false;
+                m_bldcInterface->set_keyRight(false);
             }
             break;
 
         case Qt::Key_Right:
             if (isPress) {
-                keyRight = true;
+                m_bldcInterface->set_keyRight(true);
             } else {
-                keyRight = false;
+                m_bldcInterface->set_keyLeft(false);
             }
             break;
-
         case Qt::Key_PageDown:
             if (isPress) {
                 mPacketInterface->setCurrentBrake(-ui->arrowCurrentBox->value());
@@ -236,25 +236,20 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
                 mPacketInterface->setCurrentBrake(0.0);
             }
             break;
-
         case Qt::Key_Escape:
             on_offButton_clicked();
             break;
-
         default:
             break;
         }
-
         return true;
     }
-
     return false;
 }
 
 mc_configuration MainWindow::getMcconfGui()
 {
     mc_configuration mcconf;
-
     if (ui->mcconfPwmModeSyncButton->isChecked()) {
         mcconf.pwm_mode = PWM_MODE_SYNCHRONOUS;
     } else if (ui->mcconfPwmModeBipolarButton->isChecked()) {
@@ -581,218 +576,7 @@ void MainWindow::showStatusInfo(QString info, bool isGood)
     mStatusLabel->setText(info);
 }
 
-void MainWindow::serialDataAvailable()
-{
-    while (mSerialPort->bytesAvailable() > 0) {
-        QByteArray data = mSerialPort->readAll();
-        mPacketInterface->processData(data);
-    }
-}
-
-void MainWindow::serialPortError(QSerialPort::SerialPortError error)
-{
-    QString message;
-    switch (error) {
-    case QSerialPort::NoError:
-        break;
-    case QSerialPort::DeviceNotFoundError:
-        message = tr("Device not found");
-        break;
-    case QSerialPort::OpenError:
-        message = tr("Can't open device");
-        break;
-    case QSerialPort::NotOpenError:
-        message = tr("Not open error");
-        break;
-    case QSerialPort::ResourceError:
-        message = tr("Port disconnected");
-        break;
-    case QSerialPort::UnknownError:
-        message = tr("Unknown error");
-        break;
-    default:
-        message = "Serial port error: " + QString::number(error);
-        break;
-    }
-
-    if(!message.isEmpty()) {
-        showStatusInfo(message, false);
-
-        if(mSerialPort->isOpen()) {
-            mSerialPort->close();
-        }
-    }
-}
-
-void MainWindow::timerSlot()
-{
-    // Update CAN fwd function
-    mPacketInterface->setSendCan(ui->canFwdBox->isChecked(), ui->canIdBox->value());
-
-    // Read FW version if needed
-    static bool sendCanBefore = false;
-    static int canIdBefore = 0;
-    if (mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) {
-        if (sendCanBefore != ui->canFwdBox->isChecked() ||
-                canIdBefore != ui->canIdBox->value()) {
-            mFwVersionReceived = false;
-            mFwRetries = 0;
-        }
-
-        if (!mFwVersionReceived) {
-            mPacketInterface->getFwVersion();
-            mFwRetries++;
-
-            // Timeout if the firmware cannot be read
-            if (mFwRetries >= 100) {
-                showStatusInfo("No firmware read response", false);
-                on_disconnectButton_clicked();
-            }
-        }
-
-    } else {
-        mFwVersionReceived = false;
-        mFwRetries = 0;
-    }
-    sendCanBefore = ui->canFwdBox->isChecked();
-    canIdBefore = ui->canIdBox->value();
-
-    // Update status label
-    if (mStatusInfoTime) {
-        mStatusInfoTime--;
-        if (!mStatusInfoTime) {
-            mStatusLabel->setStyleSheet(qApp->styleSheet());
-        }
-    } else {
-        if (mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) {
-            if (mPacketInterface->isLimitedMode()) {
-                mStatusLabel->setText("Connected, limited");
-            } else {
-                mStatusLabel->setText("Connected");
-            }
-        } else {
-            mStatusLabel->setText("Not connected");
-        }
-    }
-
-    // Update fw upload bar and label
-    double fw_prog = mPacketInterface->getFirmwareUploadProgress();
-    if (fw_prog > -0.1) {
-        ui->firmwareBar->setValue(fw_prog * 1000);
-        ui->firmwareUploadButton->setEnabled(false);
-        ui->firmwareCancelButton->setEnabled(true);
-    } else {
-        // If the firmware upload just finished or failed
-        if (!ui->firmwareUploadButton->isEnabled()) {
-            mFwVersionReceived = false;
-            mFwRetries = 0;
-            if (mPacketInterface->getFirmwareUploadStatus().compare("FW Upload Done") == 0) {
-                ui->firmwareBar->setValue(1000);
-            } else {
-                ui->firmwareBar->setValue(0);
-            }
-        }
-        ui->firmwareUploadButton->setEnabled(true);
-        ui->firmwareCancelButton->setEnabled(false);
-
-        // Send alive command once every 10 iterations (only while not uploading firmware)
-        static int alive_cnt = 0;
-        alive_cnt++;
-        if (alive_cnt >= 10) {
-            alive_cnt = 0;
-            mPacketInterface->sendAlive();
-        }
-    }
-    ui->firmwareUploadStatusLabel->setText(mPacketInterface->getFirmwareUploadStatus());
-
-    // Update MC readings
-    if (ui->realtimeActivateBox->isChecked()) {
-        mPacketInterface->getValues();
-    }
-
-    // Update decoded servo value
-    if (ui->appconfUpdatePpmBox->isChecked()) {
-        mPacketInterface->getDecodedPpm();
-    }
-
-    // Update decoded adc value
-    if (ui->appconfAdcUpdateBox->isChecked()) {
-        mPacketInterface->getDecodedAdc();
-    }
-
-    // Update decoded nunchuk value
-    if (ui->appconfUpdateChukBox->isChecked()) {
-        mPacketInterface->getDecodedChuk();
-    }
-
-    // Enable/disable fields in the configuration page
-    static int isSlIntBefore = true;
-    if (ui->mcconfCommIntButton->isChecked() != isSlIntBefore) {
-        if (ui->mcconfCommIntButton->isChecked()) {
-            ui->mcconfSlMinErpmBox->setEnabled(true);
-            ui->mcconfSlMaxFbCurrBox->setEnabled(true);
-            ui->mcconfSlBemfKBox->setEnabled(true);
-            ui->mcconfSlBrErpmBox->setEnabled(true);
-            ui->mcconfSlIntLimBox->setEnabled(true);
-            ui->mcconfSlIntLimScaleBrBox->setEnabled(true);
-            ui->mcconfSlMinErpmIlBox->setEnabled(true);
-        } else {
-            ui->mcconfSlMinErpmBox->setEnabled(true);
-            ui->mcconfSlMaxFbCurrBox->setEnabled(true);
-            ui->mcconfSlBemfKBox->setEnabled(false);
-            ui->mcconfSlBrErpmBox->setEnabled(true);
-            ui->mcconfSlIntLimBox->setEnabled(false);
-            ui->mcconfSlIntLimScaleBrBox->setEnabled(true);
-            ui->mcconfSlMinErpmIlBox->setEnabled(false);
-        }
-    }
-    isSlIntBefore = ui->mcconfCommIntButton->isChecked();
-
-    // Handle key events
-    static double keyPower = 0.0;
-    static double lastKeyPower = 0.0;
-    const double lowPower = 0.18;
-    const double lowPowerRev = 0.1;
-    const double highPower = 0.9;
-    const double highPowerRev = 0.3;
-    const double lowStep = 0.02;
-    const double highStep = 0.01;
-
-    if (keyRight && keyLeft) {
-        if (keyPower >= lowPower) {
-            stepTowards(keyPower, highPower, highStep);
-        } else if (keyPower <= -lowPower) {
-            stepTowards(keyPower, -highPowerRev, highStep);
-        } else if (keyPower >= 0) {
-            stepTowards(keyPower, highPower, lowStep);
-        } else {
-            stepTowards(keyPower, -highPowerRev, lowStep);
-        }
-    } else if (keyRight) {
-        if (fabs(keyPower) > lowPower) {
-            stepTowards(keyPower, lowPower, highStep);
-        } else {
-            stepTowards(keyPower, lowPower, lowStep);
-        }
-    } else if (keyLeft) {
-        if (fabs(keyPower) > lowPower) {
-            stepTowards(keyPower, -lowPowerRev, highStep);
-        } else {
-            stepTowards(keyPower, -lowPowerRev, lowStep);
-        }
-    } else {
-        stepTowards(keyPower, 0.0, lowStep * 3);
-    }
-
-    if (keyPower != lastKeyPower) {
-        lastKeyPower = keyPower;
-        mPacketInterface->setDutyCycle(keyPower);
-    }
-    UpdatePlots();
-}
-
 void MainWindow::UpdatePlots(){
-
     // Update plots
     static QVector<double> filter;
     static QVector<double> filter2;
@@ -1313,91 +1097,6 @@ void MainWindow::UpdatePlots(){
 
         mDoReplotPos = false;
     }
-
-}
-
-void MainWindow::packetDataToSend(QByteArray &data)
-{
-    if (mSerialPort->isOpen()) {
-        mSerialPort->write(data);
-    }
-}
-
-void MainWindow::fwVersionReceived(int major, int minor)
-{
-    QPair<int, int> highest_supported = *std::max_element(mCompatibleFws.begin(), mCompatibleFws.end());
-    QPair<int, int> fw_connected = qMakePair(major, minor);
-
-    bool wasReceived = mFwVersionReceived;
-
-    if (major < 0) {
-        mFwVersionReceived = false;
-        mFwRetries = 0;
-        on_disconnectButton_clicked();
-        QMessageBox messageBox;
-        messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
-                            " update it using a programmer.");
-        ui->firmwareVersionLabel->setText("Old Firmware");
-    } else if (fw_connected > highest_supported) {
-        mFwVersionReceived = true;
-        mPacketInterface->setLimitedMode(true);
-        if (!wasReceived) {
-            QMessageBox messageBox;
-            messageBox.warning(this, "Warning", "The connected VESC has newer firmware than this version of"
-                                                " BLDC Tool supports. It is recommended that you update BLDC "
-                                                " Tool to the latest version. Alternatively, the firmware on"
-                                                " the connected VESC can be downgraded in the firmware tab."
-                                                " Until then, limited communication mode will be used where"
-                                                " only the firmware can be changed.");
-        }
-    } else if (!mCompatibleFws.contains(fw_connected)) {
-        if (fw_connected >= qMakePair(1, 1)) {
-            mFwVersionReceived = true;
-            mPacketInterface->setLimitedMode(true);
-            if (!wasReceived) {
-                QMessageBox messageBox;
-                messageBox.warning(this, "Warning", "The connected VESC has too old firmware. Since the"
-                                                    " connected VESC has firmware with bootloader support, it can be"
-                                                    " updated from the Firmware tab."
-                                                    " Until then, limited communication mode will be used where only the"
-                                                    " firmware can be changed.");
-            }
-        } else {
-            mFwVersionReceived = false;
-            mFwRetries = 0;
-            on_disconnectButton_clicked();
-            if (!wasReceived) {
-                QMessageBox messageBox;
-                messageBox.critical(this, "Error", "The firmware on the connected VESC is too old. Please"
-                                                   " update it using a programmer.");
-            }
-        }
-    } else {
-        mFwVersionReceived = true;
-        if (fw_connected < highest_supported) {
-            if (!wasReceived) {
-                QMessageBox messageBox;
-                messageBox.warning(this, "Warning", "The connected VESC has compatible, but old"
-                                                    " firmware. It is recommended that you update it.");
-            }
-        }
-
-        QString fwStr;
-        mPacketInterface->setLimitedMode(false);
-        fwStr.sprintf("VESC Firmware Version %d.%d", major, minor);
-        showStatusInfo(fwStr, true);
-    }
-
-    if (major >= 0) {
-        QString fwText;
-        fwText.sprintf("%d.%d", major, minor);
-        ui->firmwareVersionLabel->setText(fwText);
-    }
-}
-
-void MainWindow::ackReceived(QString ackType)
-{
-    showStatusInfo(ackType, true);
 }
 
 void MainWindow::mcValuesReceived(MC_VALUES values)
@@ -1568,11 +1267,6 @@ void MainWindow::mcValuesReceived(MC_VALUES values)
     ui->realtimePlotRpm->replot();
 }
 
-void MainWindow::printReceived(QString str)
-{
-    ui->terminalBrowser->append(str);
-}
-
 void MainWindow::samplesReceived(QByteArray data)
 {
     for (int i = 0;i < data.size();i++) {
@@ -1645,111 +1339,16 @@ void MainWindow::experimentSamplesReceived(QVector<double> samples)
     }
 }
 
-void MainWindow::mcconfReceived(mc_configuration mcconf)
+void MainWindow::setFocHallTable(QList<int> hall_table)
 {
-    setMcconfGui(mcconf);
-    showStatusInfo("MCCONF Received", true);
-}
-
-void MainWindow::motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res)
-{
-    if (cycle_int_limit < 0.01 && bemf_coupling_k < 0.01) {
-        showStatusInfo("Bad Detection Result Received", false);
-        ui->mcconfDetectResultBrowser->setText("Detection failed.");
-    } else {
-        showStatusInfo("Detection Result Received", true);
-
-        mDetectRes.updated = true;
-        mDetectRes.cycle_int_limit = cycle_int_limit;
-        mDetectRes.bemf_coupling_k = bemf_coupling_k;
-        mDetectRes.hall_table = hall_table;
-        mDetectRes.hall_res = hall_res;
-
-        QString hall_str;
-        if (hall_res == 0) {
-            hall_str.sprintf("Detected hall sensor table:\n"
-                             "%i, %i, %i, %i, %i, %i, %i, %i\n",
-                             hall_table.at(0), hall_table.at(1),
-                             hall_table.at(2), hall_table.at(3),
-                             hall_table.at(4), hall_table.at(5),
-                             hall_table.at(6), hall_table.at(7));
-        } else if (hall_res == -1) {
-            hall_str.sprintf("Hall sensor detection failed:\n"
-                             "%i, %i, %i, %i, %i, %i, %i, %i\n",
-                             hall_table.at(0), hall_table.at(1),
-                             hall_table.at(2), hall_table.at(3),
-                             hall_table.at(4), hall_table.at(5),
-                             hall_table.at(6), hall_table.at(7));
-        } else if (hall_res == -2) {
-            hall_str.sprintf("WS2811 enabled. Hall sensors cannot be used.\n");
-        } else if (hall_res == -3) {
-            hall_str.sprintf("Encoder enabled. Hall sensors cannot be used.\n");
-        } else {
-            hall_str.sprintf("Unknown hall error: %d\n", hall_res);
-        }
-
-        ui->mcconfDetectResultBrowser->setText(QString().sprintf("Detection results:\n"
-                                                                 "Integrator limit: %.2f\n"
-                                                                 "BEMF Coupling: %.2f\n\n"
-                                                                 "%s",
-                                                                 cycle_int_limit,
-                                                                 bemf_coupling_k,
-                                                                 hall_str.toLocal8Bit().data()));
-    }
-}
-
-void MainWindow::motorRLReceived(double r, double l)
-{
-    if (r < 1e-9 && l < 1e-9) {
-        showStatusInfo("Bad Detection Result Received", false);
-    } else {
-        showStatusInfo("Detection Result Received", true);
-        ui->mcconfFocDetectRBox->setValue(r);
-        ui->mcconfFocDetectLBox->setValue(l);
-        on_mcconfFocCalcCCButton_clicked();
-    }
-}
-
-void MainWindow::motorLinkageReceived(double flux_linkage)
-{
-    if (flux_linkage < 1e-9) {
-        showStatusInfo("Bad Detection Result Received", false);
-    } else {
-        showStatusInfo("Detection Result Received", true);
-        ui->mcconfFocDetectLinkageBox->setValue(flux_linkage);
-    }
-}
-
-void MainWindow::encoderParamReceived(double offset, double ratio, bool inverted)
-{
-    if (offset > 1000.0) {
-        showStatusInfo("Encoder not enabled in firmware", false);
-        QMessageBox messageBox;
-        messageBox.critical(this, "Error", "Encoder support is not enabled in the current firmware. Please \n"
-                                           "upload firmware with encodcer support and try again.");
-    } else {
-        showStatusInfo("Encoder Result Received", true);
-        ui->mcconfFocMeasureEncoderOffsetBox->setValue(offset);
-        ui->mcconfFocMeasureEncoderRatioBox->setValue(ratio);
-        ui->mcconfFocMeasureEncoderInvertedBox->setChecked(inverted);
-    }
-}
-
-void MainWindow::focHallTableReceived(QVector<int> hall_table, int res)
-{
-    if (res != 0) {
-        showStatusInfo("Bad Detection Result Received", false);
-    } else {
-        showStatusInfo("Hall Result Received", true);
-        ui->mcconfFocMeasureHallTab0Box->setValue(hall_table.at(0));
-        ui->mcconfFocMeasureHallTab1Box->setValue(hall_table.at(1));
-        ui->mcconfFocMeasureHallTab2Box->setValue(hall_table.at(2));
-        ui->mcconfFocMeasureHallTab3Box->setValue(hall_table.at(3));
-        ui->mcconfFocMeasureHallTab4Box->setValue(hall_table.at(4));
-        ui->mcconfFocMeasureHallTab5Box->setValue(hall_table.at(5));
-        ui->mcconfFocMeasureHallTab6Box->setValue(hall_table.at(6));
-        ui->mcconfFocMeasureHallTab7Box->setValue(hall_table.at(7));
-    }
+    ui->mcconfFocMeasureHallTab0Box->setValue(hall_table.at(0));
+    ui->mcconfFocMeasureHallTab1Box->setValue(hall_table.at(1));
+    ui->mcconfFocMeasureHallTab2Box->setValue(hall_table.at(2));
+    ui->mcconfFocMeasureHallTab3Box->setValue(hall_table.at(3));
+    ui->mcconfFocMeasureHallTab4Box->setValue(hall_table.at(4));
+    ui->mcconfFocMeasureHallTab5Box->setValue(hall_table.at(5));
+    ui->mcconfFocMeasureHallTab6Box->setValue(hall_table.at(6));
+    ui->mcconfFocMeasureHallTab7Box->setValue(hall_table.at(7));
 }
 
 void MainWindow::appconfReceived(app_configuration appconf)
@@ -1884,8 +1483,8 @@ void MainWindow::appconfReceived(app_configuration appconf)
         ui->appconfAdcCurrentNorevButtonButton->setChecked(true);
         break;
     case ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_ADC:
-    	ui->appconfAdcCurrentNorevAdcButton->setChecked(true);
-    	break;
+        ui->appconfAdcCurrentNorevAdcButton->setChecked(true);
+        break;
     case ADC_CTRL_TYPE_DUTY:
         ui->appconfAdcDutyCycleButton->setChecked(true);
         break;
@@ -2039,63 +1638,21 @@ void MainWindow::decodedChukReceived(double chuk_value)
     ui->appconfDecodedChukBar->setValue((chuk_value + 1.0) * 500.0);
 }
 
-
 void MainWindow::on_serialConnectButton_clicked()
 {
-    if(mSerialPort->isOpen()) {
-        return;
-    }
-
-    mSerialPort->setPortName(ui->serialCombobox->currentData().toString());
-    mSerialPort->open(QIODevice::ReadWrite);
-
-    if(!mSerialPort->isOpen()) {
-        return;
-    }
-
-    mSerialPort->setBaudRate(QSerialPort::Baud9600);
-    mSerialPort->setDataBits(QSerialPort::Data8);
-    mSerialPort->setParity(QSerialPort::NoParity);
-    mSerialPort->setStopBits(QSerialPort::OneStop);
-    mSerialPort->setFlowControl(QSerialPort::NoFlowControl);
-
-    // For nrf
-    mSerialPort->setRequestToSend(true);
-    mSerialPort->setDataTerminalReady(true);
-    QThread::msleep(5);
-    mSerialPort->setDataTerminalReady(false);
-    QThread::msleep(100);
-
-    mPacketInterface->stopUdpConnection();
+    m_bldcInterface->set_currentSerialPort(ui->serialCombobox->currentIndex());
+    m_bldcInterface->connectCurrentSerial();
 }
 
 void MainWindow::on_udpConnectButton_clicked()
 {
-    QHostAddress ip;
-
-    if (ip.setAddress(ui->udpIpEdit->text().trimmed())) {
-        if (mSerialPort->isOpen()) {
-            mSerialPort->close();
-        }
-
-        mPacketInterface->startUdpConnection(ip, 27800);
-    } else {
-        showStatusInfo("Invalid IP address", false);
-    }
+    m_bldcInterface->set_udpIp(ui->udpIpEdit->text());
+    m_bldcInterface->connectUdb();
 }
 
 void MainWindow::on_disconnectButton_clicked()
 {
-    if (mSerialPort->isOpen()) {
-        mSerialPort->close();
-    }
-
-    if (mPacketInterface->isUdpConnected()) {
-        mPacketInterface->stopUdpConnection();
-    }
-
-    mFwVersionReceived = false;
-    mFwRetries = 0;
+    m_bldcInterface->disconnectSerial();
 }
 
 void MainWindow::on_getDataButton_clicked()
@@ -2176,25 +1733,6 @@ void MainWindow::saveExperimentSamplesToFile(QString path)
     }
 
     file.close();
-}
-
-void MainWindow::refreshSerialDevices()
-{
-    ui->serialCombobox->clear();
-
-    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
-    foreach(const QSerialPortInfo &port, ports) {
-        QString name = port.portName();
-        int index = ui->serialCombobox->count();
-        // put STMicroelectronics device first in list and add prefix
-        if(port.manufacturer() == "STMicroelectronics") {
-            name.insert(0, "VESC - ");
-            index = 0;
-        }
-        ui->serialCombobox->insertItem(index, name, port.systemLocation());
-    }
-
-    ui->serialCombobox->setCurrentIndex(0);
 }
 
 void MainWindow::on_replotButton_clicked()
@@ -2346,7 +1884,6 @@ void MainWindow::on_mcconfWriteButton_clicked()
         messageBox.critical(this, "Error", "The configuration should be read or loaded at least once before writing it.");
         return;
     }
-
     mPacketInterface->setMcconf(getMcconfGui());
 }
 
@@ -2357,18 +1894,26 @@ void MainWindow::on_currentBrakeButton_clicked()
 
 void MainWindow::on_mcconfLoadXmlButton_clicked()
 {
-    mc_configuration mcconf = getMcconfGui();
-    if (mSerialization->readMcconfXml(mcconf, this)) {
-        setMcconfGui(mcconf);
-    } else {
-        showStatusInfo("Loading MCCONF failed", false);
-    }
+
+    QUrl filename = QFileDialog::getOpenFileName(this,
+                                                    tr("Load Configuration"), ".",
+                                                    tr("Xml files (*.xml)"));
+    if(!filename.isValid())
+        return;
+    if(m_bldcInterface->loadMcconfXml(filename.toLocalFile()))
+        setMcconfGui(m_bldcInterface->get_mcconf()->data());
+
 }
 
 void MainWindow::on_mcconfSaveXmlButton_clicked()
 {
-    mc_configuration mcconf = getMcconfGui();
-    mSerialization->writeMcconfXml(mcconf, this);
+    m_bldcInterface->get_mcconf()->setData(getMcconfGui());
+    QUrl filename = QFileDialog::getOpenFileName(this,
+                                                    tr("Load Configuration"), ".",
+                                                    tr("Xml files (*.xml)"));
+    if(!filename.isValid())
+        return;
+    m_bldcInterface->saveMcconfXml(filename.toLocalFile());
 }
 
 void MainWindow::on_mcconfDetectMotorParamButton_clicked()
@@ -2581,51 +2126,23 @@ void MainWindow::on_firmwareChooseButton_clicked()
     messageBox.warning(this, "Warning", "WARNING: Uploading firmware for the wrong hardware version "
                                         "WILL damage the VESC for sure. Make sure that you choose the "
                                         "correct hardware version.");
-
     QString filename = QFileDialog::getOpenFileName(this,
                                                     tr("Choose Firmware File"), ".",
                                                     tr("Binary files (*.bin)"));
-
     if (filename.isNull()) {
         return;
     }
-
     ui->firmwareEdit->setText(filename);
 }
 
 void MainWindow::on_firmwareUploadButton_clicked()
 {
-    QFile file(ui->firmwareEdit->text());
-    if (!file.open(QIODevice::ReadOnly)) {
-        QMessageBox messageBox;
-        messageBox.critical(this, "Error", "Could not open file. Make sure that the path is valid.");
-        return;
-    }
-
-    if (file.size() > 400000) {
-        QMessageBox messageBox;
-        messageBox.critical(this, "Error", "The selected file is too large to be a firmware.");
-        return;
-    }
-
-    QFileInfo fileInfo(file.fileName());
-
-    if (!(fileInfo.fileName().startsWith("BLDC_4") || fileInfo.fileName().startsWith("VESC"))
-            || !fileInfo.fileName().endsWith(".bin")) {
-        QMessageBox messageBox;
-        messageBox.critical(this, "Error", "The selected file name seems invalid.");
-        return;
-    }
-
-    QByteArray fw = file.readAll();
-    mPacketInterface->startFirmwareUpload(fw);
+    m_bldcInterface->uploadFirmware(ui->firmwareEdit->text());
 }
 
 void MainWindow::on_firmwareVersionReadButton_clicked()
 {
-    mFwVersionReceived = false;
-    mFwRetries = 0;
-    mPacketInterface->getFwVersion();
+    m_bldcInterface->readFirmwareVersion();
 }
 
 void MainWindow::on_firmwareCancelButton_clicked()
@@ -2664,29 +2181,7 @@ void MainWindow::on_mcconfFocMeasureLinkageButton_clicked()
 
 void MainWindow::on_mcconfFocCalcCCButton_clicked()
 {
-    double r = ui->mcconfFocDetectRBox->value();
-    double l = ui->mcconfFocDetectLBox->value();
-
-    if (r < 1e-10) {
-        QMessageBox messageBox;
-        messageBox.critical(this, "Error", "R is 0. Please measure it first.");
-        return;
-    }
-
-    if (l < 1e-10) {
-        QMessageBox messageBox;
-        messageBox.critical(this, "Error", "L is 0. Please measure it first.");
-        return;
-    }
-
-    l /= 1e6;
-    double tc = ui->mcconfFocCalcCCTcBox->value();
-    double bw = 1.0 / (tc * 1e-6);
-    double kp = l * bw;
-    double ki = kp * (r / l);
-
-    ui->mcconfFocCalcKpBox->setValue(kp);
-    ui->mcconfFocCalcKiBox->setValue(ki);
+    m_bldcInterface->mcconfFocCalcCC();
 }
 
 void MainWindow::on_mcconfFocApplyRLLambdaButton_clicked()
@@ -2736,9 +2231,10 @@ void MainWindow::on_mcconfFocCalcCCApplyButton_clicked()
 
 void MainWindow::on_mcconfDetectApplyButton_clicked()
 {
-    if (mDetectRes.updated) {
-        double cycle_int_limit = mDetectRes.cycle_int_limit;
-        double bemf_coupling_k = mDetectRes.bemf_coupling_k;
+    const detect_res_t &detectRes = m_bldcInterface->get_detectRes();
+    if (detectRes.updated) {
+        double cycle_int_limit = detectRes.cycle_int_limit;
+        double bemf_coupling_k = detectRes.bemf_coupling_k;
 
         cycle_int_limit = floor(cycle_int_limit / 5.0) * 5.0;
         bemf_coupling_k = floor(bemf_coupling_k / 50.0) * 50.0;
@@ -2746,15 +2242,15 @@ void MainWindow::on_mcconfDetectApplyButton_clicked()
         ui->mcconfSlIntLimBox->setValue(cycle_int_limit);
         ui->mcconfSlBemfKBox->setValue(bemf_coupling_k);
 
-        if (mDetectRes.hall_res == 0) {
-            ui->mcconfHallTab0Box->setValue(mDetectRes.hall_table[0]);
-            ui->mcconfHallTab1Box->setValue(mDetectRes.hall_table[1]);
-            ui->mcconfHallTab2Box->setValue(mDetectRes.hall_table[2]);
-            ui->mcconfHallTab3Box->setValue(mDetectRes.hall_table[3]);
-            ui->mcconfHallTab4Box->setValue(mDetectRes.hall_table[4]);
-            ui->mcconfHallTab5Box->setValue(mDetectRes.hall_table[5]);
-            ui->mcconfHallTab6Box->setValue(mDetectRes.hall_table[6]);
-            ui->mcconfHallTab7Box->setValue(mDetectRes.hall_table[7]);
+        if (m_bldcInterface->get_detectRes().hall_res == 0) {
+            ui->mcconfHallTab0Box->setValue(detectRes.hall_table[0]);
+            ui->mcconfHallTab1Box->setValue(detectRes.hall_table[1]);
+            ui->mcconfHallTab2Box->setValue(detectRes.hall_table[2]);
+            ui->mcconfHallTab3Box->setValue(detectRes.hall_table[3]);
+            ui->mcconfHallTab4Box->setValue(detectRes.hall_table[4]);
+            ui->mcconfHallTab5Box->setValue(detectRes.hall_table[5]);
+            ui->mcconfHallTab6Box->setValue(detectRes.hall_table[6]);
+            ui->mcconfHallTab7Box->setValue(detectRes.hall_table[7]);
         }
     }
 }
@@ -2815,5 +2311,5 @@ void MainWindow::on_mcconfFocMeasureHallApplyButton_clicked()
 
 void MainWindow::on_refreshButton_clicked()
 {
-    refreshSerialDevices();
+    m_bldcInterface->refreshSerialDevices();
 }

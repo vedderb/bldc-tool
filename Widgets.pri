@@ -15,7 +15,6 @@ TEMPLATE = app
 SOURCES += \
     mainwindow.cpp \
     qcustomplot.cpp \
-    digitalfiltering.cpp \
     mrichtextedit.cpp \
     mtextedit.cpp \
     rtdatawidget.cpp
@@ -23,7 +22,6 @@ SOURCES += \
 HEADERS  += \
     mainwindow.h \
     qcustomplot.h \
-    digitalfiltering.h \
     mrichtextedit.h \
     mtextedit.h \
     rtdatawidget.h \

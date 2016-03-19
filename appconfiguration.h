@@ -89,11 +89,11 @@ public:
     } NRFRETRDELAY;
 
     // Settings
-    QML_WRITABLE_PROPERTY_W( int 	,controller_id 			,m_data.controller_id 			)
-    QML_WRITABLE_PROPERTY_W( int 	,timeout_msec 			,m_data.timeout_msec 			)
+    QML_WRITABLE_PROPERTY_WRAPPER( int 	,controller_id 			,m_data.controller_id, quint8)
+    QML_WRITABLE_PROPERTY_WRAPPER( int 	,timeout_msec 			,m_data.timeout_msec, quint32)
     QML_WRITABLE_PROPERTY_W( float 		,timeout_brake_current 	,m_data.timeout_brake_current 	)
     QML_WRITABLE_PROPERTY_W( bool 		,send_can_status 		,m_data.send_can_status 		)
-    QML_WRITABLE_PROPERTY_W( int 	,send_can_status_rate_hz,m_data.send_can_status_rate_hz)
+    QML_WRITABLE_PROPERTY_WRAPPER( int 	,send_can_status_rate_hz,m_data.send_can_status_rate_hz, quint32)
     // Application to use
     QML_WRITABLE_ENUM_PROPERTY_W( App_use ,app_to_use, app_use, m_data.app_to_use )
     // PPM application settings
@@ -124,9 +124,9 @@ public:
     QML_WRITABLE_PROPERTY_W( bool 				,adc_multi_esc 			,m_data.app_adc_conf.multi_esc 			)
     QML_WRITABLE_PROPERTY_W( bool 				,adc_tc 				,m_data.app_adc_conf.tc 				)
     QML_WRITABLE_PROPERTY_W( float				,adc_tc_max_diff 		,m_data.app_adc_conf.tc_max_diff 		)
-    QML_WRITABLE_PROPERTY_W( int 			,adc_update_rate_hz 	,m_data.app_adc_conf.update_rate_hz 	)
+    QML_WRITABLE_PROPERTY_WRAPPER( int 			,adc_update_rate_hz 	,m_data.app_adc_conf.update_rate_hz, quint32)
     // UART application settings
-    QML_WRITABLE_PROPERTY_W( int ,app_uart_baudrate	,m_data.app_uart_baudrate)
+    QML_WRITABLE_PROPERTY_WRAPPER( int ,app_uart_baudrate	,m_data.app_uart_baudrate, quint32)
     // Nunchuk application settings
     QML_WRITABLE_ENUM_PROPERTY_W( Chuk_control_type 	,chuk_ctrl_type, chuk_control_type,m_data.app_chuk_conf.ctrl_type 			)
     QML_WRITABLE_PROPERTY_W( float				,chuk_hyst 					,m_data.app_chuk_conf.hyst 					)
@@ -143,11 +143,11 @@ public:
     QML_WRITABLE_ENUM_PROPERTY_W( NRFPOWER 		,nrf_power		, NRF_POWER 	,m_data.app_nrf_conf.power		)
     QML_WRITABLE_ENUM_PROPERTY_W( NRFCRC        ,nrf_crc_type	, NRF_CRC       ,m_data.app_nrf_conf.crc_type	)
     QML_WRITABLE_ENUM_PROPERTY_W( NRFRETRDELAY  ,nrf_retry_delay, NRF_RETR_DELAY,m_data.app_nrf_conf.retry_delay)
-    QML_WRITABLE_PROPERTY_W( unsigned char 	,nrf_retries		,m_data.app_nrf_conf.retries	)
-    QML_WRITABLE_PROPERTY_W( unsigned char 	,nrf_channel		,m_data.app_nrf_conf.channel	)
-    QML_WRITABLE_PROPERTY_W( unsigned char 	,nrf_address0		,m_data.app_nrf_conf.address[0]	)
-    QML_WRITABLE_PROPERTY_W( unsigned char 	,nrf_address1		,m_data.app_nrf_conf.address[1]	)
-    QML_WRITABLE_PROPERTY_W( unsigned char 	,nrf_address2		,m_data.app_nrf_conf.address[2]	)
+    QML_WRITABLE_PROPERTY_WRAPPER( char ,nrf_retries		,m_data.app_nrf_conf.retries   , unsigned char )
+    QML_WRITABLE_PROPERTY_WRAPPER( char ,nrf_channel		,m_data.app_nrf_conf.channel   , unsigned char )
+    QML_WRITABLE_PROPERTY_WRAPPER( char ,nrf_address0		,m_data.app_nrf_conf.address[0], unsigned char	)
+    QML_WRITABLE_PROPERTY_WRAPPER( char ,nrf_address1		,m_data.app_nrf_conf.address[1], unsigned char	)
+    QML_WRITABLE_PROPERTY_WRAPPER( char 	,nrf_address2		,m_data.app_nrf_conf.address[2], unsigned char	)
     QML_WRITABLE_PROPERTY_W( bool 			,nrf_send_crc_ack	,m_data.app_nrf_conf.send_crc_ack)
 
 public:

@@ -1,10 +1,10 @@
 #include "bldcinterface.h"
 #include <math.h>
 #include <QThread>
+#ifdef QML
 #include <QtQml>
-
-namespace {
-void stepTowards(double &value, double goal, double step) {
+#endif
+void BLDCInterface::stepTowards(double &value, double goal, double step) {
     if (value < goal) {
         if ((value + step) < goal) {
             value += step;
@@ -19,20 +19,22 @@ void stepTowards(double &value, double goal, double step) {
         }
     }
 }
-}
+
 
 BLDCInterface::BLDCInterface(QObject *parent) :
     QObject(parent),
-    m_realtimeActivate(false)
+    m_udpPort(27800),
+    m_realtimeActivate(false),
+    m_keyLeft(false),
+    m_keyRight(false),
+    m_detectRes()
 {
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
     m_mcValues = new McValues(this);
     m_bleInterface = new BLEInterface(this);
 
-
     refreshSerialDevices();
-    set_udpIp("192.168.1.118");
 
     // Compatible firmwares
     mFwVersionReceived = false;
@@ -49,42 +51,22 @@ BLDCInterface::BLDCInterface(QObject *parent) :
         supportedFWs.append(tmp);
     }
     update_firmwareSupported(supportedFWs);
-
     mSerialPort = new QSerialPort(this);
-
     mTimer = new QTimer(this);
     mTimer->setInterval(20);
     mTimer->start();
-
-    mSampleInt = 0;
-    m_doReplot =(false );
-    m_doRescale=( true);
-    m_doFilterReplot = true;
     m_packetInterface = new PacketInterface(this);
-    mDetectRes.updated = false;
-
     connect(mSerialPort, SIGNAL(readyRead()),
             this, SLOT(serialDataAvailable()));
     connect(mSerialPort, SIGNAL(error(QSerialPort::SerialPortError)),
             this, SLOT(serialPortError(QSerialPort::SerialPortError)));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
-
     connect(m_packetInterface, SIGNAL(dataToSend(QByteArray&)),
             this, SLOT(packetDataToSend(QByteArray&)));
     connect(m_packetInterface, SIGNAL(fwVersionReceived(int,int)),
             this, SLOT(fwVersionReceived(int,int)));
-    connect(m_packetInterface, SIGNAL(ackReceived(QString)),
-            this, SIGNAL(ackReceived(QString)));
     connect(m_packetInterface, SIGNAL(valuesReceived(MC_VALUES)),
             m_mcValues, SLOT(setValues(MC_VALUES)));
-    connect(m_packetInterface, SIGNAL(printReceived(QString)),
-            this, SIGNAL(printReceived(QString)));
-    connect(m_packetInterface, SIGNAL(samplesReceived(QByteArray)),
-            this, SLOT(samplesReceived(QByteArray)));
-    connect(m_packetInterface, SIGNAL(rotorPosReceived(double)),
-            this, SIGNAL(rotorPosReceived(double)));
-    connect(m_packetInterface, SIGNAL(experimentSamplesReceived(QVector<double>)),
-            this, SLOT(experimentSamplesReceived(QVector<double>)));
     connect(m_packetInterface, SIGNAL(mcconfReceived(mc_configuration)),
             this, SLOT(mcconfReceived(mc_configuration)));
     connect(m_packetInterface, SIGNAL(motorParamReceived(double,double,QVector<int>,int)),
@@ -110,14 +92,14 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     connect(m_bleInterface, SIGNAL(dataReceived(QByteArray)),
             m_packetInterface, SLOT(processData(QByteArray)));
 
-
     mSerialization = new Serialization(this);
-
+#ifdef QML
     qmlRegisterType<AppConfiguration>("bldc", 1, 0, "AppConf");
     qmlRegisterType<McConfiguration>("bldc", 1, 0, "McConf");
     qmlRegisterType<McValues>("bldc", 1, 0, "McValues");
     qmlRegisterUncreatableType<PacketInterface>("bldc", 1, 0, "PacketInterface", "Uncreatable.");
     qmlRegisterUncreatableType<BLEInterface>("bldc", 1, 0, "bleInterface", "Uncreatable.");
+#endif
 }
 void BLDCInterface::serialDataAvailable()
 {
@@ -211,7 +193,7 @@ void BLDCInterface::timerSlot()
     // Update fw upload bar and label
     double fw_prog = m_packetInterface->getFirmwareUploadProgress();
     if (fw_prog > -0.1) {
-        update_firmwareProgress( fw_prog );
+        update_firmwareProgress( fw_prog * 100);
         update_firmwareUploadEnabled(false);
         update_firmwareCancelEnabled(true);
     } else {
@@ -220,9 +202,9 @@ void BLDCInterface::timerSlot()
             mFwVersionReceived = false;
             mFwRetries = 0;
             if (m_packetInterface->getFirmwareUploadStatus().compare("FW Upload Done") == 0) {
-                update_firmwareProgress(1.0);
+                update_firmwareProgress(100);
             } else {
-                update_firmwareProgress(0.0);
+                update_firmwareProgress(0);
             }
         }
         update_firmwareUploadEnabled(true);
@@ -262,21 +244,21 @@ void BLDCInterface::timerSlot()
     static int isSlIntBefore = true;
     if (m_mcconfCommInt != isSlIntBefore) {
         if (m_mcconfCommInt) {
-            m_mcconf->set_sl_min_erpm                           (true);
-            m_mcconf->set_sl_max_fullbreak_current_dir_change	(true);
-            m_mcconf->set_sl_bemf_coupling_k            		(true);
-            m_mcconf->set_sl_cycle_int_rpm_br           		(true);
-            m_mcconf->set_sl_cycle_int_limit            		(true);
-            m_mcconf->set_sl_phase_advance_at_br        		(true);
-            m_mcconf->set_sl_min_erpm_cycle_int_limit   		(true);
+            update_mcconfSlMinErpmEnabled      (true);
+            update_mcconfSlMaxFbCurrEnabled    (true);
+            update_mcconfSlBemfKEnabled        (true);
+            update_mcconfSlBrErpmEnabled       (true);
+            update_mcconfSlIntLimEnabled       (true);
+            update_mcconfSlIntLimScaleBrEnabled(true);
+            update_mcconfSlMinErpmIlEnabled    (true);
         } else {
-            m_mcconf->set_sl_min_erpm                           (true);
-            m_mcconf->set_sl_max_fullbreak_current_dir_change	(true);
-            m_mcconf->set_sl_bemf_coupling_k            		(false);
-            m_mcconf->set_sl_cycle_int_rpm_br           		(true);
-            m_mcconf->set_sl_cycle_int_limit            		(false);
-            m_mcconf->set_sl_phase_advance_at_br        		(true);
-            m_mcconf->set_sl_min_erpm_cycle_int_limit   		(false);
+            update_mcconfSlMinErpmEnabled      (true);
+            update_mcconfSlMaxFbCurrEnabled    (true);
+            update_mcconfSlBemfKEnabled        (false);
+            update_mcconfSlBrErpmEnabled       (true);
+            update_mcconfSlIntLimEnabled       (false);
+            update_mcconfSlIntLimScaleBrEnabled(true);
+            update_mcconfSlMinErpmIlEnabled    (false);
         }
     }
     isSlIntBefore = m_mcconfCommInt;
@@ -321,7 +303,7 @@ void BLDCInterface::timerSlot()
         lastKeyPower = keyPower;
         m_packetInterface->setDutyCycle(keyPower);
     }
-    emit update();
+    emit updatePlots();
 }
 
 void BLDCInterface::packetDataToSend(QByteArray &data)
@@ -401,51 +383,6 @@ void BLDCInterface::fwVersionReceived(int major, int minor)
     }
 }
 
-void BLDCInterface::samplesReceived(QByteArray data)
-{
-    for (int i = 0;i < data.size();i++) {
-        if (mSampleInt == 0 || mSampleInt == 1) {
-            tmpCurr1Array.append(data[i]);
-        } else if (mSampleInt == 2 || mSampleInt == 3) {
-            tmpCurr2Array.append(data[i]);
-        } else if (mSampleInt == 4 || mSampleInt == 5) {
-            tmpPh1Array.append(data[i]);
-        } else if (mSampleInt == 6 || mSampleInt == 7) {
-            tmpPh2Array.append(data[i]);
-        } else if (mSampleInt == 8 || mSampleInt == 9) {
-            tmpPh3Array.append(data[i]);
-        } else if (mSampleInt == 10 || mSampleInt == 11) {
-            tmpVZeroArray.append(data[i]);
-        } else if (mSampleInt == 12) {
-            tmpStatusArray.append(data[i]);
-        } else if (mSampleInt == 13 || mSampleInt == 14) {
-            tmpCurrTotArray.append(data[i]);
-        } else if (mSampleInt == 15 || mSampleInt == 16) {
-            tmpFSwArray.append(data[i]);
-        }
-
-        mSampleInt++;
-        if (mSampleInt == 17) {
-            mSampleInt = 0;
-        }
-
-        if (tmpCurr1Array.size() == (m_sampleNum * 2)) {
-            curr1Array = tmpCurr1Array;
-            curr2Array = tmpCurr2Array;
-            ph1Array = tmpPh1Array;
-            ph2Array = tmpPh2Array;
-            ph3Array = tmpPh3Array;
-            vZeroArray = tmpVZeroArray;
-            statusArray = tmpStatusArray;
-            currTotArray = tmpCurrTotArray;
-            fSwArray = tmpFSwArray;
-            set_doReplot(true);
-            set_doFilterReplot(true);
-            set_doRescale(true);
-        }
-    }
-}
-
 void BLDCInterface::mcconfReceived(mc_configuration mcconf)
 {
     m_mcconf->setData(mcconf);
@@ -462,11 +399,11 @@ void BLDCInterface::motorParamReceived(double cycle_int_limit, double bemf_coupl
     }
     emit statusInfoChanged("Detection Result Received", true);
 
-    mDetectRes.updated = true;
-    mDetectRes.cycle_int_limit = cycle_int_limit;
-    mDetectRes.bemf_coupling_k = bemf_coupling_k;
-    mDetectRes.hall_table = hall_table;
-    mDetectRes.hall_res = hall_res;
+    m_detectRes.updated = true;
+    m_detectRes.cycle_int_limit = cycle_int_limit;
+    m_detectRes.bemf_coupling_k = bemf_coupling_k;
+    m_detectRes.hall_table = hall_table.toList();
+    m_detectRes.hall_res = hall_res;
 
     QString hall_str;
     if (hall_res == 0) {
@@ -530,9 +467,9 @@ void BLDCInterface::encoderParamReceived(double offset, double ratio, bool inver
                                            "upload firmware with encodcer support and try again.");
     } else {
         emit statusInfoChanged("Encoder Result Received", true);
-        set_mcconfFocMeasureEncoderOffset(offset);
-        set_mcconfFocMeasureEncoderRatio(ratio);
-        set_mcconfFocMeasureEncoderInverted(inverted);
+        set_mcconfFocMeasureEncoderOffset   (offset);
+        set_mcconfFocMeasureEncoderRatio    (ratio);
+        set_mcconfFocMeasureEncoderInverted (inverted);
     }
 }
 
@@ -542,8 +479,8 @@ void BLDCInterface::focHallTableReceived(QVector<int> hall_table, int res)
         emit statusInfoChanged("Bad Detection Result Received", false);
     } else {
         emit statusInfoChanged("Hall Result Received", true);
-        QList<double> table;
-        foreach (double val, hall_table)
+        QList<int> table;
+        foreach (auto val, hall_table)
             table.append(val);
         set_mcconfFocMeasureHallTable(table);
     }
@@ -600,11 +537,6 @@ void BLDCInterface::mcconfFocCalcCC()
     set_mcconfFocCalcKi(ki);
 }
 
-void BLDCInterface::experimentSamplesReceived(QVector<double> samples)
-{
-    emit experimentSamplesReceived(samples.toList());
-}
-
 void BLDCInterface::refreshSerialDevices()
 {
     m_serialPortsLocations.clear();
@@ -622,20 +554,6 @@ void BLDCInterface::refreshSerialDevices()
     }
     update_serialPortNames(serialPortNames);
     set_currentSerialPort(0);
-}
-
-void BLDCInterface::clearBuffers()
-{
-    mSampleInt = 0;
-    tmpCurr1Array.clear();
-    tmpCurr2Array.clear();
-    tmpPh1Array.clear();
-    tmpPh2Array.clear();
-    tmpPh3Array.clear();
-    tmpVZeroArray.clear();
-    tmpStatusArray.clear();
-    tmpCurrTotArray.clear();
-    tmpFSwArray.clear();
 }
 
 void BLDCInterface::disconnectSerial(){
@@ -682,13 +600,25 @@ void BLDCInterface::writeMcconf()
     m_packetInterface->setMcconf(m_mcconf->data());
 }
 
-void BLDCInterface::loadMcconfXml(QString xmlfile)
+bool BLDCInterface::loadMcconfXml(QString xmlfile)
 {
     mc_configuration tmp = m_mcconf->data();
     if (mSerialization->readMcconfXml(xmlfile, tmp)) {
         m_mcconf->setData(tmp);
+        return true;
     } else {
         emit statusInfoChanged("Loading MCCONF failed", false);
+        return false;
+    }
+}
+
+bool BLDCInterface::saveMcconfXml(QString xmlfile)
+{
+    if (mSerialization->writeMcconfXml(xmlfile, m_mcconf->data())) {
+        return true;
+    } else {
+        emit statusInfoChanged("Saving MCCONF failed", false);
+        return false;
     }
 }
 
@@ -732,12 +662,6 @@ void BLDCInterface::readFirmwareVersion()
     m_packetInterface->getFwVersion();
 }
 
-void BLDCInterface::getSampleData(bool atStart, int sampleNum, int sampleInt)
-{
-    clearBuffers();
-    m_packetInterface->samplePrint(atStart, sampleNum, sampleInt);
-}
-
 void BLDCInterface::connectCurrentSerial()
 {
     connectSerial(m_serialPortsLocations.at(m_currentSerialPort));
@@ -773,7 +697,21 @@ void BLDCInterface::connectSerial(QString port)
     QThread::msleep(100);
 
     m_packetInterface->stopUdpConnection();
+}
 
+void BLDCInterface::connectUdb()
+{
+    QHostAddress ip;
+
+    if (ip.setAddress(m_udpIp.trimmed())) {
+        if (mSerialPort->isOpen()) {
+            mSerialPort->close();
+        }
+
+        m_packetInterface->startUdpConnection(ip, m_udpPort);
+    } else {
+        emit statusInfoChanged("Invalid IP address", false);
+    }
 }
 
 void BLDCInterface::connectCurrentBleDevice(){

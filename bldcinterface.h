@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QtSerialPort/QSerialPort>
 #include <QTimer>
-#include <QQmlListProperty>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QFile>
 #include <QFileInfo>
@@ -22,9 +21,10 @@ typedef struct {
     bool updated;
     double cycle_int_limit;
     double bemf_coupling_k;
-    QVector<int> hall_table;
+    QList<int> hall_table;
     int hall_res;
 } detect_res_t;
+
 
 class BLDCInterface : public QObject
 {
@@ -37,15 +37,24 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(BLEInterface*, bleInterface)
 
     QML_WRITABLE_PROPERTY(QString, udpIp)
-    QML_READONLY_PROPERTY(QStringList, serialPortNames)
+    QML_WRITABLE_PROPERTY(int, udpPort)
     QML_WRITABLE_PROPERTY(int, currentSerialPort)
+
+    QML_READONLY_PROPERTY(QStringList, serialPortNames)
     QML_READONLY_PROPERTY(QString, firmwareSupported)
     QML_READONLY_PROPERTY(QString, firmware)
     QML_READONLY_PROPERTY(QString, mcconfDetectResult)
     QML_READONLY_PROPERTY(QString, firmwareVersion)
-    QML_READONLY_PROPERTY(double, firmwareProgress)
+    QML_READONLY_PROPERTY(int, firmwareProgress)
     QML_READONLY_PROPERTY(bool, firmwareUploadEnabled)
     QML_READONLY_PROPERTY(bool, firmwareCancelEnabled)
+    QML_READONLY_PROPERTY(bool, mcconfSlMinErpmEnabled      )
+    QML_READONLY_PROPERTY(bool, mcconfSlMaxFbCurrEnabled    )
+    QML_READONLY_PROPERTY(bool, mcconfSlBemfKEnabled        )
+    QML_READONLY_PROPERTY(bool, mcconfSlBrErpmEnabled       )
+    QML_READONLY_PROPERTY(bool, mcconfSlIntLimEnabled       )
+    QML_READONLY_PROPERTY(bool, mcconfSlIntLimScaleBrEnabled)
+    QML_READONLY_PROPERTY(bool, mcconfSlMinErpmIlEnabled    )
     QML_READONLY_PROPERTY(QString, firmwareUploadStatus)
     QML_READONLY_PROPERTY(double, rotorPos)
     QML_READONLY_PROPERTY(QString, status)
@@ -54,27 +63,22 @@ class BLDCInterface : public QObject
 
     QML_WRITEONLY_PROPERTY(int, sampleNum)
     QML_WRITEONLY_PROPERTY(int, mcconfFocCalcCCTc)
-    QML_WRITEONLY_PROPERTY(int, mcconfFocCalcKp)
-    QML_WRITEONLY_PROPERTY(int, mcconfFocCalcKi)
+    QML_WRITEONLY_PROPERTY(int, canId)
     QML_WRITEONLY_PROPERTY(bool, canFwd)
-    QML_WRITEONLY_PROPERTY(bool, canId)
     QML_WRITEONLY_PROPERTY(bool, realtimeActivate)
-    QML_WRITEONLY_PROPERTY(bool, appconfUpdatePpm       )
-    QML_WRITEONLY_PROPERTY(bool, appconfAdcUpdate       )
-    QML_WRITEONLY_PROPERTY(bool, appconfUpdateChuk      )
-    QML_WRITABLE_PROPERTY(bool, mcconfCommInt           )
-    QML_WRITABLE_PROPERTY(bool, doReplot)
-    QML_WRITABLE_PROPERTY(bool, doRescale)
-    QML_WRITABLE_PROPERTY(bool, doFilterReplot)
+    QML_WRITEONLY_PROPERTY(bool, appconfUpdatePpm)
+    QML_WRITEONLY_PROPERTY(bool, appconfAdcUpdate)
+    QML_WRITEONLY_PROPERTY(bool, appconfUpdateChuk)
     QML_WRITEONLY_PROPERTY(bool, overrideKb)
     QML_WRITEONLY_PROPERTY(double, sampleFreq)
     QML_WRITEONLY_PROPERTY(bool, horizontalZoom)
     QML_WRITEONLY_PROPERTY(bool, verticalZoom)
-
-
     QML_WRITEONLY_PROPERTY(bool, keyLeft )
     QML_WRITEONLY_PROPERTY(bool, keyRight)
 
+    QML_WRITABLE_PROPERTY(bool, mcconfCommInt)
+    QML_WRITABLE_PROPERTY(int, mcconfFocCalcKp)
+    QML_WRITABLE_PROPERTY(int, mcconfFocCalcKi)
     QML_WRITABLE_PROPERTY(double, mcconfFocDetectR		          )
     QML_WRITABLE_PROPERTY(double, mcconfFocDetectL		          )
     QML_WRITABLE_PROPERTY(double, mcconfFocDetectLinkage	      )
@@ -87,10 +91,7 @@ class BLDCInterface : public QObject
     QML_WRITABLE_PROPERTY(double, mcconfFocMeasureEncoderOffset	  )
     QML_WRITABLE_PROPERTY(double, mcconfFocMeasureEncoderRatio	  )
     QML_WRITABLE_PROPERTY(double, mcconfFocMeasureEncoderInverted )
-    QML_WRITABLE_PROPERTY(double, mcconfFocMeasureEncoderCurrent  )
-    QML_WRITABLE_PROPERTY(double, mcconfFocMeasureHallCurrent	  )
-    QML_WRITABLE_PROPERTY(QList<double>, mcconfDetectHallTable	  )
-    QML_WRITABLE_PROPERTY(QList<double>, mcconfFocMeasureHallTable)
+    QML_WRITABLE_PROPERTY(QList<int>, mcconfFocMeasureHallTable)
     QML_READONLY_PROPERTY(double, appconfDecodedChuk)
     QML_READONLY_PROPERTY(double, appconfAdcDecoded )
     QML_READONLY_PROPERTY(double, appconfAdcDecoded2)
@@ -99,28 +100,28 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(int, appconfDecodedPpm)
     QML_READONLY_PROPERTY(double, appconfPpmPulsewidth)
 
-
-
 public:
     explicit BLDCInterface(QObject *parent = 0);
+    const detect_res_t& get_detectRes() const{
+        return m_detectRes;
+    }
+    bool isConnected(){
+        return mSerialPort->isOpen() || m_bleInterface->isConnected() || m_packetInterface->isUdpConnected();
+    }
 
 signals:
     void statusInfoChanged(QString info, bool isGood);
     void msgCritical(QString title, QString text);
     void msgwarning(QString title, QString text);
-    void ackReceived(QString ackType);
     void mcValuesReceived(MC_VALUES values);
-    void printReceived(QString str);
-    void serialPortsInfoChanged(QQmlListProperty<QSerialPortInfo> serialPortsInfo);
-    void rotorPosReceived(double pos);
-    void update();
-    void experimentSamplesReceived(QList<double>);
+    void updatePlots();
 
 public:
     Q_INVOKABLE static QString localFilePath(QUrl path){
         return path.toLocalFile();
     }
 
+    static void stepTowards(double &value, double goal, double step);
 public slots:
 
     void connectCurrentSerial();
@@ -132,19 +133,20 @@ public slots:
     void detect();
     void stopDetect();
     void writeMcconf();
-    void loadMcconfXml(QString xmlfile);
+    bool loadMcconfXml(QString xmlfile);
     void writeAppConf();
     void uploadFirmware(QString fileName);
     void readFirmwareVersion();
-    void getSampleData(bool atStart, int sampleNum, int sampleInt);
-
     void connectCurrentBleDevice();
     void disconnectBle();
+    void connectUdb();
+    void mcconfFocCalcCC();
+    void refreshSerialDevices();
+    bool saveMcconfXml(QString xmlfile);
 private slots:
 
     void timerSlot();
     void fwVersionReceived(int major, int minor);
-    void samplesReceived(QByteArray data);
     void mcconfReceived(mc_configuration mcconf);
     void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
     void motorRLReceived(double r, double l);
@@ -155,11 +157,8 @@ private slots:
     void decodedPpmReceived(double ppm_value, double ppm_last_len);
     void decodedAdcReceived(double adc_value, double adc_voltage, double adc_value2, double adc_voltage2);
     void decodedChukReceived(double chuk_value);
-    void mcconfFocCalcCC();
-    void experimentSamplesReceived(QVector<double>);
 private:
 
-    void refreshSerialDevices();
     void clearBuffers();
 
     QSerialPort *mSerialPort;
@@ -170,29 +169,7 @@ private:
     int mFwRetries;
     QList<QPair<int, int> > mCompatibleFws;
     Serialization *mSerialization;
-
-
-    int mSampleInt;
-    QByteArray curr1Array;
-    QByteArray curr2Array;
-    QByteArray ph1Array;
-    QByteArray ph2Array;
-    QByteArray ph3Array;
-    QByteArray vZeroArray;
-    QByteArray statusArray;
-    QByteArray currTotArray;
-    QByteArray fSwArray;
-    QByteArray tmpCurr1Array;
-    QByteArray tmpCurr2Array;
-    QByteArray tmpPh1Array;
-    QByteArray tmpPh2Array;
-    QByteArray tmpPh3Array;
-    QByteArray tmpVZeroArray;
-    QByteArray tmpStatusArray;
-    QByteArray tmpCurrTotArray;
-    QByteArray tmpFSwArray;
-    detect_res_t mDetectRes;
-
+    detect_res_t m_detectRes;
 };
 
 #endif // BLDCINTERFACE_H

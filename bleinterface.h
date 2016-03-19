@@ -70,7 +70,6 @@ private slots:
     void onDeviceConnected();
     void onDeviceDisconnected();
 
-
     //QLowEnergyService
     void onServiceStateChanged(QLowEnergyService::ServiceState s);
     void onCharacteristicChanged(const QLowEnergyCharacteristic &c,

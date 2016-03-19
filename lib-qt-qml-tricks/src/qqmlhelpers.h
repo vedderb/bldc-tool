@@ -1,6 +1,5 @@
 #ifndef QQMLHELPERS_H
 #define QQMLHELPERS_H
-
 #include <QObject>
 
 #define QML_WRITABLE_PROPERTY(type, name) \
@@ -95,6 +94,26 @@
     };
 
 // wrapper properties
+#define QML_WRITABLE_PROPERTY_WRAPPER(type, name, data, baseType) \
+    protected: \
+        Q_PROPERTY (type name READ get_##name WRITE set_##name NOTIFY name##Changed) \
+    public: \
+        type get_##name () const { \
+            return data ; \
+        } \
+    public Q_SLOTS: \
+        bool set_##name (type name) { \
+            bool ret = false; \
+            if ((ret = data != (baseType)name)) { \
+                data = name; \
+                emit name##Changed (data); \
+            } \
+            return ret; \
+        } \
+    Q_SIGNALS: \
+        void name##Changed (type name); \
+    private:
+
 #define QML_WRITABLE_PROPERTY_W(type, name, data) \
     protected: \
         Q_PROPERTY (type name READ get_##name WRITE set_##name NOTIFY name##Changed) \
@@ -142,12 +161,12 @@
         void name##Changed (type name); \
     private:
 
-
 #define QML_WRITEONLY_PROPERTY(type, name) \
     protected: \
-        Q_PROPERTY (type name WRITE set_##name) \
+        Q_PROPERTY (type name READ get_##name WRITE set_##name) \
     private: \
         type m_##name; \
+        const type& get_##name() const {return m_##name;} \
     public Q_SLOTS: \
         void set_##name (type name) { \
                 m_##name = name; \
