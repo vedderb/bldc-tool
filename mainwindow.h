@@ -113,6 +113,8 @@ private slots:
     void on_mcconfFocMeasureHallButton_clicked();
     void on_mcconfFocMeasureHallApplyButton_clicked();
     void on_refreshButton_clicked();
+    void on_bleScanButton_clicked();
+    void on_bleConnectButton_clicked();
 
 private:
     BLDCInterface *m_bldcInterface;

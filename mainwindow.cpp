@@ -50,14 +50,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mAppconfLoaded = false;
     mStatusInfoTime = 0;
 
-    connect(m_bldcInterface, SIGNAL(statusInfoChanged(QString,bool)),
-            this, SLOT(showStatusInfo(QString,bool)));
-    connect(m_bldcInterface, &BLDCInterface::msgCritical,
-                 this, [this](QString title, QString text){QMessageBox::critical(this, title, text);});
-    connect(m_bldcInterface, &BLDCInterface::msgwarning,
-                 this, [this](QString title, QString text){QMessageBox::warning(this, title, text);});
-    connect(m_bldcInterface, BLDCInterface::firmwareVersionChanged,
-            ui->firmwareVersionLabel, QLabel::setText);
     connect(mPacketInterface, &PacketInterface::ackReceived,
             this, [this](QString type){showStatusInfo(type, true);});
     connect(mPacketInterface, SIGNAL(valuesReceived(MC_VALUES)),
@@ -81,6 +73,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(mPacketInterface, SIGNAL(decodedChukReceived(double)),
             this, SLOT(decodedChukReceived(double)));
 
+    connect(m_bldcInterface, SIGNAL(statusInfoChanged(QString,bool)),
+            this, SLOT(showStatusInfo(QString,bool)));
+    connect(m_bldcInterface, &BLDCInterface::msgCritical,
+                 this, [this](QString title, QString text){QMessageBox::critical(this, title, text);});
+    connect(m_bldcInterface, &BLDCInterface::msgwarning,
+                 this, [this](QString title, QString text){QMessageBox::warning(this, title, text);});
+    connect(m_bldcInterface, BLDCInterface::firmwareVersionChanged,
+            ui->firmwareVersionLabel, QLabel::setText);
     connect(m_bldcInterface, &BLDCInterface::mcconfDetectResultChanged,
                  ui->mcconfDetectResultBrowser, &QTextBrowser::setText);
     connect(m_bldcInterface, &BLDCInterface::mcconfFocDetectRChanged,
@@ -125,6 +125,9 @@ MainWindow::MainWindow(QWidget *parent) :
                  ,ui->mcconfFocMeasureEncoderInvertedBox, &QCheckBox::setChecked);
     connect(m_bldcInterface, &BLDCInterface::updatePlots,
                  this, &MainWindow::UpdatePlots);
+    connect(m_bldcInterface->get_bleInterface(), &BLEInterface::devicesNamesChanged,
+            [this](QStringList items){
+        ui->bleCombobox->clear();ui->bleCombobox->addItems(items);});
 
     connect(ui->canFwdBox, &QCheckBox::toggled,
                  m_bldcInterface, &BLDCInterface::set_canFwd);
@@ -2312,4 +2315,17 @@ void MainWindow::on_mcconfFocMeasureHallApplyButton_clicked()
 void MainWindow::on_refreshButton_clicked()
 {
     m_bldcInterface->refreshSerialDevices();
+}
+
+void MainWindow::on_bleScanButton_clicked()
+{
+    m_bldcInterface->get_bleInterface()->scanDevices();
+}
+
+void MainWindow::on_bleConnectButton_clicked()
+{
+    if(ui->bleCombobox->currentIndex() < 0)
+        return;
+    m_bldcInterface->get_bleInterface()->set_currentDevice(ui->bleCombobox->currentIndex());
+    m_bldcInterface->connectCurrentBleDevice();
 }
