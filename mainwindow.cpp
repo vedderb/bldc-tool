@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    m_bldcInterface = new BLDCInterface(this);
+    mPacketInterface = m_bldcInterface->get_packetInterface();
 
     ui->setupUi(this);
     ui->udpIpEdit->setText("192.168.1.118");
@@ -38,8 +40,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mStatusLabel = new QLabel(this);
     ui->statusBar->addPermanentWidget(mStatusLabel);
 
-    m_bldcInterface = new BLDCInterface(this);
-    mPacketInterface = m_bldcInterface->get_packetInterface();
     mSampleInt = 0;
     mDoReplot = false;
     mDoReplotPos = false;
