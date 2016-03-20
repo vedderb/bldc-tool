@@ -67,8 +67,13 @@ void BLEInterface::read(){
 
 void BLEInterface::write(const QByteArray &data)
 {
-    if(m_service && m_characteristic.isValid())
+    if(m_service && m_characteristic.isValid()){
+        if(data.length() > 20){
+            // ToDo: send on packet
+            emit this->statusInfoChanged("Too large data to send.", false);
+        }
         m_service->writeCharacteristic(m_characteristic, data);
+    }
 }
 
 void BLEInterface::addDevice(const QBluetoothDeviceInfo &device)
