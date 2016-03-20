@@ -1,4 +1,4 @@
-#ifndef SERIALPORTINTERFACE_H
+#ifndef BLDCINTERFACE_H
 #define BLDCINTERFACE_H
 
 #include <QObject>

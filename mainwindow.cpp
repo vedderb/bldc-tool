@@ -79,8 +79,8 @@ MainWindow::MainWindow(QWidget *parent) :
                  this, [this](QString title, QString text){QMessageBox::critical(this, title, text);});
     connect(m_bldcInterface, &BLDCInterface::msgwarning,
                  this, [this](QString title, QString text){QMessageBox::warning(this, title, text);});
-    connect(m_bldcInterface, BLDCInterface::firmwareVersionChanged,
-            ui->firmwareVersionLabel, QLabel::setText);
+    connect(m_bldcInterface, &BLDCInterface::firmwareVersionChanged,
+            ui->firmwareVersionLabel, &QLabel::setText);
     connect(m_bldcInterface, &BLDCInterface::mcconfDetectResultChanged,
                  ui->mcconfDetectResultBrowser, &QTextBrowser::setText);
     connect(m_bldcInterface, &BLDCInterface::mcconfFocDetectRChanged,
@@ -93,7 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
                   ui->mcconfFocCalcKiBox ,&QDoubleSpinBox::setValue);
     connect(m_bldcInterface,  &BLDCInterface::mcconfFocDetectLinkageChanged,
                   ui->mcconfFocDetectLinkageBox ,&QDoubleSpinBox::setValue);
-    connect(m_bldcInterface, BLDCInterface::mcconfFocMeasureHallTableChanged,
+    connect(m_bldcInterface, &BLDCInterface::mcconfFocMeasureHallTableChanged,
                  this, &MainWindow::setFocHallTable);
     connect(m_bldcInterface, &BLDCInterface::firmwareProgressChanged,
             ui->firmwareBar, &QProgressBar::setValue);
