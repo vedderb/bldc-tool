@@ -32,7 +32,8 @@ BLEInterface::BLEInterface(QObject *parent) : QObject(parent),
     m_control(0),
     m_service(0),
     m_readTimer(0),
-    m_connected(false)
+    m_connected(false),
+    m_serviceUuid(SERVICE_UUID)
 {
     m_deviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
 
@@ -61,18 +62,19 @@ void BLEInterface::scanDevices()
 }
 
 void BLEInterface::read(){
-    if(m_service && m_characteristic.isValid())
-        m_service->readCharacteristic(m_characteristic);
+    if(m_service && m_readCharacteristic.isValid())
+        m_service->readCharacteristic(m_readCharacteristic);
 }
 
 void BLEInterface::write(const QByteArray &data)
 {
-    if(m_service && m_characteristic.isValid()){
+    qDebug() << "BLEInterface::write: " << data;
+    if(m_service && m_writeCharacteristic.isValid()){
         if(data.length() > 20){
             // ToDo: send on packet
             emit this->statusInfoChanged("Too large data to send.", false);
         }
-        m_service->writeCharacteristic(m_characteristic, data);
+        m_service->writeCharacteristic(m_writeCharacteristic, data);
     }
 }
 
@@ -148,9 +150,10 @@ void BLEInterface::onDeviceDisconnected()
 
 void BLEInterface::onServiceDiscovered(const QBluetoothUuid &gatt)
 {
-    m_serviceUuid =  gatt;
-    emit statusInfoChanged("Service discovered. Waiting for service scan to be done...", true);
-    m_foundService = true;
+    if(gatt == m_serviceUuid){
+        emit statusInfoChanged("Service discovered. Waiting for service scan to be done...", true);
+        m_foundService = true;
+    }
 }
 
 void BLEInterface::onServiceScanDone()
@@ -212,6 +215,7 @@ void BLEInterface::onCharacteristicChanged(const QLowEnergyCharacteristic &c,
 {
     Q_UNUSED(c)
     qDebug() << "Characteristic Changed: " << value;
+    emit dataReceived(value);
 }
 void BLEInterface::onCharacteristicWrite(const QLowEnergyCharacteristic &c,
                                           const QByteArray &value)
@@ -222,6 +226,7 @@ void BLEInterface::onCharacteristicWrite(const QLowEnergyCharacteristic &c,
 void BLEInterface::onCharacteristicRead(const QLowEnergyCharacteristic &c,
                                         const QByteArray &value){
     Q_UNUSED(c)
+    qDebug() << "Characteristic Read: " << value;
     emit dataReceived(value);
 }
 
@@ -230,16 +235,24 @@ void BLEInterface::onServiceStateChanged(QLowEnergyService::ServiceState s)
     qDebug() << "serviceStateChanged, state: " << s;
     if (s == QLowEnergyService::ServiceDiscovered) {
         foreach (QLowEnergyCharacteristic c, m_service->characteristics()) {
-            if(c.isValid() &&
-                    (c.properties() & QLowEnergyCharacteristic::WriteNoResponse) &&
-                    (c.properties() & QLowEnergyCharacteristic::Read) ){
-                m_characteristic = c;
-                if(!m_readTimer){
-                    m_readTimer = new QTimer(this);
-                    connect(m_readTimer, &QTimer::timeout, this, &BLEInterface::read);
-                    m_readTimer->start(READ_INTERVAL_MS);
+            if(c.isValid()){
+                if (c.properties() & QLowEnergyCharacteristic::WriteNoResponse ||
+                    c.properties() & QLowEnergyCharacteristic::Write) {
+                    m_writeCharacteristic = c;
+                    update_connected(true);                }
+                if (c.properties() & QLowEnergyCharacteristic::Read) {
+                    m_readCharacteristic = c;
+                    if(!m_readTimer){
+                        m_readTimer = new QTimer(this);
+                        connect(m_readTimer, &QTimer::timeout, this, &BLEInterface::read);
+                        m_readTimer->start(READ_INTERVAL_MS);
+                    }
                 }
-                update_connected(true);
+                m_notificationDesc = c.descriptor(
+                            QBluetoothUuid::ClientCharacteristicConfiguration);
+                if (m_notificationDesc.isValid()) {
+                    m_service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0100"));
+                }
                 return;
             }
         }

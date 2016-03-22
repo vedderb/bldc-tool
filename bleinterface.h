@@ -11,6 +11,7 @@
 #include "lib-qt-qml-tricks/src/qqmlhelpers.h"
 
 #define READ_INTERVAL_MS 3000
+static QString SERVICE_UUID = "6E400001-B5A3-F393-­E0A9-­E50E24DCCA9E";
 
 class DeviceInfo: public QObject
 {
@@ -92,12 +93,13 @@ private:
     QLowEnergyDescriptor m_notificationDesc;
     QLowEnergyController *m_control;
     QLowEnergyService *m_service;
-    QLowEnergyCharacteristic m_characteristic;
+    QLowEnergyCharacteristic m_writeCharacteristic;
+    QLowEnergyCharacteristic m_readCharacteristic;
     QList<DeviceInfo*> m_devices;
     bool m_foundService;
     QTimer *m_readTimer;
-    QBluetoothUuid m_serviceUuid;
     bool m_connected;
+    QBluetoothUuid m_serviceUuid;
 };
 
 #endif // BLEINTERFACE_H
