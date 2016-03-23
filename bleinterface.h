@@ -11,7 +11,7 @@
 #include "lib-qt-qml-tricks/src/qqmlhelpers.h"
 
 #define READ_INTERVAL_MS 3000
-static QString SERVICE_UUID = "6E400001-B5A3-F393-­E0A9-­E50E24DCCA9E";
+static QString SERVICE_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
 
 class DeviceInfo: public QObject
 {
@@ -100,6 +100,7 @@ private:
     QTimer *m_readTimer;
     bool m_connected;
     QBluetoothUuid m_serviceUuid;
+    void searchCharacteristic();
 };
 
 #endif // BLEINTERFACE_H

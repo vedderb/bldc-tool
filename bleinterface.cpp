@@ -162,7 +162,6 @@ void BLEInterface::onServiceScanDone()
     m_service = 0;
 
     if (m_foundService) {
-        emit statusInfoChanged("Connecting to service...", true);
         m_service = m_control->createServiceObject(
                     m_serviceUuid, this);
     }
@@ -181,7 +180,13 @@ void BLEInterface::onServiceScanDone()
     connect(m_service, SIGNAL(characteristicWritten(QLowEnergyCharacteristic,QByteArray)),
             this, SLOT(onCharacteristicWrite(QLowEnergyCharacteristic,QByteArray)));
 
-    m_service->discoverDetails();
+    if(m_service->state() == QLowEnergyService::DiscoveryRequired) {
+        emit statusInfoChanged("Connecting to service...", true);
+        m_service->discoverDetails();
+    }
+    else
+        searchCharacteristic();
+
 }
 
 void BLEInterface::disconnectDevice()
@@ -230,10 +235,8 @@ void BLEInterface::onCharacteristicRead(const QLowEnergyCharacteristic &c,
     emit dataReceived(value);
 }
 
-void BLEInterface::onServiceStateChanged(QLowEnergyService::ServiceState s)
-{
-    qDebug() << "serviceStateChanged, state: " << s;
-    if (s == QLowEnergyService::ServiceDiscovered) {
+void BLEInterface::searchCharacteristic(){
+    if(m_service){
         foreach (QLowEnergyCharacteristic c, m_service->characteristics()) {
             if(c.isValid()){
                 if (c.properties() & QLowEnergyCharacteristic::WriteNoResponse ||
@@ -253,10 +256,17 @@ void BLEInterface::onServiceStateChanged(QLowEnergyService::ServiceState s)
                 if (m_notificationDesc.isValid()) {
                     m_service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0100"));
                 }
-                return;
             }
         }
-        qWarning() << "Can't find Characteristic";
+    }
+}
+
+
+void BLEInterface::onServiceStateChanged(QLowEnergyService::ServiceState s)
+{
+    qDebug() << "serviceStateChanged, state: " << s;
+    if (s == QLowEnergyService::ServiceDiscovered) {
+        searchCharacteristic();
     }
 }
 void BLEInterface::serviceError(QLowEnergyService::ServiceError e)
