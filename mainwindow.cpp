@@ -128,6 +128,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_bldcInterface->get_bleInterface(), &BLEInterface::devicesNamesChanged,
             [this](QStringList items){
         ui->bleCombobox->clear();ui->bleCombobox->addItems(items);});
+    connect(m_bldcInterface, &BLDCInterface::serialPortNamesChanged,
+            [this](QStringList items){
+       ui->serialCombobox->clear();ui->serialCombobox->addItems(items);
+    });
 
     connect(ui->canFwdBox, &QCheckBox::toggled,
                  m_bldcInterface, &BLDCInterface::set_canFwd);
