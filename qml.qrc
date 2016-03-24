@@ -10,8 +10,11 @@
         <file>qml/MCLimits.qml</file>
         <file>qml/MCSensorLess.qml</file>
         <file>qml/FirmwarePage.qml</file>
-        <file>qml/images/back_normal.svg</file>
+        <file>qml/AppConfigurationPPM.qml</file>
+        <file>qml/NunchukTab.qml</file>
+        <file>qml/PpmTab.qml</file>
         <file>qml/RealtimeListDelegate.qml</file>
+        <file>qml/images/back_normal.svg</file>
         <file>qml/images/car-battery-7.png</file>
         <file>qml/images/car-battery-7@2x.png</file>
         <file>qml/images/car-battery-7@3x.png</file>
@@ -52,6 +55,5 @@
         <file>qml/images/4.png</file>
         <file>qml/images/5.png</file>
         <file>qml/images/6.png</file>
-        <file>qml/AppConfigurationPPM.qml</file>
     </qresource>
 </RCC>

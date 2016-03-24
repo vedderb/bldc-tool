@@ -11,9 +11,9 @@ BasicPage {
 
     property int headingTopMargin:4
     property int headingLeftMargin:6
-    property int rowVerticalMargin:6
-    property int rowLeftMargin:16
-    property int rowContentSpacing: 10
+    property int rowVerticalMargin:7
+    property int rowLeftMargin:18
+    property int rowContentSpacing: 11
     property int rectGap: 20
 
     Binding{
@@ -43,7 +43,7 @@ BasicPage {
                     id:rectSettings
                     anchors.top: parent.top
                     width: parent.width
-                    height: textSettings.height+headingTopMargin+rowControllerId.height+(3*rowVerticalMargin)+rbStatus.height+rowRate.height
+                    height: textSettings.height+headingTopMargin+rowControllerId.height+(4*rowVerticalMargin)+rbStatus.height+rowRate.height+rowBaudrate.height
                     // height: 100
                     color: parent.color
 
@@ -132,7 +132,33 @@ BasicPage {
                             anchors.verticalCenter: textHZ.verticalCenter
                         }
                     }
-
+                    Rectangle{
+                        id:rowBaudrate
+                        anchors.top :rowRate.bottom
+                        anchors.topMargin: rowVerticalMargin
+                        anchors.left: parent.left
+                        // anchors.leftMargin: rowLeftMargin
+                        // spacing:rowContentSpacing
+                        color: parent.color
+                        width: parent.width
+                        height: textfieldBaudrate.height
+                        Text{
+                            id:textBaudrate
+                            text:"Baud rate"
+                            verticalAlignment: Text.AlignVCenter
+                            font.pointSize: 12
+                            anchors.left: parent.left
+                            anchors.leftMargin: rowLeftMargin
+                        }
+                        TextField{
+                            id:textfieldBaudrate
+                            anchors.right: parent.right
+                            anchors.rightMargin: rowLeftMargin
+                            width: rectMain.width*0.2
+                            anchors.verticalCenter:textBaudrate.verticalCenter
+                            text: appconf.app_uart_baudrate
+                        }
+                    }
 
                 }
 
@@ -443,6 +469,7 @@ BasicPage {
                                 appconf.controller_id = textfieldControllerId.text
                                 appconf.send_can_status = rbStatus.checked
                                 appconf.send_can_status_rate_hz = textFieldRate.text
+                                appconf.app_uart_baudrate = textfieldBaudrate
                                 if(rbNoApp.checked)         appconf.app_to_use = AppConf.APP_NONE
                                 else if(rbPPMUART.checked)  appconf.app_to_use = AppConf.APP_PPM
                                 else if(rbCustomApp.checked)appconf.app_to_use = AppConf.APP_CUSTOM

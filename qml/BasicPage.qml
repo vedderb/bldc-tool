@@ -67,15 +67,15 @@ Item {
                 anchors.leftMargin: width*0.3
                 color: parent.color
                 Text{
-                    anchors.centerIn: parent
+//                    anchors.centerIn: parent
                     text:"Back"
                     font.pointSize: 14
                 }
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked:{
-                        rootBasicPage.previousPage()
-                    }
+            }
+            MouseArea{
+                anchors.fill: rectback
+                onClicked:{
+                    rootBasicPage.previousPage()
                 }
             }
             Text{
@@ -100,7 +100,7 @@ Item {
                 color: parent.color
                 visible: showSettingsButton
                 Image {
-                    anchors.centerIn: parent
+//                    anchors.centerIn: parent
                     height:_topToolbar.height * 0.45
                     width:height
                     source: "qrc:/qml/images/gear-two-7@3x.png"
@@ -111,11 +111,11 @@ Item {
 //                    text:"Settings"
 //                    font.pointSize: 14
 //                }
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked:{
-                       showSettings()
-                    }
+            }
+            MouseArea{
+                anchors.fill: rectSettings
+                onClicked:{
+                   showSettings()
                 }
             }
         }
