@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->firmwareSupportedLabel->setText(m_bldcInterface->get_firmwareSupported());
     mStatusLabel = new QLabel(this);
     ui->statusBar->addPermanentWidget(mStatusLabel);
+    ui->serialCombobox->addItems(m_bldcInterface->get_serialPortNames());
 
     mSampleInt = 0;
     mDoReplot = false;
