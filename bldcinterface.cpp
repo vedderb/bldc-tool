@@ -548,9 +548,13 @@ void BLDCInterface::refreshSerialDevices()
         // put STMicroelectronics device first in list and add prefix
         if(port.manufacturer() == "STMicroelectronics") {
             name.insert(0, "VESC - ");
+            serialPortNames.insert(0, name);
+            m_serialPortsLocations.insert(0, port.systemLocation());
         }
-        serialPortNames.append(name);
-        m_serialPortsLocations.append(port.systemLocation());
+        else{
+            serialPortNames.append(name);
+            m_serialPortsLocations.append(port.systemLocation());
+        }
     }
     update_serialPortNames(serialPortNames);
     set_currentSerialPort(0);
