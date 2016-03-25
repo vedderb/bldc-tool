@@ -23,24 +23,24 @@ void BLDCInterface::stepTowards(double &value, double goal, double step) {
 
 BLDCInterface::BLDCInterface(QObject *parent) :
     QObject(parent),
-    m_udpPort(27800),
-    m_realtimeActivate(false),
-    m_keyLeft(false),
-    m_keyRight(false),
-    m_detectRes(),
-#if  defined(Q_OS_WIN)
-    m_os(OS::Windows)
-#elif defined(Q_OS_ANDROID)
-    m_os(OS::Android)
-#elif defined(Q_OS_LINUX)
-    m_os(OS::Linux)
-#elif defined(Q_OS_OSX)
-    m_os(OS::OSX)
-#elif defined(Q_OS_IOS)
-    m_os(OS::IOS)
-#else
-    m_os(OS::Unkown)
-#endif
+    #if  defined(Q_OS_WIN)
+        m_os(OS::Windows)
+    #elif defined(Q_OS_ANDROID)
+        m_os(OS::Android)
+    #elif defined(Q_OS_LINUX)
+        m_os(OS::Linux)
+    #elif defined(Q_OS_OSX)
+        m_os(OS::OSX)
+    #elif defined(Q_OS_IOS)
+        m_os(OS::IOS)
+    #else
+        m_os(OS::Unkown)
+    #endif
+    ,m_udpPort(27800)
+    ,m_realtimeActivate(false)
+    ,m_keyLeft(false)
+    ,m_keyRight(false)
+    ,m_detectRes()
 {
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
