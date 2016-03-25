@@ -18,6 +18,7 @@ BasicPage {
     property int rowLeftMargin:16
     property int rowContentSpacing: 10
     property int rectGap: 20
+    property int tabMargin: 20
 
     Binding{
         target:rootSettings
@@ -73,16 +74,17 @@ BasicPage {
                             id: tabveiew
                             frameVisible: false
                             width: parent.width
-                            Tab{
+                            Component{
                                 id: serialTab
-                                title: "SerialPort"
                                 Grid{
                                     id:gridConnection
                                     width: parent.width
+                                    anchors.top: parent.top
+                                    anchors.topMargin: tabMargin
                                     columns: 2
                                     columnSpacing: rowLeftMargin
                                     rowSpacing: rowVerticalMargin*0.6
-                                    Component.onCompleted: tabveiew.height = childrenRect.height + 20
+                                    Component.onCompleted: parent.height = childrenRect.height + tabMargin
 
                                     Text{
                                         id:textPort
@@ -159,15 +161,22 @@ BasicPage {
                                 }
 
                             }
+
+                            Component.onCompleted: {
+                                if(os !== OS.IOS)
+                                    tabveiew.addTab("SerialPort", serialTab)
+                            }
                             Tab{
                                 id: bluetoothTab
                                 title: "Bluetooth"
                                 Grid{
                                     width: parent.width
+                                    anchors.top: parent.top
+                                    anchors.topMargin: tabMargin
                                     columns: 2
                                     columnSpacing: rowLeftMargin
                                     rowSpacing: rowVerticalMargin*0.6
-                                    Component.onCompleted: tabveiew.height = childrenRect.height + 20
+                                    Component.onCompleted: parent.height = childrenRect.height + tabMargin
 
                                     Text{
                                         text:"Device"

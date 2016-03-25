@@ -69,7 +69,8 @@ public:
         NRF_CRC_DISABLED = 0,
         NRF_CRC_1B,
         NRF_CRC_2B
-    } NRFCRC;typedef enum {
+    } NRFCRC;
+    typedef enum {
         NRF_RETR_DELAY_250US = 0,
         NRF_RETR_DELAY_500US,
         NRF_RETR_DELAY_750US,
@@ -87,6 +88,16 @@ public:
         NRF_RETR_DELAY_3750US,
         NRF_RETR_DELAY_4000US
     } NRFRETRDELAY;
+
+    Q_ENUM(App_use)
+    Q_ENUM(PPM_control_type)
+    Q_ENUM(ADC_control_type)
+    Q_ENUM(Chuk_control_type)
+    Q_ENUM(NRFSPEED)
+    Q_ENUM(NRFPOWER)
+    Q_ENUM(NRFAW)
+    Q_ENUM(NRFCRC)
+    Q_ENUM(NRFRETRDELAY)
 
     // Settings
     QML_WRITABLE_PROPERTY_WRAPPER( int 	,controller_id 			,m_data.controller_id, quint8)

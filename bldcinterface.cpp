@@ -27,7 +27,20 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     m_realtimeActivate(false),
     m_keyLeft(false),
     m_keyRight(false),
-    m_detectRes()
+    m_detectRes(),
+#if  defined(Q_OS_WIN)
+    m_os(OS::Windows)
+#elif defined(Q_OS_ANDROID)
+    m_os(OS::Android)
+#elif defined(Q_OS_LINUX)
+    m_os(OS::Linux)
+#elif defined(Q_OS_OSX)
+    m_os(OS::OSX)
+#elif defined(Q_OS_IOS)
+    m_os(OS::IOS)
+#else
+    m_os(OS::Unkown)
+#endif
 {
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
@@ -97,8 +110,9 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     qmlRegisterType<AppConfiguration>("bldc", 1, 0, "AppConf");
     qmlRegisterType<McConfiguration>("bldc", 1, 0, "McConf");
     qmlRegisterType<McValues>("bldc", 1, 0, "McValues");
-    qmlRegisterUncreatableType<PacketInterface>("bldc", 1, 0, "PacketInterface", "Uncreatable.");
-    qmlRegisterUncreatableType<BLEInterface>("bldc", 1, 0, "bleInterface", "Uncreatable.");
+    qmlRegisterType<PacketInterface>();
+    qmlRegisterType<BLEInterface>();
+    qmlRegisterUncreatableType<OS>("bldc", 1, 0, "OS", "Read Only" );
 #endif
 }
 void BLDCInterface::serialDataAvailable()

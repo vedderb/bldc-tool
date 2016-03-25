@@ -26,9 +26,13 @@ typedef struct {
 } detect_res_t;
 
 
+QML_ENUM_CLASS(OS,Unkown=0,Windows,Linux,OSX,Android,IOS)
+
 class BLDCInterface : public QObject
 {
     Q_OBJECT
+
+    QML_CONSTANT_PROPERTY(OS::Type, os)
 
     QML_READONLY_PROPERTY(PacketInterface*, packetInterface)
     QML_READONLY_PROPERTY(McConfiguration*, mcconf )

@@ -39,6 +39,12 @@ public:
         PWM_MODE_BIPOLAR // Some glitches occasionally, can kill MOSFETs
     } MC_pwm_mode;
 
+    Q_ENUM(MC_comm_mode)
+    Q_ENUM(MC_sensor_mode)
+    Q_ENUM(MC_motor_type)
+    Q_ENUM(MC_foc_sensor_mode)
+    Q_ENUM(MC_pwm_mode)
+
     // Switching and drive
     QML_WRITABLE_ENUM_PROPERTY_W( MC_pwm_mode       ,pwm_mode   ,mc_pwm_mode    ,m_data.pwm_mode       )
     QML_WRITABLE_ENUM_PROPERTY_W( MC_comm_mode  	,comm_mode  ,mc_comm_mode   ,m_data.comm_mode   )
