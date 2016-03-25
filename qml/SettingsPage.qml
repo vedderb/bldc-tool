@@ -92,10 +92,10 @@ BasicPage {
                                         width: rectConnection.width *0.4
                                     }
 
-                                    TextField{
-                                        id:textFieldPort
+                                    ComboBox{
+                                        id: comboBoxSerialPorts
                                         width: rectConnection.width *0.4
-                                        text:"/dev/tty.usbmodem301"
+                                        model: serialPortNames
                                     }
 
                                     Button{
@@ -103,7 +103,8 @@ BasicPage {
                                         text:"Connect"
                                         width: rectConnection.width *0.4
                                         onClicked: {
-                                            connectSerial(textFieldPort.text);
+                                            currentSerialPort = comboBoxSerialPorts.currentIndex
+                                            connectCurrentSerial()
                                         }
                                         style: ButtonStyle {
                                             label: Text {
@@ -113,6 +114,24 @@ BasicPage {
                                                 font.family: "Helvetica"
                                                 font.pointSize: 12
                                                 //color: "blue"
+                                                text: control.text
+                                            }
+                                        }
+                                    }
+                                    Button{
+                                        text:"Refresh"
+                                        width: rectConnection.width *0.4
+                                        onClicked: {
+                                            refreshSerialDevices()
+                                            comboBoxSerialPorts.currentIndex = currentSerialPort;
+                                        }
+                                        style: ButtonStyle {
+                                            label: Text {
+                                                renderType: Text.NativeRendering
+                                                verticalAlignment: Text.AlignVCenter
+                                                horizontalAlignment: Text.AlignHCenter
+                                                font.family: "Helvetica"
+                                                font.pointSize: 12
                                                 text: control.text
                                             }
                                         }

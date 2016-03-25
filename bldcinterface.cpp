@@ -556,8 +556,11 @@ void BLDCInterface::refreshSerialDevices()
             m_serialPortsLocations.append(port.systemLocation());
         }
     }
+    if(m_serialPortNames.isEmpty())
+        set_currentSerialPort(-1);
+    else
+        set_currentSerialPort(0);
     update_serialPortNames(serialPortNames);
-    set_currentSerialPort(0);
 }
 
 void BLDCInterface::disconnectSerial(){
@@ -668,7 +671,9 @@ void BLDCInterface::readFirmwareVersion()
 
 void BLDCInterface::connectCurrentSerial()
 {
-    connectSerial(m_serialPortsLocations.at(m_currentSerialPort));
+    if(m_currentSerialPort >= 0 &&
+            m_serialPortsLocations.count() > m_currentSerialPort)
+        connectSerial(m_serialPortsLocations.at(m_currentSerialPort));
 }
 
 void BLDCInterface::connectSerial(QString port)
