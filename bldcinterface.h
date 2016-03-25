@@ -1,10 +1,13 @@
 #ifndef BLDCINTERFACE_H
 #define BLDCINTERFACE_H
 
-#include <QObject>
+#ifndef NO_SERIAL_PORT
 #include <QtSerialPort/QSerialPort>
-#include <QTimer>
 #include <QtSerialPort/QSerialPortInfo>
+#endif
+
+#include <QObject>
+#include <QTimer>
 #include <QFile>
 #include <QFileInfo>
 #include <QUrl>
@@ -110,7 +113,11 @@ public:
         return m_detectRes;
     }
     bool isConnected(){
-        return mSerialPort->isOpen() || m_bleInterface->isConnected() || m_packetInterface->isUdpConnected();
+        return m_bleInterface->isConnected() || m_packetInterface->isUdpConnected()
+        #ifndef NO_SERIAL_PORT
+                ||mSerialPort->isOpen()
+        #endif
+                ;
     }
 
 signals:
@@ -128,12 +135,15 @@ public:
     static void stepTowards(double &value, double goal, double step);
 public slots:
 
+#ifndef NO_SERIAL_PORT
     void connectCurrentSerial();
     void connectSerial(QString port);
     void serialDataAvailable();
     void serialPortError(QSerialPort::SerialPortError error);
-    void packetDataToSend(QByteArray &data);
     void disconnectSerial();
+    void refreshSerialDevices();
+#endif
+    void packetDataToSend(QByteArray &data);
     void detect();
     void stopDetect();
     void writeMcconf();
@@ -145,7 +155,6 @@ public slots:
     void disconnectBle();
     void connectUdb();
     void mcconfFocCalcCC();
-    void refreshSerialDevices();
     bool saveMcconfXml(QString xmlfile);
 private slots:
 
@@ -165,8 +174,10 @@ private:
 
     void clearBuffers();
 
+#ifndef NO_SERIAL_PORT
     QSerialPort *mSerialPort;
     QStringList m_serialPortsLocations;
+#endif
     QTimer *mTimer;
     int mStatusInfoTime;
     bool mFwVersionReceived;

@@ -1179,9 +1179,11 @@ void PacketInterface::startUdpConnection(QHostAddress ip, int port)
 
 void PacketInterface::stopUdpConnection()
 {
-    mHostAddress = QHostAddress("0.0.0.0");
-    mUdpPort = 0;
-    mUdpSocket->close();
+    if(isUdpConnected()){
+        mHostAddress = QHostAddress("0.0.0.0");
+        mUdpPort = 0;
+        mUdpSocket->close();
+    }
 }
 
 bool PacketInterface::isUdpConnected()

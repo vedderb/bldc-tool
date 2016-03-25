@@ -47,7 +47,14 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     m_mcValues = new McValues(this);
     m_bleInterface = new BLEInterface(this);
 
+#ifndef NO_SERIAL_PORT
+    mSerialPort = new QSerialPort(this);
     refreshSerialDevices();
+    connect(mSerialPort, SIGNAL(readyRead()),
+            this, SLOT(serialDataAvailable()));
+    connect(mSerialPort, SIGNAL(error(QSerialPort::SerialPortError)),
+            this, SLOT(serialPortError(QSerialPort::SerialPortError)));
+#endif
 
     // Compatible firmwares
     mFwVersionReceived = false;
@@ -64,15 +71,10 @@ BLDCInterface::BLDCInterface(QObject *parent) :
         supportedFWs.append(tmp);
     }
     update_firmwareSupported(supportedFWs);
-    mSerialPort = new QSerialPort(this);
     mTimer = new QTimer(this);
     mTimer->setInterval(20);
     mTimer->start();
     m_packetInterface = new PacketInterface(this);
-    connect(mSerialPort, SIGNAL(readyRead()),
-            this, SLOT(serialDataAvailable()));
-    connect(mSerialPort, SIGNAL(error(QSerialPort::SerialPortError)),
-            this, SLOT(serialPortError(QSerialPort::SerialPortError)));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
     connect(m_packetInterface, SIGNAL(dataToSend(QByteArray&)),
             this, SLOT(packetDataToSend(QByteArray&)));
@@ -115,48 +117,6 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     qmlRegisterUncreatableType<OS>("bldc", 1, 0, "OS", "Read Only" );
 #endif
 }
-void BLDCInterface::serialDataAvailable()
-{
-    while (mSerialPort->bytesAvailable() > 0) {
-        QByteArray data = mSerialPort->readAll();
-        m_packetInterface->processData(data);
-    }
-}
-
-void BLDCInterface::serialPortError(QSerialPort::SerialPortError error)
-{
-    QString message;
-    switch (error) {
-    case QSerialPort::NoError:
-        break;
-    case QSerialPort::DeviceNotFoundError:
-        message = tr("Device not found");
-        break;
-    case QSerialPort::OpenError:
-        message = tr("Can't open device");
-        break;
-    case QSerialPort::NotOpenError:
-        message = tr("Not open error");
-        break;
-    case QSerialPort::ResourceError:
-        message = tr("Port disconnected");
-        break;
-    case QSerialPort::UnknownError:
-        message = tr("Unknown error");
-        break;
-    default:
-        message = "Serial port error: " + QString::number(error);
-        break;
-    }
-
-    if(!message.isEmpty()) {
-        emit statusInfoChanged(message, false);
-
-        if(mSerialPort->isOpen()) {
-            mSerialPort->close();
-        }
-    }
-}
 
 void BLDCInterface::timerSlot()
 {
@@ -166,7 +126,7 @@ void BLDCInterface::timerSlot()
     // Read FW version if needed
     static bool sendCanBefore = false;
     static int canIdBefore = 0;
-    if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected() || m_bleInterface->isConnected()) {
+    if (isConnected()) {
         if (sendCanBefore != m_canFwd ||
                 canIdBefore != m_canId) {
             mFwVersionReceived = false;
@@ -180,7 +140,11 @@ void BLDCInterface::timerSlot()
             // Timeout if the firmware cannot be read
             if (mFwRetries >= 100) {
                 emit statusInfoChanged("No firmware read response", false);
+#ifndef NO_SERIAL_PORT
                 disconnectSerial();
+#endif
+                m_packetInterface->stopUdpConnection();
+                disconnectBle();
             }
         }
 
@@ -193,7 +157,7 @@ void BLDCInterface::timerSlot()
 
     // Update status label
     {
-        if (mSerialPort->isOpen() || m_packetInterface->isUdpConnected() || m_bleInterface->isConnected()) {
+        if (isConnected()) {
             if (m_packetInterface->isLimitedMode()) {
                 update_status("Connected, limited");
             } else {
@@ -322,12 +286,15 @@ void BLDCInterface::timerSlot()
 
 void BLDCInterface::packetDataToSend(QByteArray &data)
 {
+#ifndef NO_SERIAL_PORT
     if (mSerialPort->isOpen()) {
         mSerialPort->write(data);
     }
-    else if (m_bleInterface->isConnected()) {
-        m_bleInterface->write(data);
-    }
+    else
+#endif
+        if (m_bleInterface->isConnected()) {
+            m_bleInterface->write(data);
+        }
 }
 
 void BLDCInterface::fwVersionReceived(int major, int minor)
@@ -340,7 +307,11 @@ void BLDCInterface::fwVersionReceived(int major, int minor)
     if (major < 0) {
         mFwVersionReceived = false;
         mFwRetries = 0;
+#ifndef NO_SERIAL_PORT
         disconnectSerial();
+#endif
+        m_packetInterface->stopUdpConnection();
+        disconnectBle();
         emit msgCritical( "Error", "The firmware on the connected VESC is too old. Please"
                             " update it using a programmer.");
         update_firmwareVersion("Old Firmware");
@@ -369,7 +340,11 @@ void BLDCInterface::fwVersionReceived(int major, int minor)
         } else {
             mFwVersionReceived = false;
             mFwRetries = 0;
+#ifndef NO_SERIAL_PORT
             disconnectSerial();
+#endif
+            m_packetInterface->stopUdpConnection();
+            disconnectBle();
             if (!wasReceived) {
                 emit msgCritical( "Error", "The firmware on the connected VESC is too old. Please"
                                                    " update it using a programmer.");
@@ -551,51 +526,9 @@ void BLDCInterface::mcconfFocCalcCC()
     set_mcconfFocCalcKi(ki);
 }
 
-void BLDCInterface::refreshSerialDevices()
-{
-    m_serialPortsLocations.clear();
-    QStringList serialPortNames;
-
-    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
-    foreach(const QSerialPortInfo &port, ports) {
-        QString name = port.portName();
-        // put STMicroelectronics device first in list and add prefix
-        if(port.manufacturer() == "STMicroelectronics") {
-            name.insert(0, "VESC - ");
-            serialPortNames.insert(0, name);
-            m_serialPortsLocations.insert(0, port.systemLocation());
-        }
-        else{
-            serialPortNames.append(name);
-            m_serialPortsLocations.append(port.systemLocation());
-        }
-    }
-    if(m_serialPortNames.isEmpty())
-        set_currentSerialPort(-1);
-    else
-        set_currentSerialPort(0);
-    update_serialPortNames(serialPortNames);
-}
-
-void BLDCInterface::disconnectSerial(){
-    if (mSerialPort->isOpen()) {
-        mSerialPort->close();
-    }
-
-    if (m_packetInterface->isUdpConnected()) {
-        m_packetInterface->stopUdpConnection();
-    }
-
-    mFwVersionReceived = false;
-    mFwRetries = 0;
-}
 void BLDCInterface::disconnectBle(){
     if (m_bleInterface->isConnected()) {
         m_bleInterface->disconnectDevice();
-    }
-
-    if (m_packetInterface->isUdpConnected()) {
-        m_packetInterface->stopUdpConnection();
     }
 
     mFwVersionReceived = false;
@@ -683,6 +616,77 @@ void BLDCInterface::readFirmwareVersion()
     m_packetInterface->getFwVersion();
 }
 
+void BLDCInterface::connectUdb()
+{
+    QHostAddress ip;
+
+    if (ip.setAddress(m_udpIp.trimmed())) {
+#ifndef NO_SERIAL_PORT
+        disconnectSerial();
+#endif
+        disconnectBle();
+
+        m_packetInterface->startUdpConnection(ip, m_udpPort);
+    } else {
+        emit statusInfoChanged("Invalid IP address", false);
+    }
+}
+
+void BLDCInterface::connectCurrentBleDevice(){
+
+#ifndef NO_SERIAL_PORT
+    if(mSerialPort->isOpen()) {
+        emit statusInfoChanged("Serial port connected.", false);
+        return;
+    }
+#endif
+    m_bleInterface->connectCurrentDevice();
+}
+
+#ifndef NO_SERIAL_PORT
+void BLDCInterface::serialDataAvailable()
+{
+    while (mSerialPort->bytesAvailable() > 0) {
+        QByteArray data = mSerialPort->readAll();
+        m_packetInterface->processData(data);
+    }
+}
+
+void BLDCInterface::serialPortError(QSerialPort::SerialPortError error)
+{
+    QString message;
+    switch (error) {
+    case QSerialPort::NoError:
+        break;
+    case QSerialPort::DeviceNotFoundError:
+        message = tr("Device not found");
+        break;
+    case QSerialPort::OpenError:
+        message = tr("Can't open device");
+        break;
+    case QSerialPort::NotOpenError:
+        message = tr("Not open error");
+        break;
+    case QSerialPort::ResourceError:
+        message = tr("Port disconnected");
+        break;
+    case QSerialPort::UnknownError:
+        message = tr("Unknown error");
+        break;
+    default:
+        message = "Serial port error: " + QString::number(error);
+        break;
+    }
+
+    if(!message.isEmpty()) {
+        emit statusInfoChanged(message, false);
+
+        if(mSerialPort->isOpen()) {
+            mSerialPort->close();
+        }
+    }
+}
+
 void BLDCInterface::connectCurrentSerial()
 {
     if(m_currentSerialPort >= 0 &&
@@ -722,25 +726,39 @@ void BLDCInterface::connectSerial(QString port)
     m_packetInterface->stopUdpConnection();
 }
 
-void BLDCInterface::connectUdb()
+
+void BLDCInterface::refreshSerialDevices()
 {
-    QHostAddress ip;
+    m_serialPortsLocations.clear();
+    QStringList serialPortNames;
 
-    if (ip.setAddress(m_udpIp.trimmed())) {
-        if (mSerialPort->isOpen()) {
-            mSerialPort->close();
+    QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
+    foreach(const QSerialPortInfo &port, ports) {
+        QString name = port.portName();
+        // put STMicroelectronics device first in list and add prefix
+        if(port.manufacturer() == "STMicroelectronics") {
+            name.insert(0, "VESC - ");
+            serialPortNames.insert(0, name);
+            m_serialPortsLocations.insert(0, port.systemLocation());
         }
-
-        m_packetInterface->startUdpConnection(ip, m_udpPort);
-    } else {
-        emit statusInfoChanged("Invalid IP address", false);
+        else{
+            serialPortNames.append(name);
+            m_serialPortsLocations.append(port.systemLocation());
+        }
     }
+    if(m_serialPortNames.isEmpty())
+        set_currentSerialPort(-1);
+    else
+        set_currentSerialPort(0);
+    update_serialPortNames(serialPortNames);
 }
 
-void BLDCInterface::connectCurrentBleDevice(){
-    if(mSerialPort->isOpen()) {
-        emit statusInfoChanged("Serial port connected.", false);
-        return;
+void BLDCInterface::disconnectSerial(){
+    if (mSerialPort->isOpen()) {
+        mSerialPort->close();
     }
-    m_bleInterface->connectCurrentDevice();
+
+    mFwVersionReceived = false;
+    mFwRetries = 0;
 }
+#endif

@@ -2,6 +2,7 @@
 DEFINES += QML # for test
 
 android | ios : DEFINES += QML
+ios: DEFINES += NO_SERIAL_PORT
 
 QT += core gui bluetooth serialport network
 CONFIG += c++11

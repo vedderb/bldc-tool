@@ -1661,6 +1661,8 @@ void MainWindow::on_udpConnectButton_clicked()
 void MainWindow::on_disconnectButton_clicked()
 {
     m_bldcInterface->disconnectSerial();
+    m_bldcInterface->disconnectBle();
+    mPacketInterface->stopUdpConnection();
 }
 
 void MainWindow::on_getDataButton_clicked()
