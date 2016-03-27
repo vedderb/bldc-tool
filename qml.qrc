@@ -14,6 +14,8 @@
         <file>qml/NunchukTab.qml</file>
         <file>qml/PpmTab.qml</file>
         <file>qml/RealtimeListDelegate.qml</file>
+        <file>qml/FocTab.qml</file>
+        <file>qml/BldcTab.qml</file>
         <file>qml/images/back_normal.svg</file>
         <file>qml/images/car-battery-7.png</file>
         <file>qml/images/car-battery-7@2x.png</file>

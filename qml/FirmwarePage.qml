@@ -75,7 +75,6 @@ BasicPage {
                 }
                 Button{
                     id:buttonChoose
-                    height: textfieldPath.height
                     text:"Choose"
                     width: rectMain.width * 0.17
                     onClicked: {
@@ -131,7 +130,6 @@ BasicPage {
 
                 Button{
                     id:buttonupload
-                    height: textfieldPath.height
                     text:"upload"
                     width: rectMain.width * 0.17
                     onClicked: {

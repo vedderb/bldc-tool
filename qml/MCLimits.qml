@@ -658,7 +658,6 @@ BasicPage {
                             columnSpacing: headingLeftMargin/1.5
                             Button{
                                 id:buttonReadConf
-                                height: textfieldPath.height
                                 text:"Read Config"
                                 width: rectButtons.width * 0.31
                                 onClicked: packetInterface.getMcconf()
@@ -675,7 +674,6 @@ BasicPage {
                             }
                             Button{
                                 id:buttonWriteConf
-                                height: textfieldPath.height
                                 text:"Write Config"
                                 width: rectMain.width * 0.31
                                 onClicked: {
@@ -721,7 +719,6 @@ BasicPage {
                             }
                             Button{
                                 id:buttonReboot
-                                height: textfieldPath.height
                                 text:"Reboot"
                                 width: rectMain.width * 0.31
                                 onClicked: packetInterface.reboot()
