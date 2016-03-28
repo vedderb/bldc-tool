@@ -73,8 +73,9 @@ void BLEInterface::write(const QByteArray &data)
         if(data.length() > 20){
             // ToDo: send on packet
             emit this->statusInfoChanged("Too large data to send.", false);
+            qDebug() << "Too large data to send.";
         }
-        m_service->writeCharacteristic(m_writeCharacteristic, data);
+        m_service->writeCharacteristic(m_writeCharacteristic, data, m_writeMode);
     }
 }
 
@@ -179,6 +180,8 @@ void BLEInterface::onServiceScanDone()
             this, SLOT(onCharacteristicRead(QLowEnergyCharacteristic,QByteArray)));
     connect(m_service, SIGNAL(characteristicWritten(QLowEnergyCharacteristic,QByteArray)),
             this, SLOT(onCharacteristicWrite(QLowEnergyCharacteristic,QByteArray)));
+    connect(m_service, SIGNAL(error(QLowEnergyService::ServiceError error)),
+            this, SLOT(serviceError(QLowEnergyService::ServiceError)));
 
     if(m_service->state() == QLowEnergyService::DiscoveryRequired) {
         emit statusInfoChanged("Connecting to service...", true);
@@ -242,7 +245,12 @@ void BLEInterface::searchCharacteristic(){
                 if (c.properties() & QLowEnergyCharacteristic::WriteNoResponse ||
                     c.properties() & QLowEnergyCharacteristic::Write) {
                     m_writeCharacteristic = c;
-                    update_connected(true);                }
+                    update_connected(true);
+                    if(c.properties() & QLowEnergyCharacteristic::WriteNoResponse)
+                        m_writeMode = QLowEnergyService::WriteWithoutResponse;
+                    else
+                        m_writeMode = QLowEnergyService::WriteWithResponse;
+                }
                 if (c.properties() & QLowEnergyCharacteristic::Read) {
                     m_readCharacteristic = c;
                     if(!m_readTimer){

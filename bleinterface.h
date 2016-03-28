@@ -101,6 +101,7 @@ private:
     bool m_connected;
     QBluetoothUuid m_serviceUuid;
     void searchCharacteristic();
+    QLowEnergyService::WriteMode m_writeMode;
 };
 
 #endif // BLEINTERFACE_H
