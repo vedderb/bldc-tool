@@ -36,7 +36,7 @@ BLEInterface::BLEInterface(QObject *parent) : QObject(parent),
     m_serviceUuid(SERVICE_UUID)
 {
     m_deviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
-
+    
     connect(m_deviceDiscoveryAgent, SIGNAL(deviceDiscovered(const QBluetoothDeviceInfo&)),
             this, SLOT(addDevice(const QBluetoothDeviceInfo&)));
     connect(m_deviceDiscoveryAgent, SIGNAL(error(QBluetoothDeviceDiscoveryAgent::Error)),
@@ -75,7 +75,7 @@ void BLEInterface::write(const QByteArray &data)
                 // continue when chunk written
                 auto conn = new QMetaObject::Connection;
                 *conn = connect(m_service, &QLowEnergyService::characteristicWritten,
-                        this, [this, data, conn](){
+                                this, [this, data, conn](){
                     write(data.mid(CHUNK_SIZE));
                     disconnect(*conn);delete conn;
                 });
@@ -126,12 +126,12 @@ void BLEInterface::connectCurrentDevice()
 {
     if(m_devices.isEmpty())
         return;
-
+    
     if (m_control) {
         m_control->disconnectFromDevice();
         delete m_control;
         m_control = 0;
-
+        
     }
     m_control = new QLowEnergyController(m_devices[ m_currentDevice]->getDevice(), this);
     connect(m_control, SIGNAL(serviceDiscovered(QBluetoothUuid)),
@@ -144,7 +144,7 @@ void BLEInterface::connectCurrentDevice()
             this, SLOT(onDeviceConnected()));
     connect(m_control, SIGNAL(disconnected()),
             this, SLOT(onDeviceDisconnected()));
-
+    
     m_control->connectToDevice();
 }
 
@@ -172,17 +172,17 @@ void BLEInterface::onServiceScanDone()
 {
     delete m_service;
     m_service = 0;
-
+    
     if (m_foundService) {
         m_service = m_control->createServiceObject(
                     m_serviceUuid, this);
     }
-
+    
     if (!m_service) {
         emit statusInfoChanged("Service not found.", false);
         return;
     }
-
+    
     connect(m_service, SIGNAL(stateChanged(QLowEnergyService::ServiceState)),
             this, SLOT(onServiceStateChanged(QLowEnergyService::ServiceState)));
     connect(m_service, SIGNAL(characteristicChanged(QLowEnergyCharacteristic,QByteArray)),
@@ -191,16 +191,16 @@ void BLEInterface::onServiceScanDone()
             this, SLOT(onCharacteristicRead(QLowEnergyCharacteristic,QByteArray)));
     connect(m_service, SIGNAL(characteristicWritten(QLowEnergyCharacteristic,QByteArray)),
             this, SLOT(onCharacteristicWrite(QLowEnergyCharacteristic,QByteArray)));
-    connect(m_service, SIGNAL(error(QLowEnergyService::ServiceError error)),
+    connect(m_service, SIGNAL(error(QLowEnergyService::ServiceError)),
             this, SLOT(serviceError(QLowEnergyService::ServiceError)));
-
+    
     if(m_service->state() == QLowEnergyService::DiscoveryRequired) {
         emit statusInfoChanged("Connecting to service...", true);
         m_service->discoverDetails();
     }
     else
         searchCharacteristic();
-
+    
 }
 
 void BLEInterface::disconnectDevice()
@@ -208,11 +208,11 @@ void BLEInterface::disconnectDevice()
     m_foundService = false;
     m_readTimer->deleteLater();
     m_readTimer = NULL;
-
+    
     if (m_devices.isEmpty()) {
         return;
     }
-
+    
     //disable notifications
     if (m_notificationDesc.isValid() && m_service) {
         m_service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0000"));
@@ -237,7 +237,7 @@ void BLEInterface::onCharacteristicChanged(const QLowEnergyCharacteristic &c,
     emit dataReceived(value);
 }
 void BLEInterface::onCharacteristicWrite(const QLowEnergyCharacteristic &c,
-                                          const QByteArray &value)
+                                         const QByteArray &value)
 {
     Q_UNUSED(c)
     qDebug() << "Characteristic Written: " << value;
@@ -251,31 +251,52 @@ void BLEInterface::onCharacteristicRead(const QLowEnergyCharacteristic &c,
 
 void BLEInterface::searchCharacteristic(){
     if(m_service){
+        QMap<QLowEnergyCharacteristic::PropertyTypes, QLowEnergyCharacteristic> properties;
         foreach (QLowEnergyCharacteristic c, m_service->characteristics()) {
             if(c.isValid()){
-                if (c.properties() & QLowEnergyCharacteristic::WriteNoResponse ||
-                    c.properties() & QLowEnergyCharacteristic::Write) {
-                    m_writeCharacteristic = c;
-                    update_connected(true);
-                    if(c.properties() & QLowEnergyCharacteristic::WriteNoResponse)
-                        m_writeMode = QLowEnergyService::WriteWithoutResponse;
-                    else
-                        m_writeMode = QLowEnergyService::WriteWithResponse;
+                if (c.properties() & QLowEnergyCharacteristic::WriteNoResponse){
+                    properties[QLowEnergyCharacteristic::WriteNoResponse] = c;
+                }
+                if(c.properties() & QLowEnergyCharacteristic::Write) {
+                    properties[QLowEnergyCharacteristic::Write] = c;
                 }
                 if (c.properties() & QLowEnergyCharacteristic::Read) {
-                    m_readCharacteristic = c;
-                    if(!m_readTimer){
-                        m_readTimer = new QTimer(this);
-                        connect(m_readTimer, &QTimer::timeout, this, &BLEInterface::read);
-                        m_readTimer->start(READ_INTERVAL_MS);
+                    properties[QLowEnergyCharacteristic::Read] = c;
+                }
+                if (c.properties() & QLowEnergyCharacteristic::Notify) {
+                    properties[QLowEnergyCharacteristic::Notify] = c;
+                    m_notificationDesc = c.descriptor(
+                                QBluetoothUuid::ClientCharacteristicConfiguration);
+                    if (m_notificationDesc.isValid()) {
+                        m_service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0100"));
                     }
                 }
-                m_notificationDesc = c.descriptor(
-                            QBluetoothUuid::ClientCharacteristicConfiguration);
-                if (m_notificationDesc.isValid()) {
-                    m_service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0100"));
+            }
+        }
+
+        bool valid = ( properties.contains(QLowEnergyCharacteristic::WriteNoResponse) ||
+                       properties.contains(QLowEnergyCharacteristic::Write)) &&
+                (properties.contains(QLowEnergyCharacteristic::Notify) ||
+                 properties.contains(QLowEnergyCharacteristic::Read));
+        if(valid){
+            if(!properties.contains(QLowEnergyCharacteristic::Notify) &&
+                    properties.contains(QLowEnergyCharacteristic::Read)){
+                m_readCharacteristic = properties[QLowEnergyCharacteristic::Read];
+                if(!m_readTimer){
+                    m_readTimer = new QTimer(this);
+                    connect(m_readTimer, &QTimer::timeout, this, &BLEInterface::read);
+                    m_readTimer->start(READ_INTERVAL_MS);
                 }
             }
+            if(properties.contains(QLowEnergyCharacteristic::Write)){
+                m_writeCharacteristic = properties[QLowEnergyCharacteristic::Write];
+                m_writeMode = QLowEnergyService::WriteWithResponse;
+            }
+            else if(properties.contains(QLowEnergyCharacteristic::WriteNoResponse)){
+                m_writeCharacteristic = properties[QLowEnergyCharacteristic::WriteNoResponse];
+                m_writeMode = QLowEnergyService::WriteWithoutResponse;
+            }
+            update_connected(true);
         }
     }
 }
