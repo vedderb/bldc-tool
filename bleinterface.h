@@ -83,6 +83,7 @@ private slots:
     void onCharacteristicWrite(const QLowEnergyCharacteristic &c, const QByteArray &value);
 
 private:
+    inline void waitForWrite();
     void update_connected(bool connected){
         if(connected != m_connected){
             m_connected = connected;
