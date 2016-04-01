@@ -20,6 +20,8 @@
 #include "mcvalues.h"
 #include "bleinterface.h"
 
+#define TIMER_INTERVAL 200
+
 typedef struct {
     bool updated;
     double cycle_int_limit;

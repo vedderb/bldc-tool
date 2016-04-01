@@ -72,7 +72,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     }
     update_firmwareSupported(supportedFWs);
     mTimer = new QTimer(this);
-    mTimer->setInterval(20);
+    mTimer->setInterval(TIMER_INTERVAL);
     mTimer->start();
     m_packetInterface = new PacketInterface(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
