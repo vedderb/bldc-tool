@@ -72,7 +72,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     }
     update_firmwareSupported(supportedFWs);
     mTimer = new QTimer(this);
-    mTimer->setInterval(TIMER_INTERVAL);
+    mTimer->setInterval(TIMER_INTERVAL_UDB);
     mTimer->start();
     m_packetInterface = new PacketInterface(this);
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
@@ -625,7 +625,7 @@ void BLDCInterface::connectUdb()
         disconnectSerial();
 #endif
         disconnectBle();
-
+        mTimer->start(TIMER_INTERVAL_UDB);
         m_packetInterface->startUdpConnection(ip, m_udpPort);
     } else {
         emit statusInfoChanged("Invalid IP address", false);
@@ -640,6 +640,7 @@ void BLDCInterface::connectCurrentBleDevice(){
         return;
     }
 #endif
+    mTimer->start(TIMER_INTERVAL_BLE);
     m_bleInterface->connectCurrentDevice();
 }
 
@@ -690,8 +691,9 @@ void BLDCInterface::serialPortError(QSerialPort::SerialPortError error)
 void BLDCInterface::connectCurrentSerial()
 {
     if(m_currentSerialPort >= 0 &&
-            m_serialPortsLocations.count() > m_currentSerialPort)
+            m_serialPortsLocations.count() > m_currentSerialPort){
         connectSerial(m_serialPortsLocations.at(m_currentSerialPort));
+    }
 }
 
 void BLDCInterface::connectSerial(QString port)
@@ -715,6 +717,7 @@ void BLDCInterface::connectSerial(QString port)
     mSerialPort->setParity(QSerialPort::NoParity);
     mSerialPort->setStopBits(QSerialPort::OneStop);
     mSerialPort->setFlowControl(QSerialPort::NoFlowControl);
+    mTimer->start(TIMER_INTERVAL_SERIAL);
 
     // For nrf
     mSerialPort->setRequestToSend(true);

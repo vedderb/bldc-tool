@@ -20,7 +20,9 @@
 #include "mcvalues.h"
 #include "bleinterface.h"
 
-#define TIMER_INTERVAL 200
+#define TIMER_INTERVAL_SERIAL   20
+#define TIMER_INTERVAL_UDB      250
+#define TIMER_INTERVAL_BLE      250
 
 typedef struct {
     bool updated;

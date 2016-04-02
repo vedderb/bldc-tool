@@ -10,7 +10,7 @@
 
 #include "lib-qt-qml-tricks/src/qqmlhelpers.h"
 
-#define READ_INTERVAL_MS 1000
+#define READ_INTERVAL_MS 20
 #define CHUNK_SIZE 20
 static QString SERVICE_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
 
