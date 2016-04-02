@@ -467,7 +467,7 @@ BasicPage {
                                 appconf.controller_id = textfieldControllerId.text
                                 appconf.send_can_status = rbStatus.checked
                                 appconf.send_can_status_rate_hz = textFieldRate.text
-                                appconf.app_uart_baudrate = textfieldBaudrate
+                                //appconf.app_uart_baudrate = textfieldBaudrate
                                 if(rbNoApp.checked)         appconf.app_to_use = AppConf.APP_NONE
                                 else if(rbPPMUART.checked)  appconf.app_to_use = AppConf.APP_PPM
                                 else if(rbCustomApp.checked)appconf.app_to_use = AppConf.APP_CUSTOM

@@ -59,6 +59,9 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
+    mCompatibleFws.append(qMakePair(2, 13));
+    mCompatibleFws.append(qMakePair(2, 14));
+    mCompatibleFws.append(qMakePair(2, 15));
     mCompatibleFws.append(qMakePair(2, 16));
 
     QString supportedFWs;
