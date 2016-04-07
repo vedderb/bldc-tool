@@ -158,9 +158,41 @@ BasicPage {
                                             }
                                         }
                                     }
+                                    Text{
+                                        id:textCanId
+                                        text: "CAN ID"
+                                        verticalAlignment: Text.AlignVCenter
+                                        font.pointSize: 14
+                                        maximumLineCount: 2
+                                        wrapMode: Text.WordWrap
+                                        width: rectGridCurrent.width * 0.73
+                                    }
+                                    TextField{
+                                        id:textFieldCanId
+                                        width: rectGridCurrent.width*0.25
+                                        text: "1"
+
+                                    }
+                                    CheckBox{
+                                        id:cbSendCan
+                                        text: "CAN Fwd"
+                                        onCheckedChanged: {
+                                           canFwd = checked
+                                           canId = textFieldCanId.text
+                                        }
+                                        style: CheckBoxStyle{
+                                            label: Text {
+                                                renderType: Text.NativeRendering
+                                                verticalAlignment: Text.AlignVCenter
+                                                horizontalAlignment: Text.AlignHCenter
+                                                font.family: "Helvetica"
+                                                // font.bold: true
+                                                font.pointSize: 14
+                                                text: control.text
+                                            }
+                                        }
+                                    }
                                 }
-
-
                             }
 
                             Component.onCompleted: {
@@ -244,6 +276,41 @@ BasicPage {
                                                 font.family: "Helvetica"
                                                 font.pointSize: 12
                                                 //color: "blue"
+                                                text: control.text
+                                            }
+                                        }
+                                    }
+
+                                    Text{
+                                        id:textCanId
+                                        text: "CAN ID"
+                                        verticalAlignment: Text.AlignVCenter
+                                        font.pointSize: 14
+                                        maximumLineCount: 2
+                                        wrapMode: Text.WordWrap
+                                        width: rectGridCurrent.width * 0.73
+                                    }
+                                    TextField{
+                                        id:textFieldCanId
+                                        width: rectGridCurrent.width*0.25
+                                        text: "1"
+
+                                    }
+                                    CheckBox{
+                                        id:cbSendCan
+                                        text: "CAN Fwd"
+                                        onCheckedChanged: {
+                                           canFwd = checked
+                                           canId = textFieldCanId.text
+                                        }
+                                        style: CheckBoxStyle{
+                                            label: Text {
+                                                renderType: Text.NativeRendering
+                                                verticalAlignment: Text.AlignVCenter
+                                                horizontalAlignment: Text.AlignHCenter
+                                                font.family: "Helvetica"
+                                                // font.bold: true
+                                                font.pointSize: 14
                                                 text: control.text
                                             }
                                         }

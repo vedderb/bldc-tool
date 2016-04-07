@@ -21,6 +21,19 @@ BasicPage {
         value:mainComponent
         when:true
     }
+
+    Timer {
+        id: timer
+    }
+
+    function delay(delayTime, cb) {
+        timer.interval = delayTime;
+        timer.repeat = false;
+        timer.triggered.connect(cb);
+        timer.start();
+    }
+
+
     property Component mainComponent: Rectangle {
         id: rootRect
         color: "#DCDCDC"
@@ -672,6 +685,8 @@ BasicPage {
                                     }
                                 }
                             }
+
+
                             Button{
                                 id:buttonWriteConf
                                 text:"Write Config"
@@ -705,6 +720,47 @@ BasicPage {
                                     mcconf.cc_gain = textFieldContGain.text
 
                                     writeMcconf()
+
+                                    canFwd = true
+
+                                    rootMotorConfigLimit.delay(1000, function() {
+                                        // please insert here code that you need to execute after delay
+                                        if(rbDC.checked) mcconf.motor_type = McConf.MOTOR_TYPE_DC
+                                        else if(rbBLDC.checked) mcconf.motor_type = McConf.MOTOR_TYPE_BLDC
+                                        else if(rbFOC.checked)mcconf.motor_type = McConf.MOTOR_TYPE_FOC
+
+                                        mcconf.l_current_max = textFieldMotor.text
+                                        mcconf.l_current_min = textFieldMotorMin.text
+                                        mcconf.l_in_current_max = textFieldBattMax.text
+                                        mcconf.l_in_current_min = textFieldBattMin.text
+                                        mcconf.l_abs_current_max = textFieldAbsoluteMax.text
+                                        mcconf.l_slow_abs_current = cbSlowAbsMax.checked
+                                        mcconf.l_rpm_lim_neg_torque = cbLimitERPM.checked
+                                        mcconf.l_min_erpm = textFieldMinERPM.text
+                                        mcconf.l_max_erpm = textFieldMaxERPM.text
+                                        mcconf.l_max_erpm_fbrake = textFieldMaxERPMBrake.text
+                                        mcconf.l_max_erpm_fbrake_cc = textFieldMaxERPMBrakeCurr.text
+                                        mcconf.l_temp_fet_start = textFieldMOSFETStart.text
+                                        mcconf.l_temp_fet_end = textFieldMOSFETEnd.text
+                                        mcconf.l_temp_motor_start = textFieldMotorStart.text
+                                        mcconf.l_temp_motor_end = textFieldMotorEnd.text
+                                        mcconf.l_min_vin = textFieldMinINV.text
+                                        mcconf.l_max_vin = textFieldMaxINV.text
+                                        mcconf.l_min_duty = textFieldMinDC.text
+                                        mcconf.l_max_duty = textFieldMaxDC.text
+                                        mcconf.cc_startup_boost_duty = textFieldStartBoost.text
+                                        mcconf.cc_min_current = textFieldMinCurr.text
+                                        mcconf.cc_gain = textFieldContGain.text
+
+                                        writeMcconf()
+
+                                        canFwd = false
+                                    })
+
+
+
+
+
                                 }
                                 style: ButtonStyle {
                                     label: Text {
