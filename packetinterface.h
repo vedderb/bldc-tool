@@ -33,46 +33,50 @@ public:
     ~PacketInterface();
 
 
-    Q_INVOKABLE void setLimitedMode(bool is_limited);
-    Q_INVOKABLE bool isLimitedMode();
-    Q_INVOKABLE bool getFwVersion();
-    Q_INVOKABLE bool startFirmwareUpload(QByteArray &newFirmware);
-    Q_INVOKABLE double getFirmwareUploadProgress();
-    Q_INVOKABLE QString getFirmwareUploadStatus();
-    Q_INVOKABLE void cancelFirmwareUpload();
-    Q_INVOKABLE bool getValues();
-    Q_INVOKABLE bool sendTerminalCmd(QString cmd);
+    void setLimitedMode(bool is_limited);
+    bool isLimitedMode();
+    bool getFwVersion();
+    bool startFirmwareUpload(QByteArray &newFirmware);
+    double getFirmwareUploadProgress();
+    QString getFirmwareUploadStatus();
+    void cancelFirmwareUpload();
+    bool getValues();
+    bool sendTerminalCmd(QString cmd);
     Q_INVOKABLE bool setDutyCycle(double dutyCycle);
     Q_INVOKABLE bool setCurrent(double current);
     Q_INVOKABLE bool setCurrentBrake(double current);
     Q_INVOKABLE bool setRpm(int rpm);
     Q_INVOKABLE bool setPos(double pos);
-    Q_INVOKABLE bool setDetect(disp_pos_mode mode);
+    bool setDetect(disp_pos_mode mode);
     Q_INVOKABLE bool samplePrint(bool at_start, int sample_len, int dec);
     Q_INVOKABLE bool getMcconf();
     Q_INVOKABLE bool getMcconfDefault();
-    Q_INVOKABLE bool setMcconf(const mc_configuration &mcconf);
+    bool setMcconf(const mc_configuration &mcconf);
     Q_INVOKABLE bool detectMotorParam(double current, double min_rpm, double low_duty);
     Q_INVOKABLE bool getAppConf();
     Q_INVOKABLE bool getAppConfDefault();
-    Q_INVOKABLE bool setAppConf(const app_configuration &appconf);
+    bool setAppConf(const app_configuration &appconf);
     Q_INVOKABLE bool reboot();
-    Q_INVOKABLE bool sendAlive();
-    Q_INVOKABLE bool getDecodedPpm();
-    Q_INVOKABLE bool getDecodedAdc();
-    Q_INVOKABLE bool getDecodedChuk();
-    Q_INVOKABLE bool setServoPos(double pos);
-    Q_INVOKABLE bool measureRL();
-    Q_INVOKABLE bool measureLinkage(double current, double min_rpm, double low_duty, double resistance);
-    Q_INVOKABLE bool measureEncoder(double current);
-    Q_INVOKABLE bool measureHallFoc(double current);
-    Q_INVOKABLE void setSendCan(bool mSendCan, unsigned int id);
-    Q_INVOKABLE void startUdpConnection(QHostAddress ip, int port);
-    Q_INVOKABLE void stopUdpConnection();
-    Q_INVOKABLE bool isUdpConnected();
-    Q_INVOKABLE bool sendCustomAppData(QByteArray data);
-    Q_INVOKABLE bool sendCustomAppData(unsigned char *data, unsigned int len);
-    Q_INVOKABLE bool setChukData(chuck_data &data);
+    bool sendAlive();
+    bool getDecodedPpm();
+    bool getDecodedAdc();
+    bool getDecodedChuk();
+    bool setServoPos(double pos);
+    bool measureRL();
+    bool measureLinkage(double current, double min_rpm, double low_duty, double resistance);
+    bool measureEncoder(double current);
+    bool measureHallFoc(double current);
+    void setSendCan(bool mSendCan, unsigned int id);
+    void startUdpConnection(QHostAddress ip, int port);
+    void stopUdpConnection();
+    bool isUdpConnected();
+    bool sendCustomAppData(QByteArray data);
+    bool sendCustomAppData(unsigned char *data, unsigned int len);
+    bool setChukData(chuck_data &data);
+    Q_INVOKABLE bool setChukData( int js_x, int js_y,
+                                  int acc_x, int acc_y, int acc_z,
+                                  bool bt_c, bool bt_z);
+
 public slots:
     void processData(const QByteArray &data);
 signals:
@@ -95,7 +99,7 @@ signals:
     void encoderParamReceived(double offset, double ratio, bool inverted);
     void customAppDataReceived(QByteArray data);
     void focHallTableReceived(QVector<int> hall_table, int res);
-    
+
 public slots:
     void timerSlot();
     void readPendingDatagrams();
@@ -135,7 +139,7 @@ private:
     unsigned int mRxDataPtr;
     unsigned char mCrcLow;
     unsigned char mCrcHigh;
-    
+
 };
 
 #endif // PACKETINTERFACE_H

@@ -1218,3 +1218,8 @@ bool PacketInterface::setChukData(chuck_data &data)
     utility::buffer_append_int16(mSendBuffer, data.acc_z, &send_index);
     return sendPacket(mSendBuffer, send_index);
 }
+
+bool PacketInterface::setChukData(int js_x, int js_y, int acc_x, int acc_y, int acc_z, bool bt_c, bool bt_z){
+    chuck_data data = {js_x,js_y,acc_x,acc_y,acc_z,bt_c,bt_z};
+    return setChukData(data);
+}
