@@ -87,6 +87,9 @@ PacketInterface::PacketInterface(QObject *parent) :
     mUdpPort = 0;
     mUdpSocket = new QUdpSocket(this);
 
+    mSliderState = false;
+    mSliderChangeTime.start();
+
     connect(mUdpSocket, SIGNAL(readyRead()),
             this, SLOT(readPendingDatagrams()));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
@@ -1210,7 +1213,10 @@ bool PacketInterface::setChukData(chuck_data &data)
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_CHUCK_DATA;
     mSendBuffer[send_index++] = data.js_x;
-    mSendBuffer[send_index++] = data.js_y;
+    //mSendBuffer[send_index++] = data.js_y <= 0x7f ? data.js_y : -data.js_y & 0x7f;
+    int value = data.js_y < 0 ? data.js_y + 0x7f + 1 : data.js_y + 0x7f + 1;
+    mSendBuffer[send_index++] = value;
+
     mSendBuffer[send_index++] = data.bt_c;
     mSendBuffer[send_index++] = data.bt_z;
     utility::buffer_append_int16(mSendBuffer, data.acc_x, &send_index);
@@ -1221,5 +1227,24 @@ bool PacketInterface::setChukData(chuck_data &data)
 
 bool PacketInterface::setChukData(int js_x, int js_y, int acc_x, int acc_y, int acc_z, bool bt_c, bool bt_z){
     chuck_data data = {js_x,js_y,acc_x,acc_y,acc_z,bt_c,bt_z};
+    mSliderChangeTime.restart();
     return setChukData(data);
+}
+
+int PacketInterface::getElapsedFromSliderChange()
+{
+    if (mSliderState)
+        return 0;
+    return mSliderChangeTime.elapsed();
+}
+
+bool PacketInterface::getSliderPressState()
+{
+    return mSliderState;
+}
+
+void PacketInterface::setSliderPressState(bool pressed)
+{
+    qDebug() << "pressed change" << pressed;
+    mSliderState = pressed;
 }

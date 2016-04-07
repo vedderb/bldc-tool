@@ -80,6 +80,8 @@ BasicPage {
 
     property Component mainComponent: Item {
         id: mainItem
+
+
         Column{
             anchors.top: parent.top
             anchors.topMargin: parent.height*0.05
@@ -135,11 +137,26 @@ BasicPage {
                 }
             }
             Item {width:1;height: parent.height*0.05}//spacer
+
             Slider{
+                id: slider
                 width: parent.width
                 minimumValue: -128
                 maximumValue: 127
+                onPressedChanged: packetInterface.setSliderPressState(pressed)
                 onValueChanged: packetInterface.setChukData(0,value,0,0,0,0,0)
+            }
+
+            Timer {
+                id: sliderTimer
+                interval: 100
+                running: true
+                repeat: true
+                onTriggered: {
+                    if (100 < packetInterface.getElapsedFromSliderChange()) {
+                        slider.value = 0;
+                    }
+                }
             }
         }
     }

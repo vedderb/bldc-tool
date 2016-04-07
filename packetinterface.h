@@ -19,6 +19,7 @@
 #define PACKETINTERFACE_H
 
 #include <QObject>
+#include <QTime>
 #include <QTimer>
 #include <QVector>
 #include <QUdpSocket>
@@ -31,7 +32,6 @@ class PacketInterface : public QObject
 public:
     explicit PacketInterface(QObject *parent = 0);
     ~PacketInterface();
-
 
     void setLimitedMode(bool is_limited);
     bool isLimitedMode();
@@ -76,6 +76,10 @@ public:
     Q_INVOKABLE bool setChukData( int js_x, int js_y,
                                   int acc_x, int acc_y, int acc_z,
                                   bool bt_c, bool bt_z);
+
+    Q_INVOKABLE int getElapsedFromSliderChange();
+    Q_INVOKABLE void setSliderPressState(bool pressed);
+    Q_INVOKABLE bool getSliderPressState();
 
 public slots:
     void processData(const QByteArray &data);
@@ -140,6 +144,8 @@ private:
     unsigned char mCrcLow;
     unsigned char mCrcHigh;
 
+    QTime  mSliderChangeTime;
+    bool   mSliderState;
 };
 
 #endif // PACKETINTERFACE_H

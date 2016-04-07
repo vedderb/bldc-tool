@@ -428,23 +428,23 @@ Flickable{
                 text:"Write Config"
                 width: flicKableMain.width * 0.31
                 onClicked: {
-                    if(rbDisabled.checked)              appconf.chuk_ctrl_type = AppConf.CHUK_CTRL_TYPE_NONE
-                    else if(rbCurrent.checked)          appconf.chuk_ctrl_type = AppConf.CHUK_CTRL_TYPE_CURRENT
-                    else if(rbCurrentNoRev.checked)     appconf.chuk_ctrl_type = AppConf.CHUK_CTRL_TYPE_CURRENT_NOREV
+                    if(rbDisabled.checked)              appconf.app_chuk_ctrl_type = AppConf.CHUK_CTRL_TYPE_NONE
+                    else if(rbCurrent.checked)          appconf.app_chuk_ctrl_type = AppConf.CHUK_CTRL_TYPE_CURRENT
+                    else if(rbCurrentNoRev.checked)     appconf.app_chuk_ctrl_type = AppConf.CHUK_CTRL_TYPE_CURRENT_NOREV
 
-                    appconf.chuk_stick_erpm_per_s_in_cc = textFieldErpms.text
-                    appconf.chuk_hyst = textFieldDeadband.text
-                    appconf.chuk_ramp_time_pos = textRampPos.text
-                    appconf.chuk_ramp_time_neg = textRampNeg.text
+                    appconf.app_chuk_stick_erpm_per_s_in_cc = textFieldErpms.text
+                    appconf.app_chuk_hyst = textFieldDeadband.text
+                    appconf.app_chuk_ramp_time_pos = textRampPos.text
+                    appconf.app_chuk_ramp_time_neg = textRampNeg.text
 
                     if(cbRPMLimit.checked){
-                        appconf.chuk_rpm_lim_start = textFieldRPMLimStart.text
-                        appconf.chuk_rpm_lim_end = textFieldRPMLimEnd.text
+                        appconf.app_chuk_rpm_lim_start = textFieldRPMLimStart.text
+                        appconf.app_chuk_rpm_lim_end = textFieldRPMLimEnd.text
                     }
-                    appconf.chuk_multi_esc = cbMultESC.checked
-                    appconf.chuk_tc = cbEnableTraction.checked
-                    appconfUpdateChukBox = cbDec.checked
-                    appconf.chuk_tc_max_diff = textFieldTractCont.text
+                    appconf.app_chuk_multi_esc = cbMultESC.checked
+                    appconf.app_chuk_tc = cbEnableTraction.checked
+                    appconfUpdateChuk = cbDec.checked
+                    appconf.app_chuk_tc_max_diff = textFieldTractCont.text
 
                     writeAppConf()
                 }
