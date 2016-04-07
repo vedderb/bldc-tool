@@ -134,6 +134,13 @@ BasicPage {
                     }
                 }
             }
+            Item {width:1;height: parent.height*0.05}//spacer
+            Slider{
+                width: parent.width
+                minimumValue: -128
+                maximumValue: 127
+                onValueChanged: packetInterface.setChukData(0,value,0,0,0,0,0)
+            }
         }
     }
 }
