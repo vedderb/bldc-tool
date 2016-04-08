@@ -39,7 +39,8 @@ BasicPage {
             Rectangle{
                 id:rectContent
                 width: parent.width
-                height:rectConnection.height + rectControl.height +rectBEMF.height + rectPlotControl.height + (rectGap * 4)
+                Component.onCompleted: rectConnection.height + rectControl.height +rectBEMF.height + rectPlotControl.height + (rectGap * 4)
+                //height:rectConnection.height + rectControl.height +rectBEMF.height + rectPlotControl.height + (rectGap * 4)
                 color:"#DCDCDC"
 
                 Rectangle{
@@ -69,17 +70,16 @@ BasicPage {
                         anchors.rightMargin: rowLeftMargin
                         anchors.top: textTitle.bottom
                         anchors.topMargin: rowVerticalMargin
-                        anchors.fill: parent
                         color: parent.color
 
                         TabView{
                             id: tabview
                             frameVisible: false
                             width: parent.width
-                            height: 500
-                            Tab{
+                            height: (os == OS.Android) ? 500 : 150
+                            Component {
                                 id: serialTab
-                                title:"SerialPort"
+                                //title:"SerialPort"
                                 Grid{
                                     id:gridConnection
                                     width: parent.width
@@ -88,7 +88,7 @@ BasicPage {
                                     columns: 2
                                     columnSpacing: rowLeftMargin
                                     rowSpacing: rowVerticalMargin*0.6
-                                    Component.onCompleted: parent.height = childrenRect.height + tabMargin
+                                    //Component.onCompleted: parent.height = childrenRect.height + tabMargin
 
                                     Layout.fillHeight: true
 
@@ -202,7 +202,9 @@ BasicPage {
                             }
 
                             Component.onCompleted: {
-                                serialTab.visible = (os != OS.IOS)
+                                if (os != OS.IOS && os != OS.Android) {
+                                    tabview.addTab("SerialPort", serialTab);
+                                }
                             }
                             Tab{
                                 id: bluetoothTab

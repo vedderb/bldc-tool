@@ -127,7 +127,7 @@ Item{
                             text: mcconf.sl_cycle_int_rpm_br
                         }
                         TextField{
-                            id:textFieldSensCurKi
+                            id:textFieldSensCurKi2
                             width: parent.width*0.2
                             text: mcconf.sl_cycle_int_rpm_br
                         }
@@ -383,6 +383,8 @@ Item{
                                     text: mcconf.sl_cycle_int_rpm_br
                                 }
                             }
+                        }
+
                         }
                     }
                 }
