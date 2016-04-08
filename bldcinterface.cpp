@@ -693,6 +693,7 @@ void BLDCInterface::serialPortError(QSerialPort::SerialPortError error)
 
 void BLDCInterface::connectCurrentSerial()
 {
+    qDebug() << "BLDInterface::connectCurrentSerial";
     if(m_currentSerialPort >= 0 &&
             m_serialPortsLocations.count() > m_currentSerialPort){
         connectSerial(m_serialPortsLocations.at(m_currentSerialPort));
@@ -701,6 +702,7 @@ void BLDCInterface::connectCurrentSerial()
 
 void BLDCInterface::connectSerial(QString port)
 {
+    qDebug() << "BLDInterface::connectSerial";
     if(mSerialPort->isOpen()) {
         return;
     }
@@ -732,9 +734,19 @@ void BLDCInterface::connectSerial(QString port)
     m_packetInterface->stopUdpConnection();
 }
 
+void BLDCInterface::disconnectSerial(){
+    qDebug() << "BLDInterface::disconnectSerial";
+    if (mSerialPort->isOpen()) {
+        mSerialPort->close();
+    }
+
+    mFwVersionReceived = false;
+    mFwRetries = 0;
+}
 
 void BLDCInterface::refreshSerialDevices()
 {
+    qDebug() << "BLDInterface::refreshSerialDevices";
     m_serialPortsLocations.clear();
     QStringList serialPortNames;
 
@@ -758,13 +770,12 @@ void BLDCInterface::refreshSerialDevices()
         set_currentSerialPort(0);
     update_serialPortNames(serialPortNames);
 }
-
-void BLDCInterface::disconnectSerial(){
-    if (mSerialPort->isOpen()) {
-        mSerialPort->close();
-    }
-
-    mFwVersionReceived = false;
-    mFwRetries = 0;
+#else
+void BLDCInterface::refreshSerialDevices()
+{
 }
+
 #endif
+
+
+

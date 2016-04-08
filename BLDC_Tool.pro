@@ -8,6 +8,10 @@ ios{
     QT -= serialport
     DEFINES += NO_SERIAL_PORT
 }
+android{
+    QT -= serialport
+    DEFINES += NO_SERIAL_PORT
+}
 
 CONFIG += c++11
 contains(DEFINES,QML){

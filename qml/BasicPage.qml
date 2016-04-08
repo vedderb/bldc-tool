@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.0
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.0
+import QtQuick.Window 2.0
 
 Item {
     id:rootBasicPage
@@ -9,7 +10,7 @@ Item {
     signal nextPage
     signal previousPage
     signal showSettings
-    height: mainWindow.height
+    height: mainWindow.height - packetInterface.getStatusBarHeight()
     width:mainWindow.width
 
     property bool showTopbar: true

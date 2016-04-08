@@ -41,13 +41,19 @@ BasicPage {
             id: flickableMain
             width: parent.width
             height: parent.height
-            contentHeight: rectMain.height
+            contentHeight: rectMotortype.height + rectCurrentLimit.height
+                           + rectRPMLimit.height + rectTempLimit.height
+                           + rectOtherLimit.height  + rectCurrentControl.height
+                           + rectBottomButtons.height + 8 * rectGap
             contentWidth: width
             Rectangle{
                 id:rectMain
                 anchors.fill: parent
                 color: "#DCDCDC"
-                height: rectMotortype.height + rectCurrentLimit.height + rectRPMLimit.height + rectTempLimit.height + rectOtherLimit.height  + rectCurrentControl.height + rectBottomButtons.height + (rectGap*7)
+                height: rectMotortype.height + rectCurrentLimit.height
+                        + rectRPMLimit.height + rectTempLimit.height
+                        + rectOtherLimit.height  + rectCurrentControl.height
+                        + rectBottomButtons.height + 8 * rectGap
                 Rectangle{
                     id: rectMotortype
                     width: parent.width

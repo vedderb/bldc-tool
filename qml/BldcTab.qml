@@ -6,14 +6,25 @@ import bldc 1.0
 Flickable{
     id:flicableMain
     anchors.fill: parent
-    contentHeight:rectMain.height+rectGap
+    contentHeight:rectSensorMode.height + rectGridSensorMode.height
+                  +rectSensorless.height + rectCommModeOptions.height
+                  + rectHallSensors.height + rectGridHallTable.height
+                  + rectGridSensorlessERPM.height + rectDetectParams.height
+                  + rectGridDetect.height + rectButtons.height
+                  + 4 * rectGap
     clip: true
 
     Rectangle{
         id:rectMain
-        height:rectSensorMode.height + rectSensorless.height+rectHallSensors.height+rectDetectParams.height + rectButtons.height +(5 * rectGap)
         width: parent.width
         color: "#DCDCDC"
+        height:rectSensorMode.height + rectGridSensorMode.height
+               +rectSensorless.height + rectCommModeOptions.height
+               + rectHallSensors.height + rectGridHallTable.height
+               + rectGridSensorlessERPM.height + rectDetectParams.height
+               + rectGridDetect.height + rectButtons.height
+               + 4 * rectGap
+
 
         Rectangle{
             id:rectSensorMode

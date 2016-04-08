@@ -92,7 +92,6 @@ Item{
                                 }
                             }
                         }
-
                     }
 
                     GridLayout{
@@ -107,30 +106,30 @@ Item{
                             font.pointSize: 14
                         }
 
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.15
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "Kp: "
+                        TextField{
+                            id:textFieldSensCurKp
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.15
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "Ki: "
+                        TextField{
+                            id:textFieldSensCurKi
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
                         Text {
                             text: qsTr("Encoder")
                             verticalAlignment: Text.AlignVCenter
                             font.pointSize: 14
                         }
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.15
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "Ofs: "
+                        TextField{
+                            id:textFieldSensCurOfs
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.15
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "Rat: "
+                        TextField{
+                            id:textFieldSensCurKi
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
                         CheckBox{
                             text: "Invert Encoder"
@@ -150,80 +149,95 @@ Item{
                             columns: 4
                             Button{
                                 Layout.preferredWidth: parent.width*0.2
-                                text: "Measure R and L"
+                                id:buttonSensCalRL
+                                text: "R & L"
+                                onClicked: {
+                                    console.log("Measuring R and L")
+                                    packetInterface.detectMotorParam(textFieldCurrent.text,
+                                                                     textFieldMinRPM.text,
+                                                                     textFieldLowDuty.text)
+                                }
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "R: "
-                                suffix: "Ω"
-                                decimals: 5
+                            TextField{
+                                id:textFieldSensDecR
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "L: "
-                                suffix: "µH"
-                                decimals: 2
+                            TextField{
+                                id:textFieldSensDetL
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "λ: "
-                                decimals:8
-                            }
-                            Button{
-                                Layout.preferredWidth: parent.width*0.2
-                                text: "Measure λ (Req: R)"
-                            }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "I: "
-                                suffix: "A"
-                                decimals: 2
-                            }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "Duty: "
-                                decimals: 2
-                            }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "RPM: "
-                                decimals:1
+                            TextField{
+                                id:textFieldSensDetλ
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
                             Button{
                                 Layout.preferredWidth: parent.width*0.2
-                                text: "Calc CC (Req: R and L)"
+                                id:buttonSensCalλ
+                                text: "Measure λ"
+                                onClicked: {
+                                    console.log("Measuring λ")
+                                    packetInterface.detectMotorParam(textFieldCurrent.text,
+                                                                     textFieldMinRPM.text,
+                                                                     textFieldLowDuty.text)
+                                }
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "TC: "
-                                suffix: "µS"
-                                decimals: 1
+                            TextField{
+                                id:textFieldSensDetI
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "Kp: "
-                                decimals:4
+                            TextField{
+                                id:textFieldSensDetDuty
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "Ki: "
-                                decimals:2
+                            TextField{
+                                id:textFieldSensDetRPM
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
                             Button{
                                 Layout.preferredWidth: parent.width*0.2
+                                id:buttonSensCalCC
+                                text: "Calc CC"
+                                onClicked: {
+                                    console.log("Calculating CC")
+                                    packetInterface.detectMotorParam(textFieldCurrent.text,
+                                                                     textFieldMinRPM.text,
+                                                                     textFieldLowDuty.text)
+                                }
+                            }
+                            TextField{
+                                id:textFieldSensDetTC
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
+                            }
+                            TextField{
+                                id:textFieldSensDetKp
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
+                            }
+                            TextField{
+                                id:textFieldSensDetKi
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
+                            }
+                            Button{
+                                Layout.preferredWidth: parent.width*0.2
+                                id:buttonSensDetApply
                                 text: "Apply"
                                 Layout.row: 3
                                 Layout.column: 3
                                 Layout.topMargin: rowVerticalMargin
+                                onClicked: {
+                                    console.log("Applying values")
+                                    packetInterface.detectMotorParam(textFieldCurrent.text,
+                                                                     textFieldMinRPM.text,
+                                                                     textFieldLowDuty.text)
+                                }
                             }
                         }
                     }
@@ -255,30 +269,20 @@ Item{
                             columnSpacing: rowContentSpacing
                             columns: 3
 
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "R: "
-                                suffix: "  Ω"
-                                maximumValue: 1000.0
-                                stepSize: 0.001000
-                                decimals: 5
+                            TextField{
+                                id:textFieldSensMotR
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "L: "
-                                suffix: " µH"
-                                decimals: 2
-                                maximumValue: 1000000.0
+                            TextField{
+                                id:textFieldSensMotL
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "λ: "
-                                maximumValue: 1000.0
-                                stepSize: 0.001000
-                                decimals: 6
+                            TextField{
+                                id:textFieldSensMotλ
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
                             Text {
                                 text: qsTr("Observer Gain (x1M)")
@@ -286,24 +290,27 @@ Item{
                                 font.pointSize: 14
 
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                decimals: 2
-                                maximumValue: 100000.0
+                            TextField{
+                                id:textFieldSensGain
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
 
                             Button{
                                 Layout.preferredWidth: parent.width*0.20
+                                id:buttonSensCalGain
                                 text:"Cal (Req: L)"
                                 width: parent.width * 0.31
                                 style: buttonStyle
+                                onClicked: {
+                                    console.log("Calculating Observer Gain")
+                                    packetInterface.detectMotorParam(textFieldCurrent.text,
+                                                                     textFieldMinRPM.text,
+                                                                     textFieldLowDuty.text)
+                                }
                             }
-
-
                         }
                     }
-
                     GroupBox{
                         width: parent.width
                         title: "Hall Sensors"
@@ -321,15 +328,46 @@ Item{
 
                                 }
 
-                                SpinBox{width:hallCol.width * 0.1}
-                                SpinBox{width:hallCol.width * 0.1}
-                                SpinBox{width:hallCol.width * 0.1}
-                                SpinBox{width:hallCol.width * 0.1}
-                                SpinBox{width:hallCol.width * 0.1}
-                                SpinBox{width:hallCol.width * 0.1}
-                                SpinBox{width:hallCol.width * 0.1}
-                                SpinBox{width:hallCol.width * 0.1}
-                            }
+                                TextField{
+                                    id:textFieldTable1
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table1
+                                }
+                                TextField{
+                                    id:textFieldTable2
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table2
+                                }
+                                TextField{
+                                    id:textFieldTable3
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table3
+                                }
+                                TextField{
+                                    id:textFieldTable4
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table4
+                                }
+                                TextField{
+                                    id:textFieldTable5
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table5
+                                }
+                                TextField{
+                                    id:textFieldTable6
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table6
+                                }
+                                TextField{
+                                    id:textFieldTable7
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table7
+                                }
+                                TextField{
+                                    id:textFieldTable8
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table8
+                                }
 
                             Row{
                                 spacing: rowVerticalMargin
@@ -339,12 +377,10 @@ Item{
                                     font.pointSize: 14
 
                                 }
-                                SpinBox{
-                                    Layout.preferredWidth: parent.width*0.20
-                                    horizontalAlignment: Qt.AlignLeft
-                                    decimals: 2
-                                    maximumValue: 200000.0
-                                    stepSize: 10
+                                TextField{
+                                    id:textFieldBRERPM
+                                    width: parent.width*0.2
+                                    text: mcconf.sl_cycle_int_rpm_br
                                 }
                             }
                         }
@@ -383,29 +419,20 @@ Item{
                                 width: parent.width * 0.2
                                 style: buttonStyle
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "I: "
-                                suffix: "  A"
-                                maximumValue: 99.0
-                                decimals: 2
-                                value: 15
-                                Layout.columnSpan: 1
+                            TextField{
+                                id:textFieldEncI
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "Ofs: "
-                                decimals: 2
-                                maximumValue: 360
+                            TextField{
+                                id:textFieldEncOfs
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "Rat: "
-                                maximumValue: 500
-                                decimals: 2
+                            TextField{
+                                id:textFieldEncRat
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
                             CheckBox{
                                 text: "Invert Encoder"
@@ -438,25 +465,55 @@ Item{
                                     style: buttonStyle
                                 }
 
-                                SpinBox{
-                                    width: encoderCol.width*0.20
-                                    horizontalAlignment: Qt.AlignLeft
-                                    prefix: "Rat: "
-                                    maximumValue: 500
-                                    decimals: 2
+                                TextField{
+                                    id:textFieldDetHallI
+                                    width: parent.width*0.2
+                                    text: mcconf.sl_cycle_int_rpm_br
                                 }
                             }
                             Row{
                                 id: detectHallSensorRow
                                 spacing: rowVerticalMargin
-                                SpinBox{width:encoderCol.width * 0.1}
-                                SpinBox{width:encoderCol.width * 0.1}
-                                SpinBox{width:encoderCol.width * 0.1}
-                                SpinBox{width:encoderCol.width * 0.1}
-                                SpinBox{width:encoderCol.width * 0.1}
-                                SpinBox{width:encoderCol.width * 0.1}
-                                SpinBox{width:encoderCol.width * 0.1}
-                                SpinBox{width:encoderCol.width * 0.1}
+                                TextField{
+                                    id:textFieldDetTable1
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table1
+                                }
+                                TextField{
+                                    id:textFieldDetTable2
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table2
+                                }
+                                TextField{
+                                    id:textFieldDetTable3
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table3
+                                }
+                                TextField{
+                                    id:textFieldDetTable4
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table4
+                                }
+                                TextField{
+                                    id:textFieldDetTable5
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table5
+                                }
+                                TextField{
+                                    id:textFieldDetTable6
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table6
+                                }
+                                TextField{
+                                    id:textFieldDetTable7
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table7
+                                }
+                                TextField{
+                                    id:textFieldDetTable8
+                                    width: parent.width*0.09
+                                    text: mcconf.hall_table8
+                                }
                             }
                             Button{
                                 text:"Apply"
@@ -467,7 +524,6 @@ Item{
                         }
                     }
                 }
-
             }
         }
         Tab{
@@ -500,70 +556,55 @@ Item{
 
                         }
 
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.20
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "F_SW: "
-                            suffix: " Hz"
-                            maximumValue: 100000
-                            stepSize: 100
+                        TextField{
+                            id:textFieldAdvFSW
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.20
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "DTc: "
-                            suffix: " µS"
-                            decimals: 3
-                            stepSize: 0.01
-                            maximumValue: 10000.0
+                        TextField{
+                            id:textFieldAdvDTc
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
                         Text {
                             text: qsTr("Speed Tracker")
                             verticalAlignment: Text.AlignVCenter
                             font.pointSize: 14
                         }
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.20
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "Kp: "
-                            decimals: 2
+                        TextField{
+                            id:textFieldAdvSpeKp
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.20
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "Ki: "
-                            decimals: 2
+                        TextField{
+                            id:textFieldAdvSpeKi
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
                         Text {
                             text: qsTr("Duty Downramp")
                             verticalAlignment: Text.AlignVCenter
                             font.pointSize: 14
                         }
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.20
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "Kp: "
-                            decimals: 2
+                        TextField{
+                            id:textFieldAdvDutKp
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.20
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "Ki: "
-                            decimals: 2
+                        TextField{
+                            id:textFieldAdvDutKi
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
                         Text {
                             text: qsTr("Openloop RPM")
                             verticalAlignment: Text.AlignVCenter
                             font.pointSize: 14
                         }
-                        SpinBox{
-                            Layout.preferredWidth: parent.width*0.20
-                            horizontalAlignment: Qt.AlignLeft
-                            prefix: "RPM: "
-                            decimals: 2
-                            maximumValue: 100000.0
-                            stepSize: 10.0
-                            Layout.rowSpan: 1
+                        TextField{
+                            id:textFieldAdvRPM
+                            width: parent.width*0.2
+                            text: mcconf.sl_cycle_int_rpm_br
                         }
                     }
                     GroupBox{
@@ -582,23 +623,15 @@ Item{
 
                             }
 
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "Hyst: "
-                                suffix: " s"
-                                maximumValue: 200.0
-                                stepSize: 0.1
-                                decimals: 3
+                            TextField{
+                                id:textFieldAdvSensHyst
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "Time: "
-                                suffix: " s"
-                                decimals: 3
-                                stepSize: 0.01
-                                maximumValue: 10000.0
+                            TextField{
+                                id:textFieldAdvSensTime
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
                             Text {
                                 text: qsTr("D Current Injection")
@@ -607,20 +640,15 @@ Item{
 
                             }
 
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "Duty: "
-                                maximumValue: 1.0
-                                stepSize: 0.01
+                            TextField{
+                                id:textFieldAdvDuty
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
-                            SpinBox{
-                                Layout.preferredWidth: parent.width*0.20
-                                horizontalAlignment: Qt.AlignLeft
-                                prefix: "Factor: "
-                                decimals: 3
-                                stepSize: 0.1
-                                maximumValue: 99.0
+                            TextField{
+                                id:textFieldAdvFact
+                                width: parent.width*0.2
+                                text: mcconf.sl_cycle_int_rpm_br
                             }
                         }
                     }
@@ -636,7 +664,7 @@ Item{
         anchors.bottomMargin: rowVerticalMargin
         anchors.leftMargin: rowLeftMargin
         spacing: rowContentSpacing
-        height: childrenRect.height
+        height: childrenRect.height + rectGap
 
         Button{
             id:buttonReadConf
@@ -659,6 +687,7 @@ Item{
             style: buttonStyle
         }
     }
+
     Component{
         id: buttonStyle
         ButtonStyle {
@@ -673,4 +702,3 @@ Item{
         }
     }
 }
-

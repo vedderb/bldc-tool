@@ -145,8 +145,9 @@ public slots:
     void serialDataAvailable();
     void serialPortError(QSerialPort::SerialPortError error);
     void disconnectSerial();
-    void refreshSerialDevices();
+
 #endif
+    void refreshSerialDevices();
     void packetDataToSend(QByteArray &data);
     void detect();
     void stopDetect();

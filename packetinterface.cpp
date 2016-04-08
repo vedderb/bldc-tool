@@ -1174,6 +1174,7 @@ void PacketInterface::setSendCan(bool sendCan, unsigned int id)
 
 void PacketInterface::startUdpConnection(QHostAddress ip, int port)
 {
+    qDebug() << "PacketInterface::startUdpConnection";
     mHostAddress = ip;
     mUdpPort = port;
     mUdpSocket->close();
@@ -1182,6 +1183,7 @@ void PacketInterface::startUdpConnection(QHostAddress ip, int port)
 
 void PacketInterface::stopUdpConnection()
 {
+    qDebug() << "PacketInterface::stopUdpConnection";
     if(isUdpConnected()){
         mHostAddress = QHostAddress("0.0.0.0");
         mUdpPort = 0;
@@ -1247,4 +1249,16 @@ void PacketInterface::setSliderPressState(bool pressed)
 {
     qDebug() << "pressed change" << pressed;
     mSliderState = pressed;
+}
+
+int PacketInterface::getStatusBarHeight()
+{
+    qDebug() << "PacketInterface::getStatusBarHeight" << mStatusBarHeight;
+    return mStatusBarHeight;
+}
+
+void PacketInterface::setStatusBarHeight(int height)
+{
+    qDebug() << "PacketInterface::setStatusBarHeight" << mStatusBarHeight;
+    mStatusBarHeight = height;
 }

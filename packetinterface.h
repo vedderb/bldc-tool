@@ -80,6 +80,8 @@ public:
     Q_INVOKABLE int getElapsedFromSliderChange();
     Q_INVOKABLE void setSliderPressState(bool pressed);
     Q_INVOKABLE bool getSliderPressState();
+    Q_INVOKABLE int getStatusBarHeight();
+    Q_INVOKABLE void setStatusBarHeight(int);
 
 public slots:
     void processData(const QByteArray &data);
@@ -146,6 +148,7 @@ private:
 
     QTime  mSliderChangeTime;
     bool   mSliderState;
+    int    mStatusBarHeight;
 };
 
 #endif // PACKETINTERFACE_H

@@ -32,12 +32,16 @@ BasicPage {
             height: parent.height
             width: parent.width
             contentWidth: width
-            contentHeight:rectMain.height
+            contentHeight: rectSettings.height + rectApp.height
+                           + rectTimeout.height + rectButtons.height
+                           + 7 * rectGap
             Rectangle{
                 id:rectMain
                 anchors.fill: parent
                 color: "#DCDCDC"
-                height: rectSettings.height + rectApp.height +rectTimeout.height + rectButtons.height +(4 * rectGap)
+                height: rectSettings.height + rectApp.height
+                        + rectTimeout.height + rectButtons.height
+                        + 7 * rectGap
 
                 Rectangle{
                     id:rectSettings

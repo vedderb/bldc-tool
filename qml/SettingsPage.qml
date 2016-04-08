@@ -1,12 +1,13 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
+import QtQuick.Layouts 1.1
 import bldc 1.0
 
 BasicPage {
 
     id:rootSettings
-    height: mainWindow.height
+    height: mainWindow.height - statusBar.height
     width:mainWindow.width
     showBackButton: true
     showSettingsButton: false
@@ -46,6 +47,7 @@ BasicPage {
                     id:rectConnection
                     width: parent.width
                     height: textTitle.height + headingTopMargin +rectGridConnection.height + rowVerticalMargin
+
                     Text{
                         id:textTitle
                         anchors.left: parent.left
@@ -55,27 +57,29 @@ BasicPage {
                         text:"Connection"
                         font.bold: true
                         font.pointSize: 14
-
                     }
 
-                    Rectangle{
+                    Rectangle {
                         id:rectGridConnection
                         width:parent.width - (2 * rowLeftMargin)
+                        height: tabview.height + tabMargin
                         anchors.left:parent.left
                         anchors.leftMargin: rowLeftMargin
                         anchors.right: parent.right
                         anchors.rightMargin: rowLeftMargin
                         anchors.top: textTitle.bottom
                         anchors.topMargin: rowVerticalMargin
-                        height: childrenRect.height
+                        anchors.fill: parent
                         color: parent.color
 
                         TabView{
-                            id: tabveiew
+                            id: tabview
                             frameVisible: false
                             width: parent.width
-                            Component{
+                            height: 500
+                            Tab{
                                 id: serialTab
+                                title:"SerialPort"
                                 Grid{
                                     id:gridConnection
                                     width: parent.width
@@ -85,6 +89,8 @@ BasicPage {
                                     columnSpacing: rowLeftMargin
                                     rowSpacing: rowVerticalMargin*0.6
                                     Component.onCompleted: parent.height = childrenRect.height + tabMargin
+
+                                    Layout.fillHeight: true
 
                                     Text{
                                         id:textPort
@@ -196,8 +202,7 @@ BasicPage {
                             }
 
                             Component.onCompleted: {
-                                if(os !== OS.IOS)
-                                    tabveiew.addTab("SerialPort", serialTab)
+                                serialTab.visible = (os != OS.IOS)
                             }
                             Tab{
                                 id: bluetoothTab
@@ -471,8 +476,8 @@ BasicPage {
                                     }
                                 }
                             }
-                        }}
-
+                        }
+                    }
                     Row {
                         id: kbControlChkRow
                         anchors.top:rectGridControl.bottom
@@ -837,6 +842,7 @@ BasicPage {
                         }
                     }
                 }
+
             }
         }
     }
