@@ -3,6 +3,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Window 2.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Layouts 1.0
+import bldc 1.0
 
 ApplicationWindow {
     id:mainWindow
@@ -42,15 +43,20 @@ ApplicationWindow {
     }
     statusBar: StatusBar {
         id: statusbar
-        Rectangle{
-            id: background
+        visible: true
+        RowLayout {
             anchors.fill: parent
-            color: 'transparent'
-        }
-        Label {
-            id: label
-            anchors.fill: parent
-            anchors.leftMargin: 10
+            Rectangle{
+                id: background
+                anchors.fill: parent
+                color: 'white'//'transparent'
+            }
+            Label {
+                id: label
+                anchors.fill: parent
+                anchors.leftMargin: 10
+                text: "Ready"
+            }
         }
         function showStatus(text, good){
             label.text = text
@@ -61,6 +67,9 @@ ApplicationWindow {
         }
         Component.onCompleted: {
             onStatusInfoChanged.connect(showStatus);
+            if (os == OS.Android) {
+                statusBar.height = label.font.pixelSize * 1.5;
+            }
         }
     }
 }

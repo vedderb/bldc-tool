@@ -10,7 +10,7 @@ Item {
     signal nextPage
     signal previousPage
     signal showSettings
-    height: mainWindow.height - packetInterface.getStatusBarHeight()
+    height: mainWindow.height
     width:mainWindow.width
 
     property bool showTopbar: true
@@ -27,6 +27,8 @@ Item {
 //            game_translate_.y = -( _settingsControlBase.height+_topToolbar.height)
 //        }
 //    }
+
+
     Item{
         id:itemBasicPage
         height: parent.height
@@ -77,6 +79,8 @@ Item {
                 anchors.fill: rectback
                 onClicked:{
                     rootBasicPage.previousPage()
+                    packetInterface.getAppConf()
+
                 }
             }
             Text{

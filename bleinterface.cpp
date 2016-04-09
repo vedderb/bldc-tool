@@ -107,7 +107,7 @@ void BLEInterface::addDevice(const QBluetoothDeviceInfo &device)
         DeviceInfo *dev = new DeviceInfo(device);
         m_devices.append(dev);
         emit devicesNamesChanged(m_devicesNames);
-        emit statusInfoChanged("Low Energy device found. Scanning for more...", true);
+        emit statusInfoChanged("Low Energy device found", true);
     }
     //...
 }

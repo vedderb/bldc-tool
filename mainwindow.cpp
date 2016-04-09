@@ -25,6 +25,7 @@
 #include <QMessageBox>
 #include <QSerialPortInfo>
 #include <QSpinBox>
+
 #include "digitalfiltering.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -38,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->udpIpEdit->setText("192.168.1.118");
     ui->firmwareSupportedLabel->setText(m_bldcInterface->get_firmwareSupported());
     mStatusLabel = new QLabel(this);
+
     ui->statusBar->addPermanentWidget(mStatusLabel);
     ui->serialCombobox->addItems(m_bldcInterface->get_serialPortNames());
 

@@ -24,6 +24,17 @@ BasicPage {
         when:true
     }
 
+    Timer {
+        id: timer
+    }
+
+    function delay(delayTime, cb) {
+        timer.interval = delayTime;
+        timer.repeat = false;
+        timer.triggered.connect(cb);
+        timer.start();
+    }
+
     property Component mainComponent: Rectangle {
         id: name
         color: "#DCDCDC"
@@ -38,6 +49,7 @@ BasicPage {
                 id: focTab
                 title: "FOC"
                 source: "FocTab.qml"
+
             }
         }
     }

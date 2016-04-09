@@ -19,7 +19,7 @@ BasicPage {
     property int rowLeftMargin:16
     property int rowContentSpacing: 10
     property int rectGap: 20
-    property int tabMargin: 20
+    property int tabMargin: text.font.pixelSize * 2
 
     Binding{
         target:rootSettings
@@ -39,8 +39,7 @@ BasicPage {
             Rectangle{
                 id:rectContent
                 width: parent.width
-                Component.onCompleted: rectConnection.height + rectControl.height +rectBEMF.height + rectPlotControl.height + (rectGap * 4)
-                //height:rectConnection.height + rectControl.height +rectBEMF.height + rectPlotControl.height + (rectGap * 4)
+                height:rectConnection.height + rectControl.height +rectBEMF.height + rectPlotControl.height + (rectGap * 4)
                 color:"#DCDCDC"
 
                 Rectangle{
@@ -323,6 +322,25 @@ BasicPage {
                                         }
                                     }
                                 }
+                            }
+
+                            style: TabViewStyle {
+                                frameOverlap: 3
+                                tab: Rectangle {
+                                    color: "#ffffff"
+                                    border.color: styleData.selected ? "steelblue" :"lightgray"
+                                    border.width: 3
+                                    implicitWidth: Math.max(text.width + 20, mainWindow.width / 2)
+                                    implicitHeight: text.font.pixelSize * 2.0
+                                    radius: 20
+                                    Text {
+                                        id: text
+                                        anchors.centerIn: parent
+                                        text: styleData.title
+                                        color: "black"
+                                    }
+                                }
+                                frame: Rectangle { color: "lightgray" }
                             }
                         }
                     }

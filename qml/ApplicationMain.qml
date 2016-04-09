@@ -5,7 +5,7 @@ import QtQuick.Controls.Styles 1.0
 
 Rectangle {
     id:rootApplicationMain
-    height: mainWindow.height
+    height: mainWindow.height - statusbar.height
     width: mainWindow.width
 
     property string destinationPage: ""

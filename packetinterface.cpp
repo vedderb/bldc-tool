@@ -17,6 +17,7 @@
 
 #include "packetinterface.h"
 #include "utility.h"
+
 #include <QDebug>
 #include <math.h>
 
@@ -1249,16 +1250,4 @@ void PacketInterface::setSliderPressState(bool pressed)
 {
     qDebug() << "pressed change" << pressed;
     mSliderState = pressed;
-}
-
-int PacketInterface::getStatusBarHeight()
-{
-    qDebug() << "PacketInterface::getStatusBarHeight" << mStatusBarHeight;
-    return mStatusBarHeight;
-}
-
-void PacketInterface::setStatusBarHeight(int height)
-{
-    qDebug() << "PacketInterface::setStatusBarHeight" << mStatusBarHeight;
-    mStatusBarHeight = height;
 }

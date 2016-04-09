@@ -3,6 +3,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.3
 import bldc 1.0
 
+
 Flickable{
     id:flicableMain
     anchors.fill: parent
@@ -371,53 +372,47 @@ Flickable{
                 height: gridHallTable.height
                 Grid{
                     id:gridHallTable
-                    columns: 9
+                    columns: 8
                     columnSpacing:parent.width *0.02
                     width: parent.width
-                    Text{
-                        id:textDirection
-                        text: "Table"
-                        verticalAlignment: Text.AlignVCenter
-                        font.pointSize: 14
-                    }
                     TextField{
                         id:textFieldTable1
-                        width: parent.width*0.09
+                        width: parent.width*0.11
                         text: mcconf.hall_table1
                     }
                     TextField{
                         id:textFieldTable2
-                        width: parent.width*0.09
+                        width: parent.width*0.11
                         text: mcconf.hall_table2
                     }
                     TextField{
                         id:textFieldTable3
-                        width: parent.width*0.09
+                        width: parent.width*0.11
                         text: mcconf.hall_table3
                     }
                     TextField{
                         id:textFieldTable4
-                        width: parent.width*0.09
+                        width: parent.width*0.11
                         text: mcconf.hall_table4
                     }
                     TextField{
                         id:textFieldTable5
-                        width: parent.width*0.09
+                        width: parent.width*0.11
                         text: mcconf.hall_table5
                     }
                     TextField{
                         id:textFieldTable6
-                        width: parent.width*0.09
+                        width: parent.width*0.11
                         text: mcconf.hall_table6
                     }
                     TextField{
                         id:textFieldTable7
-                        width: parent.width*0.09
+                        width: parent.width*0.11
                         text: mcconf.hall_table7
                     }
                     TextField{
                         id:textFieldTable8
-                        width: parent.width*0.09
+                        width: parent.width*0.11
                         text: mcconf.hall_table8
                     }
 
@@ -632,6 +627,38 @@ Flickable{
                             mcconf.hall_sl_erpm = textFieldHybridMode.text
 
                             writeMcconf()
+
+                            canFwd = true
+
+                            rootMCSensorLess.delay(1000, function() {
+                                // please insert here code that you need to execute after delay
+                                if(rbSensorless.checked)    mcconf.sensor_mode = McConf.SENSOR_MODE_SENSORLESS
+                                else if(rbSensored.checked) mcconf.sensor_mode = McConf.SENSOR_MODE_SENSORED
+                                else if(rbHybrid.checked)   mcconf.sensor_mode = McConf.SENSOR_MODE_HYBRID
+
+                                if(rbIntegrate.checked)  mcconf.comm_mode = McConf.COMM_MODE_INTEGRATE
+                                else if(rbDelay.checked) mcconf.comm_mode = McConf.COMM_MODE_DELAY
+
+                                mcconf.sl_min_erpm = textFieldMinERPM.text
+                                mcconf.sl_max_fullbreak_current_dir_change = textFieldMaxBrake.text
+                                mcconf.sl_cycle_int_limit = textFieldIntLimit.text
+                                mcconf.sl_phase_advance_at_br = textFieldPhase.text
+                                mcconf.sl_cycle_int_rpm_br = textFieldBRERPM.text
+                                mcconf.sl_bemf_coupling_k = textFieldBEMF.text
+                                mcconf.hall_table1 = textFieldTable1.text
+                                mcconf.hall_table2 = textFieldTable2.text
+                                mcconf.hall_table3 = textFieldTable3.text
+                                mcconf.hall_table4 = textFieldTable4.text
+                                mcconf.hall_table5 = textFieldTable5.text
+                                mcconf.hall_table6 = textFieldTable6.text
+                                mcconf.hall_table7 = textFieldTable7.text
+                                mcconf.hall_table8 = textFieldTable8.text
+                                mcconf.hall_sl_erpm = textFieldHybridMode.text
+
+                                writeMcconf()
+
+                                canFwd = false
+                            })
                         }
                         style: ButtonStyle {
                             label: Text {

@@ -54,6 +54,7 @@ BasicPage {
                         onClicked: {
                             destinationPage = "tab2"
                             nextPage()
+                            packetInterface.getAppConf()
                         }
                     }
                 }
@@ -68,6 +69,7 @@ BasicPage {
                         onClicked: {
                             destinationPage = "tab3"
                             nextPage()
+                            packetInterface.getMcconf()
                         }
                     }
                 }
@@ -82,6 +84,7 @@ BasicPage {
                         onClicked: {
                             destinationPage = "tab4"
                             nextPage()
+                            packetInterface.getMcconf()
                         }
                     }
                 }
@@ -110,6 +113,7 @@ BasicPage {
                         onClicked: {
                             destinationPage = "tab6"
                             nextPage()
+                            packetInterface.getAppConf()
                         }
                     }
                 }
