@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1282</width>
-    <height>765</height>
+    <width>1334</width>
+    <height>857</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -35,7 +35,7 @@
          <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>6</number>
         </property>
         <widget class="QWidget" name="tab_11">
          <attribute name="title">
@@ -1104,8 +1104,8 @@
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Detection results will be printed here.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Detection results will be printed here.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                   </widget>
                  </item>
@@ -3531,10 +3531,10 @@ p, li { white-space: pre-wrap; }
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The cruise control button will maintain the current speed while pressed when current control is used and no throttle is given. The reverse button is used to reverse the throttle when one of the corresponding control modes is used.&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;When only the ADC app is used, the TX pin is used for the cruise control button and the RX pin is used for the reverse button. When the ADC and UART apps are used at the same time, the servo input will be used as the button. In this case it will be used for the reverse button when a control mode with button is selected, otherwise it will be used for the cruise control button.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;The cruise control button will maintain the current speed while pressed when current control is used and no throttle is given. The reverse button is used to reverse the throttle when one of the corresponding control modes is used.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;When only the ADC app is used, the TX pin is used for the cruise control button and the RX pin is used for the reverse button. When the ADC and UART apps are used at the same time, the servo input will be used as the button. In this case it will be used for the reverse button when a control mode with button is selected, otherwise it will be used for the cruise control button.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                   </widget>
                  </item>
@@ -4063,16 +4063,16 @@ p, li { white-space: pre-wrap; }
                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This has been tested with the wireless Nyko Kama nunchuk. The receiver can be connected directly to the I2C port on the ESC. The y-axis on the joystick is used for acceleration/braking. The buttons have the following functions:&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;C-Button:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Cruise control. If the C-button is pressed, the ESC will maintail the current speed with a PID control loop. The joystick can still be used to accelerate and brake, but as soon as it is returned to the center position the new speed will be maintained, as long as the C-button remains pressed.&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Z-Button:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The Z-button is used to change the direction of the motor if reverse is activated. Without reverse, Z has no effect.&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;There is also a safety function. If nothing received from the nunchuk (including the accelerometers) changes for longer than the timeout value in the &lt;span style=&quot; font-style:italic;&quot;&gt;General&lt;/span&gt; tab, the timeout function will be activated and either release the motor or brake with the current specified next to the timeout value.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;This has been tested with the wireless Nyko Kama nunchuk. The receiver can be connected directly to the I2C port on the ESC. The y-axis on the joystick is used for acceleration/braking. The buttons have the following functions:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:600;&quot;&gt;C-Button:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;Cruise control. If the C-button is pressed, the ESC will maintail the current speed with a PID control loop. The joystick can still be used to accelerate and brake, but as soon as it is returned to the center position the new speed will be maintained, as long as the C-button remains pressed.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; font-weight:600;&quot;&gt;Z-Button:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;The Z-button is used to change the direction of the motor if reverse is activated. Without reverse, Z has no effect.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt;There is also a safety function. If nothing received from the nunchuk (including the accelerometers) changes for longer than the timeout value in the &lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt; font-style:italic;&quot;&gt;General&lt;/span&gt;&lt;span style=&quot; font-family:'Ubuntu'; font-size:11pt;&quot;&gt; tab, the timeout function will be activated and either release the motor or brake with the current specified next to the timeout value.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -5201,21 +5201,38 @@ p, li { white-space: pre-wrap; }
                </property>
               </widget>
              </item>
-             <item row="1" column="3">
+             <item row="2" column="4">
               <widget class="QPushButton" name="firmwareUploadButton">
                <property name="text">
                 <string>Upload</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="0" colspan="2">
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="firmwareEdit"/>
+             </item>
+             <item row="2" column="2">
+              <widget class="QPushButton" name="firmwareCancelButton">
+               <property name="text">
+                <string>Cancel</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2" colspan="3">
+              <widget class="QPushButton" name="firmwareChooseButton">
+               <property name="text">
+                <string>Choose...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0" colspan="2">
               <widget class="QLabel" name="firmwareUploadStatusLabel">
                <property name="text">
                 <string>FW Upload Status</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="0" colspan="2">
+             <item row="2" column="0" colspan="2">
               <widget class="QProgressBar" name="firmwareBar">
                <property name="maximum">
                 <number>1000</number>
@@ -5225,20 +5242,10 @@ p, li { white-space: pre-wrap; }
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="firmwareEdit"/>
-             </item>
-             <item row="1" column="2">
-              <widget class="QPushButton" name="firmwareCancelButton">
+             <item row="3" column="4">
+              <widget class="QPushButton" name="firmwareOnlineUpdateButton">
                <property name="text">
-                <string>Cancel</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2" colspan="2">
-              <widget class="QPushButton" name="firmwareChooseButton">
-               <property name="text">
-                <string>Choose...</string>
+                <string>Online Update</string>
                </property>
               </widget>
              </item>
@@ -5598,7 +5605,7 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>239</width>
+            <width>264</width>
             <height>78</height>
            </rect>
           </property>
@@ -5647,8 +5654,8 @@ p, li { white-space: pre-wrap; }
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>103</width>
-            <height>78</height>
+            <width>106</width>
+            <height>73</height>
            </rect>
           </property>
           <attribute name="label">
@@ -5668,6 +5675,14 @@ p, li { white-space: pre-wrap; }
           </layout>
          </widget>
          <widget class="QWidget" name="blePage">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>170</width>
+            <height>78</height>
+           </rect>
+          </property>
           <attribute name="label">
            <string>BLE Connection</string>
           </attribute>

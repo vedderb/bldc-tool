@@ -154,6 +154,7 @@ public slots:
     void writeMcconf();
     bool loadMcconfXml(QString xmlfile);
     void writeAppConf();
+    void onlineUpdateFirmware();
     void uploadFirmware(QString fileName);
     void readFirmwareVersion();
     void connectCurrentBleDevice();

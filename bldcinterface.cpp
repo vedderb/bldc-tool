@@ -4,6 +4,9 @@
 #ifdef QML
 #include <QtQml>
 #endif
+
+#include "downloader.h"
+
 void BLDCInterface::stepTowards(double &value, double goal, double step) {
     if (value < goal) {
         if ((value + step) < goal) {
@@ -585,6 +588,29 @@ void BLDCInterface::writeAppConf(){
         return;
     }
     m_packetInterface->setAppConf(m_appconf->data());
+}
+
+void BLDCInterface::onlineUpdateFirmware()
+{
+    // download
+    Downloader* downloader = new Downloader(this);
+    connect(downloader, &Downloader::finished, [&](const QString &fileName) {
+        update_firmwareProgress(100);
+        emit statusInfoChanged(tr("Applying new firmware..."), true);
+        uploadFirmware(fileName);
+    });
+    connect(downloader, &Downloader::error, [&](const QString &message) {
+        update_firmwareProgress(0);
+        emit msgCritical("Error download", tr("Could not download file. %1").arg(message));
+    });
+    connect(downloader, &Downloader::progress, [&](qint64 bytesReceived, qint64 bytesTotal) {
+        int progress_percent = 100 * bytesReceived / bytesTotal;
+        update_firmwareProgress(progress_percent);
+    });
+
+    downloader->setUrl("http://vesc.net.au/BLDC-TOOL/Firmware/VESC_default.bin");
+    downloader->download();
+    emit statusInfoChanged(tr("Downloading new firmware..."), true);
 }
 
 void BLDCInterface::uploadFirmware(QString fileName)

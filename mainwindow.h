@@ -92,6 +92,7 @@ private slots:
     void on_appconfReadDefaultButton_clicked();
     void on_posCtrlButton_clicked();
     void on_firmwareChooseButton_clicked();
+    void on_firmwareOnlineUpdateButton_clicked();
     void on_firmwareUploadButton_clicked();
     void on_firmwareVersionReadButton_clicked();
     void on_firmwareCancelButton_clicked();

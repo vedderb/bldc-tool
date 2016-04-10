@@ -2147,6 +2147,11 @@ void MainWindow::on_firmwareChooseButton_clicked()
     ui->firmwareEdit->setText(filename);
 }
 
+void MainWindow::on_firmwareOnlineUpdateButton_clicked()
+{
+    m_bldcInterface->onlineUpdateFirmware();
+}
+
 void MainWindow::on_firmwareUploadButton_clicked()
 {
     m_bldcInterface->uploadFirmware(ui->firmwareEdit->text());

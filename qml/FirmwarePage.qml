@@ -145,6 +145,26 @@ BasicPage {
                         }
                     }
                 }
+
+                Button{
+                    id: onlineUpdateBtn
+                    text:"Online Update"
+                    width: rectMain.width * 0.17
+                    onClicked: {
+                        onlineUpdateFirmware()
+                    }
+                    style: ButtonStyle {
+                        label: Text {
+                            renderType: Text.NativeRendering
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.family: "Helvetica"
+                            font.pointSize: 12
+                            text: control.text
+                        }
+                    }
+                }
+
             }
 
         }
