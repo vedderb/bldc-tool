@@ -1,5 +1,5 @@
 
-#DEFINES += QML # for test
+DEFINES += QML # for test
 
 QT += core gui bluetooth serialport network
 

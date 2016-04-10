@@ -64,40 +64,9 @@ BasicPage {
                 anchors.topMargin: rowVerticalMargin
                 Text{
                     id:textPath
-                    text : "Path"
+                    text : "ONLINE UPDATE"
                     font.pointSize: 14
                     verticalAlignment: Text.AlignVCenter
-                }
-                TextField{
-                    id:textfieldPath
-                    width: rectMain.width-textPath.width - buttonChoose.width - 2*rowLeftMargin -8
-                    //anchors.verticalCenter:textPath.verticalCenter
-                }
-                Button{
-                    id:buttonChoose
-                    text:"Choose"
-                    width: rectMain.width * 0.17
-                    onClicked: {
-                        messageDialog.showWarrning("Warning", "WARNING: Uploading firmware for the wrong"+
-                                                   " hardware version WILL damage the VESC for sure.")
-                        // wait for message dialog and show file dialog
-                        messageDialog.onAccepted.connect(openFileDialog)
-                    }
-                    function openFileDialog(){
-                        fileDialog.open()
-                        messageDialog.onAccepted.disconnect(openFileDialog)
-                    }
-
-                    style: ButtonStyle {
-                        label: Text {
-                            renderType: Text.NativeRendering
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
-                            font.family: "Helvetica"
-                            font.pointSize: 12
-                            text: control.text
-                        }
-                    }
                 }
             }
         }
@@ -115,12 +84,12 @@ BasicPage {
                 anchors.leftMargin: rowLeftMargin
                 anchors.right: parent.right
                 anchors.rightMargin: rowLeftMargin
-                anchors.top: textHeading.bottom
+                anchors.top: rectProgress.bottom
                 anchors.topMargin: rowVerticalMargin
 
                 ProgressBar{
                     id:progressBar
-                    width:rectMain.width - buttonupload.width - gridProgress.columnSpacing - (2* rowLeftMargin)
+                    width:rectMain.width - onlineUpdateBtn.width - gridProgress.columnSpacing - (2* rowLeftMargin)
                     minimumValue: 0
                     maximumValue: 100
                     value: firmwareProgress
@@ -128,27 +97,8 @@ BasicPage {
                 }
 
                 Button{
-                    id:buttonupload
-                    text:"upload"
-                    width: rectMain.width * 0.17
-                    onClicked: {
-                        uploadFirmware(textfieldPath.text)
-                    }
-                    style: ButtonStyle {
-                        label: Text {
-                            renderType: Text.NativeRendering
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
-                            font.family: "Helvetica"
-                            font.pointSize: 12
-                            text: control.text
-                        }
-                    }
-                }
-
-                Button{
                     id: onlineUpdateBtn
-                    text:"Online Update"
+                    text:"Update"
                     width: rectMain.width * 0.17
                     onClicked: {
                         onlineUpdateFirmware()
@@ -164,10 +114,31 @@ BasicPage {
                         }
                     }
                 }
-
             }
-
+            Grid{
+                id:gridwarning
+                columns: 1
+                columnSpacing: 4
+                width: parent.width - (2* rowLeftMargin)
+                anchors.left: parent.left
+                anchors.leftMargin: rowLeftMargin
+                anchors.right: parent.right
+                anchors.rightMargin: rowLeftMargin
+                anchors.top: gridProgress.bottom
+                anchors.topMargin: rowVerticalMargin
+                Text{
+                    id:textwarning
+                    text : {
+                        "Updating your firmware through this app only supports \n"+
+                        "The latest Default hardware version's 4.10-4.12 \n"+
+                        "Please check your hardware version before using this feature \n"+
+                        "As incorrect firmware will damage your hardware \n"+
+                        "USE AT YOUR OWN RISK!!!!!!"
+                    }
+                    font.pointSize: 14
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
         }
-
     }
 }
