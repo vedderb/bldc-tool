@@ -79,8 +79,7 @@ BasicPage {
                     width: rectMain.width * 0.17
                     onClicked: {
                         messageDialog.showWarrning("Warning", "WARNING: Uploading firmware for the wrong"+
-                                                   " hardware version WILL damage the VESC for sure. Make "+
-                                                   "sure that you choose the correct hardware version.")
+                                                   " hardware version WILL damage the VESC for sure.")
                         // wait for message dialog and show file dialog
                         messageDialog.onAccepted.connect(openFileDialog)
                     }

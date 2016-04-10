@@ -207,7 +207,7 @@ BasicPage {
                         anchors.rightMargin: rowLeftMargin
                         width: parent.width-(2*rowLeftMargin)
 
-                        height: 4*rbNoApp.height+3*rowVerticalMargin
+                        height: 5*rbNoApp.height+3*rowVerticalMargin
                         color: parent.color
 
                         Grid{
@@ -219,10 +219,14 @@ BasicPage {
                             //  anchors.centerIn: parent
                             RadioButton{
                                 id:rbNoApp
-                                checked: appconf.app_to_use === AppConf.APP_NONE
-
+                                onCheckedChanged: {
+                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                                               " communication with this mobile app.")
+                                    // wait for message dialog and show file dialog
+                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_NONE)
+                                    appconf.app_to_use === AppConf.APP_NONE
+                                }
                                 text: "No application"
-
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
                                     label: Text {
@@ -237,7 +241,7 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbPPMUART
-                                checked: appconf.app_to_use === AppConf.APP_PPM
+                                checked: appconf.app_to_use === AppConf.APP_PPM_UART
                                 text: "PPM and UART"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -253,8 +257,13 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbCustomApp
-                                checked: appconf.app_to_use === AppConf.APP_CUSTOM
-
+                                onCheckedChanged: {
+                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                                               " communication with this mobile app.")
+                                    // wait for message dialog and show file dialog
+                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_CUSTOM)
+                                    appconf.app_to_use === AppConf.APP_CUSTOM
+                                }
                                 text: "Custom user application"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -273,9 +282,14 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbPPM
-                                checked: appconf.app_to_use === AppConf.APP_PPM
+                                onCheckedChanged: {
+                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                                               " communication with this mobile app.")
+                                    // wait for message dialog and show file dialog
+                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_PPM)
+                                    appconf.app_to_use === AppConf.APP_PPM
+                                }
                                 text: "PPM"
-
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
                                     label: Text {
@@ -290,7 +304,13 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbNunChuk
-                                checked: appconf.app_to_use === AppConf.APP_NUNCHUK
+                                onCheckedChanged: {
+                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                                               " communication with this mobile app.")
+                                    // wait for message dialog and show file dialog
+                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_NUNCHUK)
+                                    appconf.app_to_use === AppConf.APP_NUNCHUK
+                                }
                                 text: "NunChuk"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -322,7 +342,13 @@ BasicPage {
                             }
                             RadioButton{
                                 id:rbNRF
-                                checked: appconf.app_to_use === AppConf.APP_NRF
+                                onCheckedChanged: {
+                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                                               " communication with this mobile app.")
+                                    // wait for message dialog and show file dialog
+                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_NRF)
+                                    appconf.app_to_use === AppConf.APP_NRF
+                                }
                                 text: "NRF"
                                 exclusiveGroup :groupOptions
                                 style: RadioButtonStyle{
@@ -336,10 +362,46 @@ BasicPage {
                                     }
                                 }
                             }
-
+                            RadioButton{
+                                id:rbADC
+                                onCheckedChanged: {
+                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                                               " communication with this mobile app.")
+                                    // wait for message dialog and show file dialog
+                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_ADC)
+                                    appconf.app_to_use === AppConf.APP_ADC
+                                }
+                                text: "ADC"
+                                exclusiveGroup :groupOptions
+                                style: RadioButtonStyle{
+                                    label: Text {
+                                        renderType: Text.NativeRendering
+                                        verticalAlignment: Text.AlignVCenter
+                                        horizontalAlignment: Text.AlignHCenter
+                                        font.family: "Helvetica"
+                                        font.pointSize: 12
+                                        text: control.text
+                                    }
+                                }
+                            }
+                            RadioButton{
+                                id:rbADCUART
+                                checked: appconf.app_to_use === AppConf.APP_ADC_UART
+                                text: "ADC and UART"
+                                exclusiveGroup :groupOptions
+                                style: RadioButtonStyle{
+                                    label: Text {
+                                        renderType: Text.NativeRendering
+                                        verticalAlignment: Text.AlignVCenter
+                                        horizontalAlignment: Text.AlignHCenter
+                                        font.family: "Helvetica"
+                                        font.pointSize: 12
+                                        text: control.text
+                                    }
+                                }
+                            }
                         }
                     }
-
                 }
 
                 Rectangle{
@@ -473,12 +535,14 @@ BasicPage {
                                 appconf.send_can_status_rate_hz = textFieldRate.text
                                 //appconf.app_uart_baudrate = textfieldBaudrate
                                 if(rbNoApp.checked)         appconf.app_to_use = AppConf.APP_NONE
-                                else if(rbPPMUART.checked)  appconf.app_to_use = AppConf.APP_PPM
+                                else if(rbPPMUART.checked)  appconf.app_to_use = AppConf.APP_PPM_UART
                                 else if(rbCustomApp.checked)appconf.app_to_use = AppConf.APP_CUSTOM
                                 else if(rbPPM.checked)      appconf.app_to_use = AppConf.APP_PPM
                                 else if(rbNunChuk.checked)  appconf.app_to_use = AppConf.APP_NUNCHUK
                                 else if(rbUART.checked)     appconf.app_to_use = AppConf.APP_UART
                                 else if(rbNRF.checked)      appconf.app_to_use = AppConf.APP_NRF
+                                else if(rbADC.checked)      appconf.app_to_use = AppConf.APP_ADC
+                                else if(rbADCUART.checked)      appconf.app_to_use = AppConf.APP_ADC_UART
                                 appconf.timeout_msec = textFieldTimeout.text
                                 appconf.timeout_brake_current = textFieldBrakeCurrent.text
 
