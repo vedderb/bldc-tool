@@ -29,16 +29,18 @@ ApplicationWindow {
         }
         function showCritical(title, text){
             icon = StandardIcon.Critical
+            console.log("qml: show critical")
             show(title, text)
         }
-        function showWarrning(title, text){
+        function showWarning(title, text){
+            console.log("qml: show warning")
             icon = StandardIcon.Warning
             show(title, text)
         }
         onAccepted: visible = false
         Component.onCompleted: {
             onMsgCritical.connect(showCritical);
-            onMsgwarning.connect( showWarrning );
+            onMsgwarning.connect( showWarning );
         }
     }
     statusBar: StatusBar {

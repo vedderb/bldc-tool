@@ -26,6 +26,10 @@
 #include <QSerialPortInfo>
 #include <QSpinBox>
 
+#ifdef Q_OS_IOS
+#include "qialertview.h"
+#endif
+
 #include "digitalfiltering.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -79,9 +83,27 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_bldcInterface, SIGNAL(statusInfoChanged(QString,bool)),
             this, SLOT(showStatusInfo(QString,bool)));
     connect(m_bldcInterface, &BLDCInterface::msgCritical,
-                 this, [this](QString title, QString text){QMessageBox::critical(this, title, text);});
+                 this, [this](QString title, QString text){
+        #ifdef Q_OS_IOS
+            QIAlertView alert;
+            alert.setTitle(title);
+            alert.setMessage(text);
+            alert.show();
+        #else
+            QMessageBox::critical(this, title, text);
+        #endif
+    });
     connect(m_bldcInterface, &BLDCInterface::msgwarning,
-                 this, [this](QString title, QString text){QMessageBox::warning(this, title, text);});
+                 this, [this](QString title, QString text){
+        #ifdef Q_OS_IOS {
+            QIAlertView alert;
+            alert.setTitle(title);
+            alert.setMessage(text);
+            alert.show();
+        #else
+            QMessageBox::warning(this, title, text);
+        #endif
+    });
     connect(m_bldcInterface, &BLDCInterface::firmwareVersionChanged,
             ui->firmwareVersionLabel, &QLabel::setText);
     connect(m_bldcInterface, &BLDCInterface::mcconfDetectResultChanged,

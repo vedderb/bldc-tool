@@ -220,10 +220,12 @@ BasicPage {
                             RadioButton{
                                 id:rbNoApp
                                 onCheckedChanged: {
-                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                    if (checked)
+                                        messageDialog.showWarning("Warning", "WARNING: This setting will stop"+
                                                                " communication with this mobile app.")
                                     // wait for message dialog and show file dialog
-                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_NONE)
+                                    if (os != OS.IOS && checked)
+                                        messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_NONE)
                                     appconf.app_to_use === AppConf.APP_NONE
                                 }
                                 text: "No application"
@@ -258,10 +260,12 @@ BasicPage {
                             RadioButton{
                                 id:rbCustomApp
                                 onCheckedChanged: {
-                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                    if (checked)
+                                        messageDialog.showWarning("Warning", "WARNING: This setting will stop"+
                                                                " communication with this mobile app.")
                                     // wait for message dialog and show file dialog
-                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_CUSTOM)
+                                    if (os != OS.IOS && checked)
+                                        messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_CUSTOM)
                                     appconf.app_to_use === AppConf.APP_CUSTOM
                                 }
                                 text: "Custom user application"
@@ -283,10 +287,12 @@ BasicPage {
                             RadioButton{
                                 id:rbPPM
                                 onCheckedChanged: {
-                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                    if (checked)
+                                        messageDialog.showWarning("Warning", "WARNING: This setting will stop"+
                                                                " communication with this mobile app.")
                                     // wait for message dialog and show file dialog
-                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_PPM)
+                                    if (os != OS.IOS && checked)
+                                        messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_PPM)
                                     appconf.app_to_use === AppConf.APP_PPM
                                 }
                                 text: "PPM"
@@ -305,10 +311,12 @@ BasicPage {
                             RadioButton{
                                 id:rbNunChuk
                                 onCheckedChanged: {
-                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                    if (checked)
+                                        messageDialog.showWarning("Warning", "WARNING: This setting will stop"+
                                                                " communication with this mobile app.")
                                     // wait for message dialog and show file dialog
-                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_NUNCHUK)
+                                    if (os != OS.IOS && checked)
+                                        messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_NUNCHUK)
                                     appconf.app_to_use === AppConf.APP_NUNCHUK
                                 }
                                 text: "NunChuk"
@@ -343,10 +351,12 @@ BasicPage {
                             RadioButton{
                                 id:rbNRF
                                 onCheckedChanged: {
-                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                    if (checked)
+                                        messageDialog.showWarning("Warning", "WARNING: This setting will stop"+
                                                                " communication with this mobile app.")
                                     // wait for message dialog and show file dialog
-                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_NRF)
+                                    if (os != OS.IOS && checked)
+                                        messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_NRF)
                                     appconf.app_to_use === AppConf.APP_NRF
                                 }
                                 text: "NRF"
@@ -365,10 +375,12 @@ BasicPage {
                             RadioButton{
                                 id:rbADC
                                 onCheckedChanged: {
-                                    messageDialog.showWarrning("Warning", "WARNING: This setting will stop"+
+                                    if (checked)
+                                        messageDialog.showWarning("Warning", "WARNING: This setting will stop"+
                                                                " communication with this mobile app.")
                                     // wait for message dialog and show file dialog
-                                    messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_ADC)
+                                    if (os != OS.IOS && checked)
+                                        messageDialog.onAccepted.connect(appconf.app_to_use === AppConf.APP_ADC)
                                     appconf.app_to_use === AppConf.APP_ADC
                                 }
                                 text: "ADC"

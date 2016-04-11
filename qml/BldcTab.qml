@@ -598,6 +598,16 @@ Flickable{
                         }
                     }
 
+                    Timer {
+                        id: timer
+                    }
+
+                    function delay(delayTime, cb) {
+                        timer.interval = delayTime;
+                        timer.repeat = false;
+                        timer.triggered.connect(cb);
+                        timer.start();
+                    }
                     Button{
                         id:buttonWriteConf
                         text:"Write Config"
@@ -630,7 +640,7 @@ Flickable{
 
                             canFwd = true
 
-                            rootMCSensorLess.delay(1000, function() {
+                            delay(1000, function() {
                                 // please insert here code that you need to execute after delay
                                 if(rbSensorless.checked)    mcconf.sensor_mode = McConf.SENSOR_MODE_SENSORLESS
                                 else if(rbSensored.checked) mcconf.sensor_mode = McConf.SENSOR_MODE_SENSORED
