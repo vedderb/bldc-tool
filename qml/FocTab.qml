@@ -68,7 +68,8 @@ Item{
 
 
                             RadioButton{
-                                id:rbSensorless
+                                id:rbEncoder
+                                checked: mcconf.foc_sensor_mode === FOC_SENSOR_MODE_ENCODER
                                 text: "Encoder"
                                 exclusiveGroup :groupOptionsSensorMode
                                 style: RadioButtonStyle{
@@ -84,6 +85,7 @@ Item{
                             }
                             RadioButton{
                                 id:rbSensored
+                                checked: mcconf.foc_sensor_mode === FOC_SENSOR_MODE_HALL
                                 text: "Hall"
                                 exclusiveGroup :groupOptionsSensorMode
                                 style: RadioButtonStyle{
@@ -98,7 +100,8 @@ Item{
                                 }
                             }
                             RadioButton{
-                                id:rbHybrid
+                                id:rbSensorless
+                                checked: mcconf.foc_sensor_mode === FOC_SENSOR_MODE_SENSORLESS
                                 text: "Sensorless"
                                 exclusiveGroup :groupOptionsSensorMode
                                 style: RadioButtonStyle{
@@ -126,13 +129,13 @@ Item{
                         }
                         TextField{
                             id:textFieldSensCurKp
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_current_kp
                             width:  mainItem.width * 0.29
                         }
                         TextField{
                             id:textFieldSensCurKi
                             width:  mainItem.width * 0.29
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_current_ki
                         }
                     }
 
@@ -145,19 +148,20 @@ Item{
                             width: mainItem.width * 0.3
                         }
                         TextField{
-                            id:textFieldSensCurOfs
+                            id:textFieldSensEncOfs
                             width:  mainItem.width * 0.29
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_encoder_offset
                         }
                         TextField{
-                            id:textFieldSensCurKi2
+                            id:textFieldSensEncRat
                             width:  mainItem.width * 0.29
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_encoder_ratio
                         }
                     }
                     CheckBox{
                         text: "Invert Encoder"
                         anchors.right: parent.right
+                        checked: mcconf.foc_encoder_inverted
                     }
 
                     GroupBox{
@@ -186,17 +190,17 @@ Item{
                                 TextField{
                                     id:textFieldSensDecR
                                     width: mainItem.width*0.18
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_motor_r
                                 }
                                 TextField{
                                     id:textFieldSensDetL
                                     width: mainItem.width*0.18
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_motor_l
                                 }
                                 TextField{
                                     id:textFieldSensDetλ
                                     width: mainItem.width*0.18
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_motor_flux_linkage
                                 }
                             }
 
@@ -216,17 +220,17 @@ Item{
                                 TextField{
                                     id:textFieldSensDetI
                                     width: mainItem.width*0.18
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: "6.0"
                                 }
                                 TextField{
                                     id:textFieldSensDetDuty
                                     width: mainItem.width*0.18
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: "0.5"
                                 }
                                 TextField{
                                     id:textFieldSensDetRPM
                                     width: mainItem.width*0.18
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: "700"
                                 }
                             }
 
@@ -246,17 +250,17 @@ Item{
                                 TextField{
                                     id:textFieldSensDetTC
                                     width: mainItem.width*0.18
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: "1000.0"
                                 }
                                 TextField{
                                     id:textFieldSensDetKp
                                     width: mainItem.width*0.18
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_current_kp
                                 }
                                 TextField{
                                     id:textFieldSensDetKi
                                     width: mainItem.width*0.18
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_current_ki
                                 }
                             }
                         }
@@ -273,17 +277,17 @@ Item{
                                 TextField{
                                     id:textFieldSensMotR
                                     width: mainItem.width <  mainItem.height ? mainItem.width*0.4 : mainItem.width * 0.3
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_motor_r
                                 }
                                 TextField{
                                     id:textFieldSensMotL
                                     width:  mainItem.width <  mainItem.height ? mainItem.width*0.23: mainItem.width * 0.3
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_motor_l
                                 }
                                 TextField{
                                     id:textFieldSensMotλ
                                     width:  mainItem.width <  mainItem.height ? mainItem.width*0.25: mainItem.width * 0.3
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_motor_flux_linkage
                                 }
 
                             }
@@ -300,7 +304,7 @@ Item{
                                 TextField{
                                     id:textFieldSensGain
                                     width:mainItem.width <  mainItem.height ? mainItem.width*0.23: mainItem.width * 0.3
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_observer_gain
                                 }
 
                                 Button{
@@ -327,10 +331,10 @@ Item{
             Flickable{
                 anchors.fill: parent
                 clip: true
-                contentHeight: hallCol.height + rectGap
+                contentHeight: fochallCol.height + rectGap
 
                 Column{
-                    id: hallCol
+                    id: fochallCol
                     anchors.left: parent.left
                     anchors.leftMargin: headingLeftMargin
                     anchors.top: parent.top
@@ -347,44 +351,44 @@ Item{
                             Row{
                                 spacing: 2
                                 TextField{
-                                    id:textFieldTable1
+                                    id:textFieldFocTable1
                                     width: mainItem.width*0.11
-                                    text: mcconf.hall_table1
+                                    text: mcconf.foc_hall_table1
                                 }
                                 TextField{
-                                    id:textFieldTable2
+                                    id:textFieldFocTable2
                                     width: mainItem.width*0.11
-                                    text: mcconf.hall_table2
+                                    text: mcconf.foc_hall_table2
                                 }
                                 TextField{
-                                    id:textFieldTable3
+                                    id:textFieldFocTable3
                                     width: mainItem.width*0.11
-                                    text: mcconf.hall_table3
+                                    text: mcconf.foc_hall_table3
                                 }
                                 TextField{
-                                    id:textFieldTable4
+                                    id:textFieldFocTable4
                                     width: mainItem.width*0.11
-                                    text: mcconf.hall_table4
+                                    text: mcconf.foc_hall_table4
                                 }
                                 TextField{
-                                    id:textFieldTable5
+                                    id:textFieldFocTable5
                                     width: mainItem.width*0.11
-                                    text: mcconf.hall_table5
+                                    text: mcconf.foc_hall_table5
                                 }
                                 TextField{
-                                    id:textFieldTable6
+                                    id:textFieldFocTable6
                                     width: mainItem.width*0.11
-                                    text: mcconf.hall_table6
+                                    text: mcconf.foc_hall_table6
                                 }
                                 TextField{
-                                    id:textFieldTable7
+                                    id:textFieldFocTable7
                                     width: mainItem.width*0.11
-                                    text: mcconf.hall_table7
+                                    text: mcconf.foc_hall_table7
                                 }
                                 TextField{
-                                    id:textFieldTable8
+                                    id:textFieldFocTable8
                                     width: mainItem.width*0.11
-                                    text: mcconf.hall_table8
+                                    text: mcconf.foc_hall_table8
                                 }
 
 
@@ -399,14 +403,87 @@ Item{
 
                                 }
                                 TextField{
-                                    id:textFieldBRERPM
+                                    id:textFieldSensHallErpm
                                     width: mainItem.width*0.15
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_hall_sl_erpm
                                 }
                             }
                         }
+                    }
+                    GroupBox{
+                        width: parent.width
+                        title: "Detect Hall Sensors"
 
+                        Column{
+                            spacing: 10
 
+                            Row{
+                                spacing: mainItem.width * 0.05
+                                Button{
+                                    text:"Measure"
+                                    width: mainItem.width * 0.27
+                                    style: buttonStyle
+                                }
+
+                                TextField{
+                                    id:textFieldDetHallI
+                                    width: mainItem.width*0.27
+                                    text: "15.0"
+                                }
+                            }
+
+                            Row{
+                                id: detectHallSensorRow
+                                spacing: mainItem.width * 0.015
+                                TextField{
+                                    id:textFieldDetTable1
+                                    width: mainItem.width*0.11
+                                    text: mcconf.foc_hall_table1
+                                }
+                                TextField{
+                                    id:textFieldDetTable2
+                                    width: mainItem.width*0.11
+                                    text: mcconf.foc_hall_table2
+                                }
+                                TextField{
+                                    id:textFieldDetTable3
+                                    width: mainItem.width*0.11
+                                    text: mcconf.foc_hall_table3
+                                }
+                                TextField{
+                                    id:textFieldDetTable4
+                                    width: mainItem.width*0.11
+                                    text: mcconf.foc_hall_table4
+                                }
+                                TextField{
+                                    id:textFieldDetTable5
+                                    width: mainItem.width*0.11
+                                    text: mcconf.foc_hall_table5
+                                }
+                                TextField{
+                                    id:textFieldDetTable6
+                                    width: mainItem.width*0.11
+                                    text: mcconf.foc_hall_table6
+                                }
+                                TextField{
+                                    id:textFieldDetTable7
+                                    width: mainItem.width*0.11
+                                    text: mcconf.foc_hall_table7
+                                }
+                                TextField{
+                                    id:textFieldDetTable8
+                                    width: mainItem.width*0.11
+                                    text: mcconf.foc_hall_table8
+                                }
+                            }
+
+                            Button{
+                                text:"Apply"
+                                width: mainItem.width * 0.28
+                                style: buttonStyle
+                                anchors.right: parent.right
+                            }
+                        }
                     }
                 }
             }
@@ -444,23 +521,23 @@ Item{
                                     style: buttonStyle
                                 }
                                 TextField{
-                                    id:textFieldEncI
-                                    width: mainItem.width*0.27
-                                    text: mcconf.sl_cycle_int_rpm_br
-                                }
-                                TextField{
                                     id:textFieldEncOfs
                                     width: mainItem.width*0.27
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_encoder_offset
+                                }
+                                TextField{
+                                    id:textFieldEncRat
+                                    width: mainItem.width*0.27
+                                    text: mcconf.foc_encoder_ratio
                                 }
                             }
 
                             Row{
                                 spacing: mainItem.width * 0.05
                                 TextField{
-                                    id:textFieldEncRat
+                                    id:textFieldEncI
                                     width: mainItem.width*0.27
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: "15.0"
                                 }
                                 CheckBox{
                                     text: "Invert Encoder"
@@ -471,84 +548,6 @@ Item{
                             Button{
                                 text:"Apply"
                                 width: mainItem.width * 0.27
-                                style: buttonStyle
-                                anchors.right: parent.right
-                            }
-
-                        }
-
-                    }
-
-                    GroupBox{
-                        width: parent.width
-                        title: "Detect Hall Sensors"
-
-                        Column{
-                            spacing: 10
-
-                            Row{
-                                spacing: mainItem.width * 0.05
-                                Button{
-                                    text:"Measure"
-                                    width: mainItem.width * 0.27
-                                    style: buttonStyle
-                                }
-
-                                TextField{
-                                    id:textFieldDetHallI
-                                    width: mainItem.width*0.27
-                                    text: mcconf.sl_cycle_int_rpm_br
-                                }
-                            }
-
-                            Row{
-                                id: detectHallSensorRow
-                                spacing: mainItem.width * 0.015
-                                TextField{
-                                    id:textFieldDetTable1
-                                    width: mainItem.width*0.11
-                                    text: mcconf.hall_table1
-                                }
-                                TextField{
-                                    id:textFieldDetTable2
-                                    width: mainItem.width*0.11
-                                    text: mcconf.hall_table2
-                                }
-                                TextField{
-                                    id:textFieldDetTable3
-                                    width: mainItem.width*0.11
-                                    text: mcconf.hall_table3
-                                }
-                                TextField{
-                                    id:textFieldDetTable4
-                                    width: mainItem.width*0.11
-                                    text: mcconf.hall_table4
-                                }
-                                TextField{
-                                    id:textFieldDetTable5
-                                    width: mainItem.width*0.11
-                                    text: mcconf.hall_table5
-                                }
-                                TextField{
-                                    id:textFieldDetTable6
-                                    width: mainItem.width*0.11
-                                    text: mcconf.hall_table6
-                                }
-                                TextField{
-                                    id:textFieldDetTable7
-                                    width: mainItem.width*0.11
-                                    text: mcconf.hall_table7
-                                }
-                                TextField{
-                                    id:textFieldDetTable8
-                                    width: mainItem.width*0.11
-                                    text: mcconf.hall_table8
-                                }
-                            }
-
-                            Button{
-                                text:"Apply"
-                                width: mainItem.width * 0.28
                                 style: buttonStyle
                                 anchors.right: parent.right
                             }
@@ -586,12 +585,12 @@ Item{
                         TextField{
                             id:textFieldAdvFSW
                             width: mainItem.width*0.25
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_f_sw
                         }
                         TextField{
                             id:textFieldAdvDTc
                             width: mainItem.width*0.25
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_dt_us
                         }
                     }
 
@@ -606,12 +605,12 @@ Item{
                         TextField{
                             id:textFieldAdvSpeKp
                             width: mainItem.width*0.25
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_pll_kp
                         }
                         TextField{
                             id:textFieldAdvSpeKi
                             width: mainItem.width*0.25
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_pll_ki
                         }
                     }
 
@@ -626,12 +625,12 @@ Item{
                         TextField{
                             id:textFieldAdvDutKp
                             width: mainItem.width*0.25
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_duty_dowmramp_kp
                         }
                         TextField{
                             id:textFieldAdvDutKi
                             width: mainItem.width*0.25
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_duty_dowmramp_ki
                         }
                     }
 
@@ -646,7 +645,7 @@ Item{
                         TextField{
                             id:textFieldAdvRPM
                             width: mainItem.width*0.25
-                            text: mcconf.sl_cycle_int_rpm_br
+                            text: mcconf.foc_openloop_rpm
                         }
                     }
                     GroupBox{
@@ -668,12 +667,12 @@ Item{
                                 TextField{
                                     id:textFieldAdvSensHyst
                                     width: mainItem.width*0.25
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_sl_openloop_hyst
                                 }
                                 TextField{
                                     id:textFieldAdvSensTime
                                     width: mainItem.width*0.25
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_sl_openloop_time
                                 }
 
                             }
@@ -690,12 +689,12 @@ Item{
                                 TextField{
                                     id:textFieldAdvDuty
                                     width: mainItem.width*0.25
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_sl_d_current_duty
                                 }
                                 TextField{
                                     id:textFieldAdvFact
                                     width: mainItem.width*0.25
-                                    text: mcconf.sl_cycle_int_rpm_br
+                                    text: mcconf.foc_sl_d_current_factor
                                 }
 
                             }
