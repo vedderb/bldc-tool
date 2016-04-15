@@ -81,19 +81,24 @@ BasicPage {
     property Component mainComponent: Item {
         id: mainItem
 
-
+        width: parent.width
+        height: parent.height
         Column{
             anchors.top: parent.top
             anchors.topMargin: parent.height*0.05
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: rootRealTimeData.height*0.004
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: parent.height * 0.01
+            //anchors.horizontalCenter: parent.horizontalCenter
+           // spacing: rootRealTimeData.height*0.004
             Rectangle{
                 id:rect1
                 color: "#A9A9A9"
-                width: rootRealTimeData.width*0.96
+                width: mainItem.width*0.95
                 height:mainItem.height*0.30
+                anchors.horizontalCenter: parent.horizontalCenter
                 ListView{
-                    //anchors.top: parent.top
+                    anchors.top: parent.top
                     width: parent.width
                     height: parent.height
                     interactive: false
@@ -104,11 +109,13 @@ BasicPage {
                     }
                 }
             }
+
             Rectangle{
                 id:rect2
                 color: "#A9A9A9"
-                width: rootRealTimeData.width*0.96
+                width: mainItem.width*0.95
                 height:mainItem.height*0.30
+                anchors.horizontalCenter: parent.horizontalCenter
                 ListView{
                     anchors.top: parent.top
                     width: parent.width
@@ -121,33 +128,37 @@ BasicPage {
                     }
                 }
             }
+
             CheckBox{
                 checked: false
                 onCheckedChanged: realtimeActivate = checked
+                anchors.left: parent.left
+                anchors.leftMargin: parent.width * 0.02
                 text: "Activate sampling"
                 style: CheckBoxStyle{
                     label: Text {
                         renderType: Text.NativeRendering
                         verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
                         font.family: "Helvetica"
                         font.bold: true
                         text: control.text
+
                     }
                 }
             }
-            Item {width:1;height: parent.height*0.05}//spacer
 
             Slider{
                 id: slider
-                width: parent.width
+                width: parent.width * 0.95
                 minimumValue: -128
                 maximumValue: 127
                 onPressedChanged: packetInterface.setSliderPressState(pressed)
                 onValueChanged: packetInterface.setChukData(0,value,0,0,0,0,0)
+                anchors.horizontalCenter: parent.horizontalCenter
             }
 
-            Timer {
+            Timer { 
                 id: sliderTimer
                 interval: 100
                 running: true

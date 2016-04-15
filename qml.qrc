@@ -58,5 +58,7 @@
         <file>qml/images/5.png</file>
         <file>qml/images/6.png</file>
         <file>main_ios.qml</file>
+        <file>qml/images/tab.png</file>
+        <file>qml/images/tab_selected.png</file>
     </qresource>
 </RCC>

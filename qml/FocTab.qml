@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.1
 import bldc 1.0
 Item{
     anchors.fill: parent
+    id: mainItem
     TabView{
         anchors.top: parent.top
         anchors.topMargin: headingTopMargin
@@ -12,11 +13,31 @@ Item{
         anchors.right: parent.right
         anchors.bottom: bottomRow.top
         anchors.bottomMargin: rowVerticalMargin
+        style: TabViewStyle {
+
+                tab: Rectangle {
+                    color: styleData.selected ? "#E5E5E5" :"#DFDFDF"
+                    border.color:  "#CDCDCD"
+                    implicitWidth: Math.max(text.width + 4, 80)
+                    implicitHeight: 30
+                    radius: 2
+                    Text {
+                        id: text
+                        anchors.centerIn: parent
+                        text: styleData.title
+                        font.pointSize: 12
+                        font.bold: true
+                    }
+                }
+            }
         Tab{
             title: "Sensorless"
+            width: mainItem.width * 0.2
+
             Flickable{
                 anchors.fill: parent
                 contentHeight: sensorlessCol.height + rectGap
+                contentWidth: mainItem.width
                 clip: true
 
                 Column{
@@ -27,7 +48,7 @@ Item{
                     anchors.topMargin: headingTopMargin
                     anchors.right: parent.right
                     anchors.rightMargin: headingLeftMargin
-                    spacing: rectGap
+                    spacing: 20
                     Column{
                         width: parent.width
                         spacing: rowVerticalMargin
@@ -94,149 +115,206 @@ Item{
                         }
                     }
 
-                    GridLayout{
-                        columns: 3
-                        width: parent.width
-                        rowSpacing: rowVerticalMargin
-                        columnSpacing: rowContentSpacing
 
+                    Row{
+                        spacing: parent.width * 0.04
                         Text {
                             text: qsTr("Current Control")
-                            verticalAlignment: Text.AlignVCenter
+                            anchors.verticalCenter: parent.verticalCenter
                             font.pointSize: 14
+                            width:  mainItem.width * 0.3
                         }
-
                         TextField{
                             id:textFieldSensCurKp
-                            width: parent.width*0.2
                             text: mcconf.sl_cycle_int_rpm_br
+                            width:  mainItem.width * 0.29
                         }
                         TextField{
                             id:textFieldSensCurKi
-                            width: parent.width*0.2
+                            width:  mainItem.width * 0.29
                             text: mcconf.sl_cycle_int_rpm_br
                         }
+                    }
+
+                    Row{
+                        spacing: parent.width * 0.04
                         Text {
                             text: qsTr("Encoder")
-                            verticalAlignment: Text.AlignVCenter
+                            anchors.verticalCenter: parent.verticalCenter
                             font.pointSize: 14
+                            width: mainItem.width * 0.3
                         }
                         TextField{
                             id:textFieldSensCurOfs
-                            width: parent.width*0.2
+                            width:  mainItem.width * 0.29
                             text: mcconf.sl_cycle_int_rpm_br
                         }
                         TextField{
                             id:textFieldSensCurKi2
-                            width: parent.width*0.2
+                            width:  mainItem.width * 0.29
                             text: mcconf.sl_cycle_int_rpm_br
                         }
-                        CheckBox{
-                            text: "Invert Encoder"
-                            Layout.row: 2
-                            Layout.column: 2
-                            Layout.topMargin: rowVerticalMargin
+                    }
+                    CheckBox{
+                        text: "Invert Encoder"
+                        anchors.right: parent.right
+                    }
+
+                    GroupBox{
+                        width: parent.width
+                        title: "Detect and Calculate Parameters"
+                        Column{
+                            anchors.top: parent.top
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            spacing: 10
+                            Row{
+                                id: row1
+
+                                spacing: parent.width * 0.02
+                                Button{
+                                    Layout.preferredWidth: mainItem.width*0.2
+                                    id:buttonSensCalRL
+                                    text: "R & L"
+                                    onClicked: {
+                                        console.log("Measuring R and L")
+                                        packetInterface.detectMotorParam(textFieldCurrent.text,
+                                                                         textFieldMinRPM.text,
+                                                                         textFieldLowDuty.text)
+                                    }
+                                }
+                                TextField{
+                                    id:textFieldSensDecR
+                                    width: mainItem.width*0.18
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                TextField{
+                                    id:textFieldSensDetL
+                                    width: mainItem.width*0.18
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                TextField{
+                                    id:textFieldSensDetλ
+                                    width: mainItem.width*0.18
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                            }
+
+                            Row{
+                                spacing: parent.width * 0.02
+                                Button{
+                                    Layout.preferredWidth: mainItem.width*0.2
+                                    id:buttonSensCalλ
+                                    text: "Measure λ"
+                                    onClicked: {
+                                        console.log("Measuring λ")
+                                        packetInterface.detectMotorParam(textFieldCurrent.text,
+                                                                         textFieldMinRPM.text,
+                                                                         textFieldLowDuty.text)
+                                    }
+                                }
+                                TextField{
+                                    id:textFieldSensDetI
+                                    width: mainItem.width*0.18
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                TextField{
+                                    id:textFieldSensDetDuty
+                                    width: mainItem.width*0.18
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                TextField{
+                                    id:textFieldSensDetRPM
+                                    width: mainItem.width*0.18
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                            }
+
+                            Row{
+                                spacing: parent.width * 0.02
+                                Button{
+                                    Layout.preferredWidth: mainItem.width*0.2
+                                    id:buttonSensCalCC
+                                    text: "Calc CC"
+                                    onClicked: {
+                                        console.log("Calculating CC")
+                                        packetInterface.detectMotorParam(textFieldCurrent.text,
+                                                                         textFieldMinRPM.text,
+                                                                         textFieldLowDuty.text)
+                                    }
+                                }
+                                TextField{
+                                    id:textFieldSensDetTC
+                                    width: mainItem.width*0.18
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                TextField{
+                                    id:textFieldSensDetKp
+                                    width: mainItem.width*0.18
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                TextField{
+                                    id:textFieldSensDetKi
+                                    width: mainItem.width*0.18
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                            }
                         }
                     }
                     GroupBox{
                         width: parent.width
-                        title: "Detect and Calculate Parameters"
-                        GridLayout{
-                            id: detectGrid
-                            width: parent.width
-                            rowSpacing: rowVerticalMargin
-                            columnSpacing: rowContentSpacing
-                            columns: 4
-                            Button{
-                                Layout.preferredWidth: parent.width*0.2
-                                id:buttonSensCalRL
-                                text: "R & L"
-                                onClicked: {
-                                    console.log("Measuring R and L")
-                                    packetInterface.detectMotorParam(textFieldCurrent.text,
-                                                                     textFieldMinRPM.text,
-                                                                     textFieldLowDuty.text)
+                        title: "Motor Parameters"
+                        clip: true
+
+                        Column{
+                            spacing: 20
+                            Row{
+                                spacing: mainItem.width * 0.02
+                                TextField{
+                                    id:textFieldSensMotR
+                                    width: mainItem.width <  mainItem.height ? mainItem.width*0.4 : mainItem.width * 0.3
+                                    text: mcconf.sl_cycle_int_rpm_br
                                 }
-                            }
-                            TextField{
-                                id:textFieldSensDecR
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldSensDetL
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldSensDetλ
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            Button{
-                                Layout.preferredWidth: parent.width*0.2
-                                id:buttonSensCalλ
-                                text: "Measure λ"
-                                onClicked: {
-                                    console.log("Measuring λ")
-                                    packetInterface.detectMotorParam(textFieldCurrent.text,
-                                                                     textFieldMinRPM.text,
-                                                                     textFieldLowDuty.text)
+                                TextField{
+                                    id:textFieldSensMotL
+                                    width:  mainItem.width <  mainItem.height ? mainItem.width*0.23: mainItem.width * 0.3
+                                    text: mcconf.sl_cycle_int_rpm_br
                                 }
-                            }
-                            TextField{
-                                id:textFieldSensDetI
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldSensDetDuty
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldSensDetRPM
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            Button{
-                                Layout.preferredWidth: parent.width*0.2
-                                id:buttonSensCalCC
-                                text: "Calc CC"
-                                onClicked: {
-                                    console.log("Calculating CC")
-                                    packetInterface.detectMotorParam(textFieldCurrent.text,
-                                                                     textFieldMinRPM.text,
-                                                                     textFieldLowDuty.text)
+                                TextField{
+                                    id:textFieldSensMotλ
+                                    width:  mainItem.width <  mainItem.height ? mainItem.width*0.25: mainItem.width * 0.3
+                                    text: mcconf.sl_cycle_int_rpm_br
                                 }
+
                             }
-                            TextField{
-                                id:textFieldSensDetTC
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldSensDetKp
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldSensDetKi
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            Button{
-                                Layout.preferredWidth: parent.width*0.2
-                                id:buttonSensDetApply
-                                text: "Apply"
-                                Layout.row: 3
-                                Layout.column: 3
-                                Layout.topMargin: rowVerticalMargin
-                                onClicked: {
-                                    console.log("Applying values")
-                                    packetInterface.detectMotorParam(textFieldCurrent.text,
-                                                                     textFieldMinRPM.text,
-                                                                     textFieldLowDuty.text)
+
+                            Row{
+                                spacing: mainItem.width * 0.02
+                                Text {
+                                    text: qsTr("Observer Gain (x1M)")
+                                    verticalAlignment: Text.AlignVCenter
+                                    font.pointSize: 14
+                                    width: mainItem.width <  mainItem.height ? mainItem.width*0.4 : mainItem.width * 0.3
+
+                                }
+                                TextField{
+                                    id:textFieldSensGain
+                                    width:mainItem.width <  mainItem.height ? mainItem.width*0.23: mainItem.width * 0.3
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+
+                                Button{
+                                    width:  mainItem.width <  mainItem.height ? mainItem.width*0.25: mainItem.width * 0.3
+                                    id:buttonSensCalGain
+                                    text:"Cal (Req: L)"
+                                    // Layout.preferredWidth: parent.width * 0.2
+                                    style: buttonStyle
+                                    onClicked: {
+                                        console.log("Calculating Observer Gain")
+                                        packetInterface.detectMotorParam(textFieldCurrent.text,
+                                                                         textFieldMinRPM.text,
+                                                                         textFieldLowDuty.text)
+                                    }
                                 }
                             }
                         }
@@ -262,136 +340,80 @@ Item{
                     spacing: rectGap
                     GroupBox{
                         width: parent.width
-                        title: "Motor Parameters (for Sensorless and Hall Operation)"
-                        GridLayout{
-                            width: parent.width
-                            rowSpacing: rowVerticalMargin
-                            columnSpacing: rowContentSpacing
-                            columns: 3
-
-                            TextField{
-                                id:textFieldSensMotR
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldSensMotL
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldSensMotλ
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            Text {
-                                text: qsTr("Observer Gain (x1M)")
-                                verticalAlignment: Text.AlignVCenter
-                                font.pointSize: 14
-
-                            }
-                            TextField{
-                                id:textFieldSensGain
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-
-                            Button{
-                                Layout.preferredWidth: parent.width*0.20
-                                id:buttonSensCalGain
-                                text:"Cal (Req: L)"
-                                width: parent.width * 0.31
-                                style: buttonStyle
-                                onClicked: {
-                                    console.log("Calculating Observer Gain")
-                                    packetInterface.detectMotorParam(textFieldCurrent.text,
-                                                                     textFieldMinRPM.text,
-                                                                     textFieldLowDuty.text)
-                                }
-                            }
-                        }
-                    }
-                    GroupBox{
-                        width: parent.width
                         title: "Hall Sensors"
 
                         Column{
-                            width: parent.width
-                            spacing: rowContentSpacing
-
+                            spacing: 20
                             Row{
-                                spacing: rowVerticalMargin
-                                Text {
-                                    text: qsTr("Table")
-                                    verticalAlignment: Text.AlignVCenter
-                                    font.pointSize: 14
-
-                                }
-
+                                spacing: 2
                                 TextField{
                                     id:textFieldTable1
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table1
                                 }
                                 TextField{
                                     id:textFieldTable2
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table2
                                 }
                                 TextField{
                                     id:textFieldTable3
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table3
                                 }
                                 TextField{
                                     id:textFieldTable4
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table4
                                 }
                                 TextField{
                                     id:textFieldTable5
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table5
                                 }
                                 TextField{
                                     id:textFieldTable6
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table6
                                 }
                                 TextField{
                                     id:textFieldTable7
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table7
                                 }
                                 TextField{
                                     id:textFieldTable8
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table8
                                 }
+
+
+                            }
 
                             Row{
                                 spacing: rowVerticalMargin
                                 Text {
                                     text: qsTr("Sensorless ERPM")
-                                    verticalAlignment: Text.AlignVCenter
+                                    anchors.verticalCenter: parent.verticalCenter
                                     font.pointSize: 14
 
                                 }
                                 TextField{
                                     id:textFieldBRERPM
-                                    width: parent.width*0.2
+                                    width: mainItem.width*0.15
                                     text: mcconf.sl_cycle_int_rpm_br
                                 }
                             }
                         }
 
-                        }
+
                     }
                 }
             }
         }
         Tab{
             title: "Encoder"
+
             Flickable{
                 anchors.fill: parent
                 clip: true
@@ -409,46 +431,52 @@ Item{
                     GroupBox{
                         width: parent.width
                         title: "Detect Encoder"
-                        GridLayout{
-                            width: parent.width
-                            rowSpacing: rowVerticalMargin
-                            columnSpacing: rowContentSpacing
-                            columns: 3
 
-                            Button{
-                                Layout.preferredWidth: parent.width*0.20
-                                text:"Measure"
-                                width: parent.width * 0.2
-                                style: buttonStyle
-                            }
-                            TextField{
-                                id:textFieldEncI
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldEncOfs
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldEncRat
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            CheckBox{
-                                text: "Invert Encoder"
+                        Column{
+                            spacing: 10
+                            Row{
+
+                                spacing: mainItem.width * 0.05
+                                Button{
+                                    Layout.preferredWidth: parent.width*0.20
+                                    text:"Measure"
+                                    width: mainItem.width * 0.27
+                                    style: buttonStyle
+                                }
+                                TextField{
+                                    id:textFieldEncI
+                                    width: mainItem.width*0.27
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                TextField{
+                                    id:textFieldEncOfs
+                                    width: mainItem.width*0.27
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
                             }
 
+                            Row{
+                                spacing: mainItem.width * 0.05
+                                TextField{
+                                    id:textFieldEncRat
+                                    width: mainItem.width*0.27
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                CheckBox{
+                                    text: "Invert Encoder"
+                                }
+
+                            }
+
                             Button{
-                                Layout.preferredWidth: parent.width*0.20
                                 text:"Apply"
-                                width: parent.width * 0.2
+                                width: mainItem.width * 0.27
                                 style: buttonStyle
-                                Layout.column: 2
-                                Layout.row: 2
+                                anchors.right: parent.right
                             }
+
                         }
+
                     }
 
                     GroupBox{
@@ -456,72 +484,73 @@ Item{
                         title: "Detect Hall Sensors"
 
                         Column{
-                            width: parent.width
-                            spacing: rowContentSpacing
+                            spacing: 10
 
                             Row{
-                                spacing: rowVerticalMargin
+                                spacing: mainItem.width * 0.05
                                 Button{
                                     text:"Measure"
-                                    width: encoderCol.width * 0.2
+                                    width: mainItem.width * 0.27
                                     style: buttonStyle
                                 }
 
                                 TextField{
                                     id:textFieldDetHallI
-                                    width: parent.width*0.2
+                                    width: mainItem.width*0.27
                                     text: mcconf.sl_cycle_int_rpm_br
                                 }
                             }
+
                             Row{
                                 id: detectHallSensorRow
-                                spacing: rowVerticalMargin
+                                spacing: mainItem.width * 0.015
                                 TextField{
                                     id:textFieldDetTable1
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table1
                                 }
                                 TextField{
                                     id:textFieldDetTable2
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table2
                                 }
                                 TextField{
                                     id:textFieldDetTable3
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table3
                                 }
                                 TextField{
                                     id:textFieldDetTable4
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table4
                                 }
                                 TextField{
                                     id:textFieldDetTable5
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table5
                                 }
                                 TextField{
                                     id:textFieldDetTable6
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table6
                                 }
                                 TextField{
                                     id:textFieldDetTable7
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table7
                                 }
                                 TextField{
                                     id:textFieldDetTable8
-                                    width: parent.width*0.09
+                                    width: mainItem.width*0.11
                                     text: mcconf.hall_table8
                                 }
                             }
+
                             Button{
                                 text:"Apply"
-                                width: parent.width * 0.2
+                                width: mainItem.width * 0.28
                                 style: buttonStyle
-                                anchors.right: detectHallSensorRow.right
+                                anchors.right: parent.right
                             }
                         }
                     }
@@ -543,115 +572,134 @@ Item{
                     anchors.topMargin: headingTopMargin
                     anchors.right: parent.right
                     anchors.rightMargin: headingLeftMargin
-                    spacing: rectGap
-
-                    GridLayout{
-                        columns: 3
-                        width: parent.width
-                        rowSpacing: rowVerticalMargin
-                        columnSpacing: rowContentSpacing
-
+                    spacing: 10
+                    Row{
+                        spacing: mainItem.width * 0.03
                         Text {
                             text: qsTr("F_SW and DTc")
-                            verticalAlignment: Text.AlignVCenter
+                            anchors.verticalCenter: parent.verticalCenter
                             font.pointSize: 14
+                            width: mainItem.width*0.35
 
                         }
 
                         TextField{
                             id:textFieldAdvFSW
-                            width: parent.width*0.2
+                            width: mainItem.width*0.25
                             text: mcconf.sl_cycle_int_rpm_br
                         }
                         TextField{
                             id:textFieldAdvDTc
-                            width: parent.width*0.2
+                            width: mainItem.width*0.25
                             text: mcconf.sl_cycle_int_rpm_br
                         }
+                    }
+
+                    Row{
+                        spacing: mainItem.width * 0.03
                         Text {
                             text: qsTr("Speed Tracker")
-                            verticalAlignment: Text.AlignVCenter
+                            width: mainItem.width*0.35
+                            anchors.verticalCenter: parent.verticalCenter
                             font.pointSize: 14
                         }
                         TextField{
                             id:textFieldAdvSpeKp
-                            width: parent.width*0.2
+                            width: mainItem.width*0.25
                             text: mcconf.sl_cycle_int_rpm_br
                         }
                         TextField{
                             id:textFieldAdvSpeKi
-                            width: parent.width*0.2
+                            width: mainItem.width*0.25
                             text: mcconf.sl_cycle_int_rpm_br
                         }
+                    }
+
+                    Row{
+                        spacing: mainItem.width * 0.03
                         Text {
                             text: qsTr("Duty Downramp")
-                            verticalAlignment: Text.AlignVCenter
+                            width: mainItem.width*0.35
+                            anchors.verticalCenter: parent.verticalCenter
                             font.pointSize: 14
                         }
                         TextField{
                             id:textFieldAdvDutKp
-                            width: parent.width*0.2
+                            width: mainItem.width*0.25
                             text: mcconf.sl_cycle_int_rpm_br
                         }
                         TextField{
                             id:textFieldAdvDutKi
-                            width: parent.width*0.2
+                            width: mainItem.width*0.25
                             text: mcconf.sl_cycle_int_rpm_br
                         }
+                    }
+
+                    Row{
+                        spacing: mainItem.width * 0.03
                         Text {
                             text: qsTr("Openloop RPM")
-                            verticalAlignment: Text.AlignVCenter
+                            width: mainItem.width*0.35
+                            anchors.verticalCenter: parent.verticalCenter
                             font.pointSize: 14
                         }
                         TextField{
                             id:textFieldAdvRPM
-                            width: parent.width*0.2
+                            width: mainItem.width*0.25
                             text: mcconf.sl_cycle_int_rpm_br
                         }
                     }
                     GroupBox{
                         width: parent.width
                         title: "Sensorless Startup and Low Speed"
-                        GridLayout{
-                            width: parent.width
-                            rowSpacing: rowVerticalMargin
-                            columnSpacing: rowContentSpacing
-                            columns: 3
 
-                            Text {
-                                text: qsTr("Open Loop")
-                                verticalAlignment: Text.AlignVCenter
-                                font.pointSize: 14
+                        Column{
+                            spacing: 10
+                            Row{
+                                spacing: mainItem.width * 0.03
+                                Text {
+                                    text: qsTr("Open Loop")
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    font.pointSize: 14
+                                    width: mainItem.width*0.35
 
-                            }
+                                }
 
-                            TextField{
-                                id:textFieldAdvSensHyst
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            TextField{
-                                id:textFieldAdvSensTime
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
-                            Text {
-                                text: qsTr("D Current Injection")
-                                verticalAlignment: Text.AlignVCenter
-                                font.pointSize: 14
+                                TextField{
+                                    id:textFieldAdvSensHyst
+                                    width: mainItem.width*0.25
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                TextField{
+                                    id:textFieldAdvSensTime
+                                    width: mainItem.width*0.25
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
 
                             }
 
-                            TextField{
-                                id:textFieldAdvDuty
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
+                            Row{
+                                spacing: mainItem.width * 0.03
+                                Text {
+                                    text: qsTr("D Current Injection")
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    font.pointSize: 14
+                                    width: mainItem.width*0.35
+                                }
+
+                                TextField{
+                                    id:textFieldAdvDuty
+                                    width: mainItem.width*0.25
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+                                TextField{
+                                    id:textFieldAdvFact
+                                    width: mainItem.width*0.25
+                                    text: mcconf.sl_cycle_int_rpm_br
+                                }
+
                             }
-                            TextField{
-                                id:textFieldAdvFact
-                                width: parent.width*0.2
-                                text: mcconf.sl_cycle_int_rpm_br
-                            }
+
                         }
                     }
                 }

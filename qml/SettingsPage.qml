@@ -38,7 +38,11 @@ BasicPage {
             contentHeight:rectContent.height
             Rectangle{
                 id:rectContent
-                width: parent.width
+                anchors.left: parent.left
+                anchors.leftMargin: rowLeftMargin
+                anchors.right: parent.right
+                anchors.rightMargin: rowLeftMargin
+                width: parent.width - rowLeftMargin * 2
                 height:rectConnection.height + rectControl.height +rectBEMF.height + rectPlotControl.height + (rectGap * 4)
                 color:"#DCDCDC"
 
@@ -96,19 +100,19 @@ BasicPage {
                                         text:"Port"
                                         verticalAlignment: Text.AlignVCenter
                                         font.pointSize: 14
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                     }
 
                                     ComboBox{
                                         id: comboBoxSerialPorts
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                         model: serialPortNames
                                     }
 
                                     Button{
                                         id:buttonConnect
                                         text:"Connect"
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                         onClicked: {
                                             currentSerialPort = comboBoxSerialPorts.currentIndex
                                             connectCurrentSerial()
@@ -127,7 +131,7 @@ BasicPage {
                                     }
                                     Button{
                                         text:"Refresh"
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                         onClicked: {
                                             refreshSerialDevices()
                                             comboBoxSerialPorts.currentIndex = currentSerialPort;
@@ -146,7 +150,7 @@ BasicPage {
 
                                     Button{
                                         id:buttonDisconnect
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                         text:"Disconnect"
                                         onClicked: {
                                             disconnectSerial();
@@ -185,6 +189,17 @@ BasicPage {
                                            canFwd = checked
                                            canId = textFieldCanId.text
                                         }
+                                        style: CheckBoxStyle{
+                                            label: Text {
+                                                renderType: Text.NativeRendering
+                                                verticalAlignment: Text.AlignVCenter
+                                                horizontalAlignment: Text.AlignHCenter
+                                                font.family: "Helvetica"
+                                                // font.bold: true
+                                                font.pointSize: 14
+                                                text: control.text
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -210,18 +225,18 @@ BasicPage {
                                         text:"Device"
                                         verticalAlignment: Text.AlignVCenter
                                         font.pointSize: 14
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                     }
 
                                     ComboBox{
                                         id: comboBoxBtDevices
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                         model: bleInterface.devicesNames
                                     }
 
                                     Button{
                                         text:"Connect"
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                         onClicked: {
                                             bleInterface.currentDevice = comboBoxBtDevices.currentIndex
                                             connectCurrentBleDevice();
@@ -240,7 +255,7 @@ BasicPage {
                                     }
                                     Button{
                                         text:"Scan"
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                         onClicked: {
                                             bleInterface.scanDevices();
                                         }
@@ -258,7 +273,7 @@ BasicPage {
                                     }
 
                                     Button{
-                                        width: rectConnection.width *0.4
+                                        width: parent.width *0.5 - rowVerticalMargin*0.6
                                         text:"Disconnect"
                                         onClicked: {
                                             disconnectBle();
@@ -312,6 +327,39 @@ BasicPage {
                                     }
                                 }
                             }
+
+                            style: TabViewStyle {
+                                tabOverlap: 16
+                                frameOverlap: 4
+                                tabsMovable: true
+
+                                frame: Rectangle {
+                                    gradient: Gradient {
+                                        GradientStop { color: "#e5e5e5"; position: 0 }
+                                        GradientStop { color: "#e0e0e0"; position: 1 }
+                                    }
+                                    border.color: "#898989"
+                                    Rectangle { anchors.fill: parent; anchors.margins: 1; border.color: "white"; color: "transparent" }
+                                }
+
+                                tab: Item {
+                                    property int totalOverlap: tabOverlap * (control.count - 1)
+                                    implicitWidth: Math.max(text.width + 30, mainWindow.width / 2 - image.border.left)
+                                    implicitHeight: text.font.pixelSize * 2.0
+                                    BorderImage {
+                                        id: image
+                                        anchors.fill: parent
+                                        source: styleData.selected ? "images/tab_selected.png" : "images/tab.png"
+                                        border.left: 30; border.right: 30
+                                        smooth: true
+                                    }
+                                    Text {
+                                        id: text
+                                        text: styleData.title
+                                        anchors.centerIn: parent
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -359,12 +407,12 @@ BasicPage {
                                 horizontalAlignment: Text.AlignRight
                                 verticalAlignment: Text.AlignVCenter
                                 font.pointSize: 12
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                             }
                             Button{
                                 id:buttonDutyCycle
                                 text:"Duty Cycle"
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 onClicked: {
                                     packetInterface.setDutyCycle(textDutyCycle.text)
                                 }
@@ -385,7 +433,7 @@ BasicPage {
                             TextField {
                                 id:textRPM
                                 text:"15000"
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 horizontalAlignment: Text.AlignRight
                                 verticalAlignment: Text.AlignVCenter
                                 font.pointSize: 12
@@ -393,7 +441,7 @@ BasicPage {
                             Button{
                                 id:buttonRPM
                                 text:"RPM"
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 onClicked: {
                                     packetInterface.setRpm(textRPM.text)
                                 }
@@ -413,7 +461,7 @@ BasicPage {
                             TextField {
                                 id:textCurrent
                                 text:"3,00"
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 horizontalAlignment: Text.AlignRight
                                 verticalAlignment: Text.AlignVCenter
                                 font.pointSize: 12
@@ -421,7 +469,7 @@ BasicPage {
                             Button{
                                 id:buttonCurrent
                                 text:"Current"
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 onClicked: {
                                     packetInterface.setCurrent(textCurrent.text)
                                 }
@@ -442,14 +490,14 @@ BasicPage {
                             TextField {
                                 id:textBrakeCurrent
                                 text:"3,00"
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 horizontalAlignment: Text.AlignRight
                                 verticalAlignment: Text.AlignVCenter
                                 font.pointSize: 12
                             }
                             Button{
                                 id:buttonBrakeCurrent
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 text:"Brake Current"
                                 onClicked: {
                                     packetInterface.setCurrentBrake(textBrakeCurrent)
@@ -524,7 +572,7 @@ BasicPage {
                                 text:"KB Current"
                                 //font.bold: true
                                 font.pointSize: 12
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
 
                             }
                             TextField {
@@ -535,14 +583,14 @@ BasicPage {
                                 verticalAlignment: Text.AlignVCenter
                                 //anchors.left: textKBCurrent.right
                                 font.pointSize: 12
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
 
                             }
 
                             Button{
                                 id:buttonRelease
                                 text:"Release"
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 onClicked: {
                                     packetInterface.setCurrent(0.0)
                                 }
@@ -561,7 +609,7 @@ BasicPage {
                             Button{
                                 id:buttonFullBrake
                                 text:"Full Brake"
-                                width: rectConnection.width *0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 onClicked: {
                                     packetInterface.setDutyCycle(0.0)
                                 }
@@ -621,7 +669,7 @@ BasicPage {
                             Button{
                                 id:buttonNow
                                 text:"Now"
-                                width: rectConnection.width * 0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 onClicked: {
                                     getSampleData(false, textFieldKSamples.text, textFieldDecimation.text)
                                 }
@@ -640,7 +688,7 @@ BasicPage {
                             Button{
                                 id:buttonAtStart
                                 text:"At Start"
-                                width: rectConnection.width * 0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 onClicked: {
                                     getSampleData(true, textFieldKSamples.text, textFieldDecimation.text)
                                 }
@@ -661,7 +709,7 @@ BasicPage {
                                 id:textSamples
                                 text:"Samples"
                                 font.pointSize: 12
-                                width: rectConnection.width * 0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                             }
                             TextField {
                                 id: textFieldKSamples
@@ -669,19 +717,19 @@ BasicPage {
                                 horizontalAlignment: Text.AlignRight
                                 verticalAlignment: Text.AlignVCenter
                                 font.pointSize: 12
-                                width: rectConnection.width * 0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                             }
 
                             Text{
                                 id:decimation
                                 text:"Decimation"
                                 font.pointSize: 12
-                                width: rectConnection.width * 0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                             }
                             TextField {
                                 id: textFieldDecimation
                                 text:"1"
-                                width: rectConnection.width * 0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 horizontalAlignment: Text.AlignRight
                                 verticalAlignment: Text.AlignVCenter
                                 font.pointSize: 12
@@ -691,12 +739,12 @@ BasicPage {
                                 id:fftText
                                 text:"Fs for FFT"
                                 font.pointSize: 12
-                                width: rectConnection.width * 0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                             }
                             TextField {
                                 id: textFieldFFT
                                 text:"1"
-                                width: rectConnection.width * 0.4
+                                width: parent.width *0.5 - rowVerticalMargin*0.6
                                 horizontalAlignment: Text.AlignRight
                                 verticalAlignment: Text.AlignVCenter
                                 font.pointSize: 12
@@ -794,7 +842,7 @@ BasicPage {
                         Button{
                             id:buttonRescale
                             text:"Rescale"
-                            width: rectConnection.width * 0.4
+                            width: textFieldFFT.width
                             onClicked: {
                                 doRescale = true
                             }
@@ -813,7 +861,7 @@ BasicPage {
                         Button{
                             id:buttonReplot
                             text:"Replot"
-                            width: rectConnection.width * 0.4
+                            width: textFieldFFT.width
                             onClicked: {
                                 doReplot = true
                                 doFilterReplot = true
