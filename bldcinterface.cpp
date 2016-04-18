@@ -127,7 +127,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
 void BLDCInterface::timerSlot()
 {
     // Update CAN fwd function
-    m_packetInterface->setSendCan(m_canFwd, m_canId);
+    m_packetInterface->setSendCan(m_canFwd= false, m_canId);
 
     // Read FW version if needed
     static bool sendCanBefore = false;
