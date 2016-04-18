@@ -116,7 +116,7 @@ public:
     const detect_res_t& get_detectRes() const{
         return m_detectRes;
     }
-    bool isConnected(){
+    Q_INVOKABLE bool isConnected(){
         return m_bleInterface->isConnected() || m_packetInterface->isUdpConnected()
         #ifndef NO_SERIAL_PORT
                 ||mSerialPort->isOpen()

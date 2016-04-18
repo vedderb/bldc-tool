@@ -34,7 +34,7 @@ public:
     ~PacketInterface();
 
     void setLimitedMode(bool is_limited);
-    bool isLimitedMode();
+    Q_INVOKABLE bool isLimitedMode();
     bool getFwVersion();
     bool startFirmwareUpload(QByteArray &newFirmware);
     double getFirmwareUploadProgress();
