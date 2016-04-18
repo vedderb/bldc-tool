@@ -55,7 +55,8 @@ MainWindow::MainWindow(QWidget *parent) :
     mRealtimeGraphsAdded = false;
     mMcconfLoaded = false;
     mAppconfLoaded = false;
-    mStatusInfoTime = 0;
+    m_statusInfoTimer.setInterval(STATUS_INFO_TIME_MS);
+    m_statusInfoTimer.setSingleShot(true);
 
     connect(mPacketInterface, &PacketInterface::ackReceived,
             this, [this](QString type){showStatusInfo(type, true);});
@@ -157,6 +158,8 @@ MainWindow::MainWindow(QWidget *parent) :
             [this](QStringList items){
        ui->serialCombobox->clear();ui->serialCombobox->addItems(items);
     });
+    connect(m_statusInfoTimer, &QTimer::timeout,
+            this, MainWindow::resetStatusLabel);
 
     connect(ui->canFwdBox, &QCheckBox::toggled,
                  m_bldcInterface, &BLDCInterface::set_canFwd);
@@ -604,8 +607,11 @@ void MainWindow::showStatusInfo(QString info, bool isGood)
         mStatusLabel->setStyleSheet("QLabel { background-color : red; color : black; }");
     }
 
-    mStatusInfoTime = 80;
     mStatusLabel->setText(info);
+
+    m_statusInfoTimer.start();
+
+
 }
 
 void MainWindow::UpdatePlots(){
@@ -1668,6 +1674,20 @@ void MainWindow::decodedAdcReceived(double adc_value, double adc_voltage, double
 void MainWindow::decodedChukReceived(double chuk_value)
 {
     ui->appconfDecodedChukBar->setValue((chuk_value + 1.0) * 500.0);
+}
+
+void MainWindow::resetStatusLabel()
+{
+    mStatusLabel->setStyleSheet(qApp->styleSheet());
+    if (m_bldcInterface->isConnected()) {
+        if (mPacketInterface->isLimitedMode()) {
+            mStatusLabel->setText("Connected, limited");
+        } else {
+            mStatusLabel->setText("Connected");
+        }
+    } else {
+        mStatusLabel->setText("Not connected");
+    }
 }
 
 void MainWindow::on_serialConnectButton_clicked()
