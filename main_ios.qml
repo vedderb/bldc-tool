@@ -84,6 +84,24 @@ ApplicationWindow {
                 background.color = 'lightgreen'
             else
                 background.color = 'red'
+            resetTimer.start()
+        }
+        Timer{
+            id: resetTimer
+            interval: 2000
+            repeat: false
+            onTriggered: {
+                background.color = 'white'
+                if (isConnected()) {
+                    if (packetInterface.isLimitedMode()) {
+                        label.text = "Connected, limited"
+                    } else {
+                        label.text = "Connected"
+                    }
+                } else {
+                    label.text = "Not connected"
+                }
+            }
         }
         Component.onCompleted: {
             onStatusInfoChanged.connect(showStatus);
