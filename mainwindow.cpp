@@ -96,7 +96,7 @@ MainWindow::MainWindow(QWidget *parent) :
     });
     connect(m_bldcInterface, &BLDCInterface::msgwarning,
                  this, [this](QString title, QString text){
-        #ifdef Q_OS_IOS {
+        #ifdef Q_OS_IOS
             QIAlertView alert;
             alert.setTitle(title);
             alert.setMessage(text);
@@ -158,8 +158,8 @@ MainWindow::MainWindow(QWidget *parent) :
             [this](QStringList items){
        ui->serialCombobox->clear();ui->serialCombobox->addItems(items);
     });
-    connect(m_statusInfoTimer, &QTimer::timeout,
-            this, MainWindow::resetStatusLabel);
+    connect(&m_statusInfoTimer, &QTimer::timeout,
+            this, &MainWindow::resetStatusLabel);
 
     connect(ui->canFwdBox, &QCheckBox::toggled,
                  m_bldcInterface, &BLDCInterface::set_canFwd);
