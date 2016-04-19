@@ -69,7 +69,7 @@ Item{
 
                             RadioButton{
                                 id:rbEncoder
-                                checked: mcconf.foc_sensor_mode === FOC_SENSOR_MODE_ENCODER
+                                checked: mcconf.foc_sensor_mode === McConf.FOC_SENSOR_MODE_ENCODER
                                 text: "Encoder"
                                 exclusiveGroup :groupOptionsSensorMode
                                 style: RadioButtonStyle{
@@ -85,7 +85,7 @@ Item{
                             }
                             RadioButton{
                                 id:rbSensored
-                                checked: mcconf.foc_sensor_mode === FOC_SENSOR_MODE_HALL
+                                checked: mcconf.foc_sensor_mode === McConf.FOC_SENSOR_MODE_HALL
                                 text: "Hall"
                                 exclusiveGroup :groupOptionsSensorMode
                                 style: RadioButtonStyle{
@@ -101,7 +101,7 @@ Item{
                             }
                             RadioButton{
                                 id:rbSensorless
-                                checked: mcconf.foc_sensor_mode === FOC_SENSOR_MODE_SENSORLESS
+                                checked: mcconf.foc_sensor_mode === McConf.FOC_SENSOR_MODE_SENSORLESS
                                 text: "Sensorless"
                                 exclusiveGroup :groupOptionsSensorMode
                                 style: RadioButtonStyle{
@@ -159,6 +159,7 @@ Item{
                         }
                     }
                     CheckBox{
+                        id:checkInvEncoder
                         text: "Invert Encoder"
                         anchors.right: parent.right
                         checked: mcconf.foc_encoder_inverted
@@ -190,17 +191,17 @@ Item{
                                 TextField{
                                     id:textFieldSensDecR
                                     width: mainItem.width*0.18
-                                    text: mcconf.foc_motor_r
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldSensDetL
                                     width: mainItem.width*0.18
-                                    text: mcconf.foc_motor_l
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldSensDetλ
                                     width: mainItem.width*0.18
-                                    text: mcconf.foc_motor_flux_linkage
+                                    text: "0"
                                 }
                             }
 
@@ -255,12 +256,12 @@ Item{
                                 TextField{
                                     id:textFieldSensDetKp
                                     width: mainItem.width*0.18
-                                    text: mcconf.foc_current_kp
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldSensDetKi
                                     width: mainItem.width*0.18
-                                    text: mcconf.foc_current_ki
+                                    text: "0"
                                 }
                             }
                         }
@@ -282,7 +283,7 @@ Item{
                                 TextField{
                                     id:textFieldSensMotL
                                     width:  mainItem.width <  mainItem.height ? mainItem.width*0.23: mainItem.width * 0.3
-                                    text: mcconf.foc_motor_l
+                                    text: (mcconf.foc_motor_l * 1000000)
                                 }
                                 TextField{
                                     id:textFieldSensMotλ
@@ -438,42 +439,42 @@ Item{
                                 TextField{
                                     id:textFieldDetTable1
                                     width: mainItem.width*0.11
-                                    text: mcconf.foc_hall_table1
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldDetTable2
                                     width: mainItem.width*0.11
-                                    text: mcconf.foc_hall_table2
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldDetTable3
                                     width: mainItem.width*0.11
-                                    text: mcconf.foc_hall_table3
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldDetTable4
                                     width: mainItem.width*0.11
-                                    text: mcconf.foc_hall_table4
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldDetTable5
                                     width: mainItem.width*0.11
-                                    text: mcconf.foc_hall_table5
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldDetTable6
                                     width: mainItem.width*0.11
-                                    text: mcconf.foc_hall_table6
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldDetTable7
                                     width: mainItem.width*0.11
-                                    text: mcconf.foc_hall_table7
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldDetTable8
                                     width: mainItem.width*0.11
-                                    text: mcconf.foc_hall_table8
+                                    text: "0"
                                 }
                             }
 
@@ -523,12 +524,12 @@ Item{
                                 TextField{
                                     id:textFieldEncOfs
                                     width: mainItem.width*0.27
-                                    text: mcconf.foc_encoder_offset
+                                    text: "0"
                                 }
                                 TextField{
                                     id:textFieldEncRat
                                     width: mainItem.width*0.27
-                                    text: mcconf.foc_encoder_ratio
+                                    text: "0"
                                 }
                             }
 
@@ -696,9 +697,7 @@ Item{
                                     width: mainItem.width*0.25
                                     text: mcconf.foc_sl_d_current_factor
                                 }
-
                             }
-
                         }
                     }
                 }
@@ -720,6 +719,17 @@ Item{
             text:"Read Config"
             width: parent.width * 0.31
             style: buttonStyle
+            onClicked: packetInterface.getMcconf()
+        }
+        Timer {
+            id: timer
+        }
+
+        function delay(delayTime, cb) {
+            timer.interval = delayTime;
+            timer.repeat = false;
+            timer.triggered.connect(cb);
+            timer.start();
         }
 
         Button{
@@ -727,6 +737,86 @@ Item{
             text:"Write Config"
             width: parent.width * 0.31
             style: buttonStyle
+            onClicked: {
+                if(rbEncoder.checked)    mcconf.foc_sensor_mode = McConf.FOC_SENSOR_MODE_ENCODER
+                else if(rbSensored.checked) mcconf.foc_sensor_mode = McConf.FOC_SENSOR_MODE_HALL
+                else if(rbSensorless.checked)   mcconf.foc_sensor_mode = McConf.FOC_SENSOR_MODE_SENSORLESS
+
+                mcconf.foc_encoder_inverted = checkInvEncoder.checked
+                mcconf.foc_current_kp = textFieldSensCurKp.text
+                mcconf.foc_current_ki = textFieldSensCurKi.text
+                mcconf.foc_encoder_offset = textFieldSensEncOfs.text
+                mcconf.foc_encoder_ratio = textFieldSensEncRat.text
+                mcconf.foc_motor_r = textFieldSensMotR.text
+                mcconf.foc_motor_l = textFieldSensMotL.text
+                mcconf.foc_motor_flux_linkage = textFieldSensMotλ.text
+                mcconf.foc_observer_gain = textFieldSensGain.text
+                mcconf.foc_hall_table1 = textFieldFocTable1.text
+                mcconf.foc_hall_table2 = textFieldFocTable2.text
+                mcconf.foc_hall_table3 = textFieldFocTable3.text
+                mcconf.foc_hall_table4 = textFieldFocTable4.text
+                mcconf.foc_hall_table5 = textFieldFocTable5.text
+                mcconf.foc_hall_table6 = textFieldFocTable6.text
+                mcconf.foc_hall_table7 = textFieldFocTable7.text
+                mcconf.foc_hall_table8 = textFieldFocTable8.text
+                mcconf.foc_hall_sl_erpm = textFieldSensHallErpm.text
+                mcconf.foc_f_sw = textFieldAdvFSW.text
+                mcconf.foc_dt_us = textFieldAdvDTc.text
+                mcconf.foc_pll_kp = textFieldAdvSpeKp.text
+                mcconf.foc_pll_ki = textFieldAdvSpeKi.text
+                mcconf.foc_duty_dowmramp_kp = textFieldAdvDutKp.text
+                mcconf.foc_duty_dowmramp_ki = textFieldAdvDutKi.text
+                mcconf.foc_openloop_rpm = textFieldAdvRPM.text
+                mcconf.foc_sl_openloop_hyst = extFieldAdvSensHyst.text
+                mcconf.foc_sl_openloop_time = textFieldAdvSensTime.text
+                mcconf.foc_sl_d_current_duty = textFieldAdvDuty.text
+                mcconf.foc_sl_d_current_factor = textFieldAdvFact.text
+
+                writeMcconf()
+
+                canFwd = true
+
+                delay(1000, function() {
+                    // please insert here code that you need to execute after delay
+                    if(rbEncoder.checked)    mcconf.foc_sensor_mode = McConf.FOC_SENSOR_MODE_ENCODER
+                    else if(rbSensored.checked) mcconf.foc_sensor_mode = McConf.FOC_SENSOR_MODE_HALL
+                    else if(rbSensorless.checked)   mcconf.foc_sensor_mode = McConf.FOC_SENSOR_MODE_SENSORLESS
+
+                    mcconf.foc_encoder_inverted = checkInvEncoder.checked
+                    mcconf.foc_current_kp = textFieldSensCurKp.text
+                    mcconf.foc_current_ki = textFieldSensCurKi.text
+                    mcconf.foc_encoder_offset = textFieldSensEncOfs.text
+                    mcconf.foc_encoder_ratio = textFieldSensEncRat.text
+                    mcconf.foc_motor_r = textFieldSensMotR.text
+                    mcconf.foc_motor_l = textFieldSensMotL.text
+                    mcconf.foc_motor_flux_linkage = textFieldSensMotλ.text
+                    mcconf.foc_observer_gain = textFieldSensGain.text
+                    mcconf.foc_hall_table1 = textFieldFocTable1.text
+                    mcconf.foc_hall_table2 = textFieldFocTable2.text
+                    mcconf.foc_hall_table3 = textFieldFocTable3.text
+                    mcconf.foc_hall_table4 = textFieldFocTable4.text
+                    mcconf.foc_hall_table5 = textFieldFocTable5.text
+                    mcconf.foc_hall_table6 = textFieldFocTable6.text
+                    mcconf.foc_hall_table7 = textFieldFocTable7.text
+                    mcconf.foc_hall_table8 = textFieldFocTable8.text
+                    mcconf.foc_hall_sl_erpm = textFieldSensHallErpm.text
+                    mcconf.foc_f_sw = textFieldAdvFSW.text
+                    mcconf.foc_dt_us = textFieldAdvDTc.text
+                    mcconf.foc_pll_kp = textFieldAdvSpeKp.text
+                    mcconf.foc_pll_ki = textFieldAdvSpeKi.text
+                    mcconf.foc_duty_dowmramp_kp = textFieldAdvDutKp.text
+                    mcconf.foc_duty_dowmramp_ki = textFieldAdvDutKi.text
+                    mcconf.foc_openloop_rpm = textFieldAdvRPM.text
+                    mcconf.foc_sl_openloop_hyst = extFieldAdvSensHyst.text
+                    mcconf.foc_sl_openloop_time = textFieldAdvSensTime.text
+                    mcconf.foc_sl_d_current_duty = textFieldAdvDuty.text
+                    mcconf.foc_sl_d_current_factor = textFieldAdvFact.text
+
+                    writeMcconf()
+
+                    canFwd = false
+                })
+            }
         }
 
         Button{
@@ -734,6 +824,7 @@ Item{
             text:"Reboot"
             width: parent.width * 0.31
             style: buttonStyle
+            onClicked: packetInterface.reboot()
         }
     }
 

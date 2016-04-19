@@ -129,10 +129,14 @@ BasicPage {
                 Text{
                     id:textwarning
                     text : {
-                        "Updating your firmware through this app only supports \n"+
-                        "The latest Default hardware version's 4.10-4.12 \n"+
-                        "Please check your hardware version before using this feature \n"+
-                        "As incorrect firmware will damage your hardware \n"+
+                        "Updating your firmware through \n"+
+                        "this app only supports \n"+
+                        "The latest Default hardware version's \n"+
+                        "4.10-4.12. \n"+
+                        "Please check your hardware version \n"+
+                        "before using this feature \n"+
+                        "As incorrect firmware will \n"+
+                        "damage your hardware \n"+
                         "USE AT YOUR OWN RISK!!!!!!"
                     }
                     font.pointSize: 14

@@ -481,7 +481,7 @@ Flickable{
             anchors.rightMargin: rowLeftMargin
             width:rectDisplay.width - (2* rowLeftMargin)
             minimumValue: 0
-            maximumValue: 100
+            maximumValue: 1000
             value: appconfDecodedPpm
         }
     }

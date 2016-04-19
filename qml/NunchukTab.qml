@@ -391,6 +391,8 @@ Flickable{
             anchors.right: parent.right
             anchors.rightMargin: rowLeftMargin
             width:rectDisplay.width - (2* rowLeftMargin)
+            minimumValue: 0
+            maximumValue: 1
             value: appconfDecodedChuk
         }
     }

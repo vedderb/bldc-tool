@@ -142,7 +142,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_bldcInterface, &BLDCInterface::mcconfSlMinErpmIlEnabledChanged
             ,ui->mcconfSlMinErpmIlBox    , &QWidget::setEnabled);
     connect(m_bldcInterface, &BLDCInterface::firmwareUploadStatusChanged,
-            ui->firmwareSupportedLabel, &QLabel::setText);
+            ui->firmwareUploadStatusLabel, &QLabel::setText);
     connect(m_bldcInterface, &BLDCInterface::mcconfFocMeasureEncoderOffsetChanged
                  ,ui->mcconfFocMeasureEncoderOffsetBox  , &QDoubleSpinBox::setValue);
     connect(m_bldcInterface, &BLDCInterface::mcconfFocMeasureEncoderRatioChanged
