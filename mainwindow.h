@@ -28,6 +28,9 @@
 #include "packetinterface.h"
 #include "serialization.h"
 #include "datatypes.h"
+#include "bldcinterface.h"
+
+#define STATUS_INFO_TIME_MS 2000
 
 namespace Ui {
 class MainWindow;
@@ -42,37 +45,20 @@ public:
     ~MainWindow();
     bool eventFilter(QObject *object, QEvent *e);
 
-    typedef struct {
-        bool updated;
-        double cycle_int_limit;
-        double bemf_coupling_k;
-        QVector<int> hall_table;
-        int hall_res;
-    } detect_res_t;
-
 private slots:
-    void serialDataAvailable();
-    void serialPortError(QSerialPort::SerialPortError error);
-
-    void timerSlot();
-    void packetDataToSend(QByteArray &data);
-    void fwVersionReceived(int major, int minor);
-    void ackReceived(QString ackType);
+    void setMcconfGui(const mc_configuration &mcconf);
+    void UpdatePlots();
+    void showStatusInfo(QString info, bool isGood);
     void mcValuesReceived(MC_VALUES values);
-    void printReceived(QString str);
     void samplesReceived(QByteArray data);
     void rotorPosReceived(double pos);
     void experimentSamplesReceived(QVector<double> samples);
-    void mcconfReceived(mc_configuration mcconf);
-    void motorParamReceived(double cycle_int_limit, double bemf_coupling_k, QVector<int> hall_table, int hall_res);
-    void motorRLReceived(double r, double l);
-    void motorLinkageReceived(double flux_linkage);
-    void encoderParamReceived(double offset, double ratio, bool inverted);
-    void focHallTableReceived(QVector<int> hall_table, int res);
+    void setFocHallTable(QList<int> hall_table);
     void appconfReceived(app_configuration appconf);
     void decodedPpmReceived(double ppm_value, double ppm_last_len);
     void decodedAdcReceived(double adc_value, double adc_voltage, double adc_value2, double adc_voltage2);
     void decodedChukReceived(double chuk_value);
+    void resetStatusLabel();
 
     void on_serialConnectButton_clicked();
     void on_udpConnectButton_clicked();
@@ -109,6 +95,7 @@ private slots:
     void on_appconfReadDefaultButton_clicked();
     void on_posCtrlButton_clicked();
     void on_firmwareChooseButton_clicked();
+    void on_firmwareOnlineUpdateButton_clicked();
     void on_firmwareUploadButton_clicked();
     void on_firmwareVersionReadButton_clicked();
     void on_firmwareCancelButton_clicked();
@@ -130,17 +117,14 @@ private slots:
     void on_mcconfFocMeasureHallButton_clicked();
     void on_mcconfFocMeasureHallApplyButton_clicked();
     void on_refreshButton_clicked();
+    void on_bleScanButton_clicked();
+    void on_bleConnectButton_clicked();
 
 private:
+    BLDCInterface *m_bldcInterface;
     Ui::MainWindow *ui;
-    QSerialPort *mSerialPort;
-    QTimer *mTimer;
     QLabel *mStatusLabel;
-    int mStatusInfoTime;
-    bool mFwVersionReceived;
-    int mFwRetries;
     QList<QPair<int, int> > mCompatibleFws;
-    Serialization *mSerialization;
     int mSampleInt;
     QByteArray curr1Array;
     QByteArray curr2Array;
@@ -181,21 +165,17 @@ private:
     bool mDoRescale;
     bool mDoFilterReplot;
     PacketInterface *mPacketInterface;
-    bool keyLeft;
-    bool keyRight;
     bool mMcconfLoaded;
     bool mAppconfLoaded;
-    detect_res_t mDetectRes;
 
     QVector<QVector<double> > mExperimentSamples;
 
     mc_configuration getMcconfGui();
-    void setMcconfGui(const mc_configuration &mcconf);
-    void showStatusInfo(QString info, bool isGood);
     void appendDoubleAndTrunc(QVector<double> *vec, double num, int maxSize);
     void clearBuffers();
     void saveExperimentSamplesToFile(QString path);
-    void refreshSerialDevices();
+    QTimer m_statusInfoTimer;
+
 };
 
 #endif // MAINWINDOW_H

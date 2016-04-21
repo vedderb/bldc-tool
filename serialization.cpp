@@ -16,7 +16,6 @@
     */
 
 #include "serialization.h"
-#include <QFileDialog>
 #include <qxmlstream.h>
 #include <QFile>
 #include <QDebug>
@@ -26,17 +25,13 @@ Serialization::Serialization(QObject *parent) :
 {
 }
 
-bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *parent)
+bool Serialization::writeMcconfXml(QString xmlfile, const mc_configuration &mcconf)
 {
-    QString filename = QFileDialog::getSaveFileName(parent,
-                                            tr("Save Configuration"), ".",
-                                            tr("Xml files (*.xml)"));
-
-    if (!filename.toLower().endsWith(".xml")) {
-        filename.append(".xml");
+    if (!xmlfile.toLower().endsWith(".xml")) {
+        xmlfile.append(".xml");
     }
 
-    QFile file(filename);
+    QFile file(xmlfile);
     if (!file.open(QIODevice::WriteOnly)) {
         return false;
     }
@@ -141,17 +136,15 @@ bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *pare
     file.close();
 
     return true;
+
 }
 
-bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
+bool Serialization::readMcconfXml(QString xmlfile, mc_configuration &mcconf)
 {
-    QString filename = QFileDialog::getOpenFileName(parent,
-                                                    tr("Load Configuration"), ".",
-                                                    tr("Xml files (*.xml)"));
 
     bool retval = true;
 
-    QFile file(filename);
+    QFile file(xmlfile);
     if (!file.open(QIODevice::ReadOnly)) {
         return false;
     }
@@ -279,4 +272,5 @@ bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
     file.close();
 
     return retval;
+
 }

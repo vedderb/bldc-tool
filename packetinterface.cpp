@@ -17,6 +17,7 @@
 
 #include "packetinterface.h"
 #include "utility.h"
+
 #include <QDebug>
 #include <math.h>
 
@@ -87,6 +88,9 @@ PacketInterface::PacketInterface(QObject *parent) :
     mUdpPort = 0;
     mUdpSocket = new QUdpSocket(this);
 
+    mSliderState = false;
+    mSliderChangeTime.start();
+
     connect(mUdpSocket, SIGNAL(readyRead()),
             this, SLOT(readPendingDatagrams()));
     connect(mTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
@@ -97,7 +101,7 @@ PacketInterface::~PacketInterface()
     delete mSendBuffer;
 }
 
-void PacketInterface::processData(QByteArray &data)
+void PacketInterface::processData(const QByteArray &data)
 {
     unsigned char rx_data;
     const int rx_timeout = 50;
@@ -1171,6 +1175,7 @@ void PacketInterface::setSendCan(bool sendCan, unsigned int id)
 
 void PacketInterface::startUdpConnection(QHostAddress ip, int port)
 {
+    qDebug() << "PacketInterface::startUdpConnection";
     mHostAddress = ip;
     mUdpPort = port;
     mUdpSocket->close();
@@ -1179,9 +1184,12 @@ void PacketInterface::startUdpConnection(QHostAddress ip, int port)
 
 void PacketInterface::stopUdpConnection()
 {
-    mHostAddress = QHostAddress("0.0.0.0");
-    mUdpPort = 0;
-    mUdpSocket->close();
+    qDebug() << "PacketInterface::stopUdpConnection";
+    if(isUdpConnected()){
+        mHostAddress = QHostAddress("0.0.0.0");
+        mUdpPort = 0;
+        mUdpSocket->close();
+    }
 }
 
 bool PacketInterface::isUdpConnected()
@@ -1208,11 +1216,38 @@ bool PacketInterface::setChukData(chuck_data &data)
     qint32 send_index = 0;
     mSendBuffer[send_index++] = COMM_SET_CHUCK_DATA;
     mSendBuffer[send_index++] = data.js_x;
-    mSendBuffer[send_index++] = data.js_y;
+    //mSendBuffer[send_index++] = data.js_y <= 0x7f ? data.js_y : -data.js_y & 0x7f;
+    int value = data.js_y < 0 ? data.js_y + 0x7f + 1 : data.js_y + 0x7f + 1;
+    mSendBuffer[send_index++] = value;
+
     mSendBuffer[send_index++] = data.bt_c;
     mSendBuffer[send_index++] = data.bt_z;
     utility::buffer_append_int16(mSendBuffer, data.acc_x, &send_index);
     utility::buffer_append_int16(mSendBuffer, data.acc_y, &send_index);
     utility::buffer_append_int16(mSendBuffer, data.acc_z, &send_index);
     return sendPacket(mSendBuffer, send_index);
+}
+
+bool PacketInterface::setChukData(int js_x, int js_y, int acc_x, int acc_y, int acc_z, bool bt_c, bool bt_z){
+    chuck_data data = {js_x,js_y,acc_x,acc_y,acc_z,bt_c,bt_z};
+    mSliderChangeTime.restart();
+    return setChukData(data);
+}
+
+int PacketInterface::getElapsedFromSliderChange()
+{
+    if (mSliderState)
+        return 0;
+    return mSliderChangeTime.elapsed();
+}
+
+bool PacketInterface::getSliderPressState()
+{
+    return mSliderState;
+}
+
+void PacketInterface::setSliderPressState(bool pressed)
+{
+    qDebug() << "pressed change" << pressed;
+    mSliderState = pressed;
 }

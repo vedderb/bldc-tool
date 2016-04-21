@@ -19,6 +19,7 @@
 #define PACKETINTERFACE_H
 
 #include <QObject>
+#include <QTime>
 #include <QTimer>
 #include <QVector>
 #include <QUdpSocket>
@@ -27,15 +28,13 @@
 class PacketInterface : public QObject
 {
     Q_OBJECT
+
 public:
     explicit PacketInterface(QObject *parent = 0);
     ~PacketInterface();
 
-    bool sendPacket(const unsigned char *data, unsigned int len_packet);
-    bool sendPacket(QByteArray data);
-    void processData(QByteArray &data);
     void setLimitedMode(bool is_limited);
-    bool isLimitedMode();
+    Q_INVOKABLE bool isLimitedMode();
     bool getFwVersion();
     bool startFirmwareUpload(QByteArray &newFirmware);
     double getFirmwareUploadProgress();
@@ -43,21 +42,21 @@ public:
     void cancelFirmwareUpload();
     bool getValues();
     bool sendTerminalCmd(QString cmd);
-    bool setDutyCycle(double dutyCycle);
-    bool setCurrent(double current);
-    bool setCurrentBrake(double current);
-    bool setRpm(int rpm);
-    bool setPos(double pos);
+    Q_INVOKABLE bool setDutyCycle(double dutyCycle);
+    Q_INVOKABLE bool setCurrent(double current);
+    Q_INVOKABLE bool setCurrentBrake(double current);
+    Q_INVOKABLE bool setRpm(int rpm);
+    Q_INVOKABLE bool setPos(double pos);
     bool setDetect(disp_pos_mode mode);
-    bool samplePrint(bool at_start, int sample_len, int dec);
-    bool getMcconf();
-    bool getMcconfDefault();
+    Q_INVOKABLE bool samplePrint(bool at_start, int sample_len, int dec);
+    Q_INVOKABLE bool getMcconf();
+    Q_INVOKABLE bool getMcconfDefault();
     bool setMcconf(const mc_configuration &mcconf);
-    bool detectMotorParam(double current, double min_rpm, double low_duty);
-    bool getAppConf();
-    bool getAppConfDefault();
+    Q_INVOKABLE bool detectMotorParam(double current, double min_rpm, double low_duty);
+    Q_INVOKABLE bool getAppConf();
+    Q_INVOKABLE bool getAppConfDefault();
     bool setAppConf(const app_configuration &appconf);
-    bool reboot();
+    Q_INVOKABLE bool reboot();
     bool sendAlive();
     bool getDecodedPpm();
     bool getDecodedAdc();
@@ -74,7 +73,16 @@ public:
     bool sendCustomAppData(QByteArray data);
     bool sendCustomAppData(unsigned char *data, unsigned int len);
     bool setChukData(chuck_data &data);
+    Q_INVOKABLE bool setChukData( int js_x, int js_y,
+                                  int acc_x, int acc_y, int acc_z,
+                                  bool bt_c, bool bt_z);
 
+    Q_INVOKABLE int getElapsedFromSliderChange();
+    Q_INVOKABLE void setSliderPressState(bool pressed);
+    Q_INVOKABLE bool getSliderPressState();
+
+public slots:
+    void processData(const QByteArray &data);
 signals:
     void dataToSend(QByteArray &data);
     void fwVersionReceived(int major, int minor);
@@ -95,12 +103,14 @@ signals:
     void encoderParamReceived(double offset, double ratio, bool inverted);
     void customAppDataReceived(QByteArray data);
     void focHallTableReceived(QVector<int> hall_table, int res);
-    
+
 public slots:
     void timerSlot();
     void readPendingDatagrams();
 
 private:
+    bool sendPacket(const unsigned char *data, unsigned int len_packet);
+    bool sendPacket(QByteArray data);
     unsigned short crc16(const unsigned char *buf, unsigned int len);
     void processPacket(const unsigned char *data, int len);
     QString faultToStr(mc_fault_code fault);
@@ -133,7 +143,10 @@ private:
     unsigned int mRxDataPtr;
     unsigned char mCrcLow;
     unsigned char mCrcHigh;
-    
+
+    QTime  mSliderChangeTime;
+    bool   mSliderState;
+    int    mStatusBarHeight;
 };
 
 #endif // PACKETINTERFACE_H

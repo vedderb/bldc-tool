@@ -1,0 +1,39 @@
+<RCC>
+    <qresource prefix="/QuickIOS">
+        <file>qmldir</file>
+        <file>ViewController.qml</file>
+        <file>NavigationBar.qml</file>
+        <file>TabBar.qml</file>
+        <file>TabBarItem.qml</file>
+        <file>TabView.qml</file>
+        <file>ITextField.qml</file>
+        <file>ProgressHUD.qml</file>
+        <file>ProgressView.qml</file>
+        <file>Application.qml</file>
+        <file>images/back.png</file>
+        <file>images/back@2x.png</file>
+        <file>NavigationController.qml</file>
+        <file>priv/NavigationViewTransition.qml</file>
+        <file>priv/NavigationBarItem.qml</file>
+        <file>NavigationItem.qml</file>
+        <file>priv/NavigationBarTransition.qml</file>
+        <file>BarButtonItem.qml</file>
+        <file>NavigationBarTitleAttributes.qml</file>
+        <file>priv/SegmentedControlTabViewStyle.qml</file>
+        <file>priv/qmldir</file>
+        <file>SegmentedViewController.qml</file>
+        <file>priv/NavigationStack.qml</file>
+        <file>ModelTransitionStyleCoverVertical.qml</file>
+        <file>Segment.qml</file>
+        <file>def/Constant.qml</file>
+        <file>def/qmldir</file>
+        <file>TableSection.qml</file>
+        <file>ToolBar.qml</file>
+        <file>utils/objectutils.js</file>
+        <file>utils/qmldir</file>
+        <file>utils/Ruler.qml</file>
+        <file>BarButtonItemStyle.qml</file>
+        <file>priv/ViewTransitionCoordinator.qml</file>
+        <file>priv/NavigationBackButton.qml</file>
+    </qresource>
+</RCC>

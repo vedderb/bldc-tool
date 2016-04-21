@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/images/back_normal.svg</file>
+    </qresource>
+</RCC>

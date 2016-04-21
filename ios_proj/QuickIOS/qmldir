@@ -1,0 +1,21 @@
+module QuickIOS
+ViewController 0.1 ViewController.qml
+NavigationBar 0.1 NavigationBar.qml
+TabBar 0.1 TabBar.qml
+TabBarItem 0.1 TabBarItem.qml
+ITextField 0.1 ITextField.qml
+IButton 0.1 IButton.qml
+ProgressHUD 0.1 ProgressHUD.qml
+ProgressView 0.1 ProgressView.qml
+NavigationController 0.1 NavigationController.qml
+TabView 0.1 TabView.qml
+NavigationItem 0.1 NavigationItem.qml
+BarButtonItem 0.1 BarButtonItem.qml
+BarButtonItemStyle 0.1 BarButtonItemStyle.qml
+Application 0.1 Application.qml
+NavigationBarTitleAttributes 0.1 NavigationBarTitleAttributes.qml
+SegmentedViewController 0.1 SegmentedViewController.qml
+Segment 0.1 Segment.qml
+TableSection 0.1 TableSection.qml
+ToolBar 0.1 ToolBar.qml
+ModelTransitionStyleCoverVertical 0.1 ModelTransitionStyleCoverVertical.qml

@@ -26,8 +26,8 @@ class Serialization : public QObject
     Q_OBJECT
 public:
     explicit Serialization(QObject *parent = 0);
-    bool writeMcconfXml(const mc_configuration &mcconf, QWidget *parent = 0);
-    bool readMcconfXml(mc_configuration &mcconf, QWidget *parent = 0);
+    Q_INVOKABLE bool writeMcconfXml(QString xmlfile, const mc_configuration &mcconf);
+    Q_INVOKABLE bool readMcconfXml(QString xmlfile, mc_configuration &mcconf);
 
 signals:
 

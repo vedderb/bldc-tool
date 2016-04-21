@@ -15,14 +15,61 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     */
 
+#ifdef QML
+
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include "bldcinterface.h"
+
+
+#include <QQuickWindow>
+#include <QtCore>
+
+#ifdef Q_OS_IOS
+#include "qisystemmessenger.h"
+#include "quickios.h"
+#include "qidevice.h"
+#endif
+
+
+int main(int argc, char *argv[])
+{
+    QGuiApplication app(argc, argv);
+    QQmlApplicationEngine engine;
+
+#ifdef Q_OS_IOS
+    // Quick iOS Initialization
+    //engine.addImportPath("qrc:///");
+    QuickIOS::registerTypes(); // It must be called before loaded any scene
+#endif
+
+    BLDCInterface bldcIntrface;
+    engine.rootContext()->setContextObject(&bldcIntrface);
+
+
+#ifdef Q_OS_IOS
+    engine.load(QUrl(QStringLiteral("qrc:/main_ios.qml")));
+    QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().first());
+    /// Setup the QQuickWindow instance to fit the iOS environment
+    QuickIOS::setupWindow(window);
+    QuickIOS::setStatusBarStyle(QuickIOS::StatusBarStyleDefault);
+    QISystemMessenger::instance()->sendMessage("activityIndicatorStart",QVariantMap());
+#else
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+#endif
+
+    return app.exec();
+}
+
+#else
 #include <QApplication>
 #include "mainwindow.h"
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-    
     return a.exec();
 }
+#endif

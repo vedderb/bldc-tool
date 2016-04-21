@@ -1,44 +1,51 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-11-18T21:19:27
-#
-#-------------------------------------------------
 
-QT       += core gui
-QT       += printsupport
-QT       += serialport
-QT       += network
+DEFINES += QML # for test
+CONFIG += c++11
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core gui bluetooth serialport network
 
-TARGET = BLDC_Tool
-TEMPLATE = app
+android | ios : DEFINES += QML
+ios{
+    QT -= serialport
+    DEFINES += NO_SERIAL_PORT
 
+    include(ios_proj/quickios.pri)
+}
+android{
+    QT -= serialport
+    DEFINES += NO_SERIAL_PORT
+}
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    qcustomplot.cpp \
-    digitalfiltering.cpp \
-    packetinterface.cpp \
-    utility.cpp \
-    serialization.cpp \
-    mrichtextedit.cpp \
-    mtextedit.cpp \
-    rtdatawidget.cpp
+contains(DEFINES,QML){
+    include(QML.pri)
+} else {
+    include(Widgets.pri)
+}
 
-HEADERS  += mainwindow.h \
-    qcustomplot.h \
+HEADERS += \
+    datatypes.h \
+    mcvalues.h \
+    bleinterface.h \
+    bldcinterface.h \
+    lib-qt-qml-tricks/src/qqmlhelpers.h \
     digitalfiltering.h \
     packetinterface.h \
     utility.h \
     serialization.h \
-    mrichtextedit.h \
-    mtextedit.h \
-    rtdatawidget.h \
-    datatypes.h
+    mcconfiguration.h \
+    appconfiguration.h \
+    downloader.h
 
-FORMS    += mainwindow.ui \
-    mrichtextedit.ui
-
-RESOURCES += \
-    resources.qrc
+SOURCES += \
+    main.cpp \
+    packetinterface.cpp \
+    bldcinterface.cpp \
+    mcvalues.cpp \
+    bleinterface.cpp \
+    lib-qt-qml-tricks/src/qqmlhelpers.cpp \
+    digitalfiltering.cpp \
+    utility.cpp \
+    serialization.cpp \
+    mcconfiguration.cpp \
+    appconfiguration.cpp \
+    downloader.cpp
