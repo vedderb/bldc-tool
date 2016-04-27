@@ -1,5 +1,5 @@
 /*
-    Copyright 2012-2014 Benjamin Vedder	benjamin@vedder.se
+    Copyright 2012-2016 Benjamin Vedder	benjamin@vedder.se
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -462,7 +462,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.foc_sl_d_current_factor = utility::buffer_get_double32(data, 1e3, &ind);
         memcpy(mcconf.foc_hall_table, data + ind, 8);
         ind += 8;
-        mcconf.foc_hall_sl_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
+        mcconf.foc_sl_erpm = utility::buffer_get_double32(data, 1000.0, &ind);
 
         mcconf.s_pid_kp = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.s_pid_ki = utility::buffer_get_double32(data, 1000000.0, &ind);
@@ -484,6 +484,7 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         mcconf.m_duty_ramp_step_rpm_lim = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.m_current_backoff_gain = utility::buffer_get_double32(data, 1000000.0, &ind);
         mcconf.m_encoder_counts = utility::buffer_get_uint32(data, &ind);
+        mcconf.m_sensor_port_mode = (sensor_port_mode)data[ind++];
 
         mcconf.meta_description = "Configuration loaded from the motor controller.";
 
@@ -961,7 +962,7 @@ bool PacketInterface::setMcconf(const mc_configuration &mcconf)
     utility::buffer_append_double32(mSendBuffer, mcconf.foc_sl_d_current_factor, 1e3, &send_index);
     memcpy(mSendBuffer + send_index, mcconf.foc_hall_table, 8);
     send_index += 8;
-    utility::buffer_append_double32(mSendBuffer,mcconf.foc_hall_sl_erpm, 1000, &send_index);
+    utility::buffer_append_double32(mSendBuffer,mcconf.foc_sl_erpm, 1000, &send_index);
 
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_kp, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.s_pid_ki, 1000000, &send_index);
@@ -983,6 +984,7 @@ bool PacketInterface::setMcconf(const mc_configuration &mcconf)
     utility::buffer_append_double32(mSendBuffer,mcconf.m_duty_ramp_step_rpm_lim, 1000000, &send_index);
     utility::buffer_append_double32(mSendBuffer,mcconf.m_current_backoff_gain, 1000000, &send_index);
     utility::buffer_append_uint32(mSendBuffer, mcconf.m_encoder_counts, &send_index);
+    mSendBuffer[send_index++] = mcconf.m_sensor_port_mode;
 
     return sendPacket(mSendBuffer, send_index);
 }

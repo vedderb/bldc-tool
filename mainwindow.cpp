@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 16));
+    mCompatibleFws.append(qMakePair(2, 17));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -363,7 +363,8 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.foc_hall_table[5] = ui->mcconfFocHallTab5Box->value();
     mcconf.foc_hall_table[6] = ui->mcconfFocHallTab6Box->value();
     mcconf.foc_hall_table[7] = ui->mcconfFocHallTab7Box->value();
-    mcconf.foc_hall_sl_erpm = ui->mcconfFocHallErpmBox->value();
+
+    mcconf.foc_sl_erpm = ui->mcconfFocSlErpmBox->value();
 
     mcconf.s_pid_kp = ui->mcconfSpidKpBox->value();
     mcconf.s_pid_ki = ui->mcconfSpidKiBox->value();
@@ -385,6 +386,14 @@ mc_configuration MainWindow::getMcconfGui()
     mcconf.m_duty_ramp_step_rpm_lim = ui->mcconfMDutyRampStepSpeedLimBox->value();
     mcconf.m_current_backoff_gain = ui->mcconfMCurrentBackoffGainBox->value();
     mcconf.m_encoder_counts = ui->mcconfMEncoderCountBox->value();
+
+    if (ui->mcconfMSensorHallButton->isChecked()) {
+        mcconf.m_sensor_port_mode = SENSOR_PORT_MODE_HALL;
+    } else if (ui->mcconfMSensorAbiButton->isChecked()) {
+        mcconf.m_sensor_port_mode = SENSOR_PORT_MODE_ABI;
+    } else if (ui->mcconfMSensorAsSpiButton->isChecked()) {
+        mcconf.m_sensor_port_mode = SENSOR_PORT_MODE_AS5047_SPI;
+    }
 
     mcconf.meta_description = ui->mcconfDescEdit->toHtml();
 
@@ -541,7 +550,7 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfFocHallTab5Box->setValue(mcconf.foc_hall_table[5]);
     ui->mcconfFocHallTab6Box->setValue(mcconf.foc_hall_table[6]);
     ui->mcconfFocHallTab7Box->setValue(mcconf.foc_hall_table[7]);
-    ui->mcconfFocHallErpmBox->setValue(mcconf.foc_hall_sl_erpm);
+    ui->mcconfFocSlErpmBox->setValue(mcconf.foc_sl_erpm);
 
     ui->mcconfSpidKpBox->setValue(mcconf.s_pid_kp);
     ui->mcconfSpidKiBox->setValue(mcconf.s_pid_ki);
@@ -563,6 +572,20 @@ void MainWindow::setMcconfGui(const mc_configuration &mcconf)
     ui->mcconfMDutyRampStepSpeedLimBox->setValue(mcconf.m_duty_ramp_step_rpm_lim);
     ui->mcconfMCurrentBackoffGainBox->setValue(mcconf.m_current_backoff_gain);
     ui->mcconfMEncoderCountBox->setValue(mcconf.m_encoder_counts);
+
+    switch (mcconf.m_sensor_port_mode) {
+    case SENSOR_PORT_MODE_HALL:
+        ui->mcconfMSensorHallButton->setChecked(true);
+        break;
+    case SENSOR_PORT_MODE_ABI:
+        ui->mcconfMSensorAbiButton->setChecked(true);
+        break;
+    case SENSOR_PORT_MODE_AS5047_SPI:
+        ui->mcconfMSensorAsSpiButton->setChecked(true);
+        break;
+    default:
+        break;
+    }
 
     ui->mcconfDescEdit->document()->setHtml(mcconf.meta_description);
 
@@ -1302,7 +1325,7 @@ void MainWindow::timerSlot()
             xAxis[i] = (double)i;
         }
 
-        ui->rotorPosBar->setValue((int)positionVec.last());
+        ui->rotorPosBar->setValue((int)fabs(positionVec.last()));
         ui->realtimePlotPosition->graph(0)->setData(xAxis, positionVec);
         ui->realtimePlotPosition->rescaleAxes();
         ui->realtimePlotPosition->replot();
@@ -1720,8 +1743,7 @@ void MainWindow::encoderParamReceived(double offset, double ratio, bool inverted
     if (offset > 1000.0) {
         showStatusInfo("Encoder not enabled in firmware", false);
         QMessageBox messageBox;
-        messageBox.critical(this, "Error", "Encoder support is not enabled in the current firmware. Please \n"
-                                           "upload firmware with encodcer support and try again.");
+        messageBox.critical(this, "Error", "Encoder support is not enabled.");
     } else {
         showStatusInfo("Encoder Result Received", true);
         ui->mcconfFocMeasureEncoderOffsetBox->setValue(offset);

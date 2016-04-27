@@ -116,7 +116,7 @@ bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *pare
     xmlwriter.writeTextElement("foc_hall_table_5", QString::number(mcconf.foc_hall_table[5]));
     xmlwriter.writeTextElement("foc_hall_table_6", QString::number(mcconf.foc_hall_table[6]));
     xmlwriter.writeTextElement("foc_hall_table_7", QString::number(mcconf.foc_hall_table[7]));
-    xmlwriter.writeTextElement("foc_hall_sl_erpm", QString::number(mcconf.foc_hall_sl_erpm));
+    xmlwriter.writeTextElement("foc_sl_erpm", QString::number(mcconf.foc_sl_erpm));
     xmlwriter.writeTextElement("s_pid_kp", QString::number(mcconf.s_pid_kp));
     xmlwriter.writeTextElement("s_pid_ki", QString::number(mcconf.s_pid_ki));
     xmlwriter.writeTextElement("s_pid_kd", QString::number(mcconf.s_pid_kd));
@@ -134,6 +134,7 @@ bool Serialization::writeMcconfXml(const mc_configuration &mcconf, QWidget *pare
     xmlwriter.writeTextElement("m_duty_ramp_step_rpm_lim", QString::number(mcconf.m_duty_ramp_step_rpm_lim));
     xmlwriter.writeTextElement("m_current_backoff_gain", QString::number(mcconf.m_current_backoff_gain));
     xmlwriter.writeTextElement("m_encoder_counts", QString::number(mcconf.m_encoder_counts));
+    xmlwriter.writeTextElement("m_sensor_port_mode", QString::number(mcconf.m_sensor_port_mode));
     xmlwriter.writeTextElement("meta_description", mcconf.meta_description);
 
     xmlwriter.writeEndElement();
@@ -239,7 +240,7 @@ bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
                     else if (xmlreader.name() == "foc_hall_table_5") {mcconf.foc_hall_table[5] = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "foc_hall_table_6") {mcconf.foc_hall_table[6] = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "foc_hall_table_7") {mcconf.foc_hall_table[7] = xmlreader.readElementText().toInt();}
-                    else if (xmlreader.name() == "foc_hall_sl_erpm") {mcconf.foc_hall_sl_erpm = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "foc_sl_erpm") {mcconf.foc_sl_erpm = xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "s_pid_kp") {mcconf.s_pid_kp = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "s_pid_ki") {mcconf.s_pid_ki = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "s_pid_kd") {mcconf.s_pid_kd = xmlreader.readElementText().toDouble();}
@@ -257,6 +258,7 @@ bool Serialization::readMcconfXml(mc_configuration &mcconf, QWidget *parent)
                     else if (xmlreader.name() == "m_duty_ramp_step_rpm_lim") {mcconf.m_duty_ramp_step_rpm_lim = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "m_current_backoff_gain") {mcconf.m_current_backoff_gain = xmlreader.readElementText().toDouble();}
                     else if (xmlreader.name() == "m_encoder_counts") {mcconf.m_encoder_counts = xmlreader.readElementText().toInt();}
+                    else if (xmlreader.name() == "m_sensor_port_mode") {mcconf.m_sensor_port_mode = (sensor_port_mode)xmlreader.readElementText().toInt();}
                     else if (xmlreader.name() == "meta_description") {mcconf.meta_description = xmlreader.readElementText();}
                     else {
                         if (xmlreader.name().size() > 0) {
