@@ -516,6 +516,34 @@ BasicPage {
                                 text: mcconf.l_max_vin
                             }
                             Text{
+                                id:textBattCutStart
+                                text: "Minimum input voltage"
+                                verticalAlignment: Text.AlignVCenter
+                                font.pointSize: 14
+                                maximumLineCount: 2
+                                wrapMode: Text.WordWrap
+                                width: rectGridOther.width * 0.73
+                            }
+                            TextField{
+                                id:textFieldBattCutStart
+                                width: rectGridOther.width*0.25
+                                text:  mcconf.l_battery_cut_start
+                            }
+                            Text{
+                                id:textBattCutEnd
+                                text: "Maximum input voltage"
+                                verticalAlignment: Text.AlignVCenter
+                                font.pointSize: 14
+                                maximumLineCount: 2
+                                wrapMode: Text.WordWrap
+                                width: rectGridOther.width * 0.73
+                            }
+                            TextField{
+                                id:textFieldBattCutEnd
+                                width: rectGridOther.width*0.25
+                                text:  mcconf.l_battery_cut_end
+                            }
+                            Text{
                                 id:textMinDC
                                 text: "Minimum duty cycle"
                                 verticalAlignment: Text.AlignVCenter
@@ -646,11 +674,7 @@ BasicPage {
                         anchors.left: parent.left
                         anchors.leftMargin: 12
                         anchors.top: parent.top
-                        text:"Load XML"
-                        onClicked: {
-                            console.log("Load XML tapped")
-                            fileDialog.open()
-                        }
+                        text:" "
                         style: ButtonStyle {
                             label: Text {
                                 renderType: Text.NativeRendering
@@ -719,6 +743,8 @@ BasicPage {
                                     mcconf.l_temp_motor_end = textFieldMotorEnd.text
                                     mcconf.l_min_vin = textFieldMinINV.text
                                     mcconf.l_max_vin = textFieldMaxINV.text
+                                    mcconf.l_battery_cut_start = textFieldBattCutStart.text
+                                    mcconf.l_battery_cut_end = textFieldBattCutEnd.text
                                     mcconf.l_min_duty = textFieldMinDC.text
                                     mcconf.l_max_duty = textFieldMaxDC.text
                                     mcconf.cc_startup_boost_duty = textFieldStartBoost.text
@@ -752,6 +778,8 @@ BasicPage {
                                         mcconf.l_temp_motor_end = textFieldMotorEnd.text
                                         mcconf.l_min_vin = textFieldMinINV.text
                                         mcconf.l_max_vin = textFieldMaxINV.text
+                                        mcconf.l_battery_cut_start = textFieldBattCutStart.text
+                                        mcconf.l_battery_cut_end = textFieldBattCutEnd.text
                                         mcconf.l_min_duty = textFieldMinDC.text
                                         mcconf.l_max_duty = textFieldMaxDC.text
                                         mcconf.cc_startup_boost_duty = textFieldStartBoost.text
