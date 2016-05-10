@@ -88,8 +88,8 @@ class BLDCInterface : public QObject
     QML_WRITEONLY_PROPERTY(bool, keyRight)
 
     QML_WRITABLE_PROPERTY(bool, mcconfCommInt)
-    QML_WRITABLE_PROPERTY(int, mcconfFocCalcKp)
-    QML_WRITABLE_PROPERTY(int, mcconfFocCalcKi)
+    QML_WRITABLE_PROPERTY(double, mcconfFocCalcKp)
+    QML_WRITABLE_PROPERTY(double, mcconfFocCalcKi)
     QML_WRITABLE_PROPERTY(double, mcconfFocDetectR		          )
     QML_WRITABLE_PROPERTY(double, mcconfFocDetectL		          )
     QML_WRITABLE_PROPERTY(double, mcconfFocDetectLinkage	      )
