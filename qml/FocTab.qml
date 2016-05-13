@@ -199,7 +199,7 @@ Item{
                                     text: "0"
                                 }
                                 TextField{
-                                    id:textFieldSensDetλ
+                                    id:textFieldSensDetLambda
                                     width: mainItem.width*0.18
                                     text: "0"
                                 }
@@ -483,6 +483,16 @@ Item{
                                 width: mainItem.width * 0.28
                                 style: buttonStyle
                                 anchors.right: parent.right
+                                onClicked: {
+                                    mcconf.foc_hall_table1 = textFieldDetTable1.text
+                                    mcconf.foc_hall_table2 = textFieldDetTable2.text
+                                    mcconf.foc_hall_table3 = textFieldDetTable3.text
+                                    mcconf.foc_hall_table4 = textFieldDetTable4.text
+                                    mcconf.foc_hall_table5 = textFieldDetTable5.text
+                                    mcconf.foc_hall_table6 = textFieldDetTable6.text
+                                    mcconf.foc_hall_table7 = textFieldDetTable7.text
+                                    mcconf.foc_hall_table8 = textFieldDetTable8.text
+                                }
                             }
                         }
                     }
