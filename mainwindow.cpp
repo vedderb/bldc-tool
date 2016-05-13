@@ -2204,6 +2204,21 @@ void MainWindow::on_firmwareOnlineUpdateButton_clicked()
     m_bldcInterface->onlineUpdateFirmware();
 }
 
+void MainWindow::on_firmwareUrlRadioBtn1_clicked()
+{
+    m_bldcInterface->set_firmwareCurrentSource(FirmwareSource::Type::Source1);
+}
+
+void MainWindow::on_firmwareUrlRadioBtn2_clicked()
+{
+    m_bldcInterface->set_firmwareCurrentSource(FirmwareSource::Type::Source2);
+}
+
+void MainWindow::on_firmwareUrlRadioBtn3_clicked()
+{
+    m_bldcInterface->set_firmwareCurrentSource(FirmwareSource::Type::Source3);
+}
+
 void MainWindow::on_firmwareUploadButton_clicked()
 {
     m_bldcInterface->uploadFirmware(ui->firmwareEdit->text());

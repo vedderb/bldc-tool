@@ -44,6 +44,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     ,m_keyLeft(false)
     ,m_keyRight(false)
     ,m_detectRes()
+    ,m_firmwareCurrentSource(FirmwareSource::Type::Source1)
 {
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
@@ -115,6 +116,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     qmlRegisterType<AppConfiguration>("bldc", 1, 0, "AppConf");
     qmlRegisterType<McConfiguration>("bldc", 1, 0, "McConf");
     qmlRegisterType<McValues>("bldc", 1, 0, "McValues");
+    qmlRegisterType<FirmwareSource>("bldc", 1, 0, "FirmwareSource");
     qmlRegisterType<PacketInterface>();
     qmlRegisterType<BLEInterface>();
     qmlRegisterUncreatableType<OS>("bldc", 1, 0, "OS", "Read Only" );
@@ -601,11 +603,28 @@ void BLDCInterface::onlineUpdateFirmware()
         emit msgCritical("Error download", tr("Could not download file. %1").arg(message));
     });
     connect(downloader, &Downloader::progress, [&](qint64 bytesReceived, qint64 bytesTotal) {
-        int progress_percent = 100 * bytesReceived / bytesTotal;
+        int progress_percent = 0;
+        // avoid division by zero
+        if(bytesTotal != 0)
+            progress_percent = 100 * bytesReceived / bytesTotal;
+
         update_firmwareProgress(progress_percent);
     });
 
-    downloader->setUrl("http://vesc.net.au/BLDC-TOOL/Firmware/VESC_default.bin");
+    QString firmwareUrl;
+    switch(m_firmwareCurrentSource) {
+    case FirmwareSource::Type::Source1:
+        firmwareUrl = "http://vesc.net.au/BLDC-TOOL/Firmware/VESC_default.bin";
+        break;
+    case FirmwareSource::Type::Source2:
+        firmwareUrl = "http://vesc.net.au/BLDC-TOOL/Firmware/VESC_default.bin2";
+        break;
+    case FirmwareSource::Type::Source3:
+        firmwareUrl = "http://vesc.net.au/BLDC-TOOL/Firmware/VESC_default.bin3";
+        break;
+    }
+
+    downloader->setUrl(firmwareUrl);
     downloader->download();
     emit statusInfoChanged(tr("Downloading new firmware..."), true);
 }

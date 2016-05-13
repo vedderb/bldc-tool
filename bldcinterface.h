@@ -34,6 +34,7 @@ typedef struct {
 
 
 QML_ENUM_CLASS(OS,Unkown=0,Windows,Linux,OSX,Android,IOS)
+QML_ENUM_CLASS(FirmwareSource,Source1=0,Source2,Source3)
 
 class BLDCInterface : public QObject
 {
@@ -58,6 +59,7 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(QString, firmwareVersion)
     QML_READONLY_PROPERTY(int, firmwareProgress)
     QML_READONLY_PROPERTY(bool, firmwareUploadEnabled)
+    QML_WRITABLE_PROPERTY(FirmwareSource::Type, firmwareCurrentSource)
     QML_READONLY_PROPERTY(bool, firmwareCancelEnabled)
     QML_READONLY_PROPERTY(bool, mcconfSlMinErpmEnabled      )
     QML_READONLY_PROPERTY(bool, mcconfSlMaxFbCurrEnabled    )
