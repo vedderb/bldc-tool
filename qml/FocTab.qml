@@ -551,6 +551,7 @@ Item{
                                     text: "15.0"
                                 }
                                 CheckBox{
+                                    id: encoderInvertedCheckBox
                                     text: "Invert Encoder"
                                 }
 
@@ -561,6 +562,11 @@ Item{
                                 width: mainItem.width * 0.27
                                 style: buttonStyle
                                 anchors.right: parent.right
+                                onClicked: {
+                                    mcconf.foc_encoder_offset = textFieldEncOfs.text
+                                    mcconf.foc_encoder_ratio = textFieldEncRat.text
+                                    mcconf.foc_encoder_inverted = encoderInvertedCheckBox.checked
+                                }
                             }
                         }
                     }
