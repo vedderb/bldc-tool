@@ -60,5 +60,6 @@
         <file>main_ios.qml</file>
         <file>qml/images/tab.png</file>
         <file>qml/images/tab_selected.png</file>
+        <file>qml/components/BldcFirmwareRadioButton.qml</file>
     </qresource>
 </RCC>
