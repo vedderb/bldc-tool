@@ -264,6 +264,50 @@ Item{
                                     text: "0"
                                 }
                             }
+                            Row{
+                                anchors.right: parent.right
+                                Button{
+                                    width:  mainItem.width <  mainItem.height ? mainItem.width*0.25: mainItem.width * 0.3
+                                    text:"Apply"
+                                    style: buttonStyle
+                                    onClicked: {
+                                        var r = parseFloat( textFieldSensDecR.text )
+                                        var l = parseFloat( textFieldSensDetL.text )
+                                        var lambda = parseFloat( textFieldSensDetLambda.text )
+
+                                        if (r < 1e-10) {
+                                            messageDialog.showCritical("Error", "R is 0. Please measure it first.")
+                                            return
+                                        }
+
+                                        if (l < 1e-10) {
+                                            messageDialog.showCritical("Error", "L is 0. Please measure it first.")
+                                            return
+                                        }
+
+                                        if (lambda < 1e-10) {
+                                            messageDialog.showCritical("Error", "\u03BB is 0. Please measure it first.")
+                                            return
+                                        }
+
+                                        textFieldSensDecR.text = r
+                                        textFieldSensDetL.text = l
+                                        textFieldSensDetLambda.text = lambda
+                                        buttonSensCalGain.clicked()
+
+                                        var kp = parseFloat(textFieldSensDetKp.text)
+                                        var ki = parseFloat(textFieldSensDetKi.text)
+
+                                        if (kp < 1e-10 || ki < 1e-10) {
+                                            messageDialog.showCritical( "Error", "Measure R and L, and calculate Kp and Ki first.")
+                                            return
+                                        }
+
+                                        mcconf.foc_current_kp = kp
+                                        mcconf.foc_current_ki = ki
+                                    }
+                                }
+                            }
                         }
                     }
                     GroupBox{
@@ -309,8 +353,8 @@ Item{
                                 }
 
                                 Button{
-                                    width:  mainItem.width <  mainItem.height ? mainItem.width*0.25: mainItem.width * 0.3
                                     id:buttonSensCalGain
+                                    width:  mainItem.width <  mainItem.height ? mainItem.width*0.25: mainItem.width * 0.3
                                     text:"Cal (Req: L)"
                                     // Layout.preferredWidth: parent.width * 0.2
                                     style: buttonStyle
