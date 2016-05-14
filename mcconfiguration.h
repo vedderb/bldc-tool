@@ -120,7 +120,7 @@ public:
     QML_WRITABLE_PROPERTY_WRAPPER(int         ,foc_hall_table6     , m_data.foc_hall_table[5],uint8_t)
     QML_WRITABLE_PROPERTY_WRAPPER(int         ,foc_hall_table7     , m_data.foc_hall_table[6],uint8_t)
     QML_WRITABLE_PROPERTY_WRAPPER(int         ,foc_hall_table8     , m_data.foc_hall_table[7],uint8_t)
-    QML_WRITABLE_PROPERTY_W( float 				,foc_hall_sl_erpm		,m_data.foc_hall_sl_erpm )
+    QML_WRITABLE_PROPERTY_W( float 				,foc_hall_sl_erpm		,m_data.foc_sl_erpm )
     // Speed PID
     QML_WRITABLE_PROPERTY_W( float	,s_pid_kp		,m_data.s_pid_kp		 )
     QML_WRITABLE_PROPERTY_W( float	,s_pid_ki		,m_data.s_pid_ki		 )

@@ -70,7 +70,7 @@ void McConfiguration::setData(const mc_configuration &src)
     set_foc_sl_d_current_duty(src.foc_sl_d_current_duty);
     set_foc_sl_d_current_factor(src.foc_sl_d_current_factor);
     set_foc_sensor_mode(src.foc_sensor_mode);
-    set_foc_hall_sl_erpm(src.foc_hall_sl_erpm);
+    set_foc_hall_sl_erpm(src.foc_sl_erpm);
     set_s_pid_kp(src.s_pid_kp);
     set_s_pid_ki(src.s_pid_ki);
     set_s_pid_kd(src.s_pid_kd);

@@ -63,7 +63,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 16));
+    mCompatibleFws.append(qMakePair(2, 17));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -457,8 +457,7 @@ void BLDCInterface::encoderParamReceived(double offset, double ratio, bool inver
 {
     if (offset > 1000.0) {
         emit statusInfoChanged("Encoder not enabled in firmware", false);
-        emit msgCritical("Error", "Encoder support is not enabled in the current firmware. Please \n"
-                                           "upload firmware with encodcer support and try again.");
+        emit msgCritical("Error", "Encoder support is not enabled.");
     } else {
         emit statusInfoChanged("Encoder Result Received", true);
         set_mcconfFocMeasureEncoderOffset   (offset);
