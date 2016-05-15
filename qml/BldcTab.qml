@@ -459,7 +459,8 @@ Flickable{
                 anchors.top: rectHallSensors.bottom
                 anchors.topMargin: rectGap
                 color: parent.color
-                height: textHeadingDetect.height + buttonStartDet.height+rectGridDetect.height+rowVerticalMargin
+                height: textHeadingDetect.height + buttonStartDet.height +
+                        rectGridDetect.height+buttonApply.height + rowVerticalMargin
                 // height: 100
 
                 Text{
@@ -553,10 +554,53 @@ Flickable{
                     }
                 }
 
+                Button{
+                    id:buttonApply
+                    anchors.left: parent.left
+                    anchors.leftMargin:rowLeftMargin
+                    anchors.top: rectGridDetect.bottom
+                    anchors.topMargin:rowVerticalMargin
+                    width: parent.width *0.4
+                    text:"Apply"
+                    onClicked: {
+                        if (detectRes.updated) {
+                            var cycle_int_limit = detectRes.cycle_int_limit
+                            var bemf_coupling_k = detectRes.bemf_coupling_k
+
+                            cycle_int_limit = Math.floor(cycle_int_limit / 5.0) * 5.0
+                            bemf_coupling_k = Math.floor(bemf_coupling_k / 50.0) * 50.0
+
+                            mcconf.sl_min_erpm_cycle_int_limit = cycle_int_limit
+                            mcconf.sl_bemf_coupling_k = bemf_coupling_k
+
+                            if (detectRes.hall_res === 0) {
+                                textFieldTable1.text = detectRes.hall_table1
+                                textFieldTable2.text = detectRes.hall_table2
+                                textFieldTable3.text = detectRes.hall_table3
+                                textFieldTable4.text = detectRes.hall_table4
+                                textFieldTable5.text = detectRes.hall_table5
+                                textFieldTable6.text = detectRes.hall_table6
+                                textFieldTable7.text = detectRes.hall_table7
+                                textFieldTable8.text = detectRes.hall_table8
+                            }
+                        }
+                    }
+                    style: ButtonStyle {
+                        label: Text {
+                            renderType: Text.NativeRendering
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.family: "Helvetica"
+                            font.pointSize: 14
+                            text: control.text
+                        }
+                    }
+                }
+
                 TextArea{
                     id:textArea
                     anchors.top: buttonStartDet.top
-                    height: buttonStartDet.height+rectGridDetect.height+rowVerticalMargin
+                    height: buttonStartDet.height+rectGridDetect.height+rowVerticalMargin + buttonApply.height
                     width: parent.width- buttonStartDet.width-(2.5 * rowLeftMargin)
                     anchors.left: buttonStartDet.right
                     anchors.leftMargin: rowLeftMargin/2

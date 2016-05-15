@@ -19,18 +19,11 @@
 #include "lib-qt-qml-tricks/src/qqmlhelpers.h"
 #include "mcvalues.h"
 #include "bleinterface.h"
+#include "detectres.h"
 
 #define TIMER_INTERVAL_SERIAL   20
 #define TIMER_INTERVAL_UDB      250
 #define TIMER_INTERVAL_BLE      250
-
-typedef struct {
-    bool updated;
-    double cycle_int_limit;
-    double bemf_coupling_k;
-    QList<int> hall_table;
-    int hall_res;
-} detect_res_t;
 
 
 QML_ENUM_CLASS(OS,Unkown=0,Windows,Linux,OSX,Android,IOS)
@@ -47,6 +40,7 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(AppConfiguration*, appconf)
     QML_READONLY_PROPERTY(McValues*, mcValues)
     QML_READONLY_PROPERTY(BLEInterface*, bleInterface)
+    QML_READONLY_PROPERTY(DetectRes*, detectRes)
 
     QML_WRITABLE_PROPERTY(QString, udpIp)
     QML_WRITABLE_PROPERTY(int, udpPort)
@@ -115,9 +109,6 @@ class BLDCInterface : public QObject
 
 public:
     explicit BLDCInterface(QObject *parent = 0);
-    const detect_res_t& get_detectRes() const{
-        return m_detectRes;
-    }
     Q_INVOKABLE bool isConnected(){
         return m_bleInterface->isConnected() || m_packetInterface->isUdpConnected()
         #ifndef NO_SERIAL_PORT
@@ -192,7 +183,6 @@ private:
     int mFwRetries;
     QList<QPair<int, int> > mCompatibleFws;
     Serialization *mSerialization;
-    detect_res_t m_detectRes;
 };
 
 #endif // BLDCINTERFACE_H

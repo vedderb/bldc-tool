@@ -43,13 +43,13 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     ,m_realtimeActivate(false)
     ,m_keyLeft(false)
     ,m_keyRight(false)
-    ,m_detectRes()
     ,m_firmwareCurrentSource(FirmwareSource::Type::Source1)
 {
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
     m_mcValues = new McValues(this);
     m_bleInterface = new BLEInterface(this);
+    m_detectRes = new DetectRes(this);
 
 #ifndef NO_SERIAL_PORT
     mSerialPort = new QSerialPort(this);
@@ -393,11 +393,18 @@ void BLDCInterface::motorParamReceived(double cycle_int_limit, double bemf_coupl
     }
     emit statusInfoChanged("Detection Result Received", true);
 
-    m_detectRes.updated = true;
-    m_detectRes.cycle_int_limit = cycle_int_limit;
-    m_detectRes.bemf_coupling_k = bemf_coupling_k;
-    m_detectRes.hall_table = hall_table.toList();
-    m_detectRes.hall_res = hall_res;
+    m_detectRes->set_updated(true);
+    m_detectRes->set_cycle_int_limit(cycle_int_limit);
+    m_detectRes->set_bemf_coupling_k(bemf_coupling_k);
+    m_detectRes->set_hall_table1(hall_table.at(0));
+    m_detectRes->set_hall_table2(hall_table.at(1));
+    m_detectRes->set_hall_table3(hall_table.at(2));
+    m_detectRes->set_hall_table4(hall_table.at(3));
+    m_detectRes->set_hall_table5(hall_table.at(4));
+    m_detectRes->set_hall_table6(hall_table.at(5));
+    m_detectRes->set_hall_table7(hall_table.at(6));
+    m_detectRes->set_hall_table8(hall_table.at(7));
+    m_detectRes->set_hall_res(hall_res);
 
     QString hall_str;
     if (hall_res == 0) {

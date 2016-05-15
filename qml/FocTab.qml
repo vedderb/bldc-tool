@@ -209,7 +209,7 @@ Item{
                                 spacing: parent.width * 0.02
                                 Button{
                                     Layout.preferredWidth: mainItem.width*0.2
-                                    id:buttonSensCalλ
+                                    id:buttonSensCalLambda
                                     text: "Measure λ"
                                     onClicked: {
                                         console.log("Measuring λ")

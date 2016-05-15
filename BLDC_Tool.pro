@@ -34,7 +34,8 @@ HEADERS += \
     serialization.h \
     mcconfiguration.h \
     appconfiguration.h \
-    downloader.h
+    downloader.h \
+    detectres.h
 
 SOURCES += \
     main.cpp \
@@ -48,4 +49,5 @@ SOURCES += \
     serialization.cpp \
     mcconfiguration.cpp \
     appconfiguration.cpp \
-    downloader.cpp
+    downloader.cpp \
+    detectres.cpp

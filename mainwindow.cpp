@@ -2338,10 +2338,10 @@ void MainWindow::on_mcconfFocCalcCCApplyButton_clicked()
 
 void MainWindow::on_mcconfDetectApplyButton_clicked()
 {
-    const detect_res_t &detectRes = m_bldcInterface->get_detectRes();
-    if (detectRes.updated) {
-        double cycle_int_limit = detectRes.cycle_int_limit;
-        double bemf_coupling_k = detectRes.bemf_coupling_k;
+    const DetectRes &detectRes = m_bldcInterface->get_detectRes();
+    if (detectRes.get_updated()) {
+        double cycle_int_limit = detectRes.get_cycle_int_limit();
+        double bemf_coupling_k = detectRes.get_bemf_coupling_k();
 
         cycle_int_limit = floor(cycle_int_limit / 5.0) * 5.0;
         bemf_coupling_k = floor(bemf_coupling_k / 50.0) * 50.0;
@@ -2349,15 +2349,15 @@ void MainWindow::on_mcconfDetectApplyButton_clicked()
         ui->mcconfSlIntLimBox->setValue(cycle_int_limit);
         ui->mcconfSlBemfKBox->setValue(bemf_coupling_k);
 
-        if (m_bldcInterface->get_detectRes().hall_res == 0) {
-            ui->mcconfHallTab0Box->setValue(detectRes.hall_table[0]);
-            ui->mcconfHallTab1Box->setValue(detectRes.hall_table[1]);
-            ui->mcconfHallTab2Box->setValue(detectRes.hall_table[2]);
-            ui->mcconfHallTab3Box->setValue(detectRes.hall_table[3]);
-            ui->mcconfHallTab4Box->setValue(detectRes.hall_table[4]);
-            ui->mcconfHallTab5Box->setValue(detectRes.hall_table[5]);
-            ui->mcconfHallTab6Box->setValue(detectRes.hall_table[6]);
-            ui->mcconfHallTab7Box->setValue(detectRes.hall_table[7]);
+        if (detectRes.get_hall_res() == 0) {
+            ui->mcconfHallTab0Box->setValue(detectRes.get_hall_table1);
+            ui->mcconfHallTab1Box->setValue(detectRes.get_hall_table2);
+            ui->mcconfHallTab2Box->setValue(detectRes.get_hall_table3);
+            ui->mcconfHallTab3Box->setValue(detectRes.get_hall_table4);
+            ui->mcconfHallTab4Box->setValue(detectRes.get_hall_table5);
+            ui->mcconfHallTab5Box->setValue(detectRes.get_hall_table6);
+            ui->mcconfHallTab6Box->setValue(detectRes.get_hall_table7);
+            ui->mcconfHallTab7Box->setValue(detectRes.get_hall_table8);
         }
     }
 }
