@@ -33,9 +33,7 @@ BLEInterface::BLEInterface(QObject *parent) : QObject(parent),
     m_control(0),
     m_service(0),
     m_readTimer(0),
-    m_connected(false),
-    m_serviceUuid(SERVICE_UUID)
-{
+    m_connected(false){
     m_deviceDiscoveryAgent = new QBluetoothDeviceDiscoveryAgent(this);
     
     connect(m_deviceDiscoveryAgent, SIGNAL(deviceDiscovered(const QBluetoothDeviceInfo&)),
@@ -170,9 +168,14 @@ void BLEInterface::onDeviceDisconnected()
 
 void BLEInterface::onServiceDiscovered(const QBluetoothUuid &gatt)
 {
-    if(gatt == m_serviceUuid){
-        emit statusInfoChanged("Service discovered. Waiting for service scan to be done...", true);
-        m_foundService = true;
+
+    foreach (auto uuid, SERVICE_UUIDs) {
+        m_serviceUuid = QBluetoothUuid(uuid);
+        if(gatt == m_serviceUuid){
+            emit statusInfoChanged("Service discovered. Waiting for service scan to be done...", true);
+            m_foundService = true;
+            break;
+        }
     }
 }
 
