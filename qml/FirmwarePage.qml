@@ -100,21 +100,21 @@ BasicPage {
                 BldcFirmwareRadioButton {
                     id: firmwareRadioButton1
                     firmwareSource: FirmwareSource.Source1
-                    text: "Source 1"
+                    text: "4.10-4.12"
                     exclusiveGroup: groupFirmwareUrl
                 }
 
                 BldcFirmwareRadioButton {
                     id: firmwareRadioButton2
                     firmwareSource: FirmwareSource.Source2
-                    text: "Source 2"
+                    text: "4.8"
                     exclusiveGroup: groupFirmwareUrl
                 }
 
                 BldcFirmwareRadioButton {
                     id: firmwareRadioButton3
                     firmwareSource: FirmwareSource.Source3
-                    text: "Source 3"
+                    text: "4.6-4.7"
                     exclusiveGroup: groupFirmwareUrl
                 }
             }
