@@ -106,6 +106,11 @@ void BLEInterface::addDevice(const QBluetoothDeviceInfo &device)
         m_devices.append(dev);
         emit devicesNamesChanged(m_devicesNames);
         emit statusInfoChanged("Low Energy device found", true);
+        if(AUTOCONNECT_DEVICES.contains(device.name())){
+            m_deviceDiscoveryAgent->stop();
+            set_currentDevice(m_devices.length()-1);
+            connectCurrentDevice();
+        }
     }
     //...
 }

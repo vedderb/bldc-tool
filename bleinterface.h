@@ -16,6 +16,7 @@
 static QList<QString> SERVICE_UUIDs = QList<QString>() << QString("0000ffe0-0000-1000-8000-00805f9b34fb")
                                                 << QString("0000ffe2-0000-1000-8000-00805f9b34fb")
                                                 << QString("6E400001-B5A3-F393-­E0A9-­E50E24DCCA9E");
+static QList<QString> AUTOCONNECT_DEVICES = QList<QString>() << QString("HMSoft") << QString("Vesc");
 
 class DeviceInfo: public QObject
 {
