@@ -330,7 +330,7 @@ Item{
                                     text: (mcconf.foc_motor_l * 1000000)
                                 }
                                 TextField{
-                                    id:textFieldSensMotλ
+                                    id:textFieldSensMotLambda
                                     width:  mainItem.width <  mainItem.height ? mainItem.width*0.25: mainItem.width * 0.3
                                     text: mcconf.foc_motor_flux_linkage
                                 }
@@ -809,7 +809,7 @@ Item{
                 mcconf.foc_encoder_ratio = textFieldSensEncRat.text
                 mcconf.foc_motor_r = textFieldSensMotR.text
                 mcconf.foc_motor_l = textFieldSensMotL.text
-                mcconf.foc_motor_flux_linkage = textFieldSensMotλ.text
+                mcconf.foc_motor_flux_linkage = textFieldSensMotLambda.text
                 mcconf.foc_observer_gain = textFieldSensGain.text
                 mcconf.foc_hall_table1 = textFieldFocTable1.text
                 mcconf.foc_hall_table2 = textFieldFocTable2.text
@@ -849,7 +849,7 @@ Item{
                     mcconf.foc_encoder_ratio = textFieldSensEncRat.text
                     mcconf.foc_motor_r = textFieldSensMotR.text
                     mcconf.foc_motor_l = textFieldSensMotL.text
-                    mcconf.foc_motor_flux_linkage = textFieldSensMotλ.text
+                    mcconf.foc_motor_flux_linkage = textFieldSensMotLambda.text
                     mcconf.foc_observer_gain = textFieldSensGain.text
                     mcconf.foc_hall_table1 = textFieldFocTable1.text
                     mcconf.foc_hall_table2 = textFieldFocTable2.text
