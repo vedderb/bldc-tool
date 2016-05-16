@@ -620,13 +620,13 @@ void BLDCInterface::onlineUpdateFirmware()
     QString firmwareUrl;
     switch(m_firmwareCurrentSource) {
     case FirmwareSource::Type::Source1:
-        firmwareUrl = "http://vesc.net.au/BLDC-TOOL/Firmware/VESC_default.bin";
+        firmwareUrl = "http://vesc.net.au/BLDC-TOOL/Firmware/VESC_4.10_default.bin";
         break;
     case FirmwareSource::Type::Source2:
-        firmwareUrl = "http://vesc.net.au/BLDC-TOOL/Firmware/VESC_default.bin2";
+        firmwareUrl = "http://vesc.net.au/BLDC-TOOL/Firmware/VESC_4.8_default.bin2";
         break;
     case FirmwareSource::Type::Source3:
-        firmwareUrl = "http://vesc.net.au/BLDC-TOOL/Firmware/VESC_default.bin3";
+        firmwareUrl = "http://vesc.net.au/BLDC-TOOL/Firmware/VESC_4.7_default.bin3";
         break;
     }
 
