@@ -5,6 +5,8 @@
 #include <QtQml>
 #endif
 
+#include <math.h>
+
 #include "downloader.h"
 
 void BLDCInterface::stepTowards(double &value, double goal, double step) {
@@ -23,6 +25,12 @@ void BLDCInterface::stepTowards(double &value, double goal, double step) {
     }
 }
 
+double BLDCInterface::round(double number, int decimals)
+{
+    int factor = pow(10,decimals);
+    double nearest = roundf(number * factor) / factor;
+    return nearest;
+}
 
 BLDCInterface::BLDCInterface(QObject *parent) :
     QObject(parent),

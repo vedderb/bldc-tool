@@ -130,6 +130,8 @@ public:
     }
 
     static void stepTowards(double &value, double goal, double step);
+
+    Q_INVOKABLE static double round(double number, int decimals);
 public slots:
 
 #ifndef NO_SERIAL_PORT

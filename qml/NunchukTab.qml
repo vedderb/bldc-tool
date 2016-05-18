@@ -165,7 +165,7 @@ Flickable{
                 TextField{
                     id:textFieldDeadband
                     width: rectGridSettings.width * 0.2
-                    text: appconf.chuk_hyst
+                    text: round( appconf.chuk_hyst, 2)
                 }
                 Text {
                     id: textRampPos
@@ -178,7 +178,7 @@ Flickable{
                 TextField{
                     id:textFieldRampPos
                     width: rectGridSettings.width * 0.2
-                    text: appconf.chuk_ramp_time_pos
+                    text: round( appconf.chuk_ramp_time_pos ,2)
                 }
                 Text {
                     id: textRampNeg
@@ -191,7 +191,7 @@ Flickable{
                 TextField{
                     id:textFieldRampNeg
                     width: rectGridSettings.width * 0.2
-                    text: appconf.chuk_ramp_time_neg
+                    text: round( appconf.chuk_ramp_time_neg, 2)
                 }
             }
         }

@@ -555,7 +555,7 @@ BasicPage {
                             TextField{
                                 id:textFieldMinDC
                                 width: rectGridOther.width*0.25
-                                text: mcconf.l_min_duty
+                                text: round(mcconf.l_min_duty, 3)
                             }
                             Text{
                                 id:textMaxDC
@@ -569,7 +569,7 @@ BasicPage {
                             TextField{
                                 id:textFieldMaxDC
                                 width: rectGridOther.width*0.25
-                                text: mcconf.l_max_duty
+                                text: round(mcconf.l_max_duty, 3)
                             }
                         }
                     }
@@ -618,7 +618,7 @@ BasicPage {
                             TextField{
                                 id:textFieldStartBoost
                                 width: rectGridCurrControl.width*0.25
-                                text: mcconf.cc_startup_boost_duty
+                                text: round(mcconf.cc_startup_boost_duty, 3)
                             }
                             Text{
                                 id:textMinCurrent
@@ -646,7 +646,7 @@ BasicPage {
                             TextField{
                                 id:textFieldContGain
                                 width: rectGridCurrControl.width*0.25
-                                text: mcconf.cc_gain
+                                text: round(mcconf.cc_gain, 5)
                             }
                         }
                     }

@@ -254,7 +254,7 @@ Flickable{
                 TextField{
                     id:textFieldDeadband
                     width: rectGridSettings.width * 0.2
-                    text: appconf.ppm_hyst
+                    text: round(appconf.ppm_hyst,2)
                 }
                 Text {
                     id: textMinPulse

@@ -304,7 +304,7 @@ Flickable{
                         id:textFieldPhase
                         //   enabled: cbSensorless.checked
                         width: parent.width*0.2
-                        text: mcconf.sl_phase_advance_at_br
+                        text: round(mcconf.sl_phase_advance_at_br, 2)
                     }
                     Text{
                         id:textBRERPM
