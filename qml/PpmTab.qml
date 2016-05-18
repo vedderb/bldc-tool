@@ -294,7 +294,7 @@ Flickable{
         color:  background.color
         CheckBox{
             id:cbRPMLimit
-            checked: appconf.ppm_rpm_lim_end  >= 200000.0
+            checked: appconf.ppm_rpm_lim_end  < 200000.0
             text: "Soft RPM limit(current mode only)"
             anchors.top: parent.top
             anchors.topMargin: headingTopMargin

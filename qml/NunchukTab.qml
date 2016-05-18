@@ -205,7 +205,7 @@ Flickable{
         color:  background.color
         CheckBox{
             id:cbRPMLimit
-            checked: appconf.chuk_rpm_lim_end  >= 200000.0
+            checked: appconf.chuk_rpm_lim_end  < 200000.0
             text: "Soft RPM limit"
             anchors.top: parent.top
             anchors.topMargin: headingTopMargin
