@@ -48,10 +48,11 @@ BLDCInterface::BLDCInterface(QObject *parent) :
         m_os(OS::Unkown)
     #endif
     ,m_udpPort(27800)
+      ,m_firmwareCurrentSource(FirmwareSource::Type::Source1)
     ,m_realtimeActivate(false)
     ,m_keyLeft(false)
     ,m_keyRight(false)
-    ,m_firmwareCurrentSource(FirmwareSource::Type::Source1)
+
 {
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
