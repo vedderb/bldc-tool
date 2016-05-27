@@ -129,7 +129,7 @@ Item{
                         }
                         TextField{
                             id:textFieldSensCurKp
-                            text: round(mcconf.foc_current_kp, 2)
+                            text: Math.round( mcconf.foc_current_kp * 100) / 100
                             width:  mainItem.width * 0.29
                         }
                         TextField{
@@ -322,17 +322,17 @@ Item{
                                 TextField{
                                     id:textFieldSensMotR
                                     width: mainItem.width <  mainItem.height ? mainItem.width*0.4 : mainItem.width * 0.3
-                                    text: round(mcconf.foc_motor_r, 2)
+                                    text: Math.round(  mcconf.foc_motor_r * 100) / 100
                                 }
                                 TextField{
                                     id:textFieldSensMotL
                                     width:  mainItem.width <  mainItem.height ? mainItem.width*0.23: mainItem.width * 0.3
-                                    text: round((mcconf.foc_motor_l * 1000000), 2)
+                                    text: Math.round( (mcconf.foc_motor_l * 1000000) * 100) / 100
                                 }
                                 TextField{
                                     id:textFieldSensMotLambda
                                     width:  mainItem.width <  mainItem.height ? mainItem.width*0.25: mainItem.width * 0.3
-                                    text: round(mcconf.foc_motor_flux_linkage, 2)
+                                    text: Math.round(  mcconf.foc_motor_flux_linkage * 100) / 100
                                 }
 
                             }
@@ -651,7 +651,7 @@ Item{
                         TextField{
                             id:textFieldAdvDTc
                             width: mainItem.width*0.25
-                            text: round(mcconf.foc_dt_us, 2)
+                            text: Math.round(  mcconf.foc_dt_us * 100) / 100
                         }
                     }
 
