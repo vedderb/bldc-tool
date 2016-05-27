@@ -48,10 +48,11 @@ BLDCInterface::BLDCInterface(QObject *parent) :
         m_os(OS::Unkown)
     #endif
     ,m_udpPort(27800)
+      ,m_firmwareCurrentSource(FirmwareSource::Type::Source1)
     ,m_realtimeActivate(false)
     ,m_keyLeft(false)
     ,m_keyRight(false)
-    ,m_firmwareCurrentSource(FirmwareSource::Type::Source1)
+
 {
     m_mcconf = new McConfiguration(this);
     m_appconf = new AppConfiguration(this);
@@ -72,6 +73,7 @@ BLDCInterface::BLDCInterface(QObject *parent) :
     mFwVersionReceived = false;
     mFwRetries = 0;
     mCompatibleFws.append(qMakePair(2, 17));
+    mCompatibleFws.append(qMakePair(2, 18));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
