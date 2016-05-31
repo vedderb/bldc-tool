@@ -185,6 +185,8 @@ MainWindow::MainWindow(QWidget *parent) :
             m_bldcInterface,  SLOT(set_mcconfFocCalcKi(double)));
     connect(ui->mcconfFocDetectLinkageBox ,SIGNAL(valueChanged(double)),
             m_bldcInterface,  SLOT(set_mcconfFocDetectLinkage(double)));
+    connect(ui->mcconfFocCalcCCTcBox, SIGNAL(valueChanged(double)),
+            m_bldcInterface, SLOT(set_mcconfFocCalcCCTc(double)));
 
     ui->currentPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     ui->voltagePlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);

@@ -69,7 +69,7 @@ class BLDCInterface : public QObject
     QML_READONLY_PROPERTY(bool, appconfLoaded)
 
     QML_WRITEONLY_PROPERTY(int, sampleNum)
-    QML_WRITEONLY_PROPERTY(int, mcconfFocCalcCCTc)
+    QML_WRITEONLY_PROPERTY(double, mcconfFocCalcCCTc)
     QML_WRITEONLY_PROPERTY(int, canId)
     QML_WRITEONLY_PROPERTY(bool, canFwd)
     QML_WRITEONLY_PROPERTY(bool, realtimeActivate)
