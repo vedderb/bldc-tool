@@ -228,6 +228,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->realtimePlotPosition->yAxis->setLabel("Deg");
 
     qApp->installEventFilter(this);
+    on_bleScanButton_clicked();
 }
 
 MainWindow::~MainWindow()
