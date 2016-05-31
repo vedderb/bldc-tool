@@ -188,6 +188,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->mcconfFocCalcCCTcBox, SIGNAL(valueChanged(double)),
             m_bldcInterface, SLOT(set_mcconfFocCalcCCTc(double)));
 
+    m_bldcInterface->set_canFwd(ui->canFwdBox->isChecked());
+    m_bldcInterface->set_realtimeActivate(ui->realtimeActivateBox->isChecked());
+    m_bldcInterface->set_appconfUpdatePpm(ui->appconfUpdatePpmBox->isChecked());
+    m_bldcInterface->set_appconfAdcUpdate(ui->appconfAdcUpdateBox->isChecked());
+    m_bldcInterface->set_appconfUpdateChuk(ui->appconfUpdateChukBox->isChecked());
+    m_bldcInterface->set_mcconfCommInt(ui->mcconfCommIntButton->isChecked());
+    m_bldcInterface->set_canId(ui->canIdBox->value());
+    m_bldcInterface->set_mcconfFocDetectR(ui->mcconfFocDetectRBox->value());
+    m_bldcInterface->set_mcconfFocDetectL(ui->mcconfFocDetectLBox->value());
+    m_bldcInterface->set_mcconfFocCalcKp(ui->mcconfFocCalcKpBox->value());
+    m_bldcInterface->set_mcconfFocCalcKi(ui->mcconfFocCalcKiBox->value());
+    m_bldcInterface->set_mcconfFocDetectLinkage(ui->mcconfFocDetectLinkageBox->value());
+    m_bldcInterface->set_mcconfFocCalcCCTc(ui->mcconfFocCalcCCTcBox->value());
+
+
+
     ui->currentPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     ui->voltagePlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
     ui->filterPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
