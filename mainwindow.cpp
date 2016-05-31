@@ -1746,12 +1746,14 @@ void MainWindow::on_serialConnectButton_clicked()
 {
     m_bldcInterface->set_currentSerialPort(ui->serialCombobox->currentIndex());
     m_bldcInterface->connectCurrentSerial();
+    resetStatusLabel();
 }
 
 void MainWindow::on_udpConnectButton_clicked()
 {
     m_bldcInterface->set_udpIp(ui->udpIpEdit->text());
     m_bldcInterface->connectUdb();
+    resetStatusLabel();
 }
 
 void MainWindow::on_disconnectButton_clicked()
@@ -1759,6 +1761,7 @@ void MainWindow::on_disconnectButton_clicked()
     m_bldcInterface->disconnectSerial();
     m_bldcInterface->disconnectBle();
     mPacketInterface->stopUdpConnection();
+    resetStatusLabel();
 }
 
 void MainWindow::on_getDataButton_clicked()
@@ -2451,4 +2454,5 @@ void MainWindow::on_bleConnectButton_clicked()
         return;
     m_bldcInterface->get_bleInterface()->set_currentDevice(ui->bleCombobox->currentIndex());
     m_bldcInterface->connectCurrentBleDevice();
+    resetStatusLabel();
 }
