@@ -526,7 +526,10 @@ void BLDCInterface::mcconfFocCalcCC()
 {
     double r = get_mcconfFocDetectR();
     double l = get_mcconfFocDetectL();
-
+    mcconfFocCalcCC(r,l,m_mcconfFocCalcCCTc);
+}
+void BLDCInterface::mcconfFocCalcCC(double r, double l, double tc)
+{
     if (r < 1e-10) {
         emit msgCritical("Error", "R is 0. Please measure it first.");
         return;
@@ -538,7 +541,6 @@ void BLDCInterface::mcconfFocCalcCC()
     }
 
     l /= 1e6;
-    double tc = m_mcconfFocCalcCCTc;
     double bw = 1.0 / (tc * 1e-6);
     double kp = l * bw;
     double ki = kp * (r / l);

@@ -156,6 +156,7 @@ public slots:
     void disconnectBle();
     void connectUdb();
     void mcconfFocCalcCC();
+    void mcconfFocCalcCC(double r, double l, double tc);
     bool saveMcconfXml(QString xmlfile);
 private slots:
 

@@ -183,9 +183,7 @@ Item{
                                     text: "R & L"
                                     onClicked: {
                                         console.log("Measuring R and L")
-                                        packetInterface.detectMotorParam(textFieldCurrent.text,
-                                                                         textFieldMinRPM.text,
-                                                                         textFieldLowDuty.text)
+                                        packetInterface.measureRL()
                                     }
                                 }
                                 TextField{
@@ -213,9 +211,10 @@ Item{
                                     text: "Measure λ"
                                     onClicked: {
                                         console.log("Measuring λ")
-                                        packetInterface.detectMotorParam(textFieldCurrent.text,
-                                                                         textFieldMinRPM.text,
-                                                                         textFieldLowDuty.text)
+                                        packetInterface.measureLinkage(textFieldSensDetI.text,
+                                                                       textFieldSensDetRPM.text,
+                                                                       textFieldSensDetDuty.text,
+                                                                      textFieldSensDecR.text);
                                     }
                                 }
                                 TextField{
@@ -243,9 +242,9 @@ Item{
                                     text: "Calc CC"
                                     onClicked: {
                                         console.log("Calculating CC")
-                                        packetInterface.detectMotorParam(textFieldCurrent.text,
-                                                                         textFieldMinRPM.text,
-                                                                         textFieldLowDuty.text)
+                                        mcconfFocCalcCC(textFieldSensDecR.text,
+                                                        textFieldSensDetL.text,
+                                                        textFieldSensDetTC.text)
                                     }
                                 }
                                 TextField{
@@ -360,9 +359,11 @@ Item{
                                     style: buttonStyle
                                     onClicked: {
                                         console.log("Calculating Observer Gain")
-                                        packetInterface.detectMotorParam(textFieldCurrent.text,
-                                                                         textFieldMinRPM.text,
-                                                                         textFieldLowDuty.text)
+                                        var L = textFieldSensMotL / 1000000.0;
+
+                                        if (L > 0.0) {
+                                            mcconf.foc_observer_gain = ((1000.0 / L) / 1000000.0);
+                                        }
                                     }
                                 }
                             }
