@@ -2,11 +2,13 @@ A Qt gui to control and debug my custom BLDC controller. A complete description 
 
 Quick build instructions for Ubuntu:
 
-1. sudo apt-get install qtcreator qt-sdk libudev-dev libqt5serialport5-dev
+1. `sudo apt-get install qtcreator qt-sdk libudev-dev libqt5serialport5-dev`
 
-2. qmake
+2. `qmake -qt=qt5`
 
-3. make
+3. `make clean && make`
+
+4. Start BLDC-tool `sudo ./BLDC_Tool`
 
 Windows and OS X builds available :
 
