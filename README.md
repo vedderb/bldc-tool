@@ -8,7 +8,11 @@ Quick build instructions for Ubuntu:
 
 3. `make clean && make`
 
-4. Start BLDC-tool `sudo ./BLDC_Tool`
+4. Allow for serial access without using sudo: `sudo adduser $USER dialout`
+
+5. Restart for access changes to take effect `sudo reboot now`
+
+6. Start BLDC-tool from inside of the built repo `./BLDC_Tool`
 
 Windows and OS X builds available :
 
