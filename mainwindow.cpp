@@ -56,8 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Compatible firmwares
     mFwVersionReceived = false;
     mFwRetries = 0;
-    mCompatibleFws.append(qMakePair(2, 17));
-    mCompatibleFws.append(qMakePair(2, 18));
+    mCompatibleFws.append(qMakePair(2, 19));
 
     QString supportedFWs;
     for (int i = 0;i < mCompatibleFws.size();i++) {
@@ -172,7 +171,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
 {
     Q_UNUSED(object);
 
-    if (!(mSerialPort->isOpen() || mPacketInterface->isUdpConnected()) || !ui->overrideKbBox->isChecked()) {
+    if (!(mSerialPort->isOpen() || mPacketInterface->isUdpConnected())) {
         return false;
     }
 
@@ -195,6 +194,15 @@ bool MainWindow::eventFilter(QObject *object, QEvent *e)
 
         if(keyEvent->isAutoRepeat()) {
             return true;
+        }
+
+        // always accept the ESC Key to stop the motor
+        if(!ui->overrideKbBox->isChecked()) {
+            if(keyEvent->key() == Qt::Key_Escape) {
+                on_offButton_clicked();
+                return true;
+            }
+            return false;
         }
 
         switch(keyEvent->key()) {
@@ -1893,11 +1901,12 @@ void MainWindow::appconfReceived(app_configuration appconf)
     case ADC_CTRL_TYPE_CURRENT_REV_BUTTON:
         ui->appconfAdcCurrentButtonButton->setChecked(true);
         break;
-
+    case ADC_CTRL_TYPE_CURRENT_BRAKE_ADC:
+        ui->appconfAdcCurrentAdcButton->setChecked(true);
+        break;
     case ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_CENTER:
         ui->appconfAdcCurrentNorevCenterButton->setChecked(true);
         break;
-
     case ADC_CTRL_TYPE_CURRENT_NOREV_BRAKE_BUTTON:
         ui->appconfAdcCurrentNorevButtonButton->setChecked(true);
         break;
@@ -1907,15 +1916,12 @@ void MainWindow::appconfReceived(app_configuration appconf)
     case ADC_CTRL_TYPE_DUTY:
         ui->appconfAdcDutyCycleButton->setChecked(true);
         break;
-
     case ADC_CTRL_TYPE_DUTY_REV_CENTER:
         ui->appconfAdcDutyCycleCenterButton->setChecked(true);
         break;
-
     case ADC_CTRL_TYPE_DUTY_REV_BUTTON:
         ui->appconfAdcDutyCycleButtonButton->setChecked(true);
         break;
-
     default:
         break;
     }
@@ -1924,6 +1930,8 @@ void MainWindow::appconfReceived(app_configuration appconf)
     ui->appconfAdcHystBox->setValue(appconf.app_adc_conf.hyst);
     ui->appconfAdcVoltageStartBox->setValue(appconf.app_adc_conf.voltage_start);
     ui->appconfAdcVoltageEndBox->setValue(appconf.app_adc_conf.voltage_end);
+    ui->appconfAdcVoltageStartBox_2->setValue(appconf.app_adc_conf.voltage2_start);
+    ui->appconfAdcVoltageEndBox_2->setValue(appconf.app_adc_conf.voltage2_end);
     ui->appconfAdcFilterBox->setChecked(appconf.app_adc_conf.use_filter);
     ui->appconfAdcSafeStartBox->setChecked(appconf.app_adc_conf.safe_start);
     ui->appconfAdcInvertCcButtonBox->setChecked(appconf.app_adc_conf.cc_button_inverted);
@@ -2501,12 +2509,16 @@ void MainWindow::on_appconfWriteButton_clicked()
         appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_DUTY_REV_CENTER;
     } else if (ui->appconfAdcDutyCycleButtonButton->isChecked()) {
         appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_DUTY_REV_BUTTON;
+    } else if (ui->appconfAdcCurrentAdcButton->isChecked()) {
+        appconf.app_adc_conf.ctrl_type = ADC_CTRL_TYPE_CURRENT_BRAKE_ADC;
     }
 
     appconf.app_adc_conf.update_rate_hz = ui->appconfAdcUpdateRateBox->value();
     appconf.app_adc_conf.hyst = ui->appconfAdcHystBox->value();
     appconf.app_adc_conf.voltage_start = ui->appconfAdcVoltageStartBox->value();
     appconf.app_adc_conf.voltage_end = ui->appconfAdcVoltageEndBox->value();
+    appconf.app_adc_conf.voltage2_start = ui->appconfAdcVoltageStartBox_2->value();
+    appconf.app_adc_conf.voltage2_end = ui->appconfAdcVoltageEndBox_2->value();
     appconf.app_adc_conf.use_filter = ui->appconfAdcFilterBox->isChecked();
     appconf.app_adc_conf.safe_start = ui->appconfAdcSafeStartBox->isChecked();
     appconf.app_adc_conf.cc_button_inverted = ui->appconfAdcInvertCcButtonBox->isChecked();

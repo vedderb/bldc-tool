@@ -519,6 +519,8 @@ void PacketInterface::processPacket(const unsigned char *data, int len)
         appconf.app_adc_conf.hyst = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_adc_conf.voltage_start = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_adc_conf.voltage_end = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_adc_conf.voltage2_start = utility::buffer_get_double32(data, 1000.0, &ind);
+        appconf.app_adc_conf.voltage2_end = utility::buffer_get_double32(data, 1000.0, &ind);
         appconf.app_adc_conf.use_filter = data[ind++];
         appconf.app_adc_conf.safe_start = data[ind++];
         appconf.app_adc_conf.cc_button_inverted = data[ind++];
@@ -1044,6 +1046,8 @@ bool PacketInterface::setAppConf(const app_configuration &appconf)
     utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.hyst, 1000.0, &send_index);
     utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.voltage_start, 1000.0, &send_index);
     utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.voltage_end, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.voltage2_start, 1000.0, &send_index);
+    utility::buffer_append_double32(mSendBuffer, appconf.app_adc_conf.voltage2_end, 1000.0, &send_index);
     mSendBuffer[send_index++] = appconf.app_adc_conf.use_filter;
     mSendBuffer[send_index++] = appconf.app_adc_conf.safe_start;
     mSendBuffer[send_index++] = appconf.app_adc_conf.cc_button_inverted;
