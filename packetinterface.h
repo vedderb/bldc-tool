@@ -24,6 +24,8 @@
 #include <QUdpSocket>
 #include "datatypes.h"
 
+#include <stdint.h>
+
 class PacketInterface : public QObject
 {
     Q_OBJECT
