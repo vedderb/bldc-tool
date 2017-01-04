@@ -135,8 +135,8 @@ void DigitalFiltering::dft(int dir, int len, double *real, double *imag) {
         }
     }
 
-    delete x2;
-    delete y2;
+    delete[] x2;
+    delete[] y2;
 }
 
 void DigitalFiltering::fftshift(double *data, int len)
@@ -298,8 +298,8 @@ QVector<double> DigitalFiltering::fftWithShift(QVector<double> &signal, int resu
         result.append(fabs(signal_vector[i]) / div_factor);
     }
 
-    delete signal_vector;
-    delete imag;
+    delete[] signal_vector;
+    delete[] imag;
 
     return result;
 }
