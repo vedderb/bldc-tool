@@ -21,6 +21,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <string.h>
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <QMessageBox>
 #include <QSerialPortInfo>
