@@ -4,3 +4,5 @@ ui_*
 Makefile
 BLDC_Tool.app
 BLDC_Tool
+.qmake.stash
+qrc_resources.cpp
