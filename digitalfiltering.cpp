@@ -17,6 +17,12 @@
 
 #include "digitalfiltering.h"
 #include <math.h>
+
+//math.h not defines M_PI by default
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
+
 #include <QDebug>
 
 DigitalFiltering::DigitalFiltering()
@@ -226,9 +232,12 @@ QVector<double> DigitalFiltering::filterSignal(const QVector<double> &signal, co
 
 QVector<double> DigitalFiltering::generateFirFilter(double f_break, int bits, bool useHamming)
 {
-    int taps = 1 << bits;
-    double imag[taps];
-    double filter_vector[taps];
+    const int taps = 1 << bits;
+    std::vector<double> imag_vec(taps);
+    std::vector<double> filter_vec(taps);
+
+    double *imag = &imag_vec[0];
+    double *filter_vector = &filter_vec[0];
 
     for(int i = 0;i < taps;i++) {
         if (i < (int)((double)taps * f_break)) {
