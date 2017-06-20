@@ -233,8 +233,11 @@ QVector<double> DigitalFiltering::filterSignal(const QVector<double> &signal, co
 QVector<double> DigitalFiltering::generateFirFilter(double f_break, int bits, bool useHamming)
 {
     const int taps = 1 << bits;
-    std::vector<double> imag(taps);
-    std::vector<double> filter_vector(taps);
+    std::vector<double> imag_vec(taps);
+    std::vector<double> filter_vec(taps);
+
+    double *imag = &imag_vec[0];
+    double *filter_vector = &filter_vec[0];
 
     for(int i = 0;i < taps;i++) {
         if (i < (int)((double)taps * f_break)) {
@@ -249,11 +252,11 @@ QVector<double> DigitalFiltering::generateFirFilter(double f_break, int bits, bo
         filter_vector[taps - i - 1] = filter_vector[i];
     }
 
-    fft(1, bits, &filter_vector.front(), &imag.front());
-    fftshift(&filter_vector.front(), taps);
+    fft(1, bits, filter_vector, imag);
+    fftshift(filter_vector, taps);
 
     if (useHamming) {
-        hamming(&filter_vector.front(), taps);
+        hamming(filter_vector, taps);
     }
 
     QVector<double> result;
