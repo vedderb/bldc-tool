@@ -64,7 +64,7 @@
                  <item>
                   <widget class="QRadioButton" name="mcconfTypeBldcButton">
                    <property name="text">
-                    <string>BLDC</string>
+                    <string>DTC</string>
                    </property>
                    <property name="checked">
                     <bool>true</bool>
